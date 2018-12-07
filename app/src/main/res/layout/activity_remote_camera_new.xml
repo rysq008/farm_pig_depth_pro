@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+      ~  UVCCamera
+      ~  library and sample to access to UVC web camera on non-rooted Android device
+      ~
+      ~ Copyright (c) 2014-2017 saki t_saki@serenegiant.com
+      ~
+      ~  Licensed under the Apache License, Version 2.0 (the "License");
+      ~  you may not use this file except in compliance with the License.
+      ~   You may obtain a copy of the License at
+      ~
+      ~      http://www.apache.org/licenses/LICENSE-2.0
+      ~
+      ~   Unless required by applicable law or agreed to in writing, software
+      ~   distributed under the License is distributed on an "AS IS" BASIS,
+      ~   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+      ~   See the License for the specific language governing permissions and
+      ~   limitations under the License.
+      ~
+      ~  All files in the folder are under this Apache License, Version 2.0.
+      ~  Files in the libjpeg-turbo, libusb, libuvc, rapidjson folder
+      ~  may have a different license, see the respective files.
+      -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/usb_camera_activity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#30425A"
+    tools:context="com.xiangchuangtec.luolu.animalcounter.view.USBCameraActivity_new"
+    tools:ignore="MergeRootFrame">
+
+   <!-- <LinearLayout
+        android:id="@+id/display_info"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="25dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/count_name"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="40dp"
+            android:text="猪舍1"
+            android:textColor="#8D9195" />
+
+        <TextView
+            android:id="@+id/total_count"
+            android:layout_width="70dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="20dp"
+            android:text="数量:20"
+            android:textColor="#8D9195" />
+
+    </LinearLayout>-->
+
+    <com.serenegiant.widget.UVCCameraTextureView
+        android:id="@+id/camera_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+    <TextView
+        android:id="@+id/warning_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:text="拍摄时使整个猪圈在摄像头范围，保证高度，遮挡少"
+        android:textColor="#8D9195" />
+
+    <ImageView
+        android:id="@+id/usb_recogn"
+        android:layout_width="wrap_content"
+        android:layout_height="540dp"
+        android:scaleType="fitXY"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <com.xiangchuangtec.luolu.animalcounter.view.RecognitionView
+        android:id="@+id/recognition_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/BLUE"
+        android:visibility="invisible"/>
+
+
+    <LinearLayout
+        android:id="@+id/display_info"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@+id/camera_view"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/count_name"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="50dp"
+                android:text="猪舍1"
+                android:textColor="#8D9195" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/total_count"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="40dp"
+                android:text="数量:20"
+                android:textColor="#8D9195" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@+id/display_info"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/count_completed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/anniu_detail"
+                android:text="完成盘查"
+                android:textColor="#ffffff" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/count_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/anniu_detail"
+                android:text="本次详情"
+                android:textColor="#ffffff" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+
+
+
+
+
+
+    <!--<ImageView-->
+        <!--android:id="@+id/frame_image"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignBottom="@+id/camera_view"-->
+        <!--android:layout_alignLeft="@+id/camera_view"-->
+        <!--android:layout_alignRight="@+id/camera_view"-->
+        <!--android:layout_alignTop="@+id/camera_view"-->
+        <!--android:src="@drawable/border"-->
+        <!--android:visibility="invisible" />-->
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_alignParentBottom="true"
+        android:background="#30425A">
+        <Button
+            android:id="@+id/usb_next_button"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginStart="50dp"
+            android:background="@drawable/video_btn_bg"
+            android:gravity="center"
+            android:text="下一圈"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="#333"
+            android:textSize="16sp"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/usb_goon_button"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="50dp"
+            android:background="@drawable/video_btn_bg"
+            android:gravity="center"
+            android:text="重点"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="#333"
+            android:textSize="16sp"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/take_picture_button"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/video_btn_bg"
+            android:gravity="center"
+            android:text="点数"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="#333"
+            android:textSize="16sp"
+            android:visibility="visible"/>
+
+        <LinearLayout
+            android:id="@+id/ll_modifier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="65dp"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <Button
+                android:id="@+id/btn_modifier_minus"
+                style="null"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/anniu_detail"
+                android:text="—"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="#ffffff"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/tv_modifier"
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:text="0"
+                android:inputType="number"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="#ffffff"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/btn_modifier_positive"
+                style="null"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/anniu_detail"
+                android:gravity="center"
+                android:text="+"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="#ffffff"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+
+
+
+
+
+
+    <ListView
+        android:id="@+id/juan_list"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_below="@+id/camera_view"
+        android:divider="@null"/>
+</RelativeLayout>

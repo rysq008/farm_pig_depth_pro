@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="20dp"
+        android:text="预理赔库中已有相似度90%对象，是否取消本次预理赔" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/lipei_one"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/result1_image"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_centerInParent="true"
+                android:clickable="true"
+                android:src="@mipmap/ic_launcher" />
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/result_edit"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:background="@drawable/preborder"
+            android:gravity="center"
+            android:text="取消" />
+
+        <TextView
+            android:id="@+id/result_goon"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:background="@drawable/preborder"
+            android:gravity="center"
+            android:text="继续" />
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="text_size">60sp</dimen>
+    <dimen name="draw_text_size">14sp</dimen>
+    <dimen name="rect_stroke_size">2dip</dimen>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="horizontal_margin_half">4dp</dimen>
+    <dimen name="vertical_margin_half">4dp</dimen>
+    <dimen name="sz_icon_camera_ctrl">44dp</dimen>
+</resources>

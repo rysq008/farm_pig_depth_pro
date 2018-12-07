@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:orientation="vertical">
+    <include
+        android:id="@+id/add_lipei_title"
+        layout="@layout/activity_title" />
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/lin_insure"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="vertical">
+        <RelativeLayout
+            android:id="@+id/polling_insure"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/text_insure"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_centerVertical="true"
+                android:background="@drawable/button_onclick"
+                android:gravity="center"
+                android:text="投保"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="10dp"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp" />
+
+        </RelativeLayout>
+        <RelativeLayout
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/shesetting"
+                android:layout_width="150dp"
+                android:layout_height="40dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/begin_btn_bg"
+                android:gravity="center"
+                android:text="猪舍设置"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/juansetting"
+                android:layout_width="150dp"
+                android:layout_height="40dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/begin_btn_bg"
+                android:gravity="center"
+                android:text="猪圈设置"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/showpolling_begin"
+                android:layout_width="150dp"
+                android:layout_height="40dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="5dp"
+                android:background="@drawable/begin_btn_bg"
+                android:gravity="center"
+                android:text="开始点数"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp" />
+
+        </RelativeLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:paddingLeft="50dp">
+
+        <TextView
+            android:id="@+id/poll_zailan"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="在栏猪总数"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/zai_tou"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="25dp"
+            android:textStyle="bold"
+            android:text="头"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/poll_zai_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@+id/zai_tou"
+            android:textStyle="bold"
+            android:text="10389"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:background="@color/BLACK_A010"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:paddingLeft="50dp">
+
+                <TextView
+                    android:id="@+id/poll_title"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="未投保"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/tou"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="25dp"
+                    android:textStyle="bold"
+                    android:text="头"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/poll_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="5dp"
+                    android:layout_toLeftOf="@+id/tou"
+                    android:textStyle="bold"
+                    android:text="10000"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+
+            <com.xiangchuang.risks.model.custom.MyListView
+                android:id="@+id/showpolling_result_weilist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@null">
+
+            </com.xiangchuang.risks.model.custom.MyListView>
+
+            <RelativeLayout
+                android:background="@color/BLACK_A010"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:paddingLeft="50dp">
+
+                <TextView
+                    android:id="@+id/poll_yititle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:textStyle="bold"
+                    android:text="已投保"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/yi_tou"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="25dp"
+                    android:textStyle="bold"
+                    android:text="头"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/yitotle_tou"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="5dp"
+                    android:textStyle="bold"
+                    android:layout_toLeftOf="@+id/yi_tou"
+                    android:text="10000"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+
+            <com.xiangchuang.risks.model.custom.MyListView
+                android:id="@+id/showpolling_result_yilist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@null"></com.xiangchuang.risks.model.custom.MyListView>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

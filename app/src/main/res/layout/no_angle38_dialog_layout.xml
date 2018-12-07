@@ -1,0 +1,105 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="10dp"
+    >
+    <!--android:id="@+id/layout_root"-->
+    <!--<LinearLayout-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:paddingLeft="10.0dip"-->
+        <!--android:paddingRight="10.0dip"-->
+        <!--android:paddingTop="10.0dip">-->
+
+
+        <!--<ImageView-->
+            <!--android:id="@id/image1"-->
+            <!--android:layout_width="10.0dip"-->
+            <!--android:layout_height="50.0dip"-->
+            <!--android:layout_marginLeft="10.0dip"-->
+            <!--android:layout_weight="1.0"-->
+            <!--android:src="@drawable/angle01_no"-->
+            <!--android:gravity="center"-->
+            <!--android:paddingTop="10.0dip" />-->
+
+        <!--<ImageView-->
+            <!--android:id="@id/image2"-->
+            <!--android:layout_width="10.0dip"-->
+            <!--android:layout_height="50.0dip"-->
+            <!--android:layout_marginLeft="10.0dip"-->
+            <!--android:layout_weight="1.0"-->
+            <!--android:src="@drawable/angle02_no"-->
+            <!--android:gravity="center"-->
+            <!--android:paddingTop="10.0dip" />-->
+
+        <!--<ImageView-->
+            <!--android:id="@id/image3"-->
+            <!--android:layout_width="10.0dip"-->
+            <!--android:layout_height="50.0dip"-->
+            <!--android:layout_marginLeft="10.0dip"-->
+            <!--android:layout_weight="1.0"-->
+            <!--android:src="@drawable/angle03_no"-->
+            <!--android:gravity="center"-->
+            <!--android:paddingTop="10.0dip" />-->
+    <!--</LinearLayout>-->
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:paddingLeft="10.0dip"-->
+        <!--android:paddingRight="10.0dip"-->
+        <!--android:paddingTop="10.0dip">-->
+
+        <!--<ImageView-->
+            <!--android:id="@id/image6"-->
+            <!--android:layout_width="10.0dip"-->
+            <!--android:layout_height="50.0dip"-->
+            <!--android:layout_marginLeft="10.0dip"-->
+            <!--android:layout_weight="1.0"-->
+            <!--android:src="@drawable/angle06_no"-->
+            <!--android:gravity="center"-->
+            <!--android:paddingTop="10.0dip" />-->
+
+        <!--<ImageView-->
+            <!--android:id="@id/image7"-->
+            <!--android:layout_width="10.0dip"-->
+            <!--android:layout_height="50.0dip"-->
+            <!--android:layout_marginLeft="10.0dip"-->
+            <!--android:layout_weight="1.0"-->
+            <!--android:src="@drawable/angle07_no"-->
+            <!--android:gravity="center"-->
+            <!--android:paddingTop="10.0dip" />-->
+
+        <!--<ImageView-->
+            <!--android:id="@id/image8"-->
+            <!--android:layout_width="10.0dip"-->
+            <!--android:layout_height="50.0dip"-->
+            <!--android:layout_marginLeft="10.0dip"-->
+            <!--android:layout_weight="1.0"-->
+            <!--android:src="@drawable/angle08_no"-->
+            <!--android:gravity="center"-->
+            <!--android:paddingTop="10.0dip" />-->
+        <!---->
+    <!--</LinearLayout>-->
+    <ProgressBar
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:indeterminateDrawable="@drawable/angle03" />
+    <ProgressBar
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:indeterminateDrawable="@drawable/angle08" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="缺少角度3、角度8，请补充！！"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#fa0a56"
+        />
+</LinearLayout>

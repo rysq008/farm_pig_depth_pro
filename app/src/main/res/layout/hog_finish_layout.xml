@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#30425A"
+        android:paddingTop="10dp">
+
+
+
+        <LinearLayout
+            android:id="@+id/LL_title"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="#30425A"
+            android:gravity="center"
+            android:paddingEnd="50dp"
+            android:paddingStart="50dp">
+
+            <TextView
+                android:id="@+id/TV_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:text="完成盘查"
+                android:textColor="#8D9195"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/TV_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="11dp"
+            android:paddingRight="5dp"
+            android:paddingLeft="5dp"
+            android:text="✕"
+            android:textColor="#8D9195"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/TV_msg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/LL_title"
+            android:background="#32445C"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingTop="30dp"
+            android:paddingBottom="30dp"
+            android:textSize="16dp"
+            android:textColor="#8D9195" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/TV_msg"
+            android:background="#8D9195" />
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/CL_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@+id/TV_msg">
+
+            <TextView
+                android:id="@+id/TV_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="放弃"
+                android:textColor="#30BABA"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/guideline" />
+
+            <TextView
+                android:id="@+id/TV_submit"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="保存"
+                android:textColor="#30BABA"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toStartOf="@+id/guideline"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <android.support.constraint.Guideline
+                android:id="@+id/guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5" />
+
+            <android.support.constraint.Guideline
+                android:id="@+id/guideline2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="-59dp" />
+
+        </android.support.constraint.ConstraintLayout>
+
+
+
+    </RelativeLayout>
+</LinearLayout>
+
+

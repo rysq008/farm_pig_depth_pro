@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:padding="5dp"
+    android:background="@drawable/info_dialog_bg">
+
+    <LinearLayout
+        android:id="@+id/ll_title"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/rounded_corner"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_titleDormNum"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="养殖管理"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:background="@android:color/white"-->
+        <!--android:orientation="horizontal"-->
+        <!--&gt;-->
+
+        <!--<ImageView-->
+            <!--android:id="@id/image1"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:layout_weight="1.0"-->
+            <!--android:layout_marginLeft="10.0dip"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:paddingTop="10.0dip"-->
+            <!--android:src="@mipmap/ic_logo" />-->
+
+    <!--</LinearLayout>-->
+    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    android:background="@drawable/rounded_corner"
+    android:orientation="vertical">
+
+        <ListView
+            android:id="@+id/listViewCounterResult"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:background="#c9c5bd"
+            android:layout_gravity="center_horizontal" />
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/editDormNum"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:inputType="number"
+        android:hint="请输入猪舍号"
+        android:lines="1"
+        android:maxLines="2"
+        android:minLines="1"
+        android:scrollbars="vertical" />
+
+    <LinearLayout
+        android:id="@+id/btns"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="6dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/dormNumExit"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/mybutton"
+            android:text="退出"
+            android:gravity="center"
+            android:layout_marginLeft="20dp"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            tools:ignore="Suspicious0dp" />
+
+
+        <Button
+            android:id="@+id/dormNumStart"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/mybutton"
+            android:layout_marginLeft="80dp"
+            android:layout_marginRight="20dp"
+            android:text="巡检"
+            android:gravity="center"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            tools:ignore="Suspicious0dp" />
+    </LinearLayout>
+</LinearLayout>

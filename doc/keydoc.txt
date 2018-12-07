@@ -1,0 +1,25 @@
+password: pig123456
+alias: pig_detect
+
+keytool -list -v -keystore doc/pig.jks
+
+Keystore type: JKS
+Keystore provider: SUN
+
+Your keystore contains 1 entry
+
+Alias name: pig_detect
+Creation date: Nov 30, 2017
+Entry type: PrivateKeyEntry
+Certificate chain length: 1
+Certificate[1]:
+Owner: CN=innovation, OU=innovation, O=innovation, L=Beijing, ST=Beijing, C=86
+Issuer: CN=innovation, OU=innovation, O=innovation, L=Beijing, ST=Beijing, C=86
+Serial number: 469e8773
+Valid from: Thu Nov 30 21:38:28 CST 2017 until: Mon Nov 24 21:38:28 CST 2042
+Certificate fingerprints:
+	 MD5:  FE:3F:A1:9D:05:FA:15:6B:70:FB:27:4A:9A:B8:F0:31
+	 SHA1: 97:B4:1C:08:90:99:8D:B5:13:0F:0F:DE:5A:01:60:40:ED:5E:56:CF
+	 SHA256: 9B:6A:C4:4B:3A:D6:83:CB:57:6F:C9:FA:B7:6B:D0:3F:34:29:75:E3:1C:64:5C:6A:2A:9C:98:1A:50:11:BE:51
+	 Signature algorithm name: SHA256withRSA
+	 Version: 3

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:paddingLeft="70dp">
+
+        <TextView
+            android:id="@+id/shename"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="猪舍"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/she_tou"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="25dp"
+            android:text="头"
+            android:textSize="16sp" />
+
+        <TextView
+            android:textStyle="bold"
+            android:id="@+id/pollshe_totlecount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@+id/she_tou"
+            android:text="10389"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+    <View
+        android:background="@color/BLACK_A010"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+    <com.xiangchuang.risks.model.custom.MyListView
+        android:divider="@null"
+        android:id="@+id/shelist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></com.xiangchuang.risks.model.custom.MyListView>
+
+</LinearLayout>

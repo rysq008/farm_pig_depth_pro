@@ -1,0 +1,72 @@
+<resources>
+    <string name="app_name">猪险</string>
+    <string name="no_camera_permission_granted">No Camera permission granted.</string>
+    <string name="loadImage">打开相册</string>
+    <string name="description_info">Info</string>
+    <string name="request_permission">This sample needs camera permission.</string>
+    <string name="camera_error">This device doesn\'t support Camera2 API.</string>
+    <string name="record">录制</string>
+    <string name="stop">取消</string>
+    <string name="dialog_title">提示</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_phonenum">手机号</string>
+    <string name="prompt_code">验证码</string>
+    <string name="action_sign_in">登录或注册</string>
+    <string name="action_get_code">获取验证码</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This phone number is invalid</string>
+    <string name="error_invalid_code">This code is too short</string>
+    <string name="error_incorrect_password">Login Failed！</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="lipei">理赔</string>
+    <string name="toubao">投保</string>
+    <string name="fullname">投保人</string>
+    <string name="jump">跳转</string>
+    <string name="OpenAlbulm">ZIP</string>
+    <string name="recognizeImage">识别</string>
+    <string name="error_noAngle">角度补充</string>
+    <string name="error_msgAdd">请补充</string>
+    <string name="error_button_ok">前往补充</string>
+    <string name="btnNextPig">下一头</string>
+    <string name="noAngle">角度补充</string>
+    <string name="view_photo">查看</string>
+    <string name="Username">Username</string>
+    <string name="App">PHPMySQL</string>
+    <string name="Role">role</string>
+    <string name="LoginRole">LoginRole</string>
+    <string name="method">method</string>
+    <string name="LoginStatus">LoginStatus</string>
+    <string name="Status">Status</string>
+    <string name="Choose">Choose</string>
+    <string name="LoginPost">LoginPost</string>
+    <string name="LoginGet">LoginGet</string>
+    <string name="Password">Password</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">巡检明细</string>
+
+    <string name="选择养殖场">选择养殖场</string>
+
+    <string-array name="farm_location_arrays">
+        <item>501养殖场</item>
+        <item>test1养殖场</item>
+        <item>正邦养殖场</item>
+        <item>国元养殖场</item>
+        <item>郑州养殖场</item>
+        <item>秦皇岛养殖场</item>
+        <item>南昌养殖场</item>
+        <item>石家庄养殖场</item>
+    </string-array>
+    <string name="title_activity_remote_camera">RemoteCameraActivity</string>
+
+    <string name="idPostive">身份证正面照片</string>
+    <string name="businessLicense">营业执照照片</string>
+    <string name="appwarning">开启定位权限才可以使用猪险app！</string>
+    <string name="locationwarning">您还未开启GPS，现在去开启吗?</string>
+    <string name="permission_request">This sample needs permission for camera and audio recording.</string>
+</resources>

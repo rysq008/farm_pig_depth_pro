@@ -1,0 +1,2 @@
+include ':app',':libuvccamera',':usbCameraCommon'
+include ':openCVLibrary331'

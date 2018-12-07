@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="30dp"
+    android:background="#32445C"
+    android:paddingStart="50dp"
+    android:paddingEnd="50dp">
+
+
+
+
+        <TextView
+            android:id="@+id/left_juan"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:text="猪圈1"
+            android:textColor="#8D9195" />
+
+        <TextView
+            android:id="@+id/auto_count"
+            android:layout_weight="2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="10000头"
+            android:textColor="#8D9195" />
+
+        <TextView
+            android:id="@+id/right_count"
+            android:layout_weight="2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="1头"
+            android:textColor="#8D9195" />
+
+
+</LinearLayout>
