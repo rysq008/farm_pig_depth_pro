@@ -22,12 +22,36 @@
 
 
     <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/shibiebox"
+        android:layout_above="@+id/tool_layout">
+        <ImageView
+            android:id="@+id/IV_left"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:background="@drawable/pigleft"
+            android:scaleType="fitCenter"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/IV_right"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:background="@drawable/pigright"
+            android:visibility="gone"/>
+    </RelativeLayout>
+
+
+    <RelativeLayout
         android:id="@+id/tool_layout"
         android:layout_width="match_parent"
-        android:layout_height="155dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:background="@android:color/transparent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/texture"
+        android:background="@drawable/bg_transparent">
 
 
         <innovation.view.SendView
@@ -47,6 +71,46 @@
                 android:layout_height="85dp"
                 android:visibility="gone"
                 android:layout_centerInParent="true" />
+
+            <TextView
+                android:id="@+id/tv_notice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:textSize="16sp"
+                android:textColor="#ffffff"
+                android:text="请将整个脸部置于采集范围内"
+                android:visibility="invisible"/>
+
+            <TextView
+                android:id="@+id/TV_left"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_alignParentStart="true"
+                android:background="@drawable/notic_btn_bg"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="#333333"
+                android:textSize="14sp"
+                android:text=""
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/TV_right"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/notic_btn_bg"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="#333333"
+                android:textSize="14sp"
+                android:text=""
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/record_control"

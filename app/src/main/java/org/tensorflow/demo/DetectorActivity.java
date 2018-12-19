@@ -23,6 +23,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.media.Image;
 import android.media.Image.Plane;
@@ -56,9 +57,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
 
+import innovation.biz.classifier.PigFaceDetectTFlite;
+import innovation.biz.classifier.PigRotationPrediction;
 import innovation.media.MediaInsureItem;
 import innovation.media.MediaProcessor;
 import innovation.media.Model;
@@ -83,43 +88,26 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     private static final Logger LOGGER = new Logger();
 
     // Configuration values for the prepackaged multibox model.
-    private static final int MB_NUM_LOCATIONS = 784;
-    private static final int MB_INPUT_SIZE = 128;
-    private static final int MB_IMAGE_MEAN = 128;
-    private static final float MB_IMAGE_STD = 128;
-    private static final String MB_INPUT_NAME = "ResizeBilinear";
-    private static final String MB_OUTPUT_NAMES = "output_locations/Reshape,output_scores/Reshape";
-    private static final String MB_MODEL_FILE = "file:///android_asset/multibox_model.pb";
-    private static final String MB_LOCATION_FILE = "file:///android_asset/multibox_location_priors.pb";
-    private static final String YOLO_MODEL_FILE = "file:///android_asset/graph-tiny-yolo-voc.pb";
-    private static final int YOLO_INPUT_SIZE = 416;
-    private static final String YOLO_INPUT_NAME = "input";
-    private static final String YOLO_OUTPUT_NAMES = "output";
-    private static final int YOLO_BLOCK_SIZE = 32;
 
+    private static final int MB_INPUT_SIZE = 128;
+
+    private static final int YOLO_INPUT_SIZE = 416;
     // Default to the included multibox model.
     private static final boolean USE_YOLO = false;
 
     private static final int CROP_SIZE = USE_YOLO ? YOLO_INPUT_SIZE : MB_INPUT_SIZE;
 
     // Minimum detection confidence to track a detection.
-    private static final float MINIMUM_CONFIDENCE = USE_YOLO ? 0.0f : 0.1f;
-
-    private static final boolean MAINTAIN_ASPECT = USE_YOLO;
-
-    private static final boolean SAVE_PREVIEW_BITMAP = false;
     private static final float TEXT_SIZE_DIP = 10;
 
     private Integer sensorOrientation;
 
     private Classifier detector;
 
-    private int previewWidth = 0;
-    private int previewHeight = 0;
+
     private byte[][] yuvBytes;
     private int[] rgbBytes = null;
     private Bitmap rgbFrameBitmap = null;
-    private Bitmap cropped2SquareBitmap = null;
     private Bitmap croppedBitmap = null;
 
     private boolean computing = false;
@@ -129,15 +117,13 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     private Matrix frameToCropTransform;
     private Matrix cropToFrameTransform;
 
-    private Bitmap cropCopyBitmap;
 
-    private MultiBoxTracker tracker;
+    public static MultiBoxTracker tracker;
 
     private byte[] luminance;
 
     private BorderedText borderedText;
 
-    private long lastProcessingTimeMs;
     private LocationTracker mLocationTracker;
 
 
@@ -151,23 +137,51 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     private String imageErrMsg = "";
     private static final int CHECK_COUNT = 1; //允许的最大错误图像次数   //定义提示类型
 
-    //end add
-    private int imageCount = 10;//haojie add for test
 
-    private static int type1Count = 0;
-    private static int type2Count = 0;
-    private static int type3Count = 0;
     public static int imageWidth;
     public static int imageHeight;
     private String sheId;
-    private String juanId;
     private String inspectNo;
     private String reason;
-    private String mfleg;
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private static final Size DESIRED_PREVIEW_SIZE = new Size(1280, 960);
+
+    private Classifier donkeyTFliteDetector;
+    private Classifier cowTFliteDetector;
+    private Classifier pigTFliteDetector;
+
+    private int previewWidth = 0;
+    private int previewHeight = 0;
 
 
+
+    private int imageCounter = 0;
+    private int imageOkCounter = 0;  //图像良好次数
+    private int imageDarkCounter = 0;//图像过暗次数
+    private int imageBlurCounter = 0;//图像模糊次数
+    private int imageBrightCounter = 0;//图像过亮次数
+
+    private static final int CHECK_COUNTER = 20; //允许的最大错误图像次数   //定义提示类型
+    //end add
+    private int imageCount = 10;// add for test
+    private static final int TFLITE_INPUT_SIZE = 300;
+    private static final boolean TFLITE_IS_QUANTIZED = true;
+//    private static final String PIG_TFLITE_DETECT_MODEL_FILE = "pig_1026_detect_xincai_addbg.tflite";
+    private static final String PIG_TFLITE_DETECT_MODEL_FILE = "ssd_mobilenet_v2_focal_quantized_coco.tflite";
+
+    public static int type1Count = 0;
+    public static int type2Count = 0;
+    public static int type3Count = 0;
+    public static int AngleTrackType = 0;
+    public static int offsetX;
+    public static int offsetY;
+
+    private static long last_toast_time = 0;
+
+    private Bitmap cropCopyBitmap;
     @Override
-
     public synchronized void onResume() {
         type1Count = 0;
         type2Count = 0;
@@ -177,9 +191,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         sheId = intent.getStringExtra(Constants.sheId);
         inspectNo = intent.getStringExtra(Constants.inspectNo);
         reason = intent.getStringExtra(Constants.reason);
-
-
-
     }
 
     @Override
@@ -194,15 +205,27 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         final float textSizePx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, TEXT_SIZE_DIP, getResources().getDisplayMetrics());
         borderedText = new BorderedText(textSizePx);
         borderedText.setTypeface(Typeface.MONOSPACE);
-        tracker = new MultiBoxTracker(getResources().getDisplayMetrics());
+        tracker = new MultiBoxTracker(this);
         mLocationTracker = new LocationTracker(getResources().getDisplayMetrics());
 
         //猪脸识别
         try {
+            pigTFliteDetector =
+                    PigFaceDetectTFlite.create(
+                            getAssets(),
+                            PIG_TFLITE_DETECT_MODEL_FILE,
+                            "",
+                            TFLITE_INPUT_SIZE,
+                            TFLITE_IS_QUANTIZED);
+        } catch (final Exception e) {
+            throw new RuntimeException("Error initializing pig TensorFlowLite!", e);
+        }
+        /*
+        try {
             detector = MediaProcessor.getInstance(getApplicationContext()).getFaceDetector_new();
         } catch (final Exception e) {
             throw new RuntimeException("Error initializing TensorFlow!", e);
-        }
+        }*/
 
         previewWidth = size.getWidth();
         previewHeight = size.getHeight();
@@ -215,7 +238,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
         LOGGER.i("Sensor orientation: %d, Screen orientation: %d", rotation, screenOrientation);
         // 20180223
-        sensorOrientation = rotation + screenOrientation;
+        sensorOrientation = rotation - getScreenOrientation();
 
 
         LOGGER.i("Initializing sensorOrientation: %d", sensorOrientation);
@@ -225,11 +248,9 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
         croppedBitmap = Bitmap.createBitmap(previewWidth, previewHeight, Config.ARGB_8888);
 
-        if (SCREEN_ORIENTATION == 0) {
-            frameToCropTransform = ImageUtils.getTransformationMatrix(previewWidth, previewHeight, previewWidth, previewHeight, 90, true);
-        } else if (SCREEN_ORIENTATION == 1) {
-            frameToCropTransform = ImageUtils.getTransformationMatrix(previewWidth, previewHeight, previewWidth, previewHeight, sensorOrientation, true);
-        }
+        frameToCropTransform = ImageUtils.getTransformationMatrix(
+                previewWidth, previewHeight, previewWidth, previewHeight, screenOrientation, true);
+
         cropToFrameTransform = new Matrix();
         frameToCropTransform.invert(cropToFrameTransform);
         yuvBytes = new byte[3][];
@@ -238,8 +259,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         trackingOverlay.addCallback(new DrawCallback() {
             @Override
             public void drawCallback(final Canvas canvas) {
-                mLocationTracker.draw(canvas);
-//                        tracker.draw(canvas);
+//                mLocationTracker.draw(canvas);
+                 tracker.draw(canvas, 1);
                 if (isDebug()) {
                     tracker.drawDebug(canvas);
                 }
@@ -282,41 +303,46 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 lines.add("Crop: " + copy.getWidth() + "x" + copy.getHeight());
                 lines.add("View: " + canvas.getWidth() + "x" + canvas.getHeight());
                 lines.add("Rotation: " + sensorOrientation);
-                lines.add("Inference time: " + lastProcessingTimeMs + "ms");
+
 
                 borderedText.drawLines(canvas, 10, canvas.getHeight() - 10, lines);
             }
         });
-        new DetectorActivity().reInitCurrentCounter(0, 0, 0);
+/*        new DetectorActivity().reInitCurrentCounter(0, 0, 0);
         new LocationTracker(getResources().getDisplayMetrics()).reInitCounter(0, 0, 0);
         trackingOverlay.refreshDrawableState();
-        textureView.refreshDrawableState();
+        textureView.refreshDrawableState();*/
     }
 
     public static OverlayView trackingOverlay;
 
     @Override
     public void onImageAvailable(final ImageReader reader) {
+        Log.i("====== " ,"===onImageAvailable=======");
         Image image = null;
         ++timestamp;
         final long currTimestamp = timestamp;
         try {
             image = reader.acquireLatestImage();
             if (image == null) {
+                Log.i("====== " ,"===onImageAvailable1=======");
                 return;
             }
             Trace.beginSection("imageAvailable");
             final Plane[] planes = image.getPlanes();
             fillBytes(planes, yuvBytes);
-            mLocationTracker.onFrame(previewWidth, previewHeight, planes[0].getRowStride(), sensorOrientation, yuvBytes[0], timestamp);
+
+            tracker.onFrame(
+                    previewWidth,
+                    previewHeight,
+                    planes[0].getRowStride(),
+                    90,
+                    yuvBytes[0],
+                    timestamp);
+
+            //mLocationTracker.onFrame(previewWidth, previewHeight, planes[0].getRowStride(), sensorOrientation, yuvBytes[0], timestamp);
             trackingOverlay.postInvalidate();
 
-            // No mutex needed as this method is not reentrant.
-            if (computing) {
-                image.close();
-                return;
-            }
-            computing = true;
 
             final int yRowStride = planes[0].getRowStride();
             final int uvRowStride = planes[1].getRowStride();
@@ -342,6 +368,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             }
             LOGGER.e(e, "Exception!");
             Trace.endSection();
+            Log.i("====== " ,"===onImageAvailable4=======");
             return;
         }
 
@@ -354,78 +381,88 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         }
         System.arraycopy(yuvBytes[0], 0, luminance, 0, luminance.length);
 
-        runInBackground(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        final long startTime = SystemClock.uptimeMillis();
 
-                        PostureItem posture = null;
-                        int angletype = 0;
-                        if (Global.VIDEO_PROCESS) {//仅在录像时进行图片采集
+        final Paint paint = new Paint();
+        Bitmap padBitmap = null;
 
-                            // 检测图片是否清晰，给出提示，用于用户调整
-                            imageok = true;
-                            imageErrMsg = "";
-                            Log.d(TAG, "图像采集开始");
-                            //图片进入模型文件
-                            if (ANIMAL_TYPE == 1) {
-                                posture = detector.recognizeImagePig(croppedBitmap, null);
-                                Log.d(TAG, "猪脸分类器");
-                            } else if (ANIMAL_TYPE == 2) {
-                                posture = detector.recognizeImageCow(croppedBitmap, null);
-                                Log.d(TAG, "牛脸分类器");
-                            } else if (ANIMAL_TYPE == 3) {
-                                Log.d(TAG, "驴脸分类器");
-//                                 TODO: 2018/9/1 By:LuoLu
-                                if (croppedBitmap.getWidth() >= croppedBitmap.getHeight()) {
-                                    cropped2SquareBitmap = Bitmap.createBitmap(
-                                            croppedBitmap,
-                                            croppedBitmap.getWidth() / 2 - croppedBitmap.getHeight() / 2,
-                                            0,
-                                            croppedBitmap.getHeight(),
-                                            croppedBitmap.getHeight()
-                                    );
-                                } else {
-                                    cropped2SquareBitmap = Bitmap.createBitmap(
-                                            croppedBitmap,
-                                            0,
-                                            croppedBitmap.getHeight() / 2 - croppedBitmap.getWidth() / 2,
-                                            croppedBitmap.getWidth(),
-                                            croppedBitmap.getWidth()
-                                    );
-                                }
-                                posture = detector.recognizeImageDonkey(cropped2SquareBitmap, null);
-                            }
-                            if (posture != null) {
-                                //  startTestDeviceAngle();
-                                Log.d(TAG, "图像采集成功-");
-                                if (imageok) {//质量合格的图片才进行计算采集
-                                    //角度计算
-                                    angletype = angleCalculate(posture);
-                                    saveImage(posture.original_bitmap);
+        // 检测图片是否清晰，给出提示，用于用户调整
+        imageErrMsg = "";
 
-                                    Log.d(TAG, "图像合格----");
-                                    // TODO: 2018/8/25 By:LuoLu
-//                                    mLocationTracker.trackResults_new(posture, angletype);
-//                                    trackingOverlay.postInvalidate();
-//                                    requestRender();
-//                                    computing = false;
 
-                                } else {
-                                    Log.d(TAG, "图像不合格原因：----" + imageErrMsg);
-                                }
-                            }
-                        }
-                        //获取显示红框
-                        mLocationTracker.trackResults_new(posture, angletype);
-                        trackingOverlay.postInvalidate();
-                        requestRender();
-                        computing = false;
+
+
+        if (!Global.VIDEO_PROCESS) {
+            Log.i("====== " ,"===onImageAvailable3=======");
+            return;
+        }
+
+        //                            图像质量检查
+        checkImageQuality(croppedBitmap);
+        if (imageok) {
+            Log.i("====== " ,"===onImageAvailable6=======");
+
+            Bitmap rotateBitmap = innovation.utils.ImageUtils.rotateBitmap(croppedBitmap, 90);
+
+
+
+            //com.innovation.utils.ImageUtils.saveImage(rotateBitmap);
+            padBitmap = innovation.utils.ImageUtils.padBitmap(rotateBitmap);
+
+
+            cropCopyBitmap = Bitmap.createBitmap(padBitmap);
+
+
+            //final Canvas canvas = new Canvas(cropCopyBitmap);
+            paint.setColor(Color.RED);
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(2.0f);
+            int croppedBitmapHeight = croppedBitmap.getHeight();
+            int croppedBitmapWidth = croppedBitmap.getWidth();
+            int padSize = padBitmap.getWidth();
+            offsetX = (padSize - croppedBitmapWidth) / 2;
+            offsetY = (padSize - croppedBitmapHeight) / 2;
+        } else {
+            LOGGER.i("图像质量不合格！" + "不合格原因：" + imageErrMsg);
+            return;
+        }
+
+
+        Log.d(TAG, "猪脸分类器");
+        pigTFliteDetector.pigRecognitionAndPostureItemTFlite(padBitmap);
+        if (PigFaceDetectTFlite.pigTFliteRecognitionAndPostureItem != null) {
+            Log.i("====== " ,"===onImageAvailable7=======");
+            tracker.trackAnimalResults(PigFaceDetectTFlite.pigTFliteRecognitionAndPostureItem.getPostureItem(), PigRotationPrediction.pigPredictAngleType);
+            final List<Classifier.Recognition> mappedRecognitions =  new LinkedList<Classifier.Recognition>();
+            if (PigFaceDetectTFlite.pigTFliteRecognitionAndPostureItem.getList() != null) {
+                for (final Classifier.Recognition result : PigFaceDetectTFlite.pigTFliteRecognitionAndPostureItem.getList()) {
+
+                    Log.i("====== " ,"===onImageAvailable8=======");
+                    final RectF location = result.getLocation();
+                    Log.e("RectF", "RectF: "+location );
+                    if (location != null) {
+                        Log.i("====== " ,"===onImageAvailable9=======");
+                        canvas.drawRect(location, paint);
+
+                        Matrix tempMatrix = new Matrix();
+                        tempMatrix.invert(cropToFrameTransform);
+                        tempMatrix.postRotate(270, 0, 0);
+                        tempMatrix.postTranslate(0, previewHeight);
+
+                        tempMatrix.mapRect(location);
+                        result.setLocation(location);
+                        mappedRecognitions.add(result);
                     }
-                });
+                }
+                Log.i("====== " ,"===onImageAvailableA=======");
+                tracker.trackResults(mappedRecognitions, luminance, currTimestamp);
+            }
+        }
 
+
+        trackingOverlay.postInvalidate();
+        requestRender();
         Trace.endSection();
+
     }
 
 
@@ -731,6 +768,92 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     }
 
 
+    //检测图片质量
+    private void checkImageQuality(Bitmap bitmap) {
+        //检测图片质量
+        int bright = innovation.utils.ImageUtils.checkImageBright(bitmap);
+        boolean ifDark = false;
+        boolean ifBright = false;
+        boolean isBlur = false;
+        imageCounter++;
+        if (bright > 180) {
+            ifBright = true;
+            imageBrightCounter++;
+            Log.d(TAG, "图像过亮，请重新选择" + "--bright ===" + bright);
+            imageErrMsg += "图像过亮！" + "--bright ===" + bright;
+        } else if (bright < 40) {
+            ifDark = true;
+            imageDarkCounter++;
+            Log.d(TAG, "图像过暗，请重新选择" + "--bright ===" + bright);
+            imageErrMsg += "图像过暗！" + "--intensityValue ===" + bright;
+        } else {
+
+            isBlur = innovation.utils.ImageUtils.isBlurByOpenCV_new(bitmap);
+            if (isBlur) {
+                imageBlurCounter++;
+                Log.d(TAG, "图像模糊，请重新选择" + "--isblur ===" + imageBlurCounter);
+                imageErrMsg += "图像模糊！" + "--isblur ===" + isBlur;
+            }
+        }
+
+        if (!ifDark && !ifBright && !isBlur) {
+            imageok = true;
+            imageOkCounter++;
+            Log.d(TAG, "图像 质量良好 imageok ===" + imageok);
+        } else {
+            imageok = false; //图片质量有问题，不进行捕捉图片的保存
+            Log.d(TAG, "图像 质量差 imageok ===" + imageok);
+        }
+        checkImageresult();
+    }
+
+    private void checkImageresult() {
+        if(imageCounter < CHECK_COUNTER){
+            return;
+        }
+        //判断图片质量，用于图片错误提示（过亮、过暗、模糊）
+
+        String tipMsg = "";
+        double tmpOk = CHECK_COUNTER * 0.6;
+        double tmpDark = CHECK_COUNTER * 0.7;
+        double tmpBright = CHECK_COUNTER * 0.7;
+        double tmpBlur = CHECK_COUNTER * 0.9;
+
+        if (imageDarkCounter > tmpDark) {
+            tipMsg = "当前环境光线过暗，不利于采集";
+        }else if (imageBrightCounter > tmpBright) {
+            tipMsg = "当前环境光线过亮，不利于采集";
+        } else if (imageBlurCounter > tmpBlur) {
+            tipMsg = "采集图像模糊，请调整拍摄距离";
+        }
+
+        if ((tipMsg.length() > 0)) {
+            Log.d(TAG, tipMsg + "== 图片不可用" + last_toast_time);
+            if(System.currentTimeMillis() - last_toast_time > 5000) {
+                Log.d(TAG, "DetectorActivity.parent = " + DetectorActivity.this );
+
+                String finalTipMsg = tipMsg;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(DetectorActivity.this, finalTipMsg, Toast.LENGTH_SHORT).show();
+                        last_toast_time = System.currentTimeMillis();
+                    }
+                });
+            }
+        } else {
+            Log.d(TAG, "--set_checkcount---tmpok==" + tmpOk + "==图片可用");
+        }
+        initImageCheckPara();
+    }
+
+    private void initImageCheckPara() {
+        imageCounter = 0;
+        imageOkCounter = 0;
+        imageDarkCounter = 0;
+        imageBlurCounter = 0;
+        imageBrightCounter = 0;
+    }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == 4) {

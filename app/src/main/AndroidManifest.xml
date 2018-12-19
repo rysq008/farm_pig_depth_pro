@@ -59,8 +59,10 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="eb91b7f4ba902477ac9c242f768152da" />
+            android:value="adf3458ffa64cdeee292d3ed2a68b6cc" />
 
+        <!--2018-12-10高德KEY  adf3458ffa64cdeee292d3ed2a68b6cc-->
+        <!-- 旧key eb91b7f4ba902477ac9c242f768152da-->
         <activity
             android:name=".CounterActivity_new"
             android:configChanges="orientation|keyboardHidden"
@@ -73,14 +75,16 @@
             </intent-filter>
             -->
         </activity>
-        <activity android:name="com.xiangchuang.risks.view.LoginFamerActivity">
+        <activity android:name="com.xiangchuang.risks.view.LoginFamerActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.ShowPollingActivity_new" />
+        <activity android:name=".view.ShowPollingActivity_new"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".view.USBCameraActivity_new"
             android:screenOrientation="portrait" />
@@ -90,19 +94,28 @@
 
         <service android:name="com.amap.api.location.APSService" />
 
-        <activity android:name="com.xiangchuang.risks.view.SelectFunctionActivity_new" />
+        <activity android:name="com.xiangchuang.risks.view.SelectFunctionActivity_new"
+            android:screenOrientation="portrait"/>
         <activity android:name="com.xiangchuang.risks.view.PigHouseInformationActivity" />
         <activity android:name="com.xiangchuang.risks.view.PigHogInformationActivity" />
         <activity android:name="com.xiangchuang.risks.view.OutHurdleActivity" />
         <activity android:name="com.xiangchuang.risks.view.LiPeiActivity" />
         <activity android:name="com.xiangchuang.risks.view.PreparedLiPeiActivity" />
-        <activity android:name="com.xiangchuang.risks.view.PreparedLiPeiActivity_new" />
+        <activity android:name="com.xiangchuang.risks.view.PreparedLiPeiActivity_new"
+            android:screenOrientation="portrait"/>
         <activity
             android:name="org.tensorflow.demo.DetectorActivity"
+            android:launchMode="singleTask"
             android:exported="true"
-            android:label="育肥猪险"
-            android:screenOrientation="unspecified" />
-        <activity android:name="com.xiangchuang.risks.view.CompanyActivity" />
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="org.tensorflow.demo.DetectorActivity_new"
+            android:launchMode="singleTask"
+            android:exported="true"/>
+
+        <activity android:name="com.xiangchuang.risks.view.CompanyActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.xiangchuang.risks.view.AddCompanyActivity"
             android:exported="true"

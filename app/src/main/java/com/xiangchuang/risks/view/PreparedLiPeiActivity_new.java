@@ -85,6 +85,7 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
     private AMapLocationClient mLocationClient;
     private String msg;
     private List<SheListBean.DataOffLineBaodanBean> mSheBeans;
+    private boolean hasInNo = false;
 
     @Override
     protected int getLayoutId() {
@@ -216,9 +217,11 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
                                 if (status == 1) {
                                     String data = jsonObject.optString("data");
                                     mchuxiannum.setText(data);
+                                    hasInNo = true;
                                 } else {
                                     String msg = jsonObject.optString("msg");
                                     mchuxiannum.setText(msg);
+                                    hasInNo = false;
                                 }
 
                             } catch (Exception e) {
@@ -298,7 +301,7 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.prepared_begin:
-                if (null == mchuxiannum.getText().toString() || "".equals(mchuxiannum.getText().toString())) {
+                if (!hasInNo) {
                     Toast.makeText(MyApplication.getAppContext(), "保单号为空，无法申请预理赔。", Toast.LENGTH_LONG).show();
                 } else {
                     collectToNet();

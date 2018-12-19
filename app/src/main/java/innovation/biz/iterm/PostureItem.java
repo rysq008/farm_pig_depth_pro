@@ -49,4 +49,10 @@ public class PostureItem {
         clipBitmap = bitmapClip;
         srcBitmap = bitmapSrc;
     }
+
+    public PostureItem(float x, float y, float z){
+        rot_x = x;
+        rot_y = y;
+        rot_z = z;
+    }
 }

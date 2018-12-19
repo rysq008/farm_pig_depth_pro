@@ -29,6 +29,7 @@ import android.os.HandlerThread;
 import android.util.Log;
 import android.util.Size;
 import android.view.KeyEvent;
+import android.view.Surface;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -198,7 +199,18 @@ public abstract class CameraActivity extends Activity implements OnImageAvailabl
             buffer.get(yuvBytes[i]);
         }
     }
-
+    protected int getScreenOrientation() {
+        switch (getWindowManager().getDefaultDisplay().getRotation()) {
+            case Surface.ROTATION_270:
+                return 270;
+            case Surface.ROTATION_180:
+                return 180;
+            case Surface.ROTATION_90:
+                return 90;
+            default:
+                return 0;
+        }
+    }
     public boolean isDebug() {
         return debug;
     }

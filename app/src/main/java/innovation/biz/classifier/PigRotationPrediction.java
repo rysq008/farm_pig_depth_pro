@@ -15,7 +15,7 @@ import innovation.utils.Rot2AngleType;
 import org.tensorflow.demo.Classifier;
 import org.tensorflow.demo.env.ImageUtils;
 import org.tensorflow.demo.env.Logger;
-//import org.tensorflow.lite.Interpreter;
+import org.tensorflow.lite.Interpreter;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -28,12 +28,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-//import static innovation.utils.ImageUtils.padBitmap;
+
+import static innovation.utils.ImageUtils.padBitmap;
 
 /**
  * @author luolu .2018/8/4
  */
-/*public class PigRotationPrediction implements Classifier {
+public class PigRotationPrediction implements Classifier {
     private static final Logger sLogger = new Logger(PigRotationPrediction.class);
     private static final boolean DEBUG = false;
     private static final float MIN_CONFIDENCE = (float) 0.8;
@@ -64,7 +65,7 @@ import java.util.Vector;
     public static int pigPredictAngleType;
 
 
-    *//** Memory-map the model file in Assets. *//*
+    /** Memory-map the model file in Assets. */
     private static MappedByteBuffer loadModelFile(AssetManager assets, String modelFilename)
             throws IOException {
         AssetFileDescriptor fileDescriptor = assets.openFd(modelFilename);
@@ -75,14 +76,14 @@ import java.util.Vector;
         return fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength);
     }
 
-    *//**
+    /**
      * Initializes a native TensorFlow session for classifying images.
      *  @param assetManager The asset manager to be used to load assets.
      * @param modelFilename The filepath of the model GraphDef protocol buffer.
      * @param labelFilename The filepath of label file for classes.
      * @param inputSize The size of image input
      * @param isQuantized Boolean representing model is quantized or not
-     *//*
+     */
     public static Classifier create(
             final AssetManager assetManager,
             final String modelFilename,
@@ -124,39 +125,11 @@ import java.util.Vector;
     }
 
     @Override
-    public RecognitionAndPostureItem cowRecognitionAndPostureItem(Bitmap bitmap) {
-        return null;
-    }
-
-    @Override
-    public RecognitionAndPostureItem donkeyRecognitionAndPostureItem(Bitmap bitmap) {
-        return null;
-    }
-
-    @Override
     public RecognitionAndPostureItem pigRecognitionAndPostureItem(Bitmap bitmap) {
         return null;
     }
 
-    @Override
-    public RecognitionAndPostureItem donkeyRecognitionAndPostureItemTFlite(Bitmap bitmap) {
-        return null;
-    }
 
-    @Override
-    public PredictRotationIterm donkeyRotationPredictionItemTFlite(Bitmap bitmap) {
-        return null;
-    }
-
-    @Override
-    public RecognitionAndPostureItem cowRecognitionAndPostureItemTFlite(Bitmap bitmap) {
-        return null;
-    }
-
-    @Override
-    public PredictRotationIterm cowRotationPredictionItemTFlite(Bitmap bitmap) {
-        return null;
-    }
 
     @Override
     public RecognitionAndPostureItem pigRecognitionAndPostureItemTFlite(Bitmap bitmap) {
@@ -324,4 +297,4 @@ import java.util.Vector;
 
         return predictRotationIterm;
     }
-}*/
+}

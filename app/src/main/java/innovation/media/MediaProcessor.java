@@ -74,7 +74,7 @@ import innovation.entry.NewBuildResultObject;
 import innovation.location.LocationManager_new;
 import innovation.login.RespObject;
 import innovation.login.Utils;
-import innovation.tensorflow.tracking.FaceDetector;
+//import innovation.tensorflow.tracking.FaceDetector;
 import innovation.upload.UploadHelper;
 import innovation.upload.UploadThread;
 import innovation.utils.ConstUtils;
@@ -141,7 +141,7 @@ public class MediaProcessor {
     private static MediaProcessor sInstance;
     private final Context mContext;
     private Activity mActivity = null;
-    private final FaceDetector mFaceDetector_new; //haojie add
+//    private final FaceDetector mFaceDetector_new; //haojie add
     private ProgressDialog mProgressDialog;
     private InsureDialog mInsureDialog = null;
     private final Handler mProcessorHandler_new;
@@ -209,15 +209,15 @@ public class MediaProcessor {
                 {"image:0", "exist:0,predict:0"},  // animal type=Global.ANIMAL_TYPE_CATTLE
                 {"image:0", "exist:0,predict:0"}   // animal type=Global.ANIMAL_TYPE_DONKEY
         };
-        mFaceDetector_new = FaceDetector.create(mContext.getAssets(),
-                "file:///android_asset/" + ConstUtils.getPBFile(ANIMAL_TYPE),
-                784,
-                192,
-                160,
-                160,
-                MODEL_PARAMS[ANIMAL_TYPE][0],
-                MODEL_PARAMS[ANIMAL_TYPE][1]
-        );
+//        mFaceDetector_new = FaceDetector.create(mContext.getAssets(),
+//                "file:///android_asset/" + ConstUtils.getPBFile(ANIMAL_TYPE),
+//                784,
+//                192,
+//                160,
+//                160,
+//                MODEL_PARAMS[ANIMAL_TYPE][0],
+//                MODEL_PARAMS[ANIMAL_TYPE][1]
+//        );
         HandlerThread mProcessorThread = new HandlerThread("processor-thread");
         mProcessorThread.start();
         mProcessorHandler_new = new ProcessorHandler_new(mProcessorThread.getLooper());
@@ -227,9 +227,9 @@ public class MediaProcessor {
     }
 
     //haojie add
-    public FaceDetector getFaceDetector_new() {
-        return mFaceDetector_new;
-    }
+//    public FaceDetector getFaceDetector_new() {
+//        return mFaceDetector_new;
+//    }
 
     public void handleMediaResource_build(final Activity activity) {
         mActivity = activity;
@@ -438,8 +438,9 @@ public class MediaProcessor {
         View.OnClickListener listener_cancel = v -> {
             editRecoed();
             mInsureDialog.dismiss();
-            mActivity.finish();
+            collectNumberHandler.sendEmptyMessage(2);
             mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
+
         };
         mInsureDialog.setAbortButton("放弃", listener_abort);
         mInsureDialog.setAddeButton("补充", listener_add);
@@ -676,8 +677,8 @@ public class MediaProcessor {
         AlertDialogManager.showMessageDialogOne(mActivity, "提示", msg, new AlertDialogManager.DialogInterface() {
             @Override
             public void onPositive() {
+                collectNumberHandler.sendEmptyMessage(2);
                 mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
-                mActivity.finish();
             }
 
             @Override
@@ -728,8 +729,8 @@ public class MediaProcessor {
             @Override
             public void onClick(View v) {
                 dialogcreate.dismiss();
+                collectNumberHandler.sendEmptyMessage(2);
                 //mActivity.startActivity(new Intent(mActivity, PreparedLiPeiActivity.class));
-                mActivity.finish();
                 mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
 
             }
@@ -832,7 +833,7 @@ public class MediaProcessor {
             @Override
             public void onClick(View v) {
                 dialogcreate.dismiss();
-                mActivity.finish();
+                collectNumberHandler.sendEmptyMessage(2);
                 mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
             }
         });
@@ -992,7 +993,7 @@ public class MediaProcessor {
             @Override
             public void onClick(View v) {
                 dialogcreate.dismiss();
-                mActivity.finish();
+                collectNumberHandler.sendEmptyMessage(2);
                 mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
             }
         });
@@ -1022,7 +1023,7 @@ public class MediaProcessor {
             @Override
             public void onClick(View v) {
                 dialogcreate.dismiss();
-                mActivity.finish();
+                collectNumberHandler.sendEmptyMessage(2);
                 mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
             }
         });
@@ -1039,7 +1040,7 @@ public class MediaProcessor {
 
 
     private void goonLiEnd1(AlertDialog dialogcreate) {
-        Map mapbody = new HashMap();
+        Map<String, String> mapbody = new HashMap<>();
         mapbody.put(Constants.userLibId, String.valueOf(userLibId));
         mapbody.put(Constants.animalId, String.valueOf(animalId));
         mapbody.put(Constants.lipeiId, lipeiId);
@@ -2279,12 +2280,10 @@ public class MediaProcessor {
             negative.setOnClickListener(view -> {
 
                 mProgressDialog.dismiss();
-
+                collectNumberHandler.sendEmptyMessage(2);
                 Intent intent = new Intent(mActivity, DetectorActivity.class);
                 intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                 mActivity.startActivity(intent);
-                mActivity.finish();
-
             });
             if (negative != null) {
                 negative.setVisibility(View.VISIBLE);
@@ -2437,11 +2436,11 @@ public class MediaProcessor {
                                         };
                                         View.OnClickListener listener_ReCollect = v -> {
                                             dialogLipeiResult.dismiss();
+                                            collectNumberHandler.sendEmptyMessage(2);
                                             Intent intent = new Intent(mActivity, DetectorActivity.class);
                                             intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                             intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                                             mActivity.startActivity(intent);
-                                            mActivity.finish();
                                         };
 
                                         dialogLipeiResult.setTitle("验证结果");
@@ -2548,6 +2547,7 @@ public class MediaProcessor {
                                         };
                                         View.OnClickListener listener_ReCollect = v -> {
                                             dialogLipeiResult.dismiss();
+                                            collectNumberHandler.sendEmptyMessage(2);
                                             Intent intent = new Intent(mActivity, DetectorActivity.class);
                                             intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                             intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
@@ -2656,11 +2656,11 @@ public class MediaProcessor {
                                         };
                                         View.OnClickListener listener_ReCollect = v -> {
                                             dialogLipeiResult.dismiss();
+                                            collectNumberHandler.sendEmptyMessage(2);
                                             Intent intent = new Intent(mActivity, DetectorActivity.class);
                                             intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                             intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                                             mActivity.startActivity(intent);
-                                            mActivity.finish();
                                         };
                                         dialogLipeiResult.setTitle("验证结果");
                                         dialogLipeiResult.setBtnGoApplication("直接申请", listener_new);
@@ -2754,11 +2754,11 @@ public class MediaProcessor {
                                         };
                                         View.OnClickListener listener_ReCollect = v -> {
                                             dialogLipeiResult.dismiss();
+                                            collectNumberHandler.sendEmptyMessage(2);
                                             Intent intent = new Intent(mActivity, DetectorActivity.class);
                                             intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                             intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                                             mActivity.startActivity(intent);
-                                            mActivity.finish();
                                         };
                                         dialogLipeiResult.setTitle("验证结果");
                                         dialogLipeiResult.setBtnGoApplication("直接申请", listener_new);
@@ -2809,11 +2809,11 @@ public class MediaProcessor {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             dialog.dismiss();
+                                            collectNumberHandler.sendEmptyMessage(2);
                                             Intent intent = new Intent(mActivity, DetectorActivity.class);
                                             intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                             intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                                             mActivity.startActivity(intent);
-                                            mActivity.finish();
                                         }
                                     });
                             builder.create();
@@ -2961,11 +2961,11 @@ public class MediaProcessor {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 dialog.dismiss();
+                                                collectNumberHandler.sendEmptyMessage(2);
                                                 Intent intent = new Intent(mActivity, DetectorActivity.class);
                                                 intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                                 intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                                                 mActivity.startActivity(intent);
-                                                mActivity.finish();
                                             }
                                         });
                                 builder.create();
@@ -2986,11 +2986,11 @@ public class MediaProcessor {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 dialog.dismiss();
+                                                collectNumberHandler.sendEmptyMessage(2);
                                                 Intent intent = new Intent(mActivity, DetectorActivity.class);
                                                 intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                                 intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                                                 mActivity.startActivity(intent);
-                                                mActivity.finish();
                                             }
                                         });
                                 builder.create();
@@ -3005,11 +3005,11 @@ public class MediaProcessor {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             dialog.dismiss();
+                                            collectNumberHandler.sendEmptyMessage(2);
                                             Intent intent = new Intent(mActivity, DetectorActivity.class);
                                             intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                             intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                                             mActivity.startActivity(intent);
-                                            mActivity.finish();
                                         }
                                     });
                             builder.create();
@@ -3024,11 +3024,11 @@ public class MediaProcessor {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
+                                        collectNumberHandler.sendEmptyMessage(2);
                                         Intent intent = new Intent(mActivity, DetectorActivity.class);
                                         intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                         intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                                         mActivity.startActivity(intent);
-                                        mActivity.finish();
                                     }
                                 });
                         builder.create();

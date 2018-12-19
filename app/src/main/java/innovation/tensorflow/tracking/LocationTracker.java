@@ -132,7 +132,7 @@ public class LocationTracker {
                 tempAngle = "正脸";
             }else if (item.mAngletype == 3){
                 tempAngle = "右脸";
-            }else if (item.mAngletype == 10){
+            }else{
                 tempAngle = "未识别";
             }
 //            String s1 = "角度："+ item.mAngletype + "\r\n";

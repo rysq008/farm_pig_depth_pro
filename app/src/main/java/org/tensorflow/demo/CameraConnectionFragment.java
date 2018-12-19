@@ -72,6 +72,7 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -214,6 +215,25 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
     private RelativeLayout mToolLayout;
     private long tmieVideoStart;
     private long tmieVideoEnd;
+
+    private static TextView tvNotice;
+    //左脸标识图
+    private static ImageView ivLeft;
+    //右脸标识图
+    private static ImageView ivRight;
+    //左脸录制按钮
+    private static TextView tvBtnLeft;
+    //右脸录制按钮
+    @SuppressLint("StaticFieldLeak")
+    private static TextView tvBtnRight;
+
+    //全局变量判断左右脸否已经采集够了
+    private static boolean leftEnough = false;
+    private static boolean  rightEnough = false;
+
+    //全局定义
+    private volatile long lastClickTime = 0L;
+    private static final int FAST_CLICK_DELAY_TIME = 2000;  // 快速点击间隔
 
 
     /**
@@ -373,8 +393,7 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
      *
      * @param text The message to show
      */
-    private void showToast(final String text) {
-        final Activity activity = getActivity();
+    public static void showToast(final String text) {
         if (activity != null) {
             activity.runOnUiThread(
                     new Runnable() {
@@ -471,6 +490,7 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
         super.onDestroy();
         Log.d("CameraConntFragment:", "CameraConnectionFragment onDestroy()!");
         Activity activity = getActivity();
+        collectNumberHandler.sendEmptyMessage(2);
         MediaProcessor.getInstance(activity).handleMediaResource_destroy();
 //        InsureDataProcessor.getInstance(activity).handleMediaResource_destroy();
 //        PayDataProcessor.getInstance(activity).handleMediaResource_destroy();
@@ -494,6 +514,13 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
         mSendView.selectLayout.setOnClickListener(mSaveClickListener);
         mSendView.stopAnim();
 
+        tvNotice = view.findViewById(R.id.tv_notice);
+
+        ivLeft = view.findViewById(R.id.IV_left);
+        ivRight = view.findViewById(R.id.IV_right);
+        tvBtnLeft = view.findViewById(R.id.TV_left);
+        tvBtnRight = view.findViewById(R.id.TV_right);
+
         mRecordSwitch = view.findViewById(R.id.record_switch);
         mRecordSwitchTxt = (TextView) view.findViewById(R.id.record_switch_txt);
         mRecordSwitchTxt.setTextColor(Color.WHITE);
@@ -504,6 +531,33 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
         mRecordVerifyTxt.setTextColor(Color.DKGRAY);
         mRecordSwitch.setEnabled(true);
         mRecordVerify.setEnabled(false);
+
+        tvBtnLeft.setText("提示\n左脸");
+        tvBtnLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ivRight.setVisibility(View.GONE);
+                if (ivLeft.getVisibility() == View.GONE) {
+                    ivLeft.setVisibility(View.VISIBLE);
+                } else {
+                    ivLeft.setVisibility(View.GONE);
+                }
+            }
+        });
+        tvBtnRight.setText("提示\n右脸");
+        tvBtnRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ivLeft.setVisibility(View.GONE);
+                if (ivRight.getVisibility() == View.GONE) {
+                    ivRight.setVisibility(View.VISIBLE);
+                } else {
+                    ivRight.setVisibility(View.GONE);
+                }
+            }
+        });
+
+
         LOGGER.i("luolu Global.model2: " + Model.BUILD.value());
         activity = getActivity();
         if (Global.mediaInsureItem == null) {
@@ -578,6 +632,9 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
         super.onResume();
         startBackgroundThread();
 
+        leftEnough = false;
+        rightEnough = false;
+
         // When the screen is turned off and turned back on, the SurfaceTexture is already
         // available, and "onSurfaceTextureAvailable" will not be called. In that case, we can open
         // a camera and start preview from here (otherwise, we wait until the surface is ready in
@@ -602,6 +659,14 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.record_control:
+
+                Log.e(TAG, "onClick: " + lastClickTime);
+                if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME) {
+                    return;
+                }
+                lastClickTime = System.currentTimeMillis();
+                Log.e(TAG, "onClick:ok " + lastClickTime);
+
                 if (mIsRecordingVideo) {
                     tmieVideoEnd = System.currentTimeMillis();
                     long during = tmieVideoEnd - tmieVideoStart;
@@ -1242,9 +1307,22 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (Global.UPLOAD_VIDEO_FLAG == true) {
+
+                            if(leftEnough){
+                                tvBtnLeft.setVisibility(View.GONE);
+                            }else{
+                                tvBtnLeft.setVisibility(View.VISIBLE);
+                            }
+                            if(rightEnough){
+                                tvBtnRight.setVisibility(View.GONE);
+                            }else{
+                                tvBtnRight.setVisibility(View.VISIBLE);
+                            }
+
+
+                            if (Global.UPLOAD_VIDEO_FLAG) {
                                 // UI
-                                mRecordControl.setText(R.string.stop);
+                                mRecordControl.setText(R.string.pause);
                                 mIsRecordingVideo = true;
                                 // Start recording
                                 mMediaRecorder.start();
@@ -1253,7 +1331,7 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                                 mRecordVerify.setEnabled(false);
                             } else {
                                 // UI
-                                mRecordControl.setText(R.string.stop);
+                                mRecordControl.setText(R.string.pause);
                                 mIsRecordingVideo = true;
                                 try {
                                     mMediaRecorder.prepare();
@@ -1409,6 +1487,13 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
         mRecordControl.setText(R.string.record);
         mRecordSwitch.setEnabled(true);
 
+        tvNotice.setVisibility(View.GONE);
+        tvBtnLeft.setVisibility(View.GONE);
+        tvBtnRight.setVisibility(View.GONE);
+
+        ivLeft.setVisibility(View.GONE);
+        ivRight.setVisibility(View.GONE);
+
         mMediaRecorder.reset();
         Global.VIDEO_PROCESS = false;
         startPreview();
@@ -1478,9 +1563,17 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                             mMediaRecorder = new MediaRecorder();
                         }
                         Global.VIDEO_PROCESS = false;
+                        // 录制、暂停按钮所在布局隐藏
                         mReCordLayout.setVisibility(View.GONE);
                         mIsRecordingVideo = false;
                         mRecordControl.setText(R.string.record);
+
+                        tvNotice.setVisibility(View.GONE);
+                        tvBtnLeft.setVisibility(View.GONE);
+                        tvBtnRight.setVisibility(View.GONE);
+                        ivLeft.setVisibility(View.GONE);
+                        ivRight.setVisibility(View.GONE);
+
                         mRecordSwitch.setEnabled(true);
                         //  mMediaRecorder.reset();
                         if (Global.UPLOAD_VIDEO_FLAG == false) {
@@ -1519,11 +1612,25 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                     break;
 
                 case 2:
-                    mReCordLayout.setVisibility(View.VISIBLE);
+//                    new LocationTracker(activity.getResources().getDisplayMetrics()).reInitCounter(0, 0, 0);
+//                    trackingOverlay.refreshDrawableState();
+//                    textureView.refreshDrawableState();
+                    if (mReCordLayout != null) {
+                        mReCordLayout.setVisibility(View.VISIBLE);
+                    }
                     new DetectorActivity().reInitCurrentCounter(0, 0, 0);
-                    new LocationTracker(activity.getResources().getDisplayMetrics()).reInitCounter(0, 0, 0);
-                    trackingOverlay.refreshDrawableState();
-                    textureView.refreshDrawableState();
+                    if (activity != null) {
+                        new MultiBoxTracker(activity).reInitCounter(0, 0, 0);
+                    }
+                    if (trackingOverlay != null) {
+                        trackingOverlay.refreshDrawableState();
+                        trackingOverlay.invalidate();
+                    }
+                    if (textureView != null) {
+                        textureView.refreshDrawableState();
+                    }
+
+
                     /*if (mReCordLayout != null) {
                         mReCordLayout.setVisibility(View.VISIBLE);
                     }
@@ -1541,7 +1648,18 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                     LOGGER.i("collectNumberHandler Message 2！");
 
                     break;
-
+                //左脸达到数量
+                case 3:
+                    leftEnough = true;
+                    tvBtnLeft.setVisibility(View.GONE);
+                    ivLeft.setVisibility(View.GONE);
+                    break;
+                //右脸达到数量
+                case 4:
+                    rightEnough = true;
+                    tvBtnRight.setVisibility(View.GONE);
+                    ivRight.setVisibility(View.GONE);
+                    break;
                 default:
                     break;
             }

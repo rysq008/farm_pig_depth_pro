@@ -50,6 +50,8 @@ import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
 import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
 
 import org.json.JSONObject;
+import org.tensorflow.demo.DetectorActivity;
+import org.tensorflow.demo.DetectorActivity_new;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -90,7 +92,6 @@ public class ShowPollingActivity_new extends BaseActivity {
     protected int getLayoutId() {
         return R.layout.activity_show_polling_new;
     }
-
 
 
     @Override
@@ -151,20 +152,20 @@ public class ShowPollingActivity_new extends BaseActivity {
                                             CounterHelper.number = 1;
                                             if (isOPen(ShowPollingActivity_new.this)) {
 
-
-                                                if (deviceHashMap.size() > 0) {
+                                                intent = new Intent(ShowPollingActivity_new.this, DetectorActivity_new.class);
+                                                /*if (deviceHashMap.size() > 0) {
                                                     //摄像头页面
                                                     intent = new Intent(ShowPollingActivity_new.this, USBCameraActivity_new.class);
                                                 } else {
                                                     Toast.makeText(ShowPollingActivity_new.this, "请连接外接摄像头。", Toast.LENGTH_LONG).show();
                                                     return;
-                                                    /*if (!permissionsDelegate.hasCameraPermission()) {
+                                                    *//*if (!permissionsDelegate.hasCameraPermission()) {
                                                         permissionsDelegate.requestCameraPermission();
                                                         return;
                                                     } else {
                                                         intent = new Intent(ShowPollingActivity_new.this, CounterActivity_new.class);
-                                                    }*/
-                                                }
+                                                    }*//*
+                                                }*/
 
 
                                                 intent.putExtra("recodetitle", recodetitle);

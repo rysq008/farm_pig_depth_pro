@@ -1,4 +1,4 @@
-/*
+
 package innovation.biz.classifier;
 
 import android.content.res.AssetFileDescriptor;
@@ -9,9 +9,9 @@ import android.graphics.Matrix;
 import android.os.SystemClock;
 import android.os.Trace;
 
-import com.innovation.biz.iterm.PigFaceKeyPointsItem;
-import com.innovation.biz.iterm.PredictRotationIterm;
-import com.innovation.utils.PointFloat;
+import innovation.biz.iterm.PigFaceKeyPointsItem;
+import innovation.biz.iterm.PredictRotationIterm;
+import innovation.utils.PointFloat;
 
 import org.tensorflow.demo.Classifier;
 import org.tensorflow.demo.env.ImageUtils;
@@ -29,13 +29,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.innovation.utils.ImageUtils.padBitmap;
+import static innovation.utils.ImageUtils.padBitmap;
 
-*/
+
 /**
  * Author by luolu, Date on 2018/10/9.
  * COMPANY：InnovationAI
- *//*
+ */
 
 
 public class PigKeyPointsDetectTFlite implements Classifier {
@@ -65,10 +65,10 @@ public class PigKeyPointsDetectTFlite implements Classifier {
     public static boolean pigKeypointsK3;
 
 
-    */
+
 /**
      * Memory-map the model file in Assets.
-     *//*
+     */
 
     private static MappedByteBuffer loadModelFile(AssetManager assets, String modelFilename)
             throws IOException {
@@ -80,7 +80,7 @@ public class PigKeyPointsDetectTFlite implements Classifier {
         return fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength);
     }
 
-    */
+
 /**
      * Initializes a native TensorFlow session for classifying images.
      *  @param assetManager  The asset manager to be used to load assets.
@@ -88,7 +88,7 @@ public class PigKeyPointsDetectTFlite implements Classifier {
      * @param labelFilename The filepath of label file for classes.
      * @param inputSize     The size of image input
      * @param isQuantized   Boolean representing model is quantized or not
-     *//*
+     */
 
     public static Classifier create(
             final AssetManager assetManager,
@@ -128,39 +128,10 @@ public class PigKeyPointsDetectTFlite implements Classifier {
     }
 
     @Override
-    public RecognitionAndPostureItem cowRecognitionAndPostureItem(Bitmap bitmap) {
-        return null;
-    }
-
-    @Override
-    public RecognitionAndPostureItem donkeyRecognitionAndPostureItem(Bitmap bitmap) {
-        return null;
-    }
-
-    @Override
     public RecognitionAndPostureItem pigRecognitionAndPostureItem(Bitmap bitmap) {
         return null;
     }
 
-    @Override
-    public RecognitionAndPostureItem donkeyRecognitionAndPostureItemTFlite(Bitmap bitmap) {
-        return null;
-    }
-
-    @Override
-    public PredictRotationIterm donkeyRotationPredictionItemTFlite(Bitmap bitmap) {
-        return null;
-    }
-
-    @Override
-    public RecognitionAndPostureItem cowRecognitionAndPostureItemTFlite(Bitmap bitmap) {
-        return null;
-    }
-
-    @Override
-    public PredictRotationIterm cowRotationPredictionItemTFlite(Bitmap bitmap) {
-        return null;
-    }
 
     @Override
     public RecognitionAndPostureItem pigRecognitionAndPostureItemTFlite(Bitmap bitmap) {
@@ -519,4 +490,3 @@ public class PigKeyPointsDetectTFlite implements Classifier {
         return points;
     }
 }
-*/

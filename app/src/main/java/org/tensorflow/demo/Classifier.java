@@ -16,10 +16,14 @@ limitations under the License.
 package org.tensorflow.demo;
 
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.graphics.RectF;
 
 import java.io.File;
 import java.util.List;
+import innovation.biz.iterm.PostureItem;
+import innovation.biz.iterm.PredictRotationIterm;
+import innovation.utils.PointFloat;
 
 /**
  * Generic interface for interacting with different recognition engines.
@@ -47,7 +51,18 @@ public interface Classifier {
 
     /** Optional location within the source image for the location of the recognized object. */
     private RectF location;
+    private  List<Point> points;
 
+
+    public Recognition(
+            final String id, final String title, final Float confidence,
+            final RectF location, List<Point> points) {
+      this.id = id;
+      this.title = title;
+      this.confidence = confidence;
+      this.location = location;
+      this.points = points;
+    }
     public Recognition(
             final String id, final String title, final Float confidence, final RectF location) {
       this.id = id;
@@ -75,6 +90,13 @@ public interface Classifier {
     public void setLocation(RectF location) {
       this.location = location;
     }
+    public List<Point> getPoints() {
+      return points;
+    }
+
+    public void setPoints(List<Point> points) {
+      this.points = points;
+    }
 
     @Override
     public String toString() {
@@ -99,12 +121,44 @@ public interface Classifier {
     }
   }
 
-  int recognizeImage(Bitmap bitmap, File file);
-  List<Recognition> recognizeImage1(Bitmap bitmap, File file);
-  PostureItem recognizeImageDonkey(Bitmap bitmap, File file);
-  // TODO: 2018/8/23 By:LuoLu
-  PostureItem recognizeImageCow(Bitmap bitmap, File file);
-  PostureItem recognizeImagePig(Bitmap bitmap, File file);
+
+  public class RecognitionAndPostureItem {
+    private List<Recognition> list;
+
+    private PostureItem postureItem;
+    private PredictRotationIterm predictRotationIterm;
+
+    public PredictRotationIterm getPredictRotationIterm() {
+      return predictRotationIterm;
+    }
+
+    public void setPredictRotationIterm(PredictRotationIterm predictRotationIterm) {
+      this.predictRotationIterm = predictRotationIterm;
+    }
+
+    public List<Recognition> getList() {
+      return list;
+    }
+
+    public void setList(List<Recognition> list) {
+      this.list = list;
+    }
+
+    public PostureItem getPostureItem() {
+      return postureItem;
+    }
+
+    public void setPostureItem(PostureItem postureItem) {
+      this.postureItem = postureItem;
+    }
+  }
+
+  RecognitionAndPostureItem pigRecognitionAndPostureItem(Bitmap bitmap);
+  RecognitionAndPostureItem pigRecognitionAndPostureItemTFlite(Bitmap bitmap);
+  PredictRotationIterm pigRotationPredictionItemTFlite(Bitmap bitmap);
+
+  List<PointFloat> recognizePointImage(Bitmap bitmap);
+
 
   void enableStatLogging(final boolean debug);
   

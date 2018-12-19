@@ -11,8 +11,7 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-==============================================================================*//*
-
+==============================================================================*/
 
 package org.tensorflow.demo.tracking;
 
@@ -26,23 +25,24 @@ import android.graphics.Paint.Join;
 import android.graphics.Paint.Style;
 import android.graphics.Point;
 import android.graphics.RectF;
+import android.media.Image;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.widget.Toast;
 
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
+import innovation.biz.classifier.BreedingPigFaceDetectTFlite;
+import innovation.biz.iterm.PostureItem;
+import innovation.biz.iterm.PredictRotationIterm;
+import innovation.biz.iterm.TrackerItem;
+import innovation.utils.PreferencesUtils;
+import innovation.utils.ScreenUtil;
 
-import org.tensorflow.demo.Classifier;
 import org.tensorflow.demo.DetectorActivity_new;
 import org.tensorflow.demo.env.BorderedText;
 import org.tensorflow.demo.env.ImageUtils;
 import org.tensorflow.demo.env.Logger;
-
-import innovation.biz.iterm.PostureItem;
-import innovation.biz.iterm.PredictRotationIterm;
-import innovation.biz.iterm.TrackerItem;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -50,15 +50,16 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Vector;
 
+import innovation.biz.iterm.PostureItem;
 import innovation.utils.ScreenUtil;
 
+import static innovation.utils.ConstUtils.ANIMAL_TYPE_PIG;
 
-*/
+
 /**
  * A tracker wrapping ObjectTracker that also handles non-max suppression and matching existing
  * objects to new detections.
- *//*
-
+ */
 public class MultiBoxTracker_new {
     private final Logger logger = new Logger();
 
@@ -92,7 +93,7 @@ public class MultiBoxTracker_new {
     public ObjectTracker objectTracker;
 
     final List<Pair<Float, RectF>> screenRects = new LinkedList<Pair<Float, RectF>>();
-    private List<Classifier.Recognition> keyPointsResult;
+    private List<BreedingPigFaceDetectTFlite.Recognition> keyPointsResult;
 
     private static class TrackedRecognition {
         ObjectTracker.TrackedObject trackedObject;
@@ -190,14 +191,13 @@ public class MultiBoxTracker_new {
     }
 
     public synchronized void trackResults(
-            final List<Classifier.Recognition> results, final byte[] frame, final long timestamp) {
+            final List<BreedingPigFaceDetectTFlite.Recognition> results, final byte[] frame, final long timestamp) {
         logger.i("Processing %d results from %d", results.size(), timestamp);
         processResults(timestamp, results, frame);
         keyPointsResult = results;
     }
 
     public synchronized void draw(final Canvas canvas, int animalType) {
-        // TODO: 2018/9/17 By:LuoLu
         int canvasW = ScreenUtil.getScreenWidth();
         int canvasH = ScreenUtil.getScreenHeight();
         Point centerOfCanvas = new Point(canvasW / 2, canvasH / 2);
@@ -216,9 +216,8 @@ public class MultiBoxTracker_new {
 //        boxPaint.setStrokeWidth(4f);
 //        canvas.drawRect(canvas.getWidth() * 0.15f, frameWidth * 0.18f, canvas.getWidth() * 0.85f, frameWidth * 0.85f, boxPaint);
 
-        }
-
-
+        //判断是什么动物画框
+//        drawCowBorder(canvas);
 
         if (mFrameRects.isEmpty()) {
             //return;
@@ -239,7 +238,6 @@ public class MultiBoxTracker_new {
         final float multiplier =
                 Math.min(canvas.getHeight() / (float) (rotated ? frameWidth : frameHeight),
                         canvas.getWidth() / (float) (rotated ? frameHeight : frameWidth));
-
         frameToCanvasMatrix =
                 ImageUtils.getTransformationMatrix(
                         frameWidth,
@@ -290,16 +288,14 @@ public class MultiBoxTracker_new {
             borderedText.drawLines(canvas, 100, drawY_capture + 50, listAngles_capture);
         }
 
-       // canvas.drawRect(100f, 100f, 100f, 100f, boxPaint);
+        // canvas.drawRect(100f, 100f, 100f, 100f, boxPaint);
         borderedText.drawText(canvas, (left + right) / 2 - 190, top, getReminderMsgText());
     }
 
-    */
-/**
+    /**
      * 画牛框
      * @param canvas
-     *//*
-
+     */
     private void drawCowBorder(final Canvas canvas){
         //1280  高
         Log.e("multibox", "frameWidth: "+frameWidth);
@@ -319,7 +315,7 @@ public class MultiBoxTracker_new {
 
         //画竖线
         final Paint boxPaint1 = new Paint();
-        boxPaint1.setColor(0xc0000000);
+        boxPaint1.setColor(0xc0006600);
         boxPaint1.setStyle(Style.STROKE);
         boxPaint1.setStrokeWidth(realWidth * 0.3f);
         canvas.drawLine(0f,realHeight*0.15f,0f,realHeight * 0.85f,boxPaint1);
@@ -385,13 +381,13 @@ public class MultiBoxTracker_new {
     }
 
     private void processResults(
-            final long timestamp, final List<Classifier.Recognition> results, final byte[] originalFrame) {
-        final List<Pair<Float, Classifier.Recognition>> rectsToTrack = new LinkedList<Pair<Float, Classifier.Recognition>>();
+            final long timestamp, final List<BreedingPigFaceDetectTFlite.Recognition> results, final byte[] originalFrame) {
+        final List<Pair<Float, BreedingPigFaceDetectTFlite.Recognition>> rectsToTrack = new LinkedList<Pair<Float, BreedingPigFaceDetectTFlite.Recognition>>();
 
         screenRects.clear();
         final Matrix rgbFrameToScreen = new Matrix(getFrameToCanvasMatrix());
 
-        for (final Classifier.Recognition result : results) {
+        for (final BreedingPigFaceDetectTFlite.Recognition result : results) {
             if (result.getLocation() == null) {
                 continue;
             }
@@ -410,7 +406,7 @@ public class MultiBoxTracker_new {
                 continue;
             }
 
-            rectsToTrack.add(new Pair<Float, Classifier.Recognition>(result.getConfidence(), result));
+            rectsToTrack.add(new Pair<Float, BreedingPigFaceDetectTFlite.Recognition>(result.getConfidence(), result));
         }
 
         if (rectsToTrack.isEmpty()) {
@@ -420,7 +416,7 @@ public class MultiBoxTracker_new {
 
         if (objectTracker == null) {
             trackedObjects.clear();
-            for (final Pair<Float, Classifier.Recognition> potential : rectsToTrack) {
+            for (final Pair<Float, BreedingPigFaceDetectTFlite.Recognition> potential : rectsToTrack) {
                 final TrackedRecognition trackedRecognition = new TrackedRecognition();
                 trackedRecognition.detectionConfidence = potential.first;
                 trackedRecognition.location = new RectF(potential.second.getLocation());
@@ -438,13 +434,13 @@ public class MultiBoxTracker_new {
         }
 
         logger.i("%d rects to track", rectsToTrack.size());
-        for (final Pair<Float, Classifier.Recognition> potential : rectsToTrack) {
+        for (final Pair<Float, BreedingPigFaceDetectTFlite.Recognition> potential : rectsToTrack) {
             handleDetection(originalFrame, timestamp, potential);
         }
     }
 
     private void handleDetection(
-            final byte[] frameCopy, final long timestamp, final Pair<Float, Classifier.Recognition> potential) {
+            final byte[] frameCopy, final long timestamp, final Pair<Float, BreedingPigFaceDetectTFlite.Recognition> potential) {
         final ObjectTracker.TrackedObject potentialObject =
                 objectTracker.trackObject(potential.second.getLocation(), timestamp, frameCopy);
 
@@ -648,4 +644,3 @@ public class MultiBoxTracker_new {
     }
 
 }
-*/
