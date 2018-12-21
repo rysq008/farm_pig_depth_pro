@@ -146,7 +146,8 @@ public class BreedingPigFaceDetectTFlite{
     }
 
     public RecognitionAndPostureItem pigRecognitionAndPostureItemTFlite(Bitmap bitmap) {
-        PostureItem posture = null;
+        List<PostureItem> postureItemList = new ArrayList<>();
+
         if (bitmap == null) {
             recognitionAndPostureItem = null;
             return null;
@@ -210,7 +211,7 @@ public class BreedingPigFaceDetectTFlite{
 
         Map<Integer, Object> outputMap = new HashMap<>();
         outputMap.put(0, outputLocations);
-        outputMap.put(1, outputClassifyResult);//
+        outputMap.put(1, outputClassifyResult);
         outputMap.put(2, outputScores);//分值
         outputMap.put(3, outputDetectNum);//检测框数量
         Trace.endSection();
@@ -240,69 +241,71 @@ public class BreedingPigFaceDetectTFlite{
 //            saveBitMap(bitmap, "pigDetected_ng4", srcPigBitmapName);
             return recognitionAndPostureItem;
         }
-        if (outputScores[0][0] > 1 || outputScores[0][0] < MIN_CONFIDENCE) {
-            sLogger.i("分值超出/分值不足：" + outputScores[0][0]);
+
+        final ArrayList<Recognition> recognitions = new ArrayList<>();
+
+        for(int i = 0; i < outputScores[0].length;++i){
+            if (outputScores[0][i] > 1 || outputScores[0][i] < MIN_CONFIDENCE) {
+                sLogger.i("分值超出/分值不足：" + outputScores[0][0]);
 //            saveBitMap(bitmap, "pigDetected_ng2", srcPigBitmapName);
-            return recognitionAndPostureItem;
+                continue;
+            }
+            sLogger.i("outputScores0 %f:" + outputScores[0][0]);
+            sLogger.i("OutClassifyResult0 %f:" + outputClassifyResult[0][0]);
+            sLogger.i("OutPDetectNum %f:" + outputDetectNum[0]);
+            //获取当前坐标
+            float modelY0 = (float) outputLocations[0][i][1];
+            float modelX0 = (float) outputLocations[0][i][0];
+            float modelY1 = (float) outputLocations[0][i][3];
+            float modelX1 = (float) outputLocations[0][i][2];
+
+            Log.e(TAG, "outputLocations: Xmin="+modelX0+";Ymin="
+                    + modelY0+";Xmax="+modelX1 +";Ymax="+modelY1);
+            //计算左上右下
+            float left = modelY0 * padSize - offsetY;
+            float top = modelX0 * padSize - offsetX;
+            float right = modelY1 * padSize - offsetY;
+            float bottom = modelX1 * padSize - offsetX;
+
+            //判断是否超出识别范围
+            if (left < 0 || top < 0 || right > padSize - 2 * offsetY || bottom > padSize - 2 * offsetX) {
+                sLogger.i("识别范围超出图像范围2");
+                continue;
+            }
+
+            // 设置猪头画框范围
+            final RectF detection = new RectF(left, top, right, bottom);
+            recognitions.add(
+                    new Recognition(
+                            "",
+                            "pigLite",
+                            outputScores[0][i],
+                            detection, null));
+            //clip image
+            Bitmap clipBitmap = innovation.utils.ImageUtils.clipBitmap(bitmap, modelY0, modelX0, modelY1, modelX1, 1.2f);
+            if (clipBitmap == null) {
+                continue;
+            }
+
+            Bitmap padBitmap2SpRatio = padBitmap2SpRatio(clipBitmap, 1.0f);
+            int widthZoom = 320, heightZoom = 320;
+            Bitmap resizeClipBitmap = zoomImage(padBitmap2SpRatio, widthZoom, heightZoom);
+
+            PostureItem posture  = new PostureItem(
+                    0,
+                    0,
+                    0,
+                    modelX0, modelY0, modelX1, modelY1, outputScores[0][i],
+                    modelY0 * padSize, modelX0 * padSize,
+                    modelY1 * padSize, modelX1 * padSize, resizeClipBitmap, bitmap);
+
+            postureItemList.add(posture);
         }
-
-        sLogger.i("outputScores0 %f:" + outputScores[0][0]);
-        sLogger.i("OutClassifyResult0 %f:" + outputClassifyResult[0][0]);
-        sLogger.i("OutPDetectNum %f:" + outputDetectNum[0]);
-        float modelY0 = (float) outputLocations[0][0][1];
-        float modelX0 = (float) outputLocations[0][0][0];
-        float modelY1 = (float) outputLocations[0][0][3];
-        float modelX1 = (float) outputLocations[0][0][2];
-
-        Log.e(TAG, "outputLocations: Xmin="+outputLocations[0][0][0]+";Ymin="
-                + outputLocations[0][0][1]+";Xmax="+outputLocations[0][0][2] +";Ymax="+outputLocations[0][0][3]);
-
-        float left = modelY0 * padSize - offsetY;
-        float top = modelX0 * padSize - offsetX;
-        float right = modelY1 * padSize - offsetY;
-        float bottom = modelX1 * padSize - offsetX;
-        if (left < 0 || top < 0 || right > padSize - 2 * offsetY || bottom > padSize - 2 * offsetX) {
-            sLogger.i("识别范围超出图像范围2");
-//            saveBitMap(bitmap, "pigDetected_ng5", srcPigBitmapName);
-            return recognitionAndPostureItem;
-        }
-
-        final ArrayList<Recognition> recognitions = new ArrayList<>(1);
-        // 设置猪头画框范围
-        final RectF detection = new RectF(left, top, right, bottom);
-        recognitions.add(
-                new Recognition(
-                        "",
-                        "pigLite",
-                        outputScores[0][0],
-                        detection, null));
 
         Trace.endSection(); // "recognizeImage"
         recognitionAndPostureItem.setList(recognitions);
 
-//        saveBitMap(bitmap, "pigDetected_ok", srcPigBitmapName);
-        //clip image
-        Bitmap clipBitmap = innovation.utils.ImageUtils.clipBitmap(bitmap, modelY0, modelX0, modelY1, modelX1, 1.2f);
-        if (clipBitmap == null) {
-            return recognitionAndPostureItem;
-        }
-
-        Bitmap padBitmap2SpRatio = padBitmap2SpRatio(clipBitmap, 1.0f);
-        int widthZoom = 320, heightZoom = 320;
-        Bitmap resizeClipBitmap = zoomImage(padBitmap2SpRatio, widthZoom, heightZoom);
-
-
-
-        //  keypoint 的判断逻辑
-        posture = new PostureItem(
-                0,
-                0,
-                0,
-                modelX0, modelY0, modelX1, modelY1, outputScores[0][0],
-                modelY0 * padSize, modelX0 * padSize,
-                modelY1 * padSize, modelX1 * padSize, resizeClipBitmap, bitmap);
-
-        recognitionAndPostureItem.setPostureItem(posture);
+        recognitionAndPostureItem.setPostureItem(postureItemList);
 //        AnimalClassifierResultIterm.pigAngleCalculateTFlite(recognitionAndPostureItem.getPostureItem());
 
         return recognitionAndPostureItem;
@@ -312,8 +315,9 @@ public class BreedingPigFaceDetectTFlite{
     public class RecognitionAndPostureItem {
         private List<Recognition> list;
 
-        private PostureItem postureItem;
+//        private PostureItem postureItem;
         private PredictRotationIterm predictRotationIterm;
+        private List<PostureItem> postureItemLis;
 
         public PredictRotationIterm getPredictRotationIterm() {
             return predictRotationIterm;
@@ -331,13 +335,22 @@ public class BreedingPigFaceDetectTFlite{
             this.list = list;
         }
 
-        public PostureItem getPostureItem() {
-            return postureItem;
+        public List<PostureItem> getPostureItem() {
+            return postureItemLis;
         }
 
-        public void setPostureItem(PostureItem postureItem) {
-            this.postureItem = postureItem;
+        public void setPostureItem(List<PostureItem> postureItemLis) {
+            this.postureItemLis = postureItemLis;
         }
+
+
+        //        public PostureItem getPostureItem() {
+//            return postureItem;
+//        }
+//
+//        public void setPostureItem(PostureItem postureItem) {
+//            this.postureItem = postureItem;
+//        }
     }
 
 

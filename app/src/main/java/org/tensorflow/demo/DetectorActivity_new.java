@@ -412,9 +412,14 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
         pigTFliteDetector.pigRecognitionAndPostureItemTFlite(padBitmap);
         if (BreedingPigFaceDetectTFlite.recognitionAndPostureItem != null) {
             Log.i("====== " ,"===onImageAvailable7=======");
+
             tracker.trackAnimalResults(BreedingPigFaceDetectTFlite.recognitionAndPostureItem.getPostureItem(), PigRotationPrediction.pigPredictAngleType);
+
             final List<BreedingPigFaceDetectTFlite.Recognition> mappedRecognitions =  new LinkedList<BreedingPigFaceDetectTFlite.Recognition>();
             if (BreedingPigFaceDetectTFlite.recognitionAndPostureItem.getList() != null) {
+
+                Log.e("ListSize", "--"+BreedingPigFaceDetectTFlite.recognitionAndPostureItem.getList().size());
+
                 for (final BreedingPigFaceDetectTFlite.Recognition result : BreedingPigFaceDetectTFlite.recognitionAndPostureItem.getList()) {
 
                     Log.i("======" ,"===onImageAvailable8=======");
@@ -435,6 +440,7 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
                     }
                 }
                 Log.i("====== " ,"===onImageAvailableA=======");
+                Log.e("mappedRecognitions", "mappedRecognitions "+mappedRecognitions.size());
                 tracker.trackResults(mappedRecognitions, luminance, currTimestamp);
             }
         }

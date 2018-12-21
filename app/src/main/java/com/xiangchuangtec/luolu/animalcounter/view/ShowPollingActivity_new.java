@@ -153,20 +153,19 @@ public class ShowPollingActivity_new extends BaseActivity {
                                             if (isOPen(ShowPollingActivity_new.this)) {
 
                                                 intent = new Intent(ShowPollingActivity_new.this, DetectorActivity_new.class);
-                                                /*if (deviceHashMap.size() > 0) {
-                                                    //摄像头页面
-                                                    intent = new Intent(ShowPollingActivity_new.this, USBCameraActivity_new.class);
-                                                } else {
-                                                    Toast.makeText(ShowPollingActivity_new.this, "请连接外接摄像头。", Toast.LENGTH_LONG).show();
-                                                    return;
-                                                    *//*if (!permissionsDelegate.hasCameraPermission()) {
-                                                        permissionsDelegate.requestCameraPermission();
-                                                        return;
-                                                    } else {
-                                                        intent = new Intent(ShowPollingActivity_new.this, CounterActivity_new.class);
-                                                    }*//*
-                                                }*/
-
+//                                                if (deviceHashMap.size() > 0) {
+//                                                    //摄像头页面
+//                                                    intent = new Intent(ShowPollingActivity_new.this, USBCameraActivity_new.class);
+//                                                } else {
+//                                                    Toast.makeText(ShowPollingActivity_new.this, "请连接外接摄像头。", Toast.LENGTH_LONG).show();
+//                                                    return;
+//                                                    /*if (!permissionsDelegate.hasCameraPermission()) {
+//                                                        permissionsDelegate.requestCameraPermission();
+//                                                        return;
+//                                                    } else {
+//                                                        intent = new Intent(ShowPollingActivity_new.this, CounterActivity_new.class);
+//                                                    }*/
+//                                                }
 
                                                 intent.putExtra("recodetitle", recodetitle);
                                                 intent.putExtra("recodenumber", recodenumber);

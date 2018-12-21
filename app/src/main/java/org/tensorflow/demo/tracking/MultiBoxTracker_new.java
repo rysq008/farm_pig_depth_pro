@@ -246,6 +246,8 @@ public class MultiBoxTracker_new {
                         (int) (multiplier * (rotated ? frameWidth : frameHeight)),
                         sensorOrientation,
                         false);
+        Log.e("trackedObjects.size()", "---"+trackedObjects.size() );;
+
         for (final TrackedRecognition recognition : trackedObjects) {
             final RectF trackedPos =
                     (objectTracker != null)
@@ -255,6 +257,10 @@ public class MultiBoxTracker_new {
             boxPaint.setColor(recognition.color);
             final float cornerSize = Math.min(trackedPos.width(), trackedPos.height()) / 8.0f;
             canvas.drawRoundRect(trackedPos, cornerSize, cornerSize, boxPaint);
+
+//            canvas.drawCircle((float)x,(float)y,35,pointPaint);
+//            textPaint.setColor(Color.YELLOW);
+//            canvas.drawText(tempCount+"", (float)x,(float)y+12f,textPaint);
 
             final String labelString =
                     !TextUtils.isEmpty(recognition.title)
@@ -414,6 +420,8 @@ public class MultiBoxTracker_new {
             return;
         }
 
+        Log.e("rectsToTrack.size", "rectsToTrack.size"+rectsToTrack.size());
+
         if (objectTracker == null) {
             trackedObjects.clear();
             for (final Pair<Float, BreedingPigFaceDetectTFlite.Recognition> potential : rectsToTrack) {
@@ -422,7 +430,9 @@ public class MultiBoxTracker_new {
                 trackedRecognition.location = new RectF(potential.second.getLocation());
                 trackedRecognition.trackedObject = null;
                 trackedRecognition.title = potential.second.getTitle();
+                //???
                 trackedRecognition.color = COLORS[trackedObjects.size()];
+
                 trackedRecognition.points = potential.second.getPoints();
                 trackedObjects.add(trackedRecognition);
 
@@ -430,6 +440,7 @@ public class MultiBoxTracker_new {
                     break;
                 }
             }
+            Log.e("trackedObjects.size", "trackedObjects.size="+trackedObjects.size());
             return;
         }
 
@@ -533,11 +544,11 @@ public class MultiBoxTracker_new {
             }
         }
 
-        if (recogToReplace == null && availableColors.isEmpty()) {
-            logger.e("No room to track this object, aborting.");
-            potentialObject.stopTracking();
-            return;
-        }
+//        if (recogToReplace == null && availableColors.isEmpty()) {
+//            logger.e("No room to track this object, aborting.");
+//            potentialObject.stopTracking();
+//            return;
+//        }
 
         // Finally safe to say we can track this object.
         logger.v(
@@ -553,8 +564,8 @@ public class MultiBoxTracker_new {
         trackedRecognition.points = potential.second.getPoints();
 
         // Use the color from a replaced object before taking one from the color queue.
-        trackedRecognition.color =
-                recogToReplace != null ? recogToReplace.color : availableColors.poll();
+        trackedRecognition.color = Color.RED;
+//                recogToReplace != null ? recogToReplace.color : availableColors.poll();
         trackedObjects.add(trackedRecognition);
     }
 
@@ -574,9 +585,9 @@ public class MultiBoxTracker_new {
         listAngles_capture.clear();
     }
 
-    public synchronized void trackAnimalResults(PostureItem posture, int angletype) {
+    public synchronized void trackAnimalResults(List<PostureItem> postureItemList, int angletype) {
         mFrameRects.clear();
-        if (posture == null) {
+        if (postureItemList == null) {
             return;
         }
         int canvasW = ScreenUtil.getScreenWidth();
@@ -589,8 +600,11 @@ public class MultiBoxTracker_new {
         int right = centerOfCanvas.x + (rectW);
         int bottom = centerOfCanvas.y + (rectH / 2);
         RectF trackRectF = new RectF(left, top, right, bottom);
-        TrackerItem item = new TrackerItem(angletype, trackRectF, posture.rot_x, posture.rot_y, posture.rot_z);
-        mFrameRects.add(item);
+
+        for(int i = 0;i< postureItemList.size();++i){
+            TrackerItem item = new TrackerItem(angletype, trackRectF);
+            mFrameRects.add(item);
+        }
     }
 
     public synchronized void trackResultsTFlite(PredictRotationIterm predictRotationIterm, int angletype) {

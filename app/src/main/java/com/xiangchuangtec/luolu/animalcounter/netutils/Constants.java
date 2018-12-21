@@ -25,8 +25,9 @@ public class Constants {
     public static final String inspectNo = "inspectNo";
     public static final String file = "file";
 
-
-    public static final String BASENEW = "http://47.92.167.61:8084/nongxian3/app/";
+// http://47.92.167.61:8081/nongxian2/ ;  http://47.92.167.61:8084/nongxian3
+//  public static final String BASENEW = "http://47.92.167.61:8084/nongxian3/app/";
+    public static final String BASENEW = "http://47.92.167.61:8081/nongxian2/app/";
 //    public static final String BASENEW = "http://192.168.1.198:8081/app/";//测试
     public static final String LOGINURLNEW = BASENEW + "ftnLogin";
 

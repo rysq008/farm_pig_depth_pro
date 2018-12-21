@@ -35,7 +35,9 @@ import android.widget.Toast;
 import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.bean.CommitLiBean;
 import com.xiangchuang.risks.model.bean.StartBean;
+import com.xiangchuang.risks.utils.CounterHelper;
 import com.xiangchuangtec.luolu.animalcounter.BuildConfig;
+import com.xiangchuangtec.luolu.animalcounter.CounterActivity_new;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
@@ -106,6 +108,8 @@ public class AddPigPicActivity extends BaseActivity {
     // 两次点击按钮之间的点击间隔不能少于1000毫秒
     private static final int MIN_CLICK_DELAY_TIME = 10000;
     private static long lastClickTime;
+
+    private String autoWeight;
 
     @Override
     protected int getLayoutId() {
@@ -287,6 +291,34 @@ public class AddPigPicActivity extends BaseActivity {
     private void setPicToView() throws Exception {
         // 取得SDCard图片路径做显示
         Bitmap photo = BitmapFactory.decodeStream(getContentResolver().openInputStream(uritempFile));
+        //上传死猪照片时候调用称重接口
+        if(picType == 0){
+            CounterHelper.recognitionWeightFromNet(photo, new CounterHelper.OnImageRecognitionWeightListener() {
+                @Override
+                public void onCompleted(float weight, int status) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            pop.dismiss();
+                            if(status == 1){
+                                autoWeight = weight+"";
+                                etAnimalAge.setText(weight + "");
+
+                                picToView(photo);
+                            } else {
+                                Toast.makeText(AddPigPicActivity.this, "识别失败！", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+            });
+        }else{
+            picToView(photo);
+        }
+
+    }
+
+    private void picToView( Bitmap photo){
         Drawable drawable = new BitmapDrawable(null, photo);
         urlpath = FileUtils.saveFile(getApplicationContext(), "temphead.jpg", photo);
 
@@ -304,6 +336,7 @@ public class AddPigPicActivity extends BaseActivity {
         // 上传图片文件
         upLoadImg(file);
     }
+
 
     private void upLoadImg(File fileImage) {
         Log.e("upLoadImg", "path=" + fileImage.getAbsolutePath());
@@ -464,7 +497,9 @@ public class AddPigPicActivity extends BaseActivity {
         mapbody.put("weight", etAnimalAge.getText().toString().trim());
         mapbody.put("weightPic", tvPersonAndAnimalpath.getText().toString().trim());
         mapbody.put("deadPics", sb.toString());
-        mapbody.put("provePic", "");
+        mapbody.put("provePic", "");//无害化证明照片
+        mapbody.put("autoWeight", autoWeight);//自动识别返回重量
+
 
         OkHttp3Util.doPost(Constants.ADD_PAY_INFO, mapbody, null, new Callback() {
             @Override
