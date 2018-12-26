@@ -437,7 +437,7 @@
 
             <TextView
                 style="@style/form_style.text"
-                android:text="企业管理账户：" />
+                android:text="养殖场账户：" />
 
             <TextView
                 android:id="@+id/qiyezhanghu"
@@ -446,14 +446,14 @@
                 android:layout_gravity="center_vertical"
                 android:textSize="16sp"
                 android:layout_marginRight="15dp"
-                android:hint="请输入企业管理账户" />
+                android:hint="请输入养殖场账户" />
         </LinearLayout>
 
         <LinearLayout style="@style/form_style.layout">
 
             <TextView
                 style="@style/form_style.text"
-                android:text="企业管理密码：" />
+                android:text="养殖场密码：" />
 
             <EditText
                 android:id="@+id/qiyepassword"
@@ -462,7 +462,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="15dp"
                 android:textSize="16sp"
-                android:hint="请输入企业管理密码" />
+                android:hint="请输入养殖场密码" />
         </LinearLayout>
 
 

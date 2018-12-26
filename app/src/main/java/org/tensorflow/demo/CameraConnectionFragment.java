@@ -490,6 +490,7 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
         super.onDestroy();
         Log.d("CameraConntFragment:", "CameraConnectionFragment onDestroy()!");
         Activity activity = getActivity();
+        mIsRecordingVideo = false;
         collectNumberHandler.sendEmptyMessage(2);
         MediaProcessor.getInstance(activity).handleMediaResource_destroy();
 //        InsureDataProcessor.getInstance(activity).handleMediaResource_destroy();
@@ -650,6 +651,7 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
 
     @Override
     public void onPause() {
+        stopRecordingVideo(false);
         closeCamera();
         stopBackgroundThread();
         super.onPause();
@@ -1228,7 +1230,7 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
         if (null == activity) {
             return;
         }
-        mMediaRecorder = new MediaRecorder();
+        //mMediaRecorder = new MediaRecorder();
         mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
         mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
@@ -1482,7 +1484,7 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
 
     private void stopRecordingVideo(boolean save) {
         // UI
-        mMediaRecorder = new MediaRecorder();
+        //mMediaRecorder = new MediaRecorder();
         mIsRecordingVideo = false;
         mRecordControl.setText(R.string.record);
         mRecordSwitch.setEnabled(true);
@@ -1560,7 +1562,7 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                 case 1:
                     try {
                         if (mMediaRecorder == null) {
-                            mMediaRecorder = new MediaRecorder();
+                            //mMediaRecorder = new MediaRecorder();
                         }
                         Global.VIDEO_PROCESS = false;
                         // 录制、暂停按钮所在布局隐藏
@@ -1575,7 +1577,7 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                         ivRight.setVisibility(View.GONE);
 
                         mRecordSwitch.setEnabled(true);
-                        //  mMediaRecorder.reset();
+                        mMediaRecorder.reset();
                         if (Global.UPLOAD_VIDEO_FLAG == false) {
                             if (!TextUtils.isEmpty(Global.VideoFileName)) {
                                 boolean deleteResult = FileUtils.deleteFile(new File(Global.VideoFileName));
@@ -1618,6 +1620,7 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                     if (mReCordLayout != null) {
                         mReCordLayout.setVisibility(View.VISIBLE);
                     }
+
                     new DetectorActivity().reInitCurrentCounter(0, 0, 0);
                     if (activity != null) {
                         new MultiBoxTracker(activity).reInitCounter(0, 0, 0);

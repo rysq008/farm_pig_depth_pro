@@ -40,6 +40,7 @@ import android.view.KeyEvent;
 import android.widget.Toast;
 
 
+import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
 
@@ -67,6 +68,7 @@ import innovation.media.MediaProcessor;
 import innovation.media.Model;
 import innovation.utils.FileUtils;
 
+import static com.xiangchuangtec.luolu.animalcounter.MyApplication.lastXmin;
 import static innovation.entry.InnApplication.ANIMAL_TYPE;
 import static innovation.entry.InnApplication.SCREEN_ORIENTATION;
 import static org.tensorflow.demo.CameraConnectionFragment_new.textureView;
@@ -170,6 +172,8 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
         type1Count = 0;
         type2Count = 0;
         type3Count = 0;
+        MyApplication.sowCount = 0;
+        lastXmin = 0f;
         super.onResume();
         Intent intent = getIntent();
         sheId = intent.getStringExtra(Constants.sheId);
@@ -301,6 +305,11 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
 
     @Override
     public void onImageAvailable(final ImageReader reader) {
+//        try {
+//            Thread.sleep(330);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
         Log.i("====== " ,"===onImageAvailable=======");
         Image image = null;
         ++timestamp;
@@ -419,7 +428,7 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
             if (BreedingPigFaceDetectTFlite.recognitionAndPostureItem.getList() != null) {
 
                 Log.e("ListSize", "--"+BreedingPigFaceDetectTFlite.recognitionAndPostureItem.getList().size());
-
+                BreedingPigFaceDetectTFlite.Recognition recognition;
                 for (final BreedingPigFaceDetectTFlite.Recognition result : BreedingPigFaceDetectTFlite.recognitionAndPostureItem.getList()) {
 
                     Log.i("======" ,"===onImageAvailable8=======");
@@ -435,8 +444,15 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
                         tempMatrix.postTranslate(0, previewHeight);
 
                         tempMatrix.mapRect(location);
-                        result.setLocation(location);
-                        mappedRecognitions.add(result);
+
+                        recognition = new BreedingPigFaceDetectTFlite.Recognition(
+                                "",
+                                "pigLite",
+                                result.getConfidence(),
+                                location, null);
+
+//                        result.setLocation(location);
+                        mappedRecognitions.add(recognition);
                     }
                 }
                 Log.i("====== " ,"===onImageAvailableA=======");
@@ -654,6 +670,8 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
         type1Count = a;
         type2Count = b;
         type3Count = c;
+        MyApplication.sowCount = 0;
+        lastXmin = 0f;
         LOGGER.i("reInitCurrentCounter-a:", type1Count);
         LOGGER.i("reInitCurrentCounter-b:", type2Count);
         LOGGER.i("reInitCurrentCounter-c:", type3Count);

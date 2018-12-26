@@ -241,14 +241,14 @@ public class AddPigPicActivity extends BaseActivity {
         intent.setDataAndType(uri, "image/jpeg");
         // crop=true是设置在开启的Intent中设置显示的VIEW可裁剪
         intent.putExtra("crop", "true");
-        if (picType == 0) {
+        /*if (picType == 0) {
             // aspectX aspectY 是宽高的比例
             intent.putExtra("aspectX", 1);
             intent.putExtra("aspectY", 1);
             // outputX outputY 是裁剪图片宽高
             intent.putExtra("outputX", 300);
             intent.putExtra("outputY", 300);
-        }
+        }*/
 //        intent.putExtra("return-data", true);
         //裁剪后的图片Uri路径，uritempFile为Uri类变量
         uritempFile = Uri.parse("file://" + "/" + Environment.getExternalStorageDirectory().getPath() + "/" + "small.jpg");
@@ -264,13 +264,13 @@ public class AddPigPicActivity extends BaseActivity {
             Intent intent = new Intent("com.android.camera.action.CROP");
             intent.setDataAndType(getImageContentUri(new File(imagePath)), "image/jpeg");
             intent.putExtra("crop", "true");
-            if (picType == 0) {
+            /*if (picType == 0) {
                 // aspectX aspectY 是宽高的比例
                 intent.putExtra("aspectX", 1);
                 intent.putExtra("aspectY", 1);
                 intent.putExtra("outputX", 300);
                 intent.putExtra("outputY", 300);
-            }
+            }*/
             intent.putExtra("scale", true);
             intent.putExtra("return-data", false);
             uritempFile = Uri.parse("file://" + "/" + Environment.getExternalStorageDirectory().getPath() + "/" + "small.jpg");
@@ -454,14 +454,14 @@ public class AddPigPicActivity extends BaseActivity {
                     return;
                 }
                 lastClickTime = SystemClock.elapsedRealtime();
-//                String stringPersonAndAnimalpath = tvPersonAndAnimalpath.getText().toString();
+                String stringPersonAndAnimalpath = tvPersonAndAnimalpath.getText().toString();
 //                String buchongLeftstr = tvbuchongleft.getText().toString();
 //                String buchongRightstr = tvbuchongright.getText().toString();
 
-//                if (etAnimalAge.getText().toString().equals("")) {
-//                    Toast.makeText(getApplicationContext(), "请输入猪的重量", Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
+                if (stringPersonAndAnimalpath.equals("")) {
+                    Toast.makeText(getApplicationContext(), "请先拍摄死猪照片。", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 showProgressDialog();
                 addPayInfo();
 

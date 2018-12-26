@@ -112,7 +112,7 @@ public class ShowPollingActivity_new extends BaseActivity {
     private void getDataFromNet(String enId) {
         Log.i("ShowPollingActivity", "enId" + enId);
 //        String url = "http://47.92.167.61:8081/numberCheck/app/sheList";
-        OkHttp3Util.doPost(Constants.SHELIST,null, new Callback() {
+        OkHttp3Util.doPost(Constants.SHELIST, null, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i("ShowPollingActivity", e.toString());
@@ -151,21 +151,24 @@ public class ShowPollingActivity_new extends BaseActivity {
                                             Intent intent = null;
                                             CounterHelper.number = 1;
                                             if (isOPen(ShowPollingActivity_new.this)) {
-
-                                                intent = new Intent(ShowPollingActivity_new.this, DetectorActivity_new.class);
-//                                                if (deviceHashMap.size() > 0) {
-//                                                    //摄像头页面
-//                                                    intent = new Intent(ShowPollingActivity_new.this, USBCameraActivity_new.class);
-//                                                } else {
-//                                                    Toast.makeText(ShowPollingActivity_new.this, "请连接外接摄像头。", Toast.LENGTH_LONG).show();
-//                                                    return;
-//                                                    /*if (!permissionsDelegate.hasCameraPermission()) {
-//                                                        permissionsDelegate.requestCameraPermission();
-//                                                        return;
-//                                                    } else {
-//                                                        intent = new Intent(ShowPollingActivity_new.this, CounterActivity_new.class);
-//                                                    }*/
-//                                                }
+                                                //判断如果是能繁母猪点数进入新的点数逻辑界面
+                                                if (mSheBeans.get(position).getPigType().equals("102")) {
+                                                    intent = new Intent(ShowPollingActivity_new.this, DetectorActivity_new.class);
+                                                } else {
+                                                    if (deviceHashMap.size() > 0) {
+                                                        //摄像头页面
+                                                        intent = new Intent(ShowPollingActivity_new.this, USBCameraActivity_new.class);
+                                                    } else {
+                                                        Toast.makeText(ShowPollingActivity_new.this, "请连接外接摄像头。", Toast.LENGTH_LONG).show();
+                                                        return;
+                                                    /*if (!permissionsDelegate.hasCameraPermission()) {
+                                                        permissionsDelegate.requestCameraPermission();
+                                                        return;
+                                                    } else {
+                                                        intent = new Intent(ShowPollingActivity_new.this, CounterActivity_new.class);
+                                                    }*/
+                                                    }
+                                                }
 
                                                 intent.putExtra("recodetitle", recodetitle);
                                                 intent.putExtra("recodenumber", recodenumber);

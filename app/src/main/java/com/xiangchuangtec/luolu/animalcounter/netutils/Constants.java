@@ -43,21 +43,24 @@ public class Constants {
     public static final String ZHUJUANDELETE = BASENEW + "ftnJuan/delete";
     public static final String ZHUJUANADD = BASENEW + "ftnJuan/add";
     public static final String ZHUJUANOUT = BASENEW + "ftnJuan/out";
+    //调起猪舍内的摄像头
     public static final String PRESTART = BASENEW + "payment/prePayStart";
-
+    //预先理赔提交
     public static final String PRECOMMIT = BASENEW + "payment/prePayCommit";
+    //上传预理赔补充视频
+    public static final String ADDPREPAYVIDEO = BASENEW + "payment/addPrePayVideo";
 
     public static final String PREJIXU = BASENEW + "payment/prePayEnd";
     public static final String PRESTOP = BASENEW + "payment/stopVideo";
     public static final String INSURE = BASENEW + "ftnInsure/list";
     public static final String INSURECOMMIT = BASENEW + "ftnInsure/commit";
     public static final String PINZHONG = BASENEW + "ftnJuan/animalType";
-    //理赔调取摄像头
+    //验证是否存在预理赔对象
     public static final String LiSTART = BASENEW + "payment/payStart";
     public static final String LICOMMIT = BASENEW + "payment/payCommit";
     public static final String LIEDD2 = BASENEW + "payment/payEnd2";
     public static final String LIEDD1 = BASENEW + "payment/payEnd1";
-    //判断是否投保
+    // 验证是否存在有效投保
     public static final String CHECKBAODAN = BASENEW + "payment/allStart";
     public static final String POLLINGLIST = BASENEW + "inspect/inspect";
     public static final String XUNJIANTIJIAONEW = BASENEW + "inspect/commit";

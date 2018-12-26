@@ -13,6 +13,9 @@ import android.support.v4.app.ActivityCompat;
 import net.gotev.uploadservice.UploadService;
 import net.gotev.uploadservice.okhttp.OkHttpStack;
 
+import java.util.ArrayList;
+
+import innovation.biz.classifier.BreedingPigFaceDetectTFlite;
 import innovation.crash.CrashHandler;
 import innovation.location.LocationManager_new;
 import innovation.network_status.NetworkChangedReceiver;
@@ -39,6 +42,16 @@ public class MyApplication extends Application {
 
     public static boolean isNetConnected = false;
     NetworkChangedReceiver networkChangedReceiver;
+
+    //能繁母猪计数器；
+    public static int sowCount = 0;
+    //记录每次抓图最小的Xmin值
+    public static float lastXmin = 0f;
+
+
+    public static int currentPadSize;
+
+    public static boolean isNoCamera = false;
 
     @Override
     public void onCreate() {

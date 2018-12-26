@@ -55,6 +55,8 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+import static com.xiangchuangtec.luolu.animalcounter.MyApplication.isNoCamera;
+
 public class PreparedLiPeiActivity_new extends BaseActivity {
     public static String TAG = "PreparedLiPeiActivity_new";
     @BindView(R.id.pre_zhushe)
@@ -358,7 +360,17 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
                                 intent.putExtra(Constants.reason, outreson);
                                 startActivity(intent);
                                 // finish();
-                            } else {
+                            } else if(bean.getStatus() == 0) {
+                                isNoCamera = true;
+                                Global.model = Model.VERIFY.value();
+                                PreferencesUtils.saveKeyValue(Constants.preVideoId,"" , MyApplication.getAppContext());
+                                Intent intent = new Intent(PreparedLiPeiActivity_new.this, DetectorActivity.class);
+                                intent.putExtra(Constants.sheId, sheId + "");
+                                intent.putExtra(Constants.inspectNo, mchuxiannum.getText().toString());
+                                intent.putExtra(Constants.reason, outreson);
+                                startActivity(intent);
+
+                            }else{
                                 AlertDialogManager.showMessageDialog(PreparedLiPeiActivity_new.this, "提示", bean.getMsg(), new AlertDialogManager.DialogInterface() {
                                     @Override
                                     public void onPositive() {
@@ -370,7 +382,7 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
 
                                     }
                                 });
-                                //Toast.makeText(MyApplication.getAppContext(), bean.getMsg(), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(MyApplication.getAppContext(), bean.getMsg(), Toast.LENGTH_LONG).show();
                             }
                         }
                     });

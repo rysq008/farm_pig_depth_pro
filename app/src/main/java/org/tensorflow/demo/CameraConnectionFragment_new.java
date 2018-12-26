@@ -24,8 +24,10 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -61,6 +63,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -74,11 +77,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.xiangchuang.risks.model.bean.RecognitionResult;
+import com.xiangchuang.risks.utils.CounterHelper;
+import com.xiangchuangtec.luolu.animalcounter.CounterActivity_new;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
+import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
 import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
+import com.xiangchuangtec.luolu.animalcounter.view.ShowPollingActivity_new;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.tensorflow.demo.env.Logger;
 import org.tensorflow.demo.tracking.MultiBoxTracker_new;
 
@@ -88,18 +99,26 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 import innovation.media.MediaInsureItem;
 import innovation.media.MediaPayItem;
-import innovation.media.MediaProcessor;
+import innovation.media.MediaProcessor_new;
 import innovation.media.Model;
 import innovation.utils.FileUtils;
+import innovation.utils.ZipUtil;
 import innovation.view.SendView;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 import static android.content.ContentValues.TAG;
+import static com.xiangchuangtec.luolu.animalcounter.MyApplication.lastXmin;
+import static com.xiangchuangtec.luolu.animalcounter.MyApplication.sowCount;
 import static org.tensorflow.demo.DetectorActivity_new.trackingOverlay;
 import static org.tensorflow.demo.Global.mediaPayItem;
 
@@ -208,23 +227,8 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
 
     //haojie add
     private RelativeLayout mToolLayout;
-    private long tmieVideoStart;
+    private static long tmieVideoStart;
     private long tmieVideoEnd;
-
-    private static TextView tvNotice;
-    //左脸标识图
-    private static ImageView ivLeft;
-    //右脸标识图
-    private static ImageView ivRight;
-    //左脸录制按钮
-    private static TextView tvBtnLeft;
-    //右脸录制按钮
-    @SuppressLint("StaticFieldLeak")
-    private static TextView tvBtnRight;
-
-    //全局变量判断左右脸否已经采集够了
-    private static boolean leftEnough = false;
-    private static boolean  rightEnough = false;
 
     //全局定义
     private volatile long lastClickTime = 0L;
@@ -279,6 +283,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
     private Size previewSize;
 
     // private Model mModel = Model.BUILD;
+    private int exposureCompensation = 0;
 
     /**
      * {@link CameraDevice.StateCallback}
@@ -486,7 +491,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
         Log.d("CameraConntFragment:", "CameraConnectionFragment onDestroy()!");
         Activity activity = getActivity();
         collectNumberHandler.sendEmptyMessage(2);
-        MediaProcessor.getInstance(activity).handleMediaResource_destroy();
+//        MediaProcessor.getInstance(activity).handleMediaResource_destroy();
 //        InsureDataProcessor.getInstance(activity).handleMediaResource_destroy();
 //        PayDataProcessor.getInstance(activity).handleMediaResource_destroy();
     }
@@ -496,7 +501,10 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
             final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         return inflater.inflate(layout, container, false);
     }
-
+    private static String mSheId;
+    private static String mSheName;
+    private static String mOldAutoCount;
+    private static String mOldDuration;
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState) {
         LOGGER.i("luolu Global.model1: " + Model.BUILD.value());
@@ -509,12 +517,13 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
         mSendView.selectLayout.setOnClickListener(mSaveClickListener);
         mSendView.stopAnim();
 
-        tvNotice = view.findViewById(R.id.tv_notice);
+        view.findViewById(R.id.tv_notice).setVisibility(View.GONE);
+        view.findViewById(R.id.IV_left).setVisibility(View.GONE);
+        view.findViewById(R.id.IV_right).setVisibility(View.GONE);
+        view.findViewById(R.id.TV_left).setVisibility(View.GONE);
+        view.findViewById(R.id.TV_right).setVisibility(View.GONE);
 
-        ivLeft = view.findViewById(R.id.IV_left);
-        ivRight = view.findViewById(R.id.IV_right);
-        tvBtnLeft = view.findViewById(R.id.TV_left);
-        tvBtnRight = view.findViewById(R.id.TV_right);
+
 
         mRecordSwitch = view.findViewById(R.id.record_switch);
         mRecordSwitchTxt = (TextView) view.findViewById(R.id.record_switch_txt);
@@ -527,34 +536,15 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
         mRecordSwitch.setEnabled(true);
         mRecordVerify.setEnabled(false);
 
-        tvBtnLeft.setText("提示\n左脸");
-        tvBtnLeft.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ivRight.setVisibility(View.GONE);
-                if (ivLeft.getVisibility() == View.GONE) {
-                    ivLeft.setVisibility(View.VISIBLE);
-                } else {
-                    ivLeft.setVisibility(View.GONE);
-                }
-            }
-        });
-        tvBtnRight.setText("提示\n右脸");
-        tvBtnRight.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ivLeft.setVisibility(View.GONE);
-                if (ivRight.getVisibility() == View.GONE) {
-                    ivRight.setVisibility(View.VISIBLE);
-                } else {
-                    ivRight.setVisibility(View.GONE);
-                }
-            }
-        });
-
-
         LOGGER.i("luolu Global.model2: " + Model.BUILD.value());
         activity = getActivity();
+
+        Intent intent = activity.getIntent();
+        mSheId = intent.getStringExtra("sheid");
+        mSheName  = intent.getStringExtra("shename");;
+        mOldAutoCount = intent.getStringExtra("autocount");
+        mOldDuration = intent.getStringExtra("duration");
+
         if (Global.mediaInsureItem == null) {
             Global.mediaInsureItem = new MediaInsureItem(activity);
         }
@@ -627,9 +617,6 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
         super.onResume();
         startBackgroundThread();
 
-        leftEnough = false;
-        rightEnough = false;
-
         // When the screen is turned off and turned back on, the SurfaceTexture is already
         // available, and "onSurfaceTextureAvailable" will not be called. In that case, we can open
         // a camera and start preview from here (otherwise, we wait until the surface is ready in
@@ -650,6 +637,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
         super.onPause();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -661,20 +649,27 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
                 }
                 lastClickTime = System.currentTimeMillis();
                 Log.e(TAG, "onClick:ok " + lastClickTime);
-
+                mRecordControl.setClickable(false);
                 if (mIsRecordingVideo) {
-                    tmieVideoEnd = System.currentTimeMillis();
-                    long during = tmieVideoEnd - tmieVideoStart;
                     stopRecordingVideo(false);
                     Global.VIDEO_PROCESS = false;
+                    /*try {
+
+                        mMediaRecorder.reset();
+                    } catch (Exception e) {
+                        Log.i("停止视频录制", e.toString());
+                    }*/
+                   collectNumberHandler.sendEmptyMessage(1);
                 } else {
                     try {
                         Global.VIDEO_PROCESS = true;
+                        tmieVideoStart = System.currentTimeMillis();
                         startRecordingVideo();
                     } catch (Exception e) {
+                        Log.e(TAG, "record_control_IOException: " + e.toString());
                         e.printStackTrace();
                     }
-                    tmieVideoStart = System.currentTimeMillis();
+
                 }
                 break;
             case R.id.record_switch:
@@ -803,7 +798,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
             mReCordLayout.setVisibility(View.VISIBLE);
             Activity activity = getActivity();
             //InsureDataProcessor.getInstance(activity).handleMediaResource_build(activity);
-            MediaProcessor.getInstance(activity).handleMediaResource_build(activity);
+//            MediaProcessor.getInstance(activity).handleMediaResource_build(activity);
 
         }
     };
@@ -1163,10 +1158,11 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
             previewRequestBuilder.set(
                     CaptureRequest.CONTROL_AF_MODE,
                     CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
-
+            previewRequestBuilder.set(CaptureRequest.CONTROL_AE_EXPOSURE_COMPENSATION, exposureCompensation);
             previewRequestBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.INFO_SUPPORTED_HARDWARE_LEVEL_FULL);
             // Finally, we start displaying the camera preview.
             previewRequest = previewRequestBuilder.build();
+            captureSession.stopRepeating();
 //            // TODO: 2018/10/16 By:LuoLu
 //            Range<Long> range = characteristics.get(CameraCharacteristics.SENSOR_INFO_EXPOSURE_TIME_RANGE);
 //            long max = range.getUpper();
@@ -1223,14 +1219,14 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
         if (null == activity) {
             return;
         }
-        mMediaRecorder = new MediaRecorder();
+        //mMediaRecorder = new MediaRecorder();
         mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
         mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         if (Global.model == Model.BUILD.value()) {
             Global.VideoFileName = Global.mediaInsureItem.getVideoFileName();
         } else if (Global.model == Model.VERIFY.value()) {
-            Global.VideoFileName = mediaPayItem.getVideoFileName();
+            Global.VideoFileName = Global.mediaPayItem.getVideoFileName();
         }
         Log.i("VideoFileName:", Global.VideoFileName);
         mMediaRecorder.setOutputFile(Global.VideoFileName);
@@ -1303,41 +1299,28 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
                         @Override
                         public void run() {
 
-                            if(leftEnough){
-                                tvBtnLeft.setVisibility(View.GONE);
-                            }else{
-                                tvBtnLeft.setVisibility(View.VISIBLE);
-                            }
-                            if(rightEnough){
-                                tvBtnRight.setVisibility(View.GONE);
-                            }else{
-                                tvBtnRight.setVisibility(View.VISIBLE);
-                            }
-
-
-                            if (Global.UPLOAD_VIDEO_FLAG) {
+                            Log.i("===startrecord==", "开始录制");
+                            try {
+                                try {
+                                    Thread.sleep(200);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
                                 // UI
-                                mRecordControl.setText(R.string.pause);
+                                mRecordControl.setText("完成");
+
                                 mIsRecordingVideo = true;
                                 // Start recording
                                 mMediaRecorder.start();
                                 // disable switch action
                                 mRecordSwitch.setEnabled(false);
                                 mRecordVerify.setEnabled(false);
-                            } else {
-                                // UI
-                                mRecordControl.setText(R.string.pause);
-                                mIsRecordingVideo = true;
-                                try {
-                                    mMediaRecorder.prepare();
-                                } catch (IllegalStateException e) {
-                                    Log.d(TAG, "IllegalStateException preparing MediaRecorder: " + e.getMessage());
-                                } catch (IOException e) {
-                                    Log.d(TAG, "IOException preparing MediaRecorder: " + e.getMessage());
-                                }
-                                mRecordSwitch.setEnabled(false);
-
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Log.e(TAG, "run: Exception"+e.toString());
+                                showToast("视频录制异常！");
                             }
+                            mRecordControl.setClickable(true);
 
                         }
                     });
@@ -1359,139 +1342,19 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
 
     }
 
-    private void startVideo() {
-        if (null == cameraDevice || !textureView.isAvailable() || null == previewSize) {
-            return;
-        }
-        Global.VIDEO_PROCESS = true;
-        try {
-            closePreviewSession();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            final Activity activity = getActivity();
-            if (null == activity) {
-                return;
-            }
-            mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-            mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
-            mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-            mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-            mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
-            // mMediaRecorder.setVideoSize(mVideoSize.getWidth(), mVideoSize.getHeight());
-            mMediaRecorder.setVideoSize(640, 480);
-
-            //mMediaRecorder.setCaptureRate(15);
-            mMediaRecorder.setVideoFrameRate(4);
-            if (Global.model == Model.BUILD.value()) {
-                Global.VideoFileName = Global.mediaInsureItem.getVideoFileName();
-            } else if (Global.model == Model.VERIFY.value()) {
-                Global.VideoFileName = mediaPayItem.getVideoFileName();
-            }
-            //mMediaRecorder.setOutputFile(Global.VideoFileName);
-            mMediaRecorder.setOutputFile(videoFileName);
-            mMediaRecorder.setVideoEncodingBitRate(5 * 1024 * 1024);
-            mMediaRecorder.prepare();
-
-            SurfaceTexture texture = textureView.getSurfaceTexture();
-            assert texture != null;
-            texture.setDefaultBufferSize(previewSize.getWidth(), previewSize.getHeight());
-            previewRequestBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_RECORD);
-            List<Surface> surfaces = new ArrayList<>();
-
-            // Set up Surface for the camera preview
-            Surface previewSurface = new Surface(texture);
-            surfaces.add(previewSurface);
-            previewRequestBuilder.addTarget(previewSurface);
-
-            // Set up Surface for the MediaRecorder
-            Surface recorderSurface = mMediaRecorder.getSurface();
-            surfaces.add(recorderSurface);
-            previewRequestBuilder.addTarget(recorderSurface);
-
-            previewReader = ImageReader.newInstance(previewSize.getWidth(), previewSize.getHeight(), ImageFormat.YUV_420_888, 4);
-            previewReader.setOnImageAvailableListener(imageListener, backgroundHandler);
-            Surface imageSurface = previewReader.getSurface();
-            surfaces.add(imageSurface);
-            previewRequestBuilder.addTarget(imageSurface);
-            cameraDevice.createCaptureSession(surfaces, new CameraCaptureSession.StateCallback() {
-
-                @Override
-                public void onConfigured(CameraCaptureSession cameraCaptureSession) {
-                    if (null == cameraDevice) {
-                        return;
-                    }
-                    captureSession = cameraCaptureSession;
-                    updatePreview();
-
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-
-                           /* if (Global.UPLOAD_VIDEO_FLAG == true) {
-                                // UI
-                                mRecordControl.setText(R.string.stop);
-                                mIsRecordingVideo = true;
-                                // Start recording
-                               // mMediaRecorder.start();
-                                // disable switch action
-                                mRecordSwitch.setEnabled(false);
-                                mRecordVerify.setEnabled(false);
-                            } else {
-                                // UI
-                                mRecordControl.setText(R.string.stop);
-                                mIsRecordingVideo = true;
-                                try {
-                                    mMediaRecorder.prepare();
-                                } catch (IllegalStateException e) {
-                                    Log.d("=====", "IllegalStateException preparing MediaRecorder: " + e.getMessage());
-                                } catch (IOException e) {
-                                    Log.d("====", "IOException preparing MediaRecorder: " + e.getMessage());
-                                }
-                                mRecordSwitch.setEnabled(false);
-
-                            }
-*/
-
-                        }
-                    });
-                }
-
-                @Override
-                public void onConfigureFailed(CameraCaptureSession cameraCaptureSession) {
-                    Activity activity = getActivity();
-                    if (null != activity) {
-                        Toast.makeText(activity, "Camera Failed!!!", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }, backgroundHandler);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.d("====", "ecception " + e.getMessage());
-        }
-    }
-
-
     private void stopRecordingVideo(boolean save) {
         // UI
-        mMediaRecorder = new MediaRecorder();
+        //mMediaRecorder = new MediaRecorder();
         mIsRecordingVideo = false;
         mRecordControl.setText(R.string.record);
         mRecordSwitch.setEnabled(true);
 
-        tvNotice.setVisibility(View.GONE);
-        tvBtnLeft.setVisibility(View.GONE);
-        tvBtnRight.setVisibility(View.GONE);
-
-        ivLeft.setVisibility(View.GONE);
-        ivRight.setVisibility(View.GONE);
-
         mMediaRecorder.reset();
         Global.VIDEO_PROCESS = false;
         startPreview();
+
+        mRecordControl.setText(R.string.record);
+        mRecordControl.setClickable(true);
     }
 
     private void closePreviewSession() {
@@ -1555,7 +1418,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
                 case 1:
                     try {
                         if (mMediaRecorder == null) {
-                            mMediaRecorder = new MediaRecorder();
+                            //mMediaRecorder = new MediaRecorder();
                         }
                         Global.VIDEO_PROCESS = false;
                         // 录制、暂停按钮所在布局隐藏
@@ -1563,24 +1426,28 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
                         mIsRecordingVideo = false;
                         mRecordControl.setText(R.string.record);
 
-                        tvNotice.setVisibility(View.GONE);
-                        tvBtnLeft.setVisibility(View.GONE);
-                        tvBtnRight.setVisibility(View.GONE);
-                        ivLeft.setVisibility(View.GONE);
-                        ivRight.setVisibility(View.GONE);
-
                         mRecordSwitch.setEnabled(true);
-                        //  mMediaRecorder.reset();
-                        if (Global.UPLOAD_VIDEO_FLAG == false) {
-                            if (!TextUtils.isEmpty(Global.VideoFileName)) {
-                                boolean deleteResult = FileUtils.deleteFile(new File(Global.VideoFileName));
-                                if (deleteResult == true) {
-                                    LOGGER.i("collectNumberHandler录制视频删除成功！");
-                                }
-                            }
+                        // 停止视频录制
+                        Log.i("停止视频录制", "start ");
+                        try {
+                            mMediaRecorder.reset();
+//                          mMediaRecorder.release();
+                        } catch (Exception e) {
+                            Log.i("停止视频录制", e.toString());
                         }
-                        MediaProcessor.getInstance(activity).handleMediaResource_build(activity);
-                        MediaProcessor.getInstance(activity).showInsureDialog();
+                        Log.i("停止视频录制", "end ");
+//                        if (Global.UPLOAD_VIDEO_FLAG == false) {
+//                            if (!TextUtils.isEmpty(Global.VideoFileName)) {
+//                                boolean deleteResult = FileUtils.deleteFile(new File(Global.VideoFileName));
+//                                if (deleteResult == true) {
+//                                    LOGGER.i("collectNumberHandler录制视频删除成功！");
+//                                }
+//                            }
+//                        }
+//                        MediaProcessor_new.getInstance(activity).handleMediaResource_build(activity);
+//                        MediaProcessor_new.getInstance(activity).showInsureDialog();
+
+                        uploadRecognitionResult();
 
                        /* if (Global.model == Model.VERIFY.value()) {
                             PayDataProcessor.getInstance(activity).handleMediaResource_build(activity);
@@ -1611,34 +1478,24 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
 //                    trackingOverlay.refreshDrawableState();
 //                    textureView.refreshDrawableState();
                     if (mReCordLayout != null) {
-                        mReCordLayout.setVisibility(View.VISIBLE);
+                            mReCordLayout.setVisibility(View.VISIBLE);
+                        }
+                        new DetectorActivity_new().reInitCurrentCounter(0, 0, 0);
+                        if (activity != null) {
+                            new MultiBoxTracker_new(activity).reInitCounter(0, 0, 0);
+                        }
+                        if (trackingOverlay != null) {
+                            trackingOverlay.refreshDrawableState();
+                            trackingOverlay.invalidate();
+                        }
+                        if (textureView != null) {
+                            textureView.refreshDrawableState();
                     }
-                    new DetectorActivity_new().reInitCurrentCounter(0, 0, 0);
-                    if (activity != null) {
-                        new MultiBoxTracker_new(activity).reInitCounter(0, 0, 0);
-                    }
-                    if (trackingOverlay != null) {
-                        trackingOverlay.refreshDrawableState();
-                        trackingOverlay.invalidate();
-                    }
-                    if (textureView != null) {
-                        textureView.refreshDrawableState();
-                    }
+                    mRecordControl.setClickable(true);
 
                     LOGGER.i("collectNumberHandler Message 2！");
                     break;
-                //左脸达到数量
-                case 3:
-                    leftEnough = true;
-                    tvBtnLeft.setVisibility(View.GONE);
-                    ivLeft.setVisibility(View.GONE);
-                    break;
-                //右脸达到数量
-                case 4:
-                    rightEnough = true;
-                    tvBtnRight.setVisibility(View.GONE);
-                    ivRight.setVisibility(View.GONE);
-                    break;
+
                 default:
                     break;
             }
@@ -1649,7 +1506,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
     public void setParmes(String sheId, String inspectNo, String reason) {
         String absolutePath = mfile.getAbsolutePath();
         //猪舍id 猪圈id 保单号  出险原因
-        MediaProcessor.getInstance(this.getActivity()).handleMediaResource_build(getActivity(), sheId, inspectNo, reason, mfile);
+//        MediaProcessor.getInstance(this.getActivity()).handleMediaResource_build(getActivity(), sheId, inspectNo, reason, mfile);
     }
 // TODO: 2018/9/18 By:LuoLu
 //    /**
@@ -1673,5 +1530,197 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
 //        assertTrue("Capture session type must be " + sessionType, isHighSpeed == CameraConstrainedHighSpeedCaptureSession.class.isAssignableFrom(session.getClass()));
 //        return session;
 //    }
+
+
+
+    private static void uploadRecognitionResult() {
+        Dialog dialog;
+        String text = String.format("本次点数采集:\n" +
+                        "合计 %d头 时长%d秒\n" +
+                        "上次点数采集:\n" +
+                        "合计 %s头 时长%s秒", sowCount, (int) ((System.currentTimeMillis() - tmieVideoStart) / 1000),
+               mOldAutoCount, mOldDuration);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        LayoutInflater inflater = LayoutInflater.from(activity);
+        View view = inflater.inflate(R.layout.hog_finish_layout, null);
+        TextView msg = view.findViewById(R.id.TV_msg);
+        msg.setText(text);
+        TextView cancel = view.findViewById(R.id.TV_cancel);
+        cancel.setText("重点本舍");
+        TextView submit = view.findViewById(R.id.TV_submit);
+        submit.setText("完成");
+        TextView title = view.findViewById(R.id.TV_title);
+        title.setText("确认完成");
+
+        dialog = builder.create();
+        dialog.show();
+        dialog.getWindow().setContentView(view);
+
+        view.findViewById(R.id.TV_close).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                synchronized (activity) {
+                    dialog.dismiss();
+                    activity.startActivity(new Intent(activity, DetectorActivity_new.class));
+                    collectNumberHandler.sendEmptyMessage(2);
+                }
+            }
+        });
+
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                showProgressDialog(activity);
+                mProgressDialog.show();
+                List<RecognitionResult> results = new ArrayList<>();
+
+                results.add(new RecognitionResult(
+                        1,sowCount,null,""
+                ));
+
+                uploadRecognitionResult(mSheId, mSheName, (int) ((System.currentTimeMillis() - tmieVideoStart) / 1000),
+                        results, activity, new CounterHelper.OnUploadResultListener() {
+                            @Override
+                            public void onCompleted(boolean succeed, String resutl) {
+                                activity.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mProgressDialog.dismiss();
+                                        if (succeed) {
+                                            try {
+                                                JSONObject jsonObject = new JSONObject(resutl);
+                                                int status = jsonObject.getInt("status");
+                                                String msg = jsonObject.getString("msg");
+                                                if (status != 1) {
+                                                    Toast.makeText(activity, "上传失败！"+msg, Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    Toast.makeText(activity, "上传成功！", Toast.LENGTH_SHORT).show();
+                                                    new Handler().postDelayed(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            activity.finish();
+                                                        }
+                                                    }, 500);
+                                                }
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                                Toast.makeText(activity, "上传失败！", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } else {
+                                            Toast.makeText(activity, "上传失败！", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                            }
+                        });
+            }
+        });
+
+        dialog.getWindow().setGravity(Gravity.CENTER);
+        dialog.setCancelable(true);
+    }
+
+    private static ProgressDialog mProgressDialog;
+    private static void showProgressDialog(Context context) {
+        mProgressDialog = new ProgressDialog(context);
+        mProgressDialog.setTitle(R.string.dialog_title);
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgressDialog.setCancelable(false);//false
+
+
+        mProgressDialog.setCanceledOnTouchOutside(false);//false
+        mProgressDialog.setIcon(R.drawable.ic_launcher);
+//        mProgressDialog.setButton(ProgressDialog.BUTTON_POSITIVE, "确定", mProgClickListener);
+        mProgressDialog.setMessage("正在识别......");
+//        mProgressDialog.show();
+//        Button positive = mProgressDialog.getButton(ProgressDialog.BUTTON_POSITIVE);
+//        if (positive != null) {
+//            positive.setVisibility(View.GONE);
+//        }
+    }
+
+
+    public static void uploadRecognitionResult(String sheId, String sheName, int duration,
+                                               List<RecognitionResult> results,
+                                               Context context, CounterHelper.OnUploadResultListener listener) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String path = com.xiangchuang.risks.utils.FileUtils.createTempDir(context);
+                File[] files = new File[results.size()];
+                files[0] = new File(Global.mediaPayItem.getVideoDir());;
+
+                int totalCount = 0;
+                int mAutoCount = 0;
+                String locationString = "";
+                try {
+                    JSONArray arrays = new JSONArray();
+                    for (RecognitionResult recognitionResult : results) {
+                        JSONObject jsonObject = new JSONObject();
+                        //经度 纬度 猪圈名字 图片名字 当前猪圈数
+                        jsonObject.put("lat", recognitionResult.lat);
+                        jsonObject.put("lon", recognitionResult.lon);
+                        jsonObject.put("name", "猪圈" + (recognitionResult.index + 1));
+                        jsonObject.put("picName", "");
+                        jsonObject.put("count", recognitionResult.count);
+                        jsonObject.put("autoCount", recognitionResult.autoCount);
+                        arrays.put(jsonObject);
+                        totalCount += recognitionResult.autoCount;
+                        mAutoCount += recognitionResult.autoCount;
+
+                    }
+                    JSONObject root = new JSONObject();
+                    root.put("pigsty", arrays);
+                    locationString = root.toString();
+                } catch (JSONException e) {
+                    listener.onCompleted(false, "");
+                    return;
+                }
+
+                File zipFile = new File(path, "out.zip");
+                ZipUtil.zipFiles(files, zipFile);
+                Map map = new HashMap();
+                map.put(Constants.AppKeyAuthorization, "hopen");
+                map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, context));
+
+//                String url = "http://47.92.167.61:8081/numberCheck/app/sheCommit";
+                Map<String, String> param = new HashMap<>();
+                param.put("sheId", sheId);
+                param.put("name", sheName);
+                param.put("count", "" + totalCount);
+                param.put("autoCount", "" + mAutoCount);
+                param.put("location", locationString);
+                param.put("timeLength", "" + duration);
+                param.put("juanCnt", "" + results.size());
+                param.put("createuser", "" + PreferencesUtils.getIntValue(Constants.userid, MyApplication.getAppContext()));
+                OkHttp3Util.uploadPreFile(Constants.SHECOMMIT, zipFile, "out.zip", param, map, new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        listener.onCompleted(false, "");
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        if (response.code() == 200) {
+                            String resutl = response.body().string();
+                            listener.onCompleted(true, resutl);
+                        } else{
+                            listener.onCompleted(false, "");
+                        }
+                    }
+                });
+            }
+        }).start();
+    }
 
 }

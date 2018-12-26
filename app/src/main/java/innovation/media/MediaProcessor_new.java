@@ -9,7 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -27,7 +26,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
@@ -47,12 +45,10 @@ import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
 import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
 import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
 
-
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.tensorflow.demo.DetectorActivity;
+import org.tensorflow.demo.DetectorActivity_new;
 import org.tensorflow.demo.Global;
-import org.tensorflow.demo.SmallVideoActivity;
 import org.tensorflow.demo.ToubaoCowInfoActivity;
 import org.tensorflow.demo.env.Logger;
 
@@ -75,10 +71,8 @@ import innovation.entry.NewBuildResultObject;
 import innovation.location.LocationManager_new;
 import innovation.login.RespObject;
 import innovation.login.Utils;
-//import innovation.tensorflow.tracking.FaceDetector;
 import innovation.upload.UploadHelper;
 import innovation.upload.UploadThread;
-import innovation.utils.ConstUtils;
 import innovation.utils.FileUtils;
 import innovation.utils.HttpRespObject;
 import innovation.utils.HttpUtils;
@@ -91,23 +85,22 @@ import okhttp3.FormBody;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-
 import static android.content.ContentValues.TAG;
-import static com.xiangchuangtec.luolu.animalcounter.MyApplication.isNoCamera;
-import static innovation.entry.InnApplication.ANIMAL_TYPE;
 import static innovation.entry.InnApplication.getCowEarNumber;
 import static innovation.entry.InnApplication.getCowType;
 import static innovation.entry.InnApplication.getStringTouboaExtra;
 import static innovation.entry.InnApplication.getlipeiTempNumber;
-import static org.tensorflow.demo.CameraConnectionFragment.collectNumberHandler;
 import static innovation.login.AddLipeiActivity.lipeiNumber;
+import static org.tensorflow.demo.CameraConnectionFragment_new.collectNumberHandler;
+
+//import innovation.tensorflow.tracking.FaceDetector;
 
 /**
  * Author by luolu, Date on 2018/8/16.
  * COMPANY：InnovationAI
  */
 
-public class MediaProcessor {
+public class MediaProcessor_new {
     //调用搜索接口的次数
     private int searchSallmerCount = 0;
 
@@ -139,8 +132,8 @@ public class MediaProcessor {
     private static final int MSG_UI_FINISH_VERIFY = 19;
     private static final int MSG_UI_FINISH_BUILD = 21;
     private static final int MSG_UI_FINISH_ZIP_FILE_NULL = 22;
-    private final Logger mLogger = new Logger(MediaProcessor.class.getSimpleName());
-    private static MediaProcessor sInstance;
+    private final Logger mLogger = new Logger(MediaProcessor_new.class.getSimpleName());
+    private static MediaProcessor_new sInstance;
     private final Context mContext;
     private Activity mActivity = null;
 //    private final FaceDetector mFaceDetector_new; //haojie add
@@ -191,18 +184,18 @@ public class MediaProcessor {
     private boolean isChongFu = false;
 
 
-    public static MediaProcessor getInstance(Context context) {
+    public static MediaProcessor_new getInstance(Context context) {
         if (sInstance == null) {
-            synchronized (MediaProcessor.class) {
+            synchronized (MediaProcessor_new.class) {
                 if (sInstance == null) {
-                    sInstance = new MediaProcessor(context);
+                    sInstance = new MediaProcessor_new(context);
                 }
             }
         }
         return sInstance;
     }
 
-    public MediaProcessor(Context context) {
+    public MediaProcessor_new(Context context) {
         mContext = context.getApplicationContext();
         final String[][] MODEL_PARAMS = {
                 // animal type=0
@@ -389,24 +382,7 @@ public class MediaProcessor {
             showProgressDialog(activity);
             writeNumnerFile(pignum);
             dialogProcessUploadOneImage();
-           /* if (InnApplication.isOfflineMode) {
-                showProgressDialog(activity);
-                dialogProcessUploadOneImage();
-            } else {
-                String pignum = meditText.getText().toString().trim();
-                if (pignum.length() == 0) {
-//                    mInsureDialog.setTextTips("请输入编号！！！");
-//                    return;
-                    pignum = "110";
-                }
-                saveLibId(pignum);
-                mInsureDialog.dismiss();
-                showProgressDialog(activity);
-                writeNumnerFile(pignum);
-                dialogProcessUploadOneImage();
-//                dialogProcessUploadAll();
-            }
-*/
+
         };
 
         View.OnClickListener listener_upload_all = v -> {
@@ -440,9 +416,8 @@ public class MediaProcessor {
         View.OnClickListener listener_cancel = v -> {
             editRecoed();
             mInsureDialog.dismiss();
-            reInitCurrentDir();
             collectNumberHandler.sendEmptyMessage(2);
-            mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
+            mActivity.startActivity(new Intent(mActivity, DetectorActivity_new.class));
 
         };
         mInsureDialog.setAbortButton("放弃", listener_abort);
@@ -544,7 +519,6 @@ public class MediaProcessor {
                                             showDialog(bean);
                                         } else if (1 == bean.getStatus() && 0 == bean.getData().getSimilarFlg()) {
                                             //无相似
-                                            lipeiId = bean.getData().getLipeiId() + "";
                                             mProgressDialog.dismiss();
                                             showSuccessDialog(bean.getMsg());
                                         }
@@ -682,7 +656,7 @@ public class MediaProcessor {
             @Override
             public void onPositive() {
                 collectNumberHandler.sendEmptyMessage(2);
-                mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
+                mActivity.startActivity(new Intent(mActivity, DetectorActivity_new.class));
             }
 
             @Override
@@ -705,12 +679,12 @@ public class MediaProcessor {
             @Override
             public void onClick(View v) {
                 dialogcreate.dismiss();
-                mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
+                mActivity.startActivity(new Intent(mActivity, DetectorActivity_new.class));
                 mActivity.finish();
             }
         });*/
     }
-    //预理赔库已有相似度"++"对象
+
     private void showDialog(CommitBean bean) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
         View inflate = View.inflate(mActivity, R.layout.pre_result5, null);
@@ -735,7 +709,7 @@ public class MediaProcessor {
                 dialogcreate.dismiss();
                 collectNumberHandler.sendEmptyMessage(2);
                 //mActivity.startActivity(new Intent(mActivity, PreparedLiPeiActivity.class));
-                mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
+                mActivity.startActivity(new Intent(mActivity, DetectorActivity_new.class));
 
             }
         });
@@ -746,11 +720,8 @@ public class MediaProcessor {
             }
         });
     }
-    //
+
     private void showSuccessDialog(String mmsg) {
-        if(isNoCamera){
-            mmsg +="\n为完成理赔，请拍摄死猪和猪舍短视频并上传。";
-        }
         AlertDialogManager.showMessageDialogOne(mActivity, "提示", mmsg, new AlertDialogManager.DialogInterface() {
             @Override
             public void onPositive() {
@@ -759,14 +730,7 @@ public class MediaProcessor {
                 if ("lipei".equals(PreferencesUtils.getStringValue(Constants.fleg, MyApplication.getAppContext()))){
                     mActivity.startActivity(new Intent(mActivity, AddPigPicActivity.class).putExtra("lipeiid",lipeiId));
                 }
-
-                if(isNoCamera){
-                    mActivity.startActivity(new Intent(mActivity, SmallVideoActivity.class).putExtra("lipeiid", lipeiId));
-                    mActivity.finish();
-                }else{
-                    mActivity.finish();
-                }
-
+                mActivity.finish();
             }
 
             @Override
@@ -848,7 +812,7 @@ public class MediaProcessor {
             public void onClick(View v) {
                 dialogcreate.dismiss();
                 collectNumberHandler.sendEmptyMessage(2);
-                mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
+                mActivity.startActivity(new Intent(mActivity, DetectorActivity_new.class));
             }
         });
         result5_goon.setOnClickListener(new View.OnClickListener() {
@@ -1008,7 +972,7 @@ public class MediaProcessor {
             public void onClick(View v) {
                 dialogcreate.dismiss();
                 collectNumberHandler.sendEmptyMessage(2);
-                mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
+                mActivity.startActivity(new Intent(mActivity, DetectorActivity_new.class));
             }
         });
         //继续
@@ -1038,7 +1002,7 @@ public class MediaProcessor {
             public void onClick(View v) {
                 dialogcreate.dismiss();
                 collectNumberHandler.sendEmptyMessage(2);
-                mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
+                mActivity.startActivity(new Intent(mActivity, DetectorActivity_new.class));
             }
         });
         /*liresult1_goon.setOnClickListener(new View.OnClickListener() {
@@ -2295,7 +2259,7 @@ public class MediaProcessor {
 
                 mProgressDialog.dismiss();
                 collectNumberHandler.sendEmptyMessage(2);
-                Intent intent = new Intent(mActivity, DetectorActivity.class);
+                Intent intent = new Intent(mActivity, DetectorActivity_new.class);
                 intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                 mActivity.startActivity(intent);
             });
@@ -2451,7 +2415,7 @@ public class MediaProcessor {
                                         View.OnClickListener listener_ReCollect = v -> {
                                             dialogLipeiResult.dismiss();
                                             collectNumberHandler.sendEmptyMessage(2);
-                                            Intent intent = new Intent(mActivity, DetectorActivity.class);
+                                            Intent intent = new Intent(mActivity, DetectorActivity_new.class);
                                             intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                             intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                                             mActivity.startActivity(intent);
@@ -2562,7 +2526,7 @@ public class MediaProcessor {
                                         View.OnClickListener listener_ReCollect = v -> {
                                             dialogLipeiResult.dismiss();
                                             collectNumberHandler.sendEmptyMessage(2);
-                                            Intent intent = new Intent(mActivity, DetectorActivity.class);
+                                            Intent intent = new Intent(mActivity, DetectorActivity_new.class);
                                             intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                             intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                                             mActivity.startActivity(intent);
@@ -2671,7 +2635,7 @@ public class MediaProcessor {
                                         View.OnClickListener listener_ReCollect = v -> {
                                             dialogLipeiResult.dismiss();
                                             collectNumberHandler.sendEmptyMessage(2);
-                                            Intent intent = new Intent(mActivity, DetectorActivity.class);
+                                            Intent intent = new Intent(mActivity, DetectorActivity_new.class);
                                             intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                             intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                                             mActivity.startActivity(intent);
@@ -2769,7 +2733,7 @@ public class MediaProcessor {
                                         View.OnClickListener listener_ReCollect = v -> {
                                             dialogLipeiResult.dismiss();
                                             collectNumberHandler.sendEmptyMessage(2);
-                                            Intent intent = new Intent(mActivity, DetectorActivity.class);
+                                            Intent intent = new Intent(mActivity, DetectorActivity_new.class);
                                             intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                             intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                                             mActivity.startActivity(intent);
@@ -2824,7 +2788,7 @@ public class MediaProcessor {
                                         public void onClick(DialogInterface dialog, int which) {
                                             dialog.dismiss();
                                             collectNumberHandler.sendEmptyMessage(2);
-                                            Intent intent = new Intent(mActivity, DetectorActivity.class);
+                                            Intent intent = new Intent(mActivity, DetectorActivity_new.class);
                                             intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                             intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                                             mActivity.startActivity(intent);
@@ -2976,7 +2940,7 @@ public class MediaProcessor {
                                             public void onClick(DialogInterface dialog, int which) {
                                                 dialog.dismiss();
                                                 collectNumberHandler.sendEmptyMessage(2);
-                                                Intent intent = new Intent(mActivity, DetectorActivity.class);
+                                                Intent intent = new Intent(mActivity, DetectorActivity_new.class);
                                                 intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                                 intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                                                 mActivity.startActivity(intent);
@@ -3001,7 +2965,7 @@ public class MediaProcessor {
                                             public void onClick(DialogInterface dialog, int which) {
                                                 dialog.dismiss();
                                                 collectNumberHandler.sendEmptyMessage(2);
-                                                Intent intent = new Intent(mActivity, DetectorActivity.class);
+                                                Intent intent = new Intent(mActivity, DetectorActivity_new.class);
                                                 intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                                 intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                                                 mActivity.startActivity(intent);
@@ -3020,7 +2984,7 @@ public class MediaProcessor {
                                         public void onClick(DialogInterface dialog, int which) {
                                             dialog.dismiss();
                                             collectNumberHandler.sendEmptyMessage(2);
-                                            Intent intent = new Intent(mActivity, DetectorActivity.class);
+                                            Intent intent = new Intent(mActivity, DetectorActivity_new.class);
                                             intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                             intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                                             mActivity.startActivity(intent);
@@ -3039,7 +3003,7 @@ public class MediaProcessor {
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
                                         collectNumberHandler.sendEmptyMessage(2);
-                                        Intent intent = new Intent(mActivity, DetectorActivity.class);
+                                        Intent intent = new Intent(mActivity, DetectorActivity_new.class);
                                         intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                         intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                                         mActivity.startActivity(intent);

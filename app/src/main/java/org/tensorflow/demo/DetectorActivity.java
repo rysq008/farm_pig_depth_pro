@@ -166,10 +166,10 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     private static final int CHECK_COUNTER = 20; //允许的最大错误图像次数   //定义提示类型
     //end add
     private int imageCount = 10;// add for test
-    private static final int TFLITE_INPUT_SIZE = 300;
+    private static final int TFLITE_INPUT_SIZE = 192;
     private static final boolean TFLITE_IS_QUANTIZED = true;
-//    private static final String PIG_TFLITE_DETECT_MODEL_FILE = "pig_1026_detect_xincai_addbg.tflite";
-    private static final String PIG_TFLITE_DETECT_MODEL_FILE = "ssd_mobilenet_v2_focal_quantized_coco.tflite";
+    private static final String PIG_TFLITE_DETECT_MODEL_FILE = "pig_1026_detect_xincai_addbg.tflite";
+//    private static final String PIG_TFLITE_DETECT_MODEL_FILE = "ssd_mobilenet_v2_focal_quantized_coco.tflite";
 
     public static int type1Count = 0;
     public static int type2Count = 0;

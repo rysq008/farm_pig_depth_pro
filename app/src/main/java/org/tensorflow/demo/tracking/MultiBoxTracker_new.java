@@ -32,6 +32,8 @@ import android.util.Pair;
 import android.util.TypedValue;
 import android.widget.Toast;
 
+import com.xiangchuangtec.luolu.animalcounter.R;
+
 import innovation.biz.classifier.BreedingPigFaceDetectTFlite;
 import innovation.biz.iterm.PostureItem;
 import innovation.biz.iterm.PredictRotationIterm;
@@ -53,7 +55,11 @@ import java.util.Vector;
 import innovation.biz.iterm.PostureItem;
 import innovation.utils.ScreenUtil;
 
+import static com.xiangchuangtec.luolu.animalcounter.MyApplication.currentPadSize;
+import static com.xiangchuangtec.luolu.animalcounter.MyApplication.sowCount;
 import static innovation.utils.ConstUtils.ANIMAL_TYPE_PIG;
+import static org.tensorflow.demo.DetectorActivity_new.offsetX;
+import static org.tensorflow.demo.DetectorActivity_new.offsetY;
 
 
 /**
@@ -208,7 +214,7 @@ public class MultiBoxTracker_new {
         int right = centerOfCanvas.x + (rectW);
         int bottom = centerOfCanvas.y + (rectH / 2);
         listAngles_capture.clear();
-        getCurrentTypeList();
+//        getCurrentTypeList();
 //
 //        final Paint boxPaint = new Paint();
 //        boxPaint.setColor(Color.BLUE);
@@ -248,54 +254,55 @@ public class MultiBoxTracker_new {
                         false);
         Log.e("trackedObjects.size()", "---"+trackedObjects.size() );;
 
-        for (final TrackedRecognition recognition : trackedObjects) {
+        float width = canvas.getWidth();
+        float height = canvas.getHeight();
+
+        for (int i = 0; i < trackedObjects.size(); i++) {
+//        for (final TrackedRecognition recognition : trackedObjects) {
             final RectF trackedPos =
                     (objectTracker != null)
-                            ? recognition.trackedObject.getTrackedPositionInPreviewFrame()
-                            : new RectF(recognition.location);
+                            ? trackedObjects.get(i).trackedObject.getTrackedPositionInPreviewFrame()
+                            : new RectF(trackedObjects.get(i).location);
             getFrameToCanvasMatrix().mapRect(trackedPos);
-            boxPaint.setColor(recognition.color);
+            boxPaint.setColor(trackedObjects.get(i).color);
             final float cornerSize = Math.min(trackedPos.width(), trackedPos.height()) / 8.0f;
             canvas.drawRoundRect(trackedPos, cornerSize, cornerSize, boxPaint);
 
-//            canvas.drawCircle((float)x,(float)y,35,pointPaint);
-//            textPaint.setColor(Color.YELLOW);
-//            canvas.drawText(tempCount+"", (float)x,(float)y+12f,textPaint);
-
-            final String labelString =
-                    !TextUtils.isEmpty(recognition.title)
-                            ? String.format("%s %.2f", recognition.title, recognition.detectionConfidence)
-                            : String.format("%.2f", recognition.detectionConfidence);
-            borderedText.drawText(canvas, trackedPos.left + cornerSize, trackedPos.bottom, labelString);
+//            final String labelString = "x="+x+";y="+y +"trackedPos="+trackedPos.toString()+";\noffsetX="+offsetX +";offsetY="+offsetY;
+//                    !TextUtils.isEmpty(trackedObjects.get(i).title)
+//                            ? String.format("%s %.2f", trackedObjects.get(i).title, trackedObjects.get(i).detectionConfidence)
+//                            : String.format("%.2f", trackedObjects.get(i).detectionConfidence);
+//            Log.e("labelString", "labelString: "+labelString);
+            borderedText.drawText(canvas, trackedPos.left + cornerSize, trackedPos.bottom, (sowCount-i)+"头");
         }
 
-        for (TrackerItem item : mFrameRects) {
-            RectF trackRectF = item.mRect;
-            float cornerSize = Math.min(trackRectF.width(), trackRectF.height()) / 8.0f;
-            String tempAngle = "未知";
-            if (DetectorActivity_new.AngleTrackType == 1) {
-                tempAngle = "左脸";
-            } else if (DetectorActivity_new.AngleTrackType == 2) {
-                tempAngle = "正脸";
-            } else if (DetectorActivity_new.AngleTrackType == 3) {
-                tempAngle = "右脸";
-            } else if (DetectorActivity_new.AngleTrackType == 10) {
-                tempAngle = "未识别角度";
-            }else {
-                tempAngle = "未识别角度";
-            }
-            String s1 = tempAngle + "\r\n";
-            Vector<String> vec = new Vector<String>();
-            vec.add(s1);//把字符串str压进容器
-            borderedText.drawLines(canvas, (trackRectF.left + trackRectF.right) / 2, (trackRectF.top + trackRectF.bottom) / 2, vec);
-            //在屏幕上输出已采集到的角度�?
-            showTime_start = System.currentTimeMillis();
-            int drawY_capture = (int) (borderedText.getTextSize() * listAngles_capture.size());
-            borderedText.drawLines(canvas, 100, drawY_capture + 50, listAngles_capture);
-        }
-
-        // canvas.drawRect(100f, 100f, 100f, 100f, boxPaint);
-        borderedText.drawText(canvas, (left + right) / 2 - 190, top, getReminderMsgText());
+//        for (TrackerItem item : mFrameRects) {
+//            RectF trackRectF = item.mRect;
+//            float cornerSize = Math.min(trackRectF.width(), trackRectF.height()) / 8.0f;
+//            String tempAngle = "未知";
+//            if (DetectorActivity_new.AngleTrackType == 1) {
+//                tempAngle = "左脸";
+//            } else if (DetectorActivity_new.AngleTrackType == 2) {
+//                tempAngle = "正脸";
+//            } else if (DetectorActivity_new.AngleTrackType == 3) {
+//                tempAngle = "右脸";
+//            } else if (DetectorActivity_new.AngleTrackType == 10) {
+//                tempAngle = "未识别角度";
+//            }else {
+//                tempAngle = "未识别角度";
+//            }
+//            String s1 = tempAngle + "\r\n";
+//            Vector<String> vec = new Vector<String>();
+//            vec.add(s1);//把字符串str压进容器
+//            borderedText.drawLines(canvas, (trackRectF.left + trackRectF.right) / 2, (trackRectF.top + trackRectF.bottom) / 2, vec);
+//            //在屏幕上输出已采集到的角度�?
+//            showTime_start = System.currentTimeMillis();
+//            int drawY_capture = (int) (borderedText.getTextSize() * listAngles_capture.size());
+//            borderedText.drawLines(canvas, 100, drawY_capture + 50, listAngles_capture);
+//        }
+//
+//        // canvas.drawRect(100f, 100f, 100f, 100f, boxPaint);
+//        borderedText.drawText(canvas, (left + right) / 2 - 190, top, getReminderMsgText());
     }
 
     /**
@@ -581,7 +588,7 @@ public class MultiBoxTracker_new {
         type1Sum = type1;
         type2Sum = type2;
         type3Sum = type3;
-        getCurrentTypeList();
+//        getCurrentTypeList();
         listAngles_capture.clear();
     }
 
