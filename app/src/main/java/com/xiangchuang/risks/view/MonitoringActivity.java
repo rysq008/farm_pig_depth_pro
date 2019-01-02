@@ -24,6 +24,9 @@ import com.xiangchuangtec.luolu.animalcounter.R;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
 import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
 
+/**
+ * 监控信息
+ */
 public class MonitoringActivity extends AppCompatActivity {
 
     private WebView webView;
@@ -53,7 +56,6 @@ public class MonitoringActivity extends AppCompatActivity {
         webView.addJavascriptInterface(this,"android");//添加js监听 这样html就能调用客户端
         webView.setWebChromeClient(webChromeClient);
         webView.setWebViewClient(webViewClient);
-
 
         WebSettings webSettings=webView.getSettings();
         webSettings.setDisplayZoomControls(false);

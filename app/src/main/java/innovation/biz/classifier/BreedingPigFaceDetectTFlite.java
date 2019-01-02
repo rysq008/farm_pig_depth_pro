@@ -12,6 +12,7 @@ import android.os.SystemClock;
 import android.os.Trace;
 import android.util.Log;
 
+import com.xiangchuang.risks.model.bean.shanTiaoBean;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 
 import org.tensorflow.demo.env.ImageUtils;
@@ -46,9 +47,9 @@ import static org.tensorflow.demo.DetectorActivity_new.offsetX;
 import static org.tensorflow.demo.DetectorActivity_new.offsetY;
 
 /**
- * @author luolu .2018/8/4
+ *
  */
-public class BreedingPigFaceDetectTFlite{
+public class BreedingPigFaceDetectTFlite {
     private static final Logger sLogger = new Logger(BreedingPigFaceDetectTFlite.class);
 
     // 2018/12/18 hedazhi edit start
@@ -58,7 +59,7 @@ public class BreedingPigFaceDetectTFlite{
     private static final float MIN_CONFIDENCE = 0.5f;
 
     // 2018/12/18 hedazhi edit end
-    private static final String TAG = "PigFaceDetectTFlite";
+    private static final String TAG = "PigDetectTFlite";
     // Only return this many results.
     private static final int NUM_DETECTIONS = 10;
     // Float model
@@ -84,6 +85,15 @@ public class BreedingPigFaceDetectTFlite{
     public static RecognitionAndPostureItem recognitionAndPostureItem;
     //记录前一帧的排序后矩形集合
     private ArrayList<BreedingPigFaceDetectTFlite.Recognition> lastRecognitions = new ArrayList<>();
+
+    int padSize;
+
+    //记录闪跳部分的集合
+    private List<shanTiaoBean> shanTiaoBeanList = new ArrayList<>();
+    //x轴偏移量
+    float centerXOffset = 0;
+    //x轴最大位置 超出此位置不记录数量
+    float maxBase = 0;
 
     /**
      * Memory-map the model file in Assets.
@@ -166,12 +176,14 @@ public class BreedingPigFaceDetectTFlite{
 
         int height = bitmap.getHeight();
         int width = bitmap.getWidth();
-        int padSize = height;
+        padSize = height;
         currentPadSize = padSize;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS", Locale.getDefault());
         srcPigBitmapName = sdf.format(new Date(System.currentTimeMillis())) + ".jpeg";
 //        saveBitMap(bitmap, "pigSrcImage", srcPigBitmapName);
         sLogger.i("padBitmap padSize %d:" + padSize);
+        maxBase = 0.7f * padSize - offsetY;
+
         Matrix frameToCropTransform = ImageUtils.getTransformationMatrix(bitmap.getWidth(), bitmap.getHeight(),
                 inputSize, inputSize, 0, true);
         Matrix cropToFrameTransform = new Matrix();
@@ -254,7 +266,7 @@ public class BreedingPigFaceDetectTFlite{
 
         final ArrayList<Recognition> recognitions = new ArrayList<>();
 
-        for(int i = 0; i < outputScores[0].length;++i){
+        for (int i = 0; i < outputScores[0].length; ++i) {
             if (outputScores[0][i] > 1 || outputScores[0][i] < MIN_CONFIDENCE) {
                 sLogger.i("分值超出/分值不足：" + outputScores[0][0]);
 //            saveBitMap(bitmap, "pigDetected_ng2", srcPigBitmapName);
@@ -269,11 +281,11 @@ public class BreedingPigFaceDetectTFlite{
             float modelY1 = (float) outputLocations[0][i][3];
             float modelX1 = (float) outputLocations[0][i][2];
 
-            Log.e(TAG, "outputLocations: Xmin="+modelX0+";Ymin="
-                    + modelY0+";Xmax="+modelX1 +";Ymax="+modelY1);
+            Log.e(TAG, "outputLocations: Xmin=" + modelX0 + ";Ymin="
+                    + modelY0 + ";Xmax=" + modelX1 + ";Ymax=" + modelY1);
 
             //判断当前xmin是否大于 基线0.15
-            if(modelY0 < 0.15){
+            if ((modelY0 + modelY1) / 2 < 0.15) {
                 continue;
             }
 
@@ -307,7 +319,7 @@ public class BreedingPigFaceDetectTFlite{
             int widthZoom = 320, heightZoom = 320;
             Bitmap resizeClipBitmap = zoomImage(padBitmap2SpRatio, widthZoom, heightZoom);
 
-            PostureItem posture  = new PostureItem(0,0,0,
+            PostureItem posture = new PostureItem(0, 0, 0,
                     modelX0, modelY0, modelX1, modelY1, outputScores[0][i],
                     modelY0 * padSize, modelX0 * padSize,
                     modelY1 * padSize, modelX1 * padSize, resizeClipBitmap, bitmap);
@@ -320,41 +332,49 @@ public class BreedingPigFaceDetectTFlite{
         Collections.sort(recognitions, new Comparator<Recognition>() {
             @Override
             public int compare(Recognition o1, Recognition o2) {
-                return Float.compare((o1.location.left + o1.location.right)/2 , (o2.location.left + o2.location.right)/2);
+                return Float.compare((o1.location.left + o1.location.right) / 2, (o2.location.left + o2.location.right) / 2);
             }
         });
 
         //获取的画框集合size大于0 时
-        if(recognitions.size() > 0){
-            float cIou = 0;
-            Log.e(TAG, "lastRecognitions.size: "+lastRecognitions.size());
-            Log.d("数组 赋值前", "lrecognitions: "+lastRecognitions.toString());
-            if(lastRecognitions.size() > 0){
-                //计算重合面积百分比
-                cIou = calculateIou(recognitions,lastRecognitions);
-            }
-            Log.e("cIou", "cIou== "+cIou);
+        if (recognitions.size() > 0) {
+//            float cIou = 0;
+//            Log.e(TAG, "lastRecognitions.size: " + lastRecognitions.size());
+//            Log.d("数组 赋值前", "lrecognitions: " + lastRecognitions.toString());
+//
+//            if (lastRecognitions.size() > 0) {
+//                //计算重合面积百分比
+//                cIou = calculateIou(recognitions, lastRecognitions);
+//            }
+//            Log.e("cIou", "cIou== " + cIou);
+//
+//            //获取去当前识别中心点
+//            float center = (recognitions.get(0).getLocation().left + recognitions.get(0).getLocation().right) / 2;
+//            Log.e("center", "center: " + center);
+//            //如果上次的xmin 大于当前的xmin 则判断是有新的对象进入 计数器++  lastxmin从新赋值
+//            if (lastXmin > center && cIou < 0.53f) {
+//                sowCount++;
+//            }
 
-            //获取去当前识别中心点
-            float center = (recognitions.get(0).getLocation().left + recognitions.get(0).getLocation().right)/2;
-            Log.e("center", "center: "+center );
-            //如果上次的xmin 大于当前的xmin 则判断是有新的对象进入 计数器++  lastxmin从新赋值
-            if(lastXmin > center && cIou < 0.53f){
-                sowCount++;
+            if (lastRecognitions.size() > 0) {
+                //进入计数计算
+                calculateListIou(recognitions, lastRecognitions);
             }
+
             //如果计数器当前值为0，取当前集合的size赋值给计数器
-            if(sowCount == 0){
+            if (sowCount == 0) {
                 sowCount = recognitions.size();
             }
+
             lastRecognitions.clear();
             lastRecognitions.addAll(recognitions);
-            lastXmin = center;
+//            lastXmin = center;
         }
 
-        Log.d("数组", "crecognitions: "+recognitions.toString());
-        Log.d("数组 赋值以后", "lrecognitions: "+lastRecognitions.toString());
+        Log.d("数组", "crecognitions: " + recognitions.toString());
+        Log.d("数组 赋值以后", "lrecognitions: " + lastRecognitions.toString());
 
-        Log.e("sowCount", "sowCount"+sowCount );
+        Log.e("sowCount", "sowCount" + sowCount);
         recognitionAndPostureItem.setList(recognitions);
 
         recognitionAndPostureItem.setPostureItem(postureItemList);
@@ -362,13 +382,10 @@ public class BreedingPigFaceDetectTFlite{
         return recognitionAndPostureItem;
     }
 
-
-
-
     public class RecognitionAndPostureItem {
         private List<Recognition> list;
 
-//        private PostureItem postureItem;
+        //        private PostureItem postureItem;
         private PredictRotationIterm predictRotationIterm;
         private List<PostureItem> postureItemLis;
 
@@ -424,9 +441,11 @@ public class BreedingPigFaceDetectTFlite{
          */
         private final Float confidence;
 
-        /** Optional location within the source image for the location of the recognized object. */
+        /**
+         * Optional location within the source image for the location of the recognized object.
+         */
         private RectF location;
-        private  List<Point> points;
+        private List<Point> points;
 
 
         public Recognition(
@@ -438,6 +457,7 @@ public class BreedingPigFaceDetectTFlite{
             this.location = location;
             this.points = points;
         }
+
         public Recognition(
                 final String id, final String title, final Float confidence, final RectF location) {
             this.id = id;
@@ -465,6 +485,7 @@ public class BreedingPigFaceDetectTFlite{
         public void setLocation(RectF location) {
             this.location = location;
         }
+
         public List<Point> getPoints() {
             return points;
         }
@@ -497,20 +518,20 @@ public class BreedingPigFaceDetectTFlite{
     }
 
     //计算重合区域面积与总面积的百分比
-    private float calculateIou(ArrayList<Recognition> currents, ArrayList<Recognition> lasts){
+    private float calculateIou(ArrayList<Recognition> currents, ArrayList<Recognition> lasts) {
         float iou = 0;
 
-        Log.e(TAG, "calculateIou: +currents.left" + currents.get(0).getLocation().left );
-        Log.e(TAG, "calculateIou: +lasts.left" + lasts.get(0).getLocation().left );
+        Log.e(TAG, "calculateIou: +currents.left" + currents.get(0).getLocation().left);
+        Log.e(TAG, "calculateIou: +lasts.left" + lasts.get(0).getLocation().left);
 
-        Log.e(TAG, "calculateIou: +currents.right" + currents.get(0).getLocation().right );
-        Log.e(TAG, "calculateIou: +lasts.right" + lasts.get(0).getLocation().right );
+        Log.e(TAG, "calculateIou: +currents.right" + currents.get(0).getLocation().right);
+        Log.e(TAG, "calculateIou: +lasts.right" + lasts.get(0).getLocation().right);
 
-        Log.e(TAG, "calculateIou: +currents.top" + currents.get(0).getLocation().top );
-        Log.e(TAG, "calculateIou: +lasts.top" + lasts.get(0).getLocation().top );
+        Log.e(TAG, "calculateIou: +currents.top" + currents.get(0).getLocation().top);
+        Log.e(TAG, "calculateIou: +lasts.top" + lasts.get(0).getLocation().top);
 
-        Log.e(TAG, "calculateIou: +currents.bottom" + currents.get(0).getLocation().bottom );
-        Log.e(TAG, "calculateIou: +lasts.bottom" + lasts.get(0).getLocation().bottom );
+        Log.e(TAG, "calculateIou: +currents.bottom" + currents.get(0).getLocation().bottom);
+        Log.e(TAG, "calculateIou: +lasts.bottom" + lasts.get(0).getLocation().bottom);
 
 
         float leftx1 = Math.max(currents.get(0).getLocation().left, lasts.get(0).getLocation().left);
@@ -523,12 +544,124 @@ public class BreedingPigFaceDetectTFlite{
         float h = righty1 - lefty1;
 
         //重合部分面积
-        float wh = w*h;
+        float wh = w * h;
 
         iou = wh /
-                ((currents.get(0).getLocation().right - currents.get(0).getLocation().left)*(currents.get(0).getLocation().bottom - currents.get(0).getLocation().top) +
-                (lasts.get(0).getLocation().right - lasts.get(0).getLocation().left) * (lasts.get(0).getLocation().bottom - lasts.get(0).getLocation().left) - wh);
+                ((currents.get(0).getLocation().right - currents.get(0).getLocation().left) * (currents.get(0).getLocation().bottom - currents.get(0).getLocation().top) +
+                        (lasts.get(0).getLocation().right - lasts.get(0).getLocation().left) * (lasts.get(0).getLocation().bottom - lasts.get(0).getLocation().left) - wh);
         return iou;
     }
 
+    //计算重合区域面积与总面积的百分比
+    private void calculateListIou(ArrayList<Recognition> currents, ArrayList<Recognition> lasts) {
+        //循环判断前一帧中是否有单独的对象框
+        for (int i = 0; i < lasts.size(); i++) {
+            //标记是否是单独对象
+            boolean isDan = true;
+            for (int j = 0; j < currents.size(); j++) {
+                //获取两帧中的xMin最大值
+                float leftx1 = Math.max(lasts.get(i).getLocation().left, currents.get(j).getLocation().left);
+                //获取两帧中的yMin最大值
+                float lefty1 = Math.max(lasts.get(i).getLocation().top, currents.get(j).getLocation().top);
+                //获取两帧中的xMax最大值
+                float rightx1 = Math.min(lasts.get(i).getLocation().right, currents.get(j).getLocation().right);
+                //获取两帧中的yMax最大值
+                float righty1 = Math.min(lasts.get(i).getLocation().bottom, currents.get(j).getLocation().bottom);
+                //计算宽、高
+                float w = rightx1 - leftx1;
+                float h = righty1 - lefty1;
+                //计算重合部分面积
+                float wh = w * h;
+                float iou = wh /
+                        ((lasts.get(i).getLocation().right - lasts.get(i).getLocation().left)
+                                * (lasts.get(i).getLocation().bottom - lasts.get(i).getLocation().top) +
+                                (currents.get(j).getLocation().right - currents.get(j).getLocation().left)
+                                        * (currents.get(j).getLocation().bottom - currents.get(j).getLocation().left) - wh);
+                //判断重合部分面积是否大于指定阈值， 大于则证明是已存在对象并计算出水平位移， 否则单独是对象
+                if (iou > 0.53f) {
+                    isDan = false;
+                    centerXOffset = ((lasts.get(i).getLocation().right + lasts.get(i).getLocation().left) / 2) -
+                            ((currents.get(j).getLocation().right + currents.get(j).getLocation().left) / 2);
+                    break;
+                } else {
+                    isDan = true;
+                }
+            }
+            if (isDan) {
+                float c = ((lasts.get(i).getLocation().right + lasts.get(i).getLocation().left) / 2);
+                //判断闪跳对象是不是在基线范围内
+                if (c < maxBase) {
+                    //将闪跳对象添加到集合保存
+                    shanTiaoBeanList.add(new shanTiaoBean(c, c));
+                }
+            }
+        }
+        //更新偏移集合
+        if (shanTiaoBeanList.size() > 0) {
+            for (int k = 0; k < shanTiaoBeanList.size(); k++) {
+                float xMi = shanTiaoBeanList.get(k).getxMin();
+                float xMa = shanTiaoBeanList.get(k).getxMax();
+                shanTiaoBeanList.get(k).setxMin(xMi + 0.5f * centerXOffset);
+                shanTiaoBeanList.get(k).setxMax(xMa + 1.5f * centerXOffset);
+                float tempCenter = (shanTiaoBeanList.get(k).getxMax() + shanTiaoBeanList.get(k).getxMin()) / 2;
+                //判断闪跳集合中的对象中心点是否超出范围 超出则删除当前对象
+                if (tempCenter > maxBase) {
+                    shanTiaoBeanList.remove(k);
+                }
+            }
+        }
+        //循环判断后一帧中是否有单独对象
+        for (int i = 0; i < currents.size(); i++) {
+            boolean isDan = false;
+            for (int j = 0; j < lasts.size(); j++) {
+                float leftx1 = Math.max(lasts.get(j).getLocation().left, currents.get(i).getLocation().left);
+                float lefty1 = Math.max(lasts.get(j).getLocation().top, currents.get(i).getLocation().top);
+                float rightx1 = Math.min(lasts.get(j).getLocation().right, currents.get(i).getLocation().right);
+                float righty1 = Math.min(lasts.get(j).getLocation().bottom, currents.get(i).getLocation().bottom);
+                //计算宽、高
+                float w = rightx1 - leftx1;
+                float h = righty1 - lefty1;
+                //计算重合部分面积
+                float wh = w * h;
+                float iou = wh /
+                        ((lasts.get(j).getLocation().right - lasts.get(j).getLocation().left)
+                                * (lasts.get(j).getLocation().bottom - lasts.get(j).getLocation().top) +
+                                (currents.get(i).getLocation().right - currents.get(i).getLocation().left)
+                                        * (currents.get(i).getLocation().bottom - currents.get(i).getLocation().left) - wh);
+                if (iou > 0.53f) {
+                    isDan = false;
+                    break;
+                } else {
+                    isDan = true;
+                }
+            }
+            if (isDan) {
+                float c = (currents.get(i).getLocation().right + currents.get(i).getLocation().left) / 2;
+                float lastC = (lasts.get(0).getLocation().right + lasts.get(0).getLocation().left) / 2;
+                if (shanTiaoBeanList.size() > 0) {
+                    boolean isInXOffset = false;
+                    for (int k = 0; k < shanTiaoBeanList.size(); k++) {
+                        float xMi = shanTiaoBeanList.get(k).getxMin();
+                        float xMa = shanTiaoBeanList.get(k).getxMax();
+                        float tempCenter = (xMi + xMa) / 2;
+                        //判断闪跳集合中的对象中心点是否超出范围 超出则删除当前对象
+                        if (tempCenter > maxBase) {
+                            isInXOffset = true;
+                            shanTiaoBeanList.remove(k);
+                        } else {
+                            //判断单独对象是否在震荡范围内， 如果在不增加数量 否则增加数量
+                            if (c > shanTiaoBeanList.get(k).getxMin() && c < shanTiaoBeanList.get(k).getxMax()) {
+                                isInXOffset = true;
+                                shanTiaoBeanList.remove(k);
+                                break;
+                            }
+                        }
+                    }
+                    if (!isInXOffset && c < lastC) {
+                        sowCount++;
+                    }
+                }
+            }
+        }
+    }
 }

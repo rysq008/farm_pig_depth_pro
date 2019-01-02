@@ -505,6 +505,7 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
 
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState) {
+
         LOGGER.i("luolu Global.model1: " + Model.BUILD.value());
         textureView = (AutoFitTextureView) view.findViewById(R.id.texture);
         mReCordLayout = (RelativeLayout) view.findViewById(R.id.record_layout);
@@ -565,8 +566,12 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
             Global.mediaInsureItem = new MediaInsureItem(activity);
         }
         if (Global.mediaPayItem == null) {
-            mediaPayItem = new MediaPayItem(activity);
+            Global.mediaPayItem = new MediaPayItem(activity);
         }
+
+
+        MediaProcessor.getInstance(activity).reInitCurrentDir();
+
         //String videoFileName = Global.mediaInsureItem.getVideoFileName();
         videoFileName = "/storage/emulated/0/innovation/animal/ZipImage/video.mp4";
         Log.i("===videoFileName===", videoFileName);
@@ -580,16 +585,15 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
         }
         mfleg = PreferencesUtils.getStringValue(Constants.fleg, MyApplication.getAppContext());
         mReCordLayout.setVisibility(View.VISIBLE);
-        // TODO: 2018/9/26 By:LuoLu  currentInit dir
-       /* if (Global.model == Model.BUILD.value()) {
-            InsureDataProcessor.getInstance(activity).handleMediaResource_build(activity);
+
+        //每次初始化成功后清空图片信息
+        if (Global.model == Model.BUILD.value()) {
             Global.mediaInsureItem.currentDel();
             Global.mediaInsureItem.currentInit();
         } else if (Global.model == Model.VERIFY.value()) {
-            PayDataProcessor.getInstance(activity).handleMediaResource_build(activity);
-            mediaPayItem.currentDel();
-            mediaPayItem.currentInit();
-        }*/
+            Global.mediaPayItem.currentDel();
+            Global.mediaPayItem.currentInit();
+        }
 
         //textSensorExposureTime = view.findViewById(R.id.textSensorExposureTime);
 

@@ -57,6 +57,7 @@ public class Constants {
     public static final String PINZHONG = BASENEW + "ftnJuan/animalType";
     //验证是否存在预理赔对象
     public static final String LiSTART = BASENEW + "payment/payStart";
+    //理赔上传
     public static final String LICOMMIT = BASENEW + "payment/payCommit";
     public static final String LIEDD2 = BASENEW + "payment/payEnd2";
     public static final String LIEDD1 = BASENEW + "payment/payEnd1";

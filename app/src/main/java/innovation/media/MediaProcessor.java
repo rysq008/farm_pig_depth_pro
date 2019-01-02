@@ -675,7 +675,7 @@ public class MediaProcessor {
     }
 
 
-    //预理赔弹框
+    // 预理赔/理赔弹框
     private void showErrorDialog(String msg) {
 
         AlertDialogManager.showMessageDialogOne(mActivity, "提示", msg, new AlertDialogManager.DialogInterface() {
@@ -748,25 +748,21 @@ public class MediaProcessor {
     }
     //
     private void showSuccessDialog(String mmsg) {
-        if(isNoCamera){
+        if(isNoCamera && !("lipei".equals(PreferencesUtils.getStringValue(Constants.fleg, MyApplication.getAppContext())))){
             mmsg +="\n为完成理赔，请拍摄死猪和猪舍短视频并上传。";
         }
         AlertDialogManager.showMessageDialogOne(mActivity, "提示", mmsg, new AlertDialogManager.DialogInterface() {
             @Override
             public void onPositive() {
                 destroyDialogs();
-
                 if ("lipei".equals(PreferencesUtils.getStringValue(Constants.fleg, MyApplication.getAppContext()))){
                     mActivity.startActivity(new Intent(mActivity, AddPigPicActivity.class).putExtra("lipeiid",lipeiId));
-                }
-
-                if(isNoCamera){
-                    mActivity.startActivity(new Intent(mActivity, SmallVideoActivity.class).putExtra("lipeiid", lipeiId));
-                    mActivity.finish();
                 }else{
-                    mActivity.finish();
+                    if(isNoCamera){
+                        mActivity.startActivity(new Intent(mActivity, SmallVideoActivity.class).putExtra("lipeiid", lipeiId));
+                    }
                 }
-
+                mActivity.finish();
             }
 
             @Override
@@ -1409,7 +1405,7 @@ public class MediaProcessor {
     }
 
     //重新初始化Current文件
-    private void reInitCurrentDir() {
+    public void reInitCurrentDir() {
         Log.i("reInitCurrentDir:", "重新初始化Current文件");
         if (Global.model == Model.BUILD.value()) {
             Global.mediaInsureItem.currentDel();

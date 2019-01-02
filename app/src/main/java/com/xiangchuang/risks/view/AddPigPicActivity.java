@@ -208,12 +208,12 @@ public class AddPigPicActivity extends BaseActivity {
                     e.printStackTrace();
                 }
                 break;
-                // 调用相机拍照
+            // 调用相机拍照
             case REQUESTCODE_TAKE:
                 File temp = new File(Environment.getExternalStorageDirectory() + "/" + IMAGE_FILE_NAME);
                 crop(Environment.getExternalStorageDirectory() + "/" + IMAGE_FILE_NAME);
                 break;
-                // 取得裁剪后的图片
+            // 取得裁剪后的图片
             case REQUESTCODE_CUTTING:
                 if (data != null) {
                     try {
@@ -256,6 +256,7 @@ public class AddPigPicActivity extends BaseActivity {
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
         startActivityForResult(intent, REQUESTCODE_CUTTING);
     }
+
     /**
      * 裁剪相机图片方法实现
      */
@@ -291,34 +292,39 @@ public class AddPigPicActivity extends BaseActivity {
     private void setPicToView() throws Exception {
         // 取得SDCard图片路径做显示
         Bitmap photo = BitmapFactory.decodeStream(getContentResolver().openInputStream(uritempFile));
-        //上传死猪照片时候调用称重接口
-        if(picType == 0){
-            CounterHelper.recognitionWeightFromNet(photo, new CounterHelper.OnImageRecognitionWeightListener() {
-                @Override
-                public void onCompleted(float weight, int status) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            pop.dismiss();
-                            if(status == 1){
-                                autoWeight = weight+"";
-                                etAnimalAge.setText(weight + "");
-
-                                picToView(photo);
-                            } else {
-                                Toast.makeText(AddPigPicActivity.this, "识别失败！", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                }
-            });
-        }else{
-            picToView(photo);
-        }
-
+        picToView(photo);
     }
 
-    private void picToView( Bitmap photo){
+    /**
+     * 上传死猪图片给后台模型进行称重识别
+     * @param photo
+     */
+    private void upDeadPig(Bitmap photo) {
+        //上传死猪照片时候调用称重接口
+        CounterHelper.recognitionWeightFromNet(photo, new CounterHelper.OnImageRecognitionWeightListener() {
+            @Override
+            public void onCompleted(float weight, int status) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        pop.dismiss();
+                        if (status == 1) {
+                            autoWeight = weight + "";
+                            etAnimalAge.setText(weight + "");
+                        } else {
+                            Toast.makeText(AddPigPicActivity.this, "识别失败！", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * 将照片显示在view上，并调用上传
+     * @param photo
+     */
+    private void picToView(Bitmap photo) {
         Drawable drawable = new BitmapDrawable(null, photo);
         urlpath = FileUtils.saveFile(getApplicationContext(), "temphead.jpg", photo);
 
@@ -334,11 +340,11 @@ public class AddPigPicActivity extends BaseActivity {
 
         showProgressDialog();
         // 上传图片文件
-        upLoadImg(file);
+        upLoadImg(file, photo);
     }
 
-
-    private void upLoadImg(File fileImage) {
+    //上传照片
+    private void upLoadImg(File fileImage, Bitmap photo) {
         Log.e("upLoadImg", "path=" + fileImage.getAbsolutePath());
         OkHttp3Util.uploadPreFile(Constants.UP_LOAD_IMG, fileImage, "a.jpg", null, null, new Callback() {
                     @Override
@@ -352,6 +358,7 @@ public class AddPigPicActivity extends BaseActivity {
                             }
                         });
                     }
+
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
                         if (response.isSuccessful()) {
@@ -372,8 +379,9 @@ public class AddPigPicActivity extends BaseActivity {
                                         } else {
                                             mProgressDialog.dismiss();
                                             Toast.makeText(AddPigPicActivity.this, msg, Toast.LENGTH_SHORT).show();
-                                            if(picType == 0){
+                                            if (picType == 0) {
                                                 tvPersonAndAnimalpath.setText(data);
+                                                upDeadPig(photo);
                                             } else if (picType == 1) {
                                                 tvbuchongleft.setText(data);
                                             } else {
@@ -478,19 +486,19 @@ public class AddPigPicActivity extends BaseActivity {
         String buchongRightstr = tvbuchongright.getText().toString();
         StringBuilder sb = new StringBuilder();
 
-        if(!buchongLeftstr.equals("")){
+        if (!buchongLeftstr.equals("")) {
             sb.append(buchongLeftstr);
             sb.append(",");
         }
 
-       if(!buchongRightstr.equals("")){
-           sb.append(buchongRightstr);
-           sb.append(",");
-       }
+        if (!buchongRightstr.equals("")) {
+            sb.append(buchongRightstr);
+            sb.append(",");
+        }
 
-       if(sb.length()>0){
-           sb.deleteCharAt(sb.length()-1);
-       }
+        if (sb.length() > 0) {
+            sb.deleteCharAt(sb.length() - 1);
+        }
 
         Map mapbody = new HashMap();
         mapbody.put(Constants.lipeiId, lipeiId);
@@ -524,7 +532,7 @@ public class AddPigPicActivity extends BaseActivity {
                                 String msg = jsonObject.getString("msg");
                                 if (status == -1 || 0 == status) {
                                     mProgressDialog.dismiss();
-                                    Toast.makeText(AddPigPicActivity.this, msg.equals("")?"信息提交失败，请检查您的网络。":msg, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(AddPigPicActivity.this, msg.equals("") ? "信息提交失败，请检查您的网络。" : msg, Toast.LENGTH_SHORT).show();
                                 } else {
                                     mProgressDialog.dismiss();
                                     StartBean bean = GsonUtils.getBean(s, StartBean.class);

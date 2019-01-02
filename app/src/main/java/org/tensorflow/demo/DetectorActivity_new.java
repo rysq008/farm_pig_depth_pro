@@ -155,7 +155,8 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
     private int imageCount = 10;// add for test
     private static final int TFLITE_INPUT_SIZE = 300;
     private static final boolean TFLITE_IS_QUANTIZED = true;
-    private static final String PIG_TFLITE_DETECT_MODEL_FILE = "ssd_mobilenet_v2_focal_quantized_coco.tflite";
+    private static final String PIG_TFLITE_DETECT_MODEL_FILE = "detect.tflite";
+//    private static final String PIG_TFLITE_DETECT_MODEL_FILE = "ssd_mobilenet_v2_focal_quantized_coco.tflite";
 
     public static int type1Count = 0;
     public static int type2Count = 0;
@@ -306,7 +307,7 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
     @Override
     public void onImageAvailable(final ImageReader reader) {
 //        try {
-//            Thread.sleep(330);
+//            Thread.sleep(200);
 //        } catch (InterruptedException e) {
 //            e.printStackTrace();
 //        }

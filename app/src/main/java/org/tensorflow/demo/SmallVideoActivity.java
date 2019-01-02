@@ -136,7 +136,7 @@ public class SmallVideoActivity extends AppCompatActivity implements SurfaceHold
         mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                mStartButton.setVisibility(View.GONE);
+                mStartButton.setVisibility(View.GONE);
                 mProgressBar.setCancel(false);
                 //显示上滑取消
                 mTvTip.setVisibility(View.GONE);
@@ -283,27 +283,26 @@ public class SmallVideoActivity extends AppCompatActivity implements SurfaceHold
                 mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
                 mMediaRecorder.setVideoSize(videoWidth, videoHeight);
                 //每秒的帧数
-                mMediaRecorder.setVideoFrameRate(24);
+//                mMediaRecorder.setVideoFrameRate(24);
                 //编码格式
 //                mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.DEFAULT);
                 mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
 //                mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
                 mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+
+//                getOptimalSize(mCamera.getParameters().getSupportedVideoSizes(), videoWidth, videoHeight);
+
                 // 设置帧频率，然后就清晰了
 //                mMediaRecorder.setVideoEncodingBitRate(1 * 1024 * 1024 * 100);
                 mMediaRecorder.setVideoEncodingBitRate(600000);
-                // TODO: 2016/10/20 临时写个文件地址, 稍候该!!!
                 /*File targetDir = Environment.
                         getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
                 mTargetFile = new File(targetDir,
                         SystemClock.currentThreadTimeMillis() + ".mp4");
                 mMediaRecorder.setOutputFile(mTargetFile.getAbsolutePath());*/
 
-
                 Global.mediaInsureItem = new MediaInsureItem(SmallVideoActivity.this);
                 Global.VideoFileName = Global.mediaInsureItem.getVideoFileName();
-
-
 
                 mMediaRecorder.setOutputFile(Global.VideoFileName);
                 mMediaRecorder.setPreviewDisplay(mSurfaceHolder.getSurface());
@@ -323,16 +322,51 @@ public class SmallVideoActivity extends AppCompatActivity implements SurfaceHold
         }
     }
 
+
+    /**
+     * 获取手机相机所支持的分辨率,并取第二位的分辨率为拍摄分辨率
+     *
+     * @return
+     */
+    private Camera.Size getOptimalSize(List<Camera.Size> sizes, int w, int h) {
+        Camera.Size optimalSize = sizes.get(sizes.size() > 1 ? 1 : 0);
+         /*
+            注释以下代码原因,在有些手机上, 如华为,
+            最佳分辨率拍摄会导致,拍摄失败
+            java.lang.RuntimeException: start failed
+          */
+//        float targetRadio = h / (float) w;
+//        float optimalDif = Float.MAX_VALUE; //最匹配的比例
+//        int optimalMaxDif = Integer.MAX_VALUE;//最优的最大值差距
+//        for (Camera.Size size : sizes) {
+//            float newOptimal = size.width / (float) size.height;
+//            float newDiff = Math.abs(newOptimal - targetRadio);
+//            if (newDiff < optimalDif) { //更好的尺寸
+//                optimalDif = newDiff;
+//                optimalSize = size;
+//                optimalMaxDif = Math.abs(h - size.width);
+//            } else if (newDiff == optimalDif) {//更好的尺寸
+//                int newOptimalMaxDif = Math.abs(h - size.width);
+//                if (newOptimalMaxDif < optimalMaxDif) {
+//                    optimalDif = newDiff;
+//                    optimalSize = size;
+//                    optimalMaxDif = newOptimalMaxDif;
+//                }
+//            }
+//        }
+        return optimalSize;
+    }
+
     /**
      * 停止录制 并且保存
      */
     private void stopRecordSave() {
         if (isRecording) {
             isRunning = false;
-            mMediaRecorder.stop();
+            stopMedia();
             isRecording = false;
             mTargetFile = new File(Global.VideoFileName);
-            Toast.makeText(this, "视频已经放至" + mTargetFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "视频已经放至" + mTargetFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
 
             if (mTargetFile.exists()) {
                 upVideo();
@@ -341,6 +375,39 @@ public class SmallVideoActivity extends AppCompatActivity implements SurfaceHold
             }
         }
     }
+
+    private void stopMedia(){
+        if (mMediaRecorder != null) {
+            //added by ouyang start
+            try {
+                //下面三个参数必须加，不加的话会奔溃，在mediarecorder.stop();
+                //报错为：RuntimeException:stop failed
+                mMediaRecorder.setOnErrorListener(null);
+                mMediaRecorder.setOnInfoListener(null);
+                mMediaRecorder.setPreviewDisplay(null);
+                mMediaRecorder.stop();
+            } catch (IllegalStateException e) {
+                // TODO: handle exception
+                Log.i("MyException", Log.getStackTraceString(e));
+            }catch (RuntimeException e) {
+                // TODO: handle exception
+                Log.i("MyException", Log.getStackTraceString(e));
+            }catch (Exception e) {
+                // TODO: handle exception
+                Log.i("MyException", Log.getStackTraceString(e));
+            }
+            //added by ouyang end
+
+            mMediaRecorder.release();
+            mMediaRecorder = null;
+            if (mCamera != null) {
+                mCamera.release();
+                mCamera = null;
+            }
+        }
+    }
+
+
 
     private void showProgressDialog() {
         mProgressDialog = new ProgressDialog(this);
@@ -419,7 +486,7 @@ public class SmallVideoActivity extends AppCompatActivity implements SurfaceHold
                                     @Override
                                     public void run() {
                                         mProgressDialog.dismiss();
-
+                                        Toast.makeText(SmallVideoActivity.this, "上传成功。", Toast.LENGTH_SHORT).show();
                                         boolean result = FileUtils.deleteFile(mTargetFile);
                                         if (result == true) {
                                             Log.i("yulipeidetete:", "本地图片打包文件删除成功！！");

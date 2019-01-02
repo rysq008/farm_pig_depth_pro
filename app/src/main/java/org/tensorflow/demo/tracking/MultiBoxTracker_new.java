@@ -252,7 +252,7 @@ public class MultiBoxTracker_new {
                         (int) (multiplier * (rotated ? frameWidth : frameHeight)),
                         sensorOrientation,
                         false);
-        Log.e("trackedObjects.size()", "---"+trackedObjects.size() );;
+        Log.e("trackedObjects.size()", sowCount+"---"+trackedObjects.size() );;
 
         float width = canvas.getWidth();
         float height = canvas.getHeight();

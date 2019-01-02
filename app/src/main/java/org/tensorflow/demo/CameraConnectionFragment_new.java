@@ -107,7 +107,6 @@ import java.util.concurrent.TimeUnit;
 
 import innovation.media.MediaInsureItem;
 import innovation.media.MediaPayItem;
-import innovation.media.MediaProcessor_new;
 import innovation.media.Model;
 import innovation.utils.FileUtils;
 import innovation.utils.ZipUtil;
@@ -1444,8 +1443,6 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
 //                                }
 //                            }
 //                        }
-//                        MediaProcessor_new.getInstance(activity).handleMediaResource_build(activity);
-//                        MediaProcessor_new.getInstance(activity).showInsureDialog();
 
                         uploadRecognitionResult();
 

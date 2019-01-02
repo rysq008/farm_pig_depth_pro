@@ -57,6 +57,9 @@ import okhttp3.Response;
 
 import static com.xiangchuangtec.luolu.animalcounter.MyApplication.isNoCamera;
 
+/**
+ * 预理赔
+ */
 public class PreparedLiPeiActivity_new extends BaseActivity {
     public static String TAG = "PreparedLiPeiActivity_new";
     @BindView(R.id.pre_zhushe)
@@ -352,6 +355,7 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
                                     str = stringBuffer.toString();
                                     Log.i("stringbuffer",str);
                                 }
+                                isNoCamera = false;
                                 PreferencesUtils.saveKeyValue(Constants.preVideoId,str , MyApplication.getAppContext());
                                 Global.model = Model.VERIFY.value();
                                 Intent intent = new Intent(PreparedLiPeiActivity_new.this, DetectorActivity.class);

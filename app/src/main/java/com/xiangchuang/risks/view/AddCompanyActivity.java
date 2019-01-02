@@ -460,8 +460,9 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
         mapbody.put("password", qiyepassword.getText().toString());
 
         mapbody.put("cardFront", str_idcard_zheng);
-        mapbody.put("bankFront", str_idcard_fan);
-        mapbody.put("bankBack", str_bank);
+        mapbody.put("cardBack", str_idcard_fan);
+        mapbody.put("bankFront",str_bank);
+        mapbody.put("bankBack", "");
 
         if(type){
             mapbody.put("enId",PreferencesUtils.getStringValue(Constants.en_id, MyApplication.getAppContext()));
@@ -622,19 +623,13 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
         boolean flag = photo.compress(Bitmap.CompressFormat.JPEG, 30, out);
         Log.e("flag:", "图片压缩成功" + flag);
 
-        if (imageType.contains("idcard_zheng")) {
-            btnIdcardZhengUpload.setImageDrawable(drawable);
-        } else if (imageType.contains("idcard_fan")) {
-            btnIdcardFanUpload.setImageDrawable(drawable);
-        } else if (imageType.contains("bank")) {
-            btnBankUpload.setImageDrawable(drawable);
-        }
+
         File fileURLPath = new File(urlpath);
         //upload_zipImage(fileURLPath, userId);
-        upload_image(fileURLPath);
+        upload_image(fileURLPath, drawable);
     }
 
-    private void upload_image(File fileURLPath) {
+    private void upload_image(File fileURLPath, Drawable drawable) {
         Map map = new HashMap();
         map.put(Constants.AppKeyAuthorization, "hopen");
         map.put(Constants.id, PreferencesUtils.getStringValue(Constants.id, MyApplication.getAppContext(), "0"));
@@ -683,6 +678,15 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
                                                 } else if (imageType.contains("bank")) {
                                                     str_bank = data;
                                                 }
+
+                                                if (imageType.contains("idcard_zheng")) {
+                                                    btnIdcardZhengUpload.setImageDrawable(drawable);
+                                                } else if (imageType.contains("idcard_fan")) {
+                                                    btnIdcardFanUpload.setImageDrawable(drawable);
+                                                } else if (imageType.contains("bank")) {
+                                                    btnBankUpload.setImageDrawable(drawable);
+                                                }
+
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
                                             }
