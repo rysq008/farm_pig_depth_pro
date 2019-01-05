@@ -18,7 +18,6 @@ package org.tensorflow.demo;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -26,7 +25,6 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -40,11 +38,9 @@ import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CameraMetadata;
-import android.hardware.camera2.CaptureFailure;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.CaptureResult;
 import android.hardware.camera2.TotalCaptureResult;
-import android.hardware.camera2.params.MeteringRectangle;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.ImageReader;
 import android.media.ImageReader.OnImageAvailableListener;
@@ -54,19 +50,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
-import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
-import android.support.v13.app.FragmentCompat;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Rational;
 import android.util.Size;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
@@ -74,14 +66,19 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
-import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
+
+import innovation.media.MediaInsureItem;
+import innovation.media.MediaPayItem;
+import innovation.media.MediaProcessor;
+import innovation.media.Model;
+import innovation.utils.FileUtils;
+import innovation.view.SendView;
 
 import org.tensorflow.demo.env.Logger;
 import org.tensorflow.demo.tracking.MultiBoxTracker;
@@ -93,23 +90,18 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
-import innovation.media.MediaInsureItem;
-import innovation.media.MediaPayItem;
-import innovation.media.MediaProcessor;
-import innovation.media.Model;
-import innovation.tensorflow.tracking.LocationTracker;
-import innovation.utils.FileUtils;
-import innovation.view.SendView;
-
 import static android.content.ContentValues.TAG;
+import static com.xiangchuangtec.luolu.animalcounter.MyApplication.timeVideoStart;
 import static org.tensorflow.demo.DetectorActivity.trackingOverlay;
 import static org.tensorflow.demo.Global.mediaPayItem;
 
 @SuppressLint("ValidFragment")
-public class CameraConnectionFragment extends Fragment implements View.OnClickListener, FragmentCompat.OnRequestPermissionsResultCallback {
+public class CameraConnectionFragment extends Fragment implements View.OnClickListener {
     private static final Logger LOGGER = new Logger();
 
     /**
@@ -121,8 +113,6 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
     /**
      * Conversion from screen rotation to JPEG orientation.
      */
-    private static final int SENSOR_ORIENTATION_DEFAULT_DEGREES = 90;
-    private static final int SENSOR_ORIENTATION_INVERSE_DEGREES = 270;
     private static final SparseIntArray DEFAULT_ORIENTATIONS = new SparseIntArray();
     private static final SparseIntArray INVERSE_ORIENTATIONS = new SparseIntArray();
     private static final String FRAGMENT_DIALOG = "dialog";
@@ -147,8 +137,6 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
      */
     private final TextureView.SurfaceTextureListener surfaceTextureListener =
             new TextureView.SurfaceTextureListener() {
-                @TargetApi(Build.VERSION_CODES.M)
-                @RequiresApi(api = Build.VERSION_CODES.M)
                 @Override
                 public void onSurfaceTextureAvailable(
                         final SurfaceTexture texture, final int width, final int height) {
@@ -161,6 +149,7 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                 public void onSurfaceTextureSizeChanged(
                         final SurfaceTexture texture, final int width, final int height) {
                     configureTransform(width, height);
+
                 }
 
                 @Override
@@ -172,14 +161,10 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                 public void onSurfaceTextureUpdated(final SurfaceTexture texture) {
                 }
             };
-    private boolean mManualFocusEngaged;
     private static Activity activity;
     private CameraCharacteristics characteristics;
     public static TextView textSensorExposureTime;
-    private File mfile;
-    private String mfleg;
-    private String videoFileName;
-
+    private Context context;
 
     /**
      * Callback for Activities to use to initialize their data once the
@@ -197,25 +182,19 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
     /**
      * An {@link AutoFitTextureView} for camera preview.
      */
-    public static AutoFitTextureView textureView;
+    private static AutoFitTextureView textureView;
 
     private static RelativeLayout mReCordLayout;
     /**
      * Button to record video
      */
+    /*private TextView testtv;*/
+    private static TextView myTest;
     private static TextView mRecordControl;
     private static View mRecordSwitch;
     private TextView mRecordSwitchTxt;
     private View mRecordVerify;
     private TextView mRecordVerifyTxt;
-
-    private static SendView mSendView;
-
-    //haojie add
-    private RelativeLayout mToolLayout;
-    private long tmieVideoStart;
-    private long tmieVideoEnd;
-
     private static TextView tvNotice;
     //左脸标识图
     private static ImageView ivLeft;
@@ -226,15 +205,17 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
     //右脸录制按钮
     @SuppressLint("StaticFieldLeak")
     private static TextView tvBtnRight;
-
+    //全局变量获取当前保险类型
+    private int animalType;
     //全局变量判断左右脸否已经采集够了
     private static boolean leftEnough = false;
-    private static boolean  rightEnough = false;
+    private static boolean rightEnough = false;
 
     //全局定义
     private volatile long lastClickTime = 0L;
     private static final int FAST_CLICK_DELAY_TIME = 2000;  // 快速点击间隔
 
+    private static SendView mSendView;
 
     /**
      * Max preview width that is guaranteed by Camera2 API
@@ -249,7 +230,7 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
     /**
      * A {@link CameraCaptureSession } for camera preview.
      */
-    private CameraCaptureSession captureSession;
+    private static CameraCaptureSession captureSession;
 
     /**
      * A reference to the opened {@link CameraDevice}.
@@ -262,12 +243,13 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
     private Integer sensorOrientation;
 
     /**
-     * The {@link Size} of video recording.
+     * The {@link android.util.Size} of video recording.
      */
     private Size mVideoSize;
     private Size mVideoSize_midia;
     int mVideoSize_midia_width = 0;
     int mVideoSize_midia_height = 0;
+
     /**
      * MediaRecorder
      */
@@ -282,6 +264,11 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
      * The {@link Size} of camera preview.
      */
     private Size previewSize;
+    private CameraCharacteristics mCharacteristics;
+    private int exposureCompensation = 0;
+    private int maxExposureCompensation;
+    private int minExposureCompensation;
+    private double exposureCompensationStep;
 
     // private Model mModel = Model.BUILD;
 
@@ -299,6 +286,43 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                     startPreview();
                     if (null != textureView) {
                         configureTransform(textureView.getWidth(), textureView.getHeight());
+                    }
+                    boolean mAutoMode = true;
+                    if (mAutoMode) {
+                        // 首先仍旧需要获得支持的自动模式
+                        int[] modes = mCharacteristics.get(
+                                CameraCharacteristics.CONTROL_AE_AVAILABLE_MODES);
+                        android.util.Range<Integer> range = mCharacteristics.get(
+                                CameraCharacteristics.CONTROL_AE_COMPENSATION_RANGE);
+                        maxExposureCompensation = range.getUpper().intValue();
+                        minExposureCompensation = range.getLower().intValue();
+                        Rational step = mCharacteristics.get(
+                                CameraCharacteristics.CONTROL_AE_COMPENSATION_STEP);
+                        exposureCompensationStep = step.doubleValue();
+                        if (modes == null || modes.length == 0 ||
+                                (modes.length == 1 && modes[0] == CameraCharacteristics.CONTROL_AE_MODE_OFF)) {
+                            // 如果不支持自动模式，则使用手动模式
+                            mAutoMode = false;
+                            try {
+                                CaptureRequest.Builder mCaptureBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
+                                mCaptureBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_OFF);
+                                CaptureRequest req = mCaptureBuilder.build();
+
+                            } catch (CameraAccessException e) {
+
+                            }
+
+//                             reqBuilder.set(CaptureRequest.CONTROL_AE_MODE,
+//                                    CaptureRequest.CONTROL_AE_MODE_OFF);
+                        } else {
+                            // 如果支持自动模式，则（可以根据闪光灯模式）选择一个自动模式
+                            //reqBuilder.set(CaptureRequest.CONTROL_AE_MODE,
+                            //       CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH);
+                        }
+                    } else {
+                        // 关闭自动模式，使用手动模式
+                        //reqBuilder.set(CaptureRequest.CONTROL_AE_MODE,
+                        //        CaptureRequest.CONTROL_AE_MODE_OFF);
                     }
                 }
 
@@ -359,8 +383,8 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
     /**
      * The input size in pixels desired by TensorFlow (width and height of a square bitmap).
      */
-    // private final Size inputSize;
-    private final int inputSize;
+    private final Size inputSize;
+
     /**
      * The layout identifier to inflate for this Fragment.
      */
@@ -369,19 +393,10 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
 
     private final ConnectionCallback cameraConnectionCallback;
 
-    /*   CameraConnectionFragment(
-               final ConnectionCallback connectionCallback,
-               final OnImageAvailableListener imageListener,
-               final int layout, final Size inputSize) {
-           this.cameraConnectionCallback = connectionCallback;
-           this.imageListener = imageListener;
-           this.layout = layout;
-           this.inputSize = inputSize;
-       }*/
     CameraConnectionFragment(
             final ConnectionCallback connectionCallback,
             final OnImageAvailableListener imageListener,
-            final int layout, final int inputSize) {
+            final int layout, final Size inputSize) {
         this.cameraConnectionCallback = connectionCallback;
         this.imageListener = imageListener;
         this.layout = layout;
@@ -394,6 +409,7 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
      * @param text The message to show
      */
     public static void showToast(final String text) {
+//        final Activity activity = getActivity();
         if (activity != null) {
             activity.runOnUiThread(
                     new Runnable() {
@@ -473,17 +489,12 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
         }
     }
 
-   /* public static CameraConnectionFragment newInstance(
+    public static CameraConnectionFragment newInstance(
             final ConnectionCallback callback,
             final OnImageAvailableListener imageListener, final int layout, final Size inputSize) {
         return new CameraConnectionFragment(callback, imageListener, layout, inputSize);
-    }*/
-
-    public static CameraConnectionFragment newInstance(
-            final ConnectionCallback callback,
-            final OnImageAvailableListener imageListener, final int layout, final int inputSize) {
-        return new CameraConnectionFragment(callback, imageListener, layout, inputSize);
     }
+
 
     @Override
     public void onDestroy() {
@@ -491,10 +502,8 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
         Log.d("CameraConntFragment:", "CameraConnectionFragment onDestroy()!");
         Activity activity = getActivity();
         mIsRecordingVideo = false;
-        collectNumberHandler.sendEmptyMessage(2);
         MediaProcessor.getInstance(activity).handleMediaResource_destroy();
-//        InsureDataProcessor.getInstance(activity).handleMediaResource_destroy();
-//        PayDataProcessor.getInstance(activity).handleMediaResource_destroy();
+//        android.os.Process.killProcess(android.os.Process.myPid());
     }
 
     @Override
@@ -503,9 +512,16 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
         return inflater.inflate(layout, container, false);
     }
 
+    //手势滑动
+    private float mPosX, mPosY;//开始位置
+    private float mCurPosX, mCurPosY;//结束位置
+
+    @SuppressLint("ClickableViewAccessibility")
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState) {
-
+//        InnApplication.during = 0;
+        Global.VIDEO_PROCESS = false;
         LOGGER.i("luolu Global.model1: " + Model.BUILD.value());
         textureView = (AutoFitTextureView) view.findViewById(R.id.texture);
         mReCordLayout = (RelativeLayout) view.findViewById(R.id.record_layout);
@@ -515,6 +531,9 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
         mSendView.backLayout.setOnClickListener(mCancelClickListener);
         mSendView.selectLayout.setOnClickListener(mSaveClickListener);
         mSendView.stopAnim();
+
+//        myTest = (TextView) view.findViewById(R.id.myTest);
+//        myTest.setOnClickListener(this);
 
         tvNotice = view.findViewById(R.id.tv_notice);
 
@@ -562,29 +581,13 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
 
         LOGGER.i("luolu Global.model2: " + Model.BUILD.value());
         activity = getActivity();
+        context = getActivity().getApplicationContext();
         if (Global.mediaInsureItem == null) {
             Global.mediaInsureItem = new MediaInsureItem(activity);
         }
         if (Global.mediaPayItem == null) {
             Global.mediaPayItem = new MediaPayItem(activity);
         }
-
-
-        MediaProcessor.getInstance(activity).reInitCurrentDir();
-
-        //String videoFileName = Global.mediaInsureItem.getVideoFileName();
-        videoFileName = "/storage/emulated/0/innovation/animal/ZipImage/video.mp4";
-        Log.i("===videoFileName===", videoFileName);
-        mfile = new File(videoFileName);
-        if (!mfile.exists()) {
-            try {
-                mfile.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        mfleg = PreferencesUtils.getStringValue(Constants.fleg, MyApplication.getAppContext());
-        mReCordLayout.setVisibility(View.VISIBLE);
 
         //每次初始化成功后清空图片信息
         if (Global.model == Model.BUILD.value()) {
@@ -595,25 +598,34 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
             Global.mediaPayItem.currentInit();
         }
 
-        //textSensorExposureTime = view.findViewById(R.id.textSensorExposureTime);
+//        seekBar = view.findViewById(R.id.seekbar);
+//        seekBar.setMax(24);
+//        seekBar.setProgress(12);
+//        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//            @Override
+//            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+//                if (i > 12) {
+//                    exposureCompensation = i - 12;
+//                    updatePreview();
+//                }
+//                if (i < 12) {
+//                    exposureCompensation = i - 12;
+//                    updatePreview();
+//                }
+//            }
+//
+//            @Override
+//            public void onStartTrackingTouch(SeekBar seekBar) {
+//
+//            }
+//
+//            @Override
+//            public void onStopTrackingTouch(SeekBar seekBar) {
+//
+//            }
+//        });
 
     }
-
-
-    private boolean isMeteringAreaAFSupported() {
-        final CameraManager manager = (CameraManager) getActivity().getSystemService(Context.CAMERA_SERVICE);
-        CameraCharacteristics characteristics = null;
-        try {
-
-            for (final String cameraId : manager.getCameraIdList()) {
-                characteristics = manager.getCameraCharacteristics(cameraId);
-            }
-        } catch (CameraAccessException e) {
-            e.printStackTrace();
-        }
-        return characteristics.get(CameraCharacteristics.CONTROL_MAX_REGIONS_AF) >= 1;
-    }
-
 
     @Override
     public void onStop() {
@@ -630,13 +642,11 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
         super.onActivityCreated(savedInstanceState);
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onResume() {
         super.onResume();
         startBackgroundThread();
-
+        //初始化时候获取当前动物类型
         leftEnough = false;
         rightEnough = false;
 
@@ -645,9 +655,7 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
         // a camera and start preview from here (otherwise, we wait until the surface is ready in
         // the SurfaceTextureListener).
         if (textureView.isAvailable()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                openCamera(textureView.getWidth(), textureView.getHeight());
-            }
+            openCamera(textureView.getWidth(), textureView.getHeight());
         } else {
             textureView.setSurfaceTextureListener(surfaceTextureListener);
         }
@@ -655,7 +663,6 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
 
     @Override
     public void onPause() {
-        stopRecordingVideo(false);
         closeCamera();
         stopBackgroundThread();
         super.onPause();
@@ -664,6 +671,7 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            //录制/暂定切换
             case R.id.record_control:
 
                 Log.e(TAG, "onClick: " + lastClickTime);
@@ -672,20 +680,53 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                 }
                 lastClickTime = System.currentTimeMillis();
                 Log.e(TAG, "onClick:ok " + lastClickTime);
+                mRecordControl.setClickable(false);
 
                 if (mIsRecordingVideo) {
-                    tmieVideoEnd = System.currentTimeMillis();
-                    long during = tmieVideoEnd - tmieVideoStart;
+                    // 停止按钮点击时
+                    MyApplication.during += System.currentTimeMillis() - timeVideoStart;
+                    //Toast.makeText(activity, InnApplication.during+"", Toast.LENGTH_SHORT).show();
                     stopRecordingVideo(false);
                     Global.VIDEO_PROCESS = false;
-                } else {
+
                     try {
-                        Global.VIDEO_PROCESS = true;
-                        startRecordingVideo();
+                        TimerTask timerTask = new TimerTask() {
+                            @Override
+                            public void run() {
+                                collectNumberHandler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            mMediaRecorder.stop();
+                                        } catch (IllegalStateException e) {
+                                            Log.e(TAG, " mMediaRecorder.stop:Exception "+e);
+                                            // TODO 如果当前java状态和jni里面的状态不一致，
+                                            //e.printStackTrace();
+                                            mMediaRecorder = null;
+                                            mMediaRecorder = new MediaRecorder();
+                                        }
+                                        mMediaRecorder.reset();
+                                    }
+                                });
+                            }
+                        };
+                        new Timer().schedule(timerTask, 30);
                     } catch (Exception e) {
+                        Log.e("-----停止视频录制-----------", "---->>>>>>>>>" + e);
                         e.printStackTrace();
                     }
-                    tmieVideoStart = System.currentTimeMillis();
+
+                } else {
+                    // 录制按钮点击时
+                    try {
+                        Global.VIDEO_PROCESS = true;
+                        timeVideoStart = System.currentTimeMillis();
+                        startRecordingVideo();
+                    } catch (IOException e) {
+                        Log.e(TAG, "record_control_IOException: " + e.toString());
+                        e.printStackTrace();
+                    }
+
                 }
                 break;
             case R.id.record_switch:
@@ -702,101 +743,19 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                     mRecordSwitchTxt.setTextColor(Color.DKGRAY);
                 }
                 break;
-
+//            case R.id.myTest:
+//                try {
+//                    Global.VIDEO_PROCESS = true;
+//                    timeVideoStart = System.currentTimeMillis();
+//                    startRecordingVideo();
+//                } catch (Exception e) {
+//                    Log.e(TAG, "record_control_IOException: " + e.toString());
+//                    e.printStackTrace();
+//                }
+//                break;
             default:
-                break;
         }
     }
-
-    private View.OnTouchListener textureViewTouchFocusClickListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-
-            final int actionMasked = motionEvent.getActionMasked();
-            if (actionMasked != MotionEvent.ACTION_DOWN) {
-                return false;
-            }
-            if (mManualFocusEngaged) {
-                Log.d("=====", "Manual focus already engaged");
-                return true;
-            }
-
-//                    final Rect sensorArraySize = cameraDevice.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE);
-
-            // : here I just flip x,y, but this needs to correspond with the sensor orientation (via SENSOR_ORIENTATION)
-            final int y = (int) ((motionEvent.getX() / (float) view.getWidth()) * (float) mVideoSize.getHeight());
-            final int x = (int) ((motionEvent.getY() / (float) view.getHeight()) * (float) mVideoSize.getWidth());
-            final int halfTouchWidth = 150; //(int)motionEvent.getTouchMajor(); // : this doesn't represent actual touch size in pixel. Values range in [3, 10]...
-            final int halfTouchHeight = 150; //(int)motionEvent.getTouchMinor();
-            MeteringRectangle focusAreaTouch = new MeteringRectangle(Math.max(x - halfTouchWidth, 0),
-                    Math.max(y - halfTouchHeight, 0),
-                    halfTouchWidth * 2,
-                    halfTouchHeight * 2,
-                    MeteringRectangle.METERING_WEIGHT_MAX - 1);
-
-            CameraCaptureSession.CaptureCallback captureCallbackHandler = new CameraCaptureSession.CaptureCallback() {
-                @Override
-                public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
-                    super.onCaptureCompleted(session, request, result);
-                    mManualFocusEngaged = false;
-
-                    if (request.getTag() == "FOCUS_TAG") {
-                        //the focus trigger is complete -
-                        //resume repeating (preview surface will get frames), clear AF trigger
-                        previewRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, null);
-                        try {
-                            captureSession.setRepeatingRequest(previewRequestBuilder.build(), null, null);
-                        } catch (CameraAccessException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-
-                @Override
-                public void onCaptureFailed(CameraCaptureSession session, CaptureRequest request, CaptureFailure failure) {
-                    super.onCaptureFailed(session, request, failure);
-                    Log.e("======", "Manual AF failure: " + failure);
-                    mManualFocusEngaged = false;
-                }
-            };
-
-            //first stop the existing repeating request
-            try {
-                captureSession.stopRepeating();
-            } catch (CameraAccessException e) {
-                e.printStackTrace();
-            }
-
-            //cancel any existing AF trigger (repeated touches, etc.)
-            previewRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_CANCEL);
-            previewRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_OFF);
-            try {
-                captureSession.capture(previewRequestBuilder.build(), captureCallbackHandler, backgroundHandler);
-            } catch (CameraAccessException e) {
-                e.printStackTrace();
-            }
-
-            //Now add a new AF trigger with focus region
-            if (isMeteringAreaAFSupported()) {
-                previewRequestBuilder.set(CaptureRequest.CONTROL_AF_REGIONS, new MeteringRectangle[]{focusAreaTouch});
-            }
-            previewRequestBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
-            previewRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_AUTO);
-            previewRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_START);
-            previewRequestBuilder.setTag("FOCUS_TAG"); //we'll capture this later for resuming the preview
-
-            //then we ask for a single request (not repeating!)
-            try {
-                captureSession.capture(previewRequestBuilder.build(), captureCallbackHandler, backgroundHandler);
-            } catch (CameraAccessException e) {
-                e.printStackTrace();
-            }
-            mManualFocusEngaged = true;
-
-            return true;
-
-        }
-    };
 
     private View.OnClickListener mCancelClickListener = new View.OnClickListener() {
         @Override
@@ -813,9 +772,7 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
         public void onClick(View v) {
             mReCordLayout.setVisibility(View.VISIBLE);
             Activity activity = getActivity();
-            //InsureDataProcessor.getInstance(activity).handleMediaResource_build(activity);
             MediaProcessor.getInstance(activity).handleMediaResource_build(activity);
-
         }
     };
 
@@ -832,6 +789,7 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
             for (final String cameraId : manager.getCameraIdList()) {
 //                final CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraId);
                 characteristics = manager.getCameraCharacteristics(cameraId);
+                mCharacteristics = characteristics;
 
                 final StreamConfigurationMap map =
                         characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
@@ -854,11 +812,11 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
 
                 sensorOrientation = characteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);//获取摄像头的旋转角度
 
-                mVideoSize = chooseVideoSize(map.getOutputSizes(MediaRecorder.class));//map.getOutputSizes(MediaRecorder.class)--获取图片输出的尺寸
+                mVideoSize = chooseVideoSize(map.getOutputSizes(MediaRecorder.class));//map.getOutputSizes(MediaRecorder.class)--获取图片输出的尺�?
                 previewSize =
                         chooseOptimalSize(map.getOutputSizes(SurfaceTexture.class),
-                                width,
-                                height);
+                                inputSize.getWidth(),
+                                inputSize.getHeight());
 
                 mVideoSize_midia = mVideoSize;
 
@@ -876,26 +834,9 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
 
                 CameraConnectionFragment.this.cameraId = cameraId;
 
-//                // TODO: 2018/10/15 By:LuoLu
-//                Range<Integer> range2 = characteristics.get(CameraCharacteristics.SENSOR_INFO_SENSITIVITY_RANGE);
-//                int max1 = range2.getUpper();//10000
-//                int min1 = range2.getLower();//100
-////                int iso = ((progress * (max1 - min1)) / 100 + min1);
-////                mPreviewBuilder.set(CaptureRequest.SENSOR_SENSITIVITY, iso);
-//                LOGGER.i("range2 max："+ max1);
-//                LOGGER.i("range2 min："+ min1);
-//
-//                Range<Long> range = characteristics.get(CameraCharacteristics.SENSOR_INFO_EXPOSURE_TIME_RANGE);
-//                long max = range.getUpper();
-//                long min = range.getLower();
-//                long ae = (((max - min)) / 100 + min);
-//                previewRequestBuilder.set(CaptureRequest.SENSOR_EXPOSURE_TIME, ae);
-//                textSensorExposureTime.setText("曝光时间：" + ae);
-
                 cameraConnectionCallback.onPreviewSizeChosen(previewSize, 0);
                 return;
             }
-
         } catch (final CameraAccessException e) {
             LOGGER.e(e, "Exception!");
         } catch (final NullPointerException e) {
@@ -907,70 +848,11 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
 
     }
 
-    private boolean hasPermissionsGranted(String[] permissions) {
-        for (String permission : permissions) {
-            if (ActivityCompat.checkSelfPermission(getActivity(), permission)
-                    != PackageManager.PERMISSION_GRANTED) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean shouldShowRequestPermissionRationale(String[] permissions) {
-        for (String permission : permissions) {
-            if (FragmentCompat.shouldShowRequestPermissionRationale(this, permission)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        Log.d("===", "onRequestPermissionsResult");
-        if (requestCode == REQUEST_VIDEO_PERMISSIONS) {
-            if (grantResults.length == VIDEO_PERMISSIONS.length) {
-                for (int result : grantResults) {
-                    if (result != PackageManager.PERMISSION_GRANTED) {
-                        ErrorDialog.newInstance(getString(R.string.permission_request))
-                                .show(getChildFragmentManager(), FRAGMENT_DIALOG);
-                        break;
-                    }
-                }
-            } else {
-                ErrorDialog.newInstance(getString(R.string.permission_request))
-                        .show(getChildFragmentManager(), FRAGMENT_DIALOG);
-            }
-        } else {
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
-    }
-
-    /**
-     * Requests permissions needed for recording video.
-     */
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void requestVideoPermissions() {
-        if (shouldShowRequestPermissionRationale(VIDEO_PERMISSIONS)) {
-            new ConfirmationDialog().show(getChildFragmentManager(), FRAGMENT_DIALOG);
-        } else {
-            FragmentCompat.requestPermissions(this, VIDEO_PERMISSIONS, REQUEST_VIDEO_PERMISSIONS);
-        }
-    }
-
     /**
      * Opens the camera specified by {@link CameraConnectionFragment#cameraId}.
      */
-    @TargetApi(Build.VERSION_CODES.M)
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @SuppressLint("MissingPermission")
     private void openCamera(final int width, final int height) {
-        if (!hasPermissionsGranted(VIDEO_PERMISSIONS)) {
-            requestVideoPermissions();
-            return;
-        }
         setUpCameraOutputs(width, height);
         configureTransform(width, height);
         mMediaRecorder = new MediaRecorder();
@@ -991,43 +873,10 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                 return;
             }
             manager.openCamera(cameraId, stateCallback, null);
-
         } catch (final CameraAccessException e) {
             LOGGER.e(e, "Exception!");
         } catch (final InterruptedException e) {
             throw new RuntimeException("Interrupted while trying to lock camera opening.", e);
-        }
-
-    }
-
-    private static final String[] VIDEO_PERMISSIONS = {
-            Manifest.permission.CAMERA,
-            Manifest.permission.RECORD_AUDIO,
-    };
-    private static final int REQUEST_VIDEO_PERMISSIONS = 1;
-
-    public static class ConfirmationDialog extends DialogFragment {
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final Fragment parent = getParentFragment();
-            return new AlertDialog.Builder(getActivity())
-                    .setMessage(R.string.permission_request)
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            FragmentCompat.requestPermissions(parent, VIDEO_PERMISSIONS,
-                                    REQUEST_VIDEO_PERMISSIONS);
-                        }
-                    })
-                    .setNegativeButton(android.R.string.cancel,
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    parent.getActivity().finish();
-                                }
-                            })
-                    .create();
         }
 
     }
@@ -1174,18 +1023,11 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
             previewRequestBuilder.set(
                     CaptureRequest.CONTROL_AF_MODE,
                     CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
-
+            previewRequestBuilder.set(CaptureRequest.CONTROL_AE_EXPOSURE_COMPENSATION, exposureCompensation);
             previewRequestBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.INFO_SUPPORTED_HARDWARE_LEVEL_FULL);
             // Finally, we start displaying the camera preview.
             previewRequest = previewRequestBuilder.build();
-//            // TODO: 2018/10/16 By:LuoLu
-//            Range<Long> range = characteristics.get(CameraCharacteristics.SENSOR_INFO_EXPOSURE_TIME_RANGE);
-//            long max = range.getUpper();
-//            long min = range.getLower();
-//            long ae = (((max - min)) / 100 + min);
-//            previewRequestBuilder.set(CaptureRequest.SENSOR_EXPOSURE_TIME, ae);
-//            textSensorExposureTime.setText("曝光时间：" + ae);
-//            valueAETime = ae;
+            captureSession.stopRepeating();
 
 
             captureSession.setRepeatingRequest(previewRequest, captureCallback, backgroundHandler);
@@ -1229,6 +1071,7 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
         textureView.setTransform(matrix);
     }
 
+    //保存视频
     private void setUpMediaRecorder() throws IOException {
         final Activity activity = getActivity();
         if (null == activity) {
@@ -1241,8 +1084,9 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
         if (Global.model == Model.BUILD.value()) {
             Global.VideoFileName = Global.mediaInsureItem.getVideoFileName();
         } else if (Global.model == Model.VERIFY.value()) {
-            Global.VideoFileName = mediaPayItem.getVideoFileName();
+            Global.VideoFileName = Global.mediaPayItem.getVideoFileName();
         }
+        Log.i("Global.model:", Global.model + "");
         Log.i("VideoFileName:", Global.VideoFileName);
         mMediaRecorder.setOutputFile(Global.VideoFileName);
         mMediaRecorder.setVideoEncodingBitRate(600000);
@@ -1256,16 +1100,23 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
 
         mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
         mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        //解决录制视频, 播放器横向问题
+        mMediaRecorder.setOrientationHint(90);
         try {
+            /**
+             * 准备记录器开始捕捉和编码数据。此方法必须在设置所需的音频和视频源、编码器、文件格式等之后调用，但在start()之前调用。
+             * 如果在调用之后抛出IllegalStateException
+             * start()或在setOutputFormat()之前。
+             * 如果准备失败，则抛出IOException。
+             */
             mMediaRecorder.prepare();
         } catch (IllegalStateException e) {
-            Log.d("CameraFragment", "IllegalStateException preparing MediaRecorder: " + e.getMessage());
+            Log.d(TAG, "IllegalStateException preparing MediaRecorder: " + e.getMessage());
             mMediaRecorder.release();
         } catch (IOException e) {
-            Log.d("CameraFragment", "IOException preparing MediaRecorder: " + e.getMessage());
+            Log.d(TAG, "IOException preparing MediaRecorder: " + e.getMessage());
             mMediaRecorder.release();
         }
-
     }
 
     private void startRecordingVideo() throws IOException {
@@ -1298,6 +1149,7 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
             previewRequestBuilder.addTarget(recorderSurface);
             previewRequestBuilder.addTarget(imageSurface);
             List<Surface> surfaceList = Arrays.asList(textureSurface, recorderSurface, imageSurface);
+
             // Start a capture session
             // Once the session starts, we can update the UI and start recording
             cameraDevice.createCaptureSession(surfaceList, new CameraCaptureSession.StateCallback() {
@@ -1311,33 +1163,50 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                     updatePreview();
 
                     getActivity().runOnUiThread(new Runnable() {
+                        @RequiresApi(api = Build.VERSION_CODES.M)
                         @Override
                         public void run() {
 
-                            if(leftEnough){
+                            tvNotice.setVisibility(View.VISIBLE);
+
+                            if (leftEnough) {
                                 tvBtnLeft.setVisibility(View.GONE);
-                            }else{
+                            } else {
                                 tvBtnLeft.setVisibility(View.VISIBLE);
                             }
-                            if(rightEnough){
+                            if (rightEnough) {
                                 tvBtnRight.setVisibility(View.GONE);
-                            }else{
+                            } else {
                                 tvBtnRight.setVisibility(View.VISIBLE);
                             }
 
-
                             if (Global.UPLOAD_VIDEO_FLAG) {
-                                // UI
-                                mRecordControl.setText(R.string.pause);
-                                mIsRecordingVideo = true;
-                                // Start recording
-                                mMediaRecorder.start();
-                                // disable switch action
-                                mRecordSwitch.setEnabled(false);
-                                mRecordVerify.setEnabled(false);
+                                //  if (touBaoVieoFlag.equals("1")|| liPeiVieoFlag.equals("1")) {
+                                Log.i("===startrecord==", "开始录制");
+                                try {
+                                    try {
+                                        Thread.sleep(200);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                    // UI
+                                    mRecordControl.setText(R.string.stop);
+
+                                    mIsRecordingVideo = true;
+                                    // Start recording
+                                    mMediaRecorder.start();
+                                    // disable switch action
+                                    mRecordSwitch.setEnabled(false);
+                                    mRecordVerify.setEnabled(false);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    showToast("视频录制异常！");
+                                }
+                                mRecordControl.setClickable(true);
                             } else {
                                 // UI
-                                mRecordControl.setText(R.string.pause);
+                                mRecordControl.setText(R.string.stop);
+
                                 mIsRecordingVideo = true;
                                 try {
                                     mMediaRecorder.prepare();
@@ -1347,8 +1216,9 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                                     Log.d(TAG, "IOException preparing MediaRecorder: " + e.getMessage());
                                 }
                                 mRecordSwitch.setEnabled(false);
-
+                                mRecordControl.setClickable(true);
                             }
+
 
                         }
                     });
@@ -1370,129 +1240,12 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
 
     }
 
-    private void startVideo() {
-        if (null == cameraDevice || !textureView.isAvailable() || null == previewSize) {
-            return;
-        }
-        Global.VIDEO_PROCESS = true;
-        try {
-            closePreviewSession();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            final Activity activity = getActivity();
-            if (null == activity) {
-                return;
-            }
-            mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-            mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
-            mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-            mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-            mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
-            // mMediaRecorder.setVideoSize(mVideoSize.getWidth(), mVideoSize.getHeight());
-            mMediaRecorder.setVideoSize(640, 480);
-
-            //mMediaRecorder.setCaptureRate(15);
-            mMediaRecorder.setVideoFrameRate(4);
-            if (Global.model == Model.BUILD.value()) {
-                Global.VideoFileName = Global.mediaInsureItem.getVideoFileName();
-            } else if (Global.model == Model.VERIFY.value()) {
-                Global.VideoFileName = mediaPayItem.getVideoFileName();
-            }
-            //mMediaRecorder.setOutputFile(Global.VideoFileName);
-            mMediaRecorder.setOutputFile(videoFileName);
-            mMediaRecorder.setVideoEncodingBitRate(5 * 1024 * 1024);
-            mMediaRecorder.prepare();
-
-            SurfaceTexture texture = textureView.getSurfaceTexture();
-            assert texture != null;
-            texture.setDefaultBufferSize(previewSize.getWidth(), previewSize.getHeight());
-            previewRequestBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_RECORD);
-            List<Surface> surfaces = new ArrayList<>();
-
-            // Set up Surface for the camera preview
-            Surface previewSurface = new Surface(texture);
-            surfaces.add(previewSurface);
-            previewRequestBuilder.addTarget(previewSurface);
-
-            // Set up Surface for the MediaRecorder
-            Surface recorderSurface = mMediaRecorder.getSurface();
-            surfaces.add(recorderSurface);
-            previewRequestBuilder.addTarget(recorderSurface);
-
-            previewReader = ImageReader.newInstance(previewSize.getWidth(), previewSize.getHeight(), ImageFormat.YUV_420_888, 4);
-            previewReader.setOnImageAvailableListener(imageListener, backgroundHandler);
-            Surface imageSurface = previewReader.getSurface();
-            surfaces.add(imageSurface);
-            previewRequestBuilder.addTarget(imageSurface);
-            cameraDevice.createCaptureSession(surfaces, new CameraCaptureSession.StateCallback() {
-
-                @Override
-                public void onConfigured(CameraCaptureSession cameraCaptureSession) {
-                    if (null == cameraDevice) {
-                        return;
-                    }
-                    captureSession = cameraCaptureSession;
-                    updatePreview();
-
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-
-                           /* if (Global.UPLOAD_VIDEO_FLAG == true) {
-                                // UI
-                                mRecordControl.setText(R.string.stop);
-                                mIsRecordingVideo = true;
-                                // Start recording
-                               // mMediaRecorder.start();
-                                // disable switch action
-                                mRecordSwitch.setEnabled(false);
-                                mRecordVerify.setEnabled(false);
-                            } else {
-                                // UI
-                                mRecordControl.setText(R.string.stop);
-                                mIsRecordingVideo = true;
-                                try {
-                                    mMediaRecorder.prepare();
-                                } catch (IllegalStateException e) {
-                                    Log.d("=====", "IllegalStateException preparing MediaRecorder: " + e.getMessage());
-                                } catch (IOException e) {
-                                    Log.d("====", "IOException preparing MediaRecorder: " + e.getMessage());
-                                }
-                                mRecordSwitch.setEnabled(false);
-
-                            }
-*/
-
-                        }
-                    });
-                }
-
-                @Override
-                public void onConfigureFailed(CameraCaptureSession cameraCaptureSession) {
-                    Activity activity = getActivity();
-                    if (null != activity) {
-                        Toast.makeText(activity, "Camera Failed!!!", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }, backgroundHandler);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.d("====", "ecception " + e.getMessage());
-        }
-    }
-
-
     private void stopRecordingVideo(boolean save) {
         // UI
         //mMediaRecorder = new MediaRecorder();
         mIsRecordingVideo = false;
-        mRecordControl.setText(R.string.record);
-        mRecordSwitch.setEnabled(true);
 
+        mRecordSwitch.setEnabled(true);
         tvNotice.setVisibility(View.GONE);
         tvBtnLeft.setVisibility(View.GONE);
         tvBtnRight.setVisibility(View.GONE);
@@ -1500,9 +1253,12 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
         ivLeft.setVisibility(View.GONE);
         ivRight.setVisibility(View.GONE);
 
-        mMediaRecorder.reset();
+//        mMediaRecorder.reset();
         Global.VIDEO_PROCESS = false;
         startPreview();
+//        lastClickTime = 0L;
+        mRecordControl.setText(R.string.record);
+        mRecordControl.setClickable(true);
     }
 
     private void closePreviewSession() {
@@ -1568,37 +1324,79 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                         if (mMediaRecorder == null) {
                             //mMediaRecorder = new MediaRecorder();
                         }
+                        MyApplication.during += System.currentTimeMillis() - timeVideoStart;
+                        //Toast.makeText(activity, ""+InnApplication.during, Toast.LENGTH_SHORT).show();
                         Global.VIDEO_PROCESS = false;
                         // 录制、暂停按钮所在布局隐藏
                         mReCordLayout.setVisibility(View.GONE);
                         mIsRecordingVideo = false;
                         mRecordControl.setText(R.string.record);
-
                         tvNotice.setVisibility(View.GONE);
                         tvBtnLeft.setVisibility(View.GONE);
                         tvBtnRight.setVisibility(View.GONE);
                         ivLeft.setVisibility(View.GONE);
                         ivRight.setVisibility(View.GONE);
-
+                        // 采集？ 按钮
                         mRecordSwitch.setEnabled(true);
-                        mMediaRecorder.reset();
-                        if (Global.UPLOAD_VIDEO_FLAG == false) {
-                            if (!TextUtils.isEmpty(Global.VideoFileName)) {
-                                boolean deleteResult = FileUtils.deleteFile(new File(Global.VideoFileName));
-                                if (deleteResult == true) {
-                                    LOGGER.i("collectNumberHandler录制视频删除成功！");
+                        // 停止视频录制
+                        Log.i("停止视频录制", "start ");
+
+                        try {
+                            captureSession.stopRepeating();
+                            captureSession.abortCaptures();
+                        } catch (CameraAccessException e) {
+                            e.printStackTrace();
+                        }
+
+                        try {
+                            TimerTask timerTask = new TimerTask() {
+                                @Override
+                                public void run() {
+                                    collectNumberHandler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            try {
+                                                mMediaRecorder.stop();
+                                            } catch (IllegalStateException e) {
+                                                Log.e(TAG, " mMediaRecorder.stop:Exception "+e);
+                                                // TODO 如果当前java状态和jni里面的状态不一致，
+                                                //e.printStackTrace();
+                                                mMediaRecorder = null;
+                                                mMediaRecorder = new MediaRecorder();
+                                            }
+                                            mMediaRecorder.reset();
+                                        }
+                                    });
                                 }
+                            };
+                            new Timer().schedule(timerTask, 30);
+                        } catch (RuntimeException e) {
+                            Log.e("-----停止视频录制-----------", "---->>>>>>>>>" + e);
+                            e.printStackTrace();
+                        }
+
+
+//                        try {
+//                            mMediaRecorder.reset();
+////                          mMediaRecorder.release();
+//                        } catch (Exception e) {
+//                            Log.i("停止视频录制", e.toString());
+//                        }
+                        Log.i("停止视频录制", "end ");
+                        if (!Global.UPLOAD_VIDEO_FLAG) {
+                            if (!TextUtils.isEmpty(Global.VideoFileName)) {
+                                //将已录制的视频删除
+//                                boolean deleteResult = FileUtils.deleteFile(new File(Global.VideoFileName));
+//                                if (deleteResult == true) {
+//                                    LOGGER.i("collectNumberHandler录制视频删除成功！");
+//                                }
                             }
                         }
                         MediaProcessor.getInstance(activity).handleMediaResource_build(activity);
                         MediaProcessor.getInstance(activity).showInsureDialog();
 
-                       /* if (Global.model == Model.VERIFY.value()) {
-                            PayDataProcessor.getInstance(activity).handleMediaResource_build(activity);
-                        } else if (Global.model == Model.BUILD.value()) {
-                            InsureDataProcessor.getInstance(activity).handleMediaResource_build(activity);
-                        }*/
                     } catch (WindowManager.BadTokenException e) {
+                        e.printStackTrace();
                         //use a log message
                         AlertDialog.Builder builderApplyFinish = new AlertDialog.Builder(activity)
                                 .setIcon(R.drawable.cowface)
@@ -1611,16 +1409,11 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                                         activity.finish();
                                     }
                                 });
-
                         builderApplyFinish.setCancelable(false);
                         builderApplyFinish.show();
                     }
                     break;
-
                 case 2:
-//                    new LocationTracker(activity.getResources().getDisplayMetrics()).reInitCounter(0, 0, 0);
-//                    trackingOverlay.refreshDrawableState();
-//                    textureView.refreshDrawableState();
                     if (mReCordLayout != null) {
                         mReCordLayout.setVisibility(View.VISIBLE);
                     }
@@ -1629,6 +1422,10 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                     if (activity != null) {
                         new MultiBoxTracker(activity).reInitCounter(0, 0, 0);
                     }
+//                    if (activity instanceof DetectorActivity) {
+//                        ((DetectorActivity) activity).reInitCurrentCounter(0, 0, 0);
+//                        DetectorActivity.tracker.reInitCounter(0, 0, 0);
+//                    }
                     if (trackingOverlay != null) {
                         trackingOverlay.refreshDrawableState();
                         trackingOverlay.invalidate();
@@ -1636,24 +1433,9 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                     if (textureView != null) {
                         textureView.refreshDrawableState();
                     }
-
-
-                    /*if (mReCordLayout != null) {
-                        mReCordLayout.setVisibility(View.VISIBLE);
-                    }
-                    new DetectorActivity().reInitCurrentCounter(0, 0, 0);
-                    if (activity != null) {
-                        new MultiBoxTracker(activity).reInitCounter(0, 0, 0);
-                    }
-                    if (trackingOverlay != null) {
-                        trackingOverlay.refreshDrawableState();
-                        trackingOverlay.invalidate();
-                    }
-                    if (textureView != null) {
-                        textureView.refreshDrawableState();
-                    }*/
+//                    MyApplication.debugNub = 0;
+                    MyApplication.during = 0;
                     LOGGER.i("collectNumberHandler Message 2！");
-
                     break;
                 //左脸达到数量
                 case 3:
@@ -1667,6 +1449,62 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                     tvBtnRight.setVisibility(View.GONE);
                     ivRight.setVisibility(View.GONE);
                     break;
+                /*//继续录制
+                case 5:
+                    myTest.performClick();
+                    break;
+                //达到2分钟和4分钟时 停止录制
+                case 6:
+                    try {
+                        if (mMediaRecorder == null) {
+                            //mMediaRecorder = new MediaRecorder();
+                        }
+                        if (MyApplication.debugNub == 2) {
+                            // 录制、暂停按钮所在布局隐藏
+                            mReCordLayout.setVisibility(View.GONE);
+                            tvNotice.setVisibility(View.GONE);
+                            tvBtnLeft.setVisibility(View.GONE);
+                            tvBtnRight.setVisibility(View.GONE);
+                            ivLeft.setVisibility(View.GONE);
+                            ivRight.setVisibility(View.GONE);
+                        }
+
+                        MyApplication.during += System.currentTimeMillis() - timeVideoStart;
+                        Global.VIDEO_PROCESS = false;
+
+                        mIsRecordingVideo = false;
+                        mRecordControl.setText(R.string.record);
+                        // 停止视频录制
+                        try {
+                            captureSession.stopRepeating();
+                            captureSession.abortCaptures();
+                        } catch (CameraAccessException e) {
+                            e.printStackTrace();
+                        }
+
+                        try{
+                            TimerTask timerTask = new TimerTask() {
+                                @Override
+                                public void run() {
+                                    collectNumberHandler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            mMediaRecorder.stop();
+                                            mMediaRecorder.reset();
+                                        }
+                                    });
+                                }
+                            };
+                            new Timer().schedule(timerTask,30);
+                        }catch(RuntimeException e){
+                            Log.e("-----停止视频录制-----------","---->>>>>>>>>"+e);
+                            e.printStackTrace();
+                        }
+                    } catch (Exception e) {
+                        Log.i("tv_ 停止视频录制", e.toString());
+                    }
+                    MediaProcessor.getInstance(activity).handleMediaResource_build(activity);
+                    break;*/
                 default:
                     break;
             }
@@ -1675,31 +1513,7 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
     };
 
     public void setParmes(String sheId, String inspectNo, String reason) {
-        String absolutePath = mfile.getAbsolutePath();
         //猪舍id 猪圈id 保单号  出险原因
-        MediaProcessor.getInstance(this.getActivity()).handleMediaResource_build(getActivity(), sheId, inspectNo, reason, mfile);
+        MediaProcessor.getInstance(this.getActivity()).handleMediaResource_build(getActivity(), sheId, inspectNo, reason);
     }
-// TODO: 2018/9/18 By:LuoLu
-//    /**
-//     * Configure a new camera session with output surfaces and type.
-//     *
-//     * @param camera The CameraDevice to be configured.
-//     * @param outputSurfaces The surface list that used for camera output.
-//     * @param listener The callback CameraDevice will notify when capture results are available.
-//     */
-//    @RequiresApi(api = Build.VERSION_CODES.M)
-//    public static CameraCaptureSession configureCameraSession(CameraDevice camera, List<Surface> outputSurfaces, boolean isHighSpeed, CameraCaptureSession.StateCallback listener, Handler handler) throws CameraAccessException {
-//        BlockingSessionCallback sessionListener = new BlockingSessionCallback(listener);
-//        if (isHighSpeed) {
-//            camera.createConstrainedHighSpeedCaptureSession(outputSurfaces, sessionListener, handler);
-//        } else {
-//            camera.createCaptureSession(outputSurfaces, sessionListener, handler);
-//        }
-//        CameraCaptureSession session = sessionListener.waitAndGetSession(SESSION_CONFIGURE_TIMEOUT_MS);
-//        assertFalse("Camera session should not be a reprocessable session", session.isReprocessable());
-//        String sessionType = isHighSpeed ? "High Speed" : "Normal";
-//        assertTrue("Capture session type must be " + sessionType, isHighSpeed == CameraConstrainedHighSpeedCaptureSession.class.isAssignableFrom(session.getClass()));
-//        return session;
-//    }
-
 }

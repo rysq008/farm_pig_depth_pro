@@ -34,7 +34,7 @@ public class Global {
 
 
     // 当APP采集并上传视频时设为TRUE
-    public static Boolean UPLOAD_VIDEO_FLAG = false;
+    public static Boolean UPLOAD_VIDEO_FLAG = true;
 
     public static boolean VIDEO_PROCESS = false;
 

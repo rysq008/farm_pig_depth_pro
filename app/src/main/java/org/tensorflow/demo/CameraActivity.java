@@ -255,5 +255,5 @@ public abstract class CameraActivity extends Activity implements OnImageAvailabl
 
     protected abstract int getLayoutId();
 
-    protected abstract int getDesiredPreviewFrameSize();
+    protected abstract Size getDesiredPreviewFrameSize();
 }

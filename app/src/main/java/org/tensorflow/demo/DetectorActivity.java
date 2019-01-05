@@ -72,7 +72,6 @@ import innovation.utils.FileUtils;
 
 import static innovation.entry.InnApplication.ANIMAL_TYPE;
 import static innovation.entry.InnApplication.SCREEN_ORIENTATION;
-import static org.tensorflow.demo.CameraConnectionFragment.textureView;
 
 
 /**
@@ -388,9 +387,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         // 检测图片是否清晰，给出提示，用于用户调整
         imageErrMsg = "";
 
-
-
-
         if (!Global.VIDEO_PROCESS) {
             Log.i("====== " ,"===onImageAvailable3=======");
             return;
@@ -400,17 +396,11 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         checkImageQuality(croppedBitmap);
         if (imageok) {
             Log.i("====== " ,"===onImageAvailable6=======");
-
             Bitmap rotateBitmap = innovation.utils.ImageUtils.rotateBitmap(croppedBitmap, 90);
-
-
 
             //com.innovation.utils.ImageUtils.saveImage(rotateBitmap);
             padBitmap = innovation.utils.ImageUtils.padBitmap(rotateBitmap);
-
-
             cropCopyBitmap = Bitmap.createBitmap(padBitmap);
-
 
             //final Canvas canvas = new Canvas(cropCopyBitmap);
             paint.setColor(Color.RED);
@@ -724,8 +714,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     }
 
     @Override
-    protected int getDesiredPreviewFrameSize() {
-        return CROP_SIZE;
+    protected Size getDesiredPreviewFrameSize() {
+        return DESIRED_PREVIEW_SIZE;
     }
 
     @Override

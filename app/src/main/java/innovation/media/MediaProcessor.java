@@ -167,7 +167,6 @@ public class MediaProcessor {
     private String sheId;
     private String inspectNo;
     private String reason;
-    private File mfile;
 
     private ZipOutputStream zipOutputStream;
     private String similarImgUrl;
@@ -239,13 +238,12 @@ public class MediaProcessor {
         str_address = LocationManager_new.getInstance(activity).str_address;
     }
 
-    public void handleMediaResource_build(Activity activity, String sheId, String inspectNo, String reason, File mfile) {
+    public void handleMediaResource_build(Activity activity, String sheId, String inspectNo, String reason) {
         mActivity = activity;
         initDialogs(activity);
         this.sheId = sheId;
         this.inspectNo = inspectNo;
         this.reason = reason;
-        this.mfile = mfile;
         str_address = LocationManager_new.getInstance(activity).str_address;
     }
 

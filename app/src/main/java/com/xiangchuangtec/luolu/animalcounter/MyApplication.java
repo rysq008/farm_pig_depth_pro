@@ -53,6 +53,12 @@ public class MyApplication extends Application {
 
     public static boolean isNoCamera = false;
 
+    /* 计时器录制时长 */
+    public static long during = 0;
+
+    /* 计时器录制开始时间 */
+    public static long timeVideoStart;
+
     @Override
     public void onCreate() {
         super.onCreate();
