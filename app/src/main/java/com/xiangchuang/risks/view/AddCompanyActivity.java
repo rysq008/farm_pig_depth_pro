@@ -262,13 +262,13 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
                                 } catch (ParseException e) {
                                     e.printStackTrace();
                                 }
-                                if (bean.getData().getCardFront() != null) {
-//                                    str_idcard_zheng = bean.getData().getCardFront();
-//                                    Glide.with(AddCompanyActivity.this).load(bean.getData().getCardFront())
-//                                            .into(btnIdcardZhengUpload);
+                                if (!bean.getData().getCardFront().isEmpty()) {
+                                    str_idcard_zheng = bean.getData().getCardFront();
+                                    Glide.with(AddCompanyActivity.this).load(bean.getData().getCardFront())
+                                            .into(btnIdcardZhengUpload);
 
                                 }
-                                if (bean.getData().getCardBack() != null) {
+                                if (!bean.getData().getCardBack().isEmpty()) {
 //                                    str_idcard_fan = bean.getData().getCardBack();
 //                                    Glide.with(AddCompanyActivity.this).load(bean.getData().getCardBack())
 //                                            .into(btnIdcardZhengUpload);
@@ -280,9 +280,9 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
                                     tvBaodanBankNum.setText(bean.getData().getBankNo());
                                 }
                                 if (!bean.getData().getBankFront().isEmpty()) {
-//                                    str_bank = bean.getData().getBankBack();
-//                                    Glide.with(AddCompanyActivity.this).load(bean.getData().getBankFront())
-//                                            .into(btnBankUpload);
+                                    str_bank = bean.getData().getBankBack();
+                                    Glide.with(AddCompanyActivity.this).load(bean.getData().getBankFront())
+                                            .into(btnBankUpload);
 
                                 }
                                 if (!bean.getData().getEnPhone().isEmpty()) {

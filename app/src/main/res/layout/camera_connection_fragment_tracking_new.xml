@@ -6,7 +6,9 @@
     <org.tensorflow.demo.AutoFitTextureView
         android:id="@+id/texture"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true" />
 
     <org.tensorflow.demo.OverlayView
         android:id="@+id/tracking_overlay"

@@ -1,10 +1,7 @@
 package com.xiangchuangtec.luolu.animalcounter.view;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.location.LocationManager;
@@ -12,35 +9,18 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.xiangchuang.risks.base.BaseActivity;
-import com.xiangchuang.risks.model.bean.InSureCommitBean;
-import com.xiangchuang.risks.model.bean.LoginBean;
-import com.xiangchuang.risks.model.bean.PollingListBean;
 import com.xiangchuang.risks.model.bean.SheListBean;
-import com.xiangchuang.risks.model.bean.ZhuSheBean;
-import com.xiangchuang.risks.model.custom.MyListView;
-import com.xiangchuang.risks.model.myinterface.MyInterface;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.utils.CounterHelper;
 import com.xiangchuang.risks.utils.PermissionsDelegate;
-import com.xiangchuang.risks.view.HogDetailActivity;
 import com.xiangchuang.risks.view.HogDetailActivity_new;
-import com.xiangchuang.risks.view.PigHogInformationActivity;
-import com.xiangchuang.risks.view.PigHouseInformationActivity;
-import com.xiangchuangtec.luolu.animalcounter.CounterActivity_new;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
 import com.xiangchuangtec.luolu.animalcounter.model.PollingResultAdapter_new;
@@ -49,17 +29,13 @@ import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
 import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
 import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
 
-import org.json.JSONObject;
-import org.tensorflow.demo.DetectorActivity;
 import org.tensorflow.demo.DetectorActivity_new;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;

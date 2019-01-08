@@ -7,7 +7,6 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -64,65 +63,26 @@ public class HttpUtils {
     public static String INSUR_QUERY_URL = baseUrl + "baodan/detailApp";
     //投保保单查询接口(根据临时保单号、姓名、身份证号查询)
     public static String INSUR_DETAIL_QUERY_URL = baseUrl + "baodan/detailQueryApp";
-
     //新增牲畜信息接口
     public static String INSUR_ADDPIG_URL = baseUrl + "pigInfo/addApp";
-
     //zip文件上传接口
     public static String PIG_FILEUPLOAD = baseUrl + "pigApp/upload";
-
     //图片上传接口
     public static String PIG_IMAGEUPLOAD = baseUrl + "pigApp/uploadImage";
     //    //投保建库
 //    public static String PIG_BUILD = baseUrl + "pigApp/build";
     //建库
     public static String PIG_BUILD = baseUrl + "pigApp/cow";
-
     //模型查询结果
     public static String PIG_BUILD_RESULT = baseUrl + "pigApp/queryResult";
-
     //新增理赔
     public static String LIPEI_NEW_URL = baseUrl + "pigLipei/addApp";
     //理赔验证
     public static String PIG_VERIFY = baseUrl + "pigApp/recognition";
     //短信验证码接口
     public static String GET_SMSCODE_URL = baseUrl + "app/sendcode";
-    //畜险APP注册接口
-    public static String COWAPP_RIGISTER_URL = baseUrl + "app/sendcode";
-
     //注册接口
     public static String GET_REGISTER_URL = baseUrl + "app/register";
-
-    //登录获取token
-    public static String LOGIN_GET_TOKEN_URL = "http://47.94.233.91:8080/login/get-token/";
-    //public static String LOGIN_GET_TOKEN_URL = "http://api.innovationai.com/login/get-token/";
-    // 上传
-    public static String UPLOAD_URL = "http://47.94.233.91:8080/ai/up/";
-    //public static String UPLOAD_URL = "http://api.innovationai.com/ai/up/";
-    //密钥
-    public static String SECRET_KEY = "YOuXiNPaIsEcReT";
-    //mobile参数
-    public static String QUEREY_MOBILE = "mobile";
-
-    public static String USERINFO_SHAREFILE = "userinfo_sharefile";
-
-    public static String VIDEOINFO_SHAREFILE = "videoinfo";
-
-    //图片验证码
-    public static String PIC_VERIFY_CODE = baseUrl + "app/randCodeImage";
-
-    //登陆
-    public static String PIC_LOGIN_URL = baseUrl + "app/login";
-
-    //获取公司
-    public static String GET_ALL_COMPANY_URL = baseUrl + "app/queryAppDept";
-
-    //获取版本更新json
-    public static String GET_UPDATE_URL = baseUrl + "app/appVersion/update";
-    // TODO: 2018/8/9 By:LuoLu
-    public static String BUILD_UPLOAD_OFFLINE_URL = baseUrl + "pigApp/uploadOffline";
-
-
 
     /**
      * @param url
@@ -146,7 +106,6 @@ public class HttpUtils {
                 .readTimeout(200, TimeUnit.SECONDS);//读取时长
         Response response = client.newCall(request).execute();
         return response.body().string();
-
     }
 
     public static String get(String url) throws IOException {

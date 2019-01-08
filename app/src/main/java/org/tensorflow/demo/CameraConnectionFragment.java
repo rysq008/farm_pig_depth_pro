@@ -98,7 +98,6 @@ import java.util.concurrent.TimeUnit;
 import static android.content.ContentValues.TAG;
 import static com.xiangchuangtec.luolu.animalcounter.MyApplication.timeVideoStart;
 import static org.tensorflow.demo.DetectorActivity.trackingOverlay;
-import static org.tensorflow.demo.Global.mediaPayItem;
 
 @SuppressLint("ValidFragment")
 public class CameraConnectionFragment extends Fragment implements View.OnClickListener {
@@ -663,6 +662,12 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
 
     @Override
     public void onPause() {
+        // 停止按钮点击时
+        MyApplication.during += System.currentTimeMillis() - timeVideoStart;
+        //Toast.makeText(activity, InnApplication.during+"", Toast.LENGTH_SHORT).show();
+        stopRecordingVideo(false);
+        Global.VIDEO_PROCESS = false;
+
         closeCamera();
         stopBackgroundThread();
         super.onPause();

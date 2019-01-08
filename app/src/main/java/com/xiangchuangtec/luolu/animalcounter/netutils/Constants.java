@@ -1,5 +1,7 @@
 package com.xiangchuangtec.luolu.animalcounter.netutils;
 
+import innovation.utils.HttpUtils;
+
 public class Constants {
     //生产
     // public static final String BASE = "http://192.168.2.103:8089/app/";
@@ -25,10 +27,9 @@ public class Constants {
     public static final String inspectNo = "inspectNo";
     public static final String file = "file";
 
-// http://47.92.167.61:8081/nongxian2/ ;  http://47.92.167.61:8084/nongxian3
-//  public static final String BASENEW = "http://47.92.167.61:8084/nongxian3/app/";
-    public static final String BASENEW = "http://47.92.167.61:8081/nongxian2/app/";
-//    public static final String BASENEW = "http://192.168.1.198:8081/app/";//测试
+    //    60.205.209.245:8081;   47.92.167.61:8081
+//    public static final String BASENEW =  "http://47.92.167.61:8081/nongxian2/app/";
+    public static final String BASENEW = HttpUtils.baseUrl+"app/";
     public static final String LOGINURLNEW = BASENEW + "ftnLogin";
 
     public static final String ZHUSHESHOW = BASENEW + "ftnShe/list";
@@ -116,12 +117,8 @@ public class Constants {
     public static final String UP_LOAD_IMG = BASENEW + "uploadImg";
     public static final String ADD_PAY_INFO = BASENEW + "payment/addPayInfo";
 
-
     //public static final String BASE8081= "http://47.92.167.61:8081/";
-    public static final String SHEDETAIL = "http://47.92.167.61:8081/numberCheck/app/sheDetail";
-
-
-
+//    public static final String SHEDETAIL = "http://47.92.167.61:8081/numberCheck/app/sheDetail";
 
     public static final String deptIdnew = "dept_id";
     public static final String id = "id";

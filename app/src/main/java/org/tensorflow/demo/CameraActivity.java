@@ -18,7 +18,6 @@ package org.tensorflow.demo;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.pm.PackageManager;
 import android.media.Image.Plane;
 import android.media.ImageReader.OnImageAvailableListener;
@@ -40,10 +39,6 @@ import org.tensorflow.demo.env.Logger;
 
 import java.nio.ByteBuffer;
 
-import innovation.media.MediaProcessor;
-import innovation.tensorflow.tracking.LocationTracker;
-
-import static org.tensorflow.demo.DetectorActivity.trackingOverlay;
 
 public abstract class CameraActivity extends Activity implements OnImageAvailableListener {
     private static final Logger LOGGER = new Logger();
@@ -75,6 +70,10 @@ public abstract class CameraActivity extends Activity implements OnImageAvailabl
         } else {
             requestPermission();
         }
+
+        DetectorActivity.type1Count=0;
+        DetectorActivity.type2Count=0;
+        DetectorActivity.type3Count=0;
     }
 
     @Override
@@ -84,12 +83,12 @@ public abstract class CameraActivity extends Activity implements OnImageAvailabl
     }
 
     @Override
-    public synchronized void onResume() {
-        LOGGER.d("onResume " + this);
-        super.onResume();
+        public synchronized void onResume() {
+            LOGGER.d("onResume " + this);
+            super.onResume();
 
-        handlerThread = new HandlerThread("inference");
-        handlerThread.start();
+            handlerThread = new HandlerThread("inference");
+            handlerThread.start();
         handler = new Handler(handlerThread.getLooper());
     }
 
@@ -148,6 +147,8 @@ public abstract class CameraActivity extends Activity implements OnImageAvailabl
                     requestPermission();
                 }
             }
+            default:
+                break;
         }
     }
 

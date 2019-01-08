@@ -143,18 +143,10 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <activity
+        <!--<activity
             android:name="com.xiangchuang.risks.view.HogDetailActivity"
             android:exported="true">
-
-            <!--
-              <intent-filter>
-                  <action android:name="android.intent.action.MAIN" />
-
-                  <category android:name="android.intent.category.LAUNCHER" />
-              </intent-filter>
-            -->
-        </activity>
+        </activity>-->
         <activity
             android:name="com.xiangchuang.risks.view.HogDetailActivity_new"
             android:exported="true" />

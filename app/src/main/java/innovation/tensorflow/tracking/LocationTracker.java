@@ -1,7 +1,5 @@
 package innovation.tensorflow.tracking;
 
-import android.app.Activity;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -11,26 +9,18 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.Pair;
 import android.util.TypedValue;
-import android.widget.Toast;
 
-import innovation.entry.InnApplication;
 import innovation.utils.ScreenUtil;
-import innovation.utils.UIUtils;
 
-import org.tensorflow.demo.CameraConnectionFragment;
 import org.tensorflow.demo.Classifier;
 import org.tensorflow.demo.Global;
 import org.tensorflow.demo.PostureItem;
 import org.tensorflow.demo.env.BorderedText;
-import org.tensorflow.demo.env.ImageUtils;
 import org.tensorflow.demo.tracking.TrackerItem;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 import java.util.Vector;
 /**
  * Author by luolu, Date on 2018/8/27.

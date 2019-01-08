@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">猪险</string>
+    <!--<string name="app_name">猪险</string>-->
+    <string name="app_name">猪险测试版</string>
     <string name="no_camera_permission_granted">No Camera permission granted.</string>
     <string name="loadImage">打开相册</string>
     <string name="description_info">Info</string>

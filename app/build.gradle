@@ -12,8 +12,8 @@ android {
         applicationId "com.xiangchuangtec.luolu.animalcounter"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 1097
-        versionName "1.097"
+        versionCode 1098
+        versionName "1.098"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         ndk {

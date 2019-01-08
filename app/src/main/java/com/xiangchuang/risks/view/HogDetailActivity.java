@@ -1,3 +1,4 @@
+/*
 package com.xiangchuang.risks.view;
 
 import android.support.annotation.Nullable;
@@ -125,3 +126,4 @@ public class HogDetailActivity extends BaseActivity {
         });
     }
 }
+*/

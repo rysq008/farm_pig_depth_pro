@@ -228,7 +228,6 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
         // 20180223
         sensorOrientation = rotation - getScreenOrientation();
 
-
         LOGGER.i("Initializing sensorOrientation: %d", sensorOrientation);
         LOGGER.i("Initializing at size %dx%d", previewWidth, previewHeight);
         rgbBytes = new int[previewWidth * previewHeight];
@@ -336,7 +335,6 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
             //mLocationTracker.onFrame(previewWidth, previewHeight, planes[0].getRowStride(), sensorOrientation, yuvBytes[0], timestamp);
             trackingOverlay.postInvalidate();
 
-
             final int yRowStride = planes[0].getRowStride();
             final int uvRowStride = planes[1].getRowStride();
             final int uvPixelStride = planes[1].getPixelStride();
@@ -374,15 +372,11 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
         }
         System.arraycopy(yuvBytes[0], 0, luminance, 0, luminance.length);
 
-
         final Paint paint = new Paint();
         Bitmap padBitmap = null;
 
         // 检测图片是否清晰，给出提示，用于用户调整
         imageErrMsg = "";
-
-
-
 
         if (!Global.VIDEO_PROCESS) {
             Log.i("====== " ,"===onImageAvailable3=======");
@@ -468,189 +462,6 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
 
     }
 
-    /**
-     * 缩放图片
-     *
-     * @param
-     */
-    private Bitmap getPostScaleBitmap(Bitmap bitmap) {
-        // Matrix类进行图片处理（缩小或者旋转）
-        Matrix matrix = new Matrix();
-        // 根据指定高度宽度缩放
-        matrix.postScale(0.05f, 0.05f);
-        // 生成新的图片
-        try {
-            Bitmap dstbmp = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
-                    bitmap.getHeight(), matrix, true);
-            if (dstbmp != null) {
-                return dstbmp;
-            }
-        } catch (Exception e) {
-            String s = e.getMessage().toString();
-            Log.d(TAG, "图像imgae----getPostScaleBitmap except===" + s);
-            return null;
-        }
-        return null;
-    }
-
-
-    //haojie add
-    //判断模糊，true:模糊 false:清晰
-    private boolean getImageBlur(Bitmap bitmap) {
-        return innovation.utils.ImageUtils.isBlurByOpenCV_new(bitmap);
-    }
-
-    //获取图片亮度值
-    public int getImageBright(Bitmap bm) {
-        int width = bm.getWidth();
-        int height = bm.getHeight();
-        int r, g, b;
-        int count = 0;
-        int bright = 0;
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                count++;
-                int localTemp = bm.getPixel(i, j);
-                r = (localTemp | 0xff00ffff) >> 16 & 0x00ff;
-                g = (localTemp | 0xffff00ff) >> 8 & 0x0000ff;
-                b = (localTemp | 0xffffff00) & 0x0000ff;
-                bright = (int) (bright + 0.299 * r + 0.587 * g + 0.114 * b);
-            }
-        }
-        return bright / count;
-    }
-
-    //检测亮度
-    private int check_imageBright(Bitmap bitmap) {
-        //对图像进行模糊度，明暗度判断
-        //先缩放再获得亮度
-        Bitmap check_image = getPostScaleBitmap(bitmap);
-        long time0 = System.currentTimeMillis();
-        int bitBright = getImageBright(check_image);
-        long time1 = System.currentTimeMillis();
-        Log.d(TAG, "图像imgae----bitBright===" + bitBright + "--spent time ====" + (time1 - time0));
-        return bitBright;
-    }
-
-    //检测图片质量
-    private void check_imageQuality(Bitmap bitmap) {
-        int bright = check_imageBright(bitmap);
-        boolean ifdark = false;
-        boolean ifbright = false;
-        boolean isblur = false;
-        if (bright > 160) {
-            ifbright = true;
-            bright_count++;
-            Log.d(TAG, "图像过亮，请重新选择" + "--bright ===" + bright);
-            imageErrMsg += "图像过亮！" + "--bright ===" + bright;
-        } else if (bright < 30) {
-            ifdark = true;
-            dark_count++;
-            Log.d(TAG, "图像过暗，请重新选择" + "--bright ===" + bright);
-            imageErrMsg += "图像过暗！" + "--intensityValue ===" + bright;
-        }
-        isblur = check_blur(bitmap);
-        if (isblur) {
-            blur_count++;
-            Log.d(TAG, "图像模糊，请重新选择" + "--isblur ===" + isblur);
-            imageErrMsg += "图像模糊！" + "--isblur ===" + isblur;
-        }
-
-        if (!ifdark && !ifbright && !isblur) {
-            imageok = true;
-            ok_count++;
-            Log.d(TAG, "图像 质量良好 imageok ===" + imageok);
-        } else {
-            imageok = false; //图片质量有问题，不进行捕捉图片的保存
-            Log.d(TAG, "图像 质量差 imageok ===" + imageok);
-        }
-        check_imageresult();
-    }
-
-    //判断模糊，true:模糊 false:清晰
-    private boolean check_blur(Bitmap bitmap) {
-        return innovation.utils.ImageUtils.isBlurByOpenCV_new(bitmap);
-    }
-
-    //判断图片质量，用于图片错误提示（过亮、过暗、模糊）
-    private void check_imageresult() {
-        if (image_count > CHECK_COUNT) {
-            int error_count = dark_count + bright_count + blur_count;
-            String tipmsg = "";
-            double tmpok = CHECK_COUNT * 0.6;
-            double tmpdark = CHECK_COUNT * 0.3;
-            double tmpbright = CHECK_COUNT * 0.3;
-            double tmpblur = CHECK_COUNT * 0.2;
-
-            if (dark_count > tmpdark) {
-                if (tipmsg.length() > 0)
-                    tipmsg = tipmsg + "、";
-                tipmsg = tipmsg + "过暗";
-            }
-            if (bright_count > tmpbright) {
-                if (tipmsg.length() > 0)
-                    tipmsg = tipmsg + "、";
-                tipmsg = tipmsg + "过亮";
-            }
-            if (blur_count > tmpblur) {
-                if (tipmsg.length() > 0)
-                    tipmsg = tipmsg + "、";
-                tipmsg = tipmsg + "模糊";
-            }
-
-            if ((ok_count < tmpok) && (tipmsg.length() > 0)) {
-                tipmsg = "当前图片" + tipmsg + "，请调整";
-                Toast.makeText(DetectorActivity_new.this, tipmsg, Toast.LENGTH_SHORT).show();
-            } else {
-                Log.d(TAG, "haojie---set_checkcount---tmpok==" + tmpok + "==图片可用");
-            }
-            init_checkpara();
-        } else {
-            image_count++;
-        }
-    }
-
-    private void init_checkpara() {
-        image_count = 0;
-        ok_count = 0;
-        dark_count = 0;
-        blur_count = 0;
-        bright_count = 0;
-    }
-
-    //获得角度类型
-    private int getAngleCategory(float x, float y) {
-        int type = 10;
-        float new_x, new_y;
-        //弧度转角度
-        new_x = (float) (x * 180 / 3.14);
-        new_y = (float) (y * 180 / 3.14);
-// TODO: 2018/8/22 By:LuoLu  根据ANIMAL_TYPE进行角度分类
-        final int[][] ANGEL_PARAMS = {
-                // animal type=0
-                {0, 0, 0, 0, 0, 0, 0, 0},
-                {-60, 60, -80, -8, -8, 8, 8, 80},  // animal type=Global.ANIMAL_TYPE_PIG
-                {0, 40, -60, -15, -8, 8, 15, 60},  // animal type=Global.ANIMAL_TYPE_CATTLE
-                {0, 60, -70, -15, -8, 8, 15, 70}   // animal type=Global.ANIMAL_TYPE_DONKEY
-        };
-
-        if (new_x >= ANGEL_PARAMS[ANIMAL_TYPE][0] && new_x <= ANGEL_PARAMS[ANIMAL_TYPE][1]) {
-            if (new_y >= ANGEL_PARAMS[ANIMAL_TYPE][2] && new_y <= ANGEL_PARAMS[ANIMAL_TYPE][3]) {
-                type = 1;
-            } else if (new_y > ANGEL_PARAMS[ANIMAL_TYPE][4] && new_y <= ANGEL_PARAMS[ANIMAL_TYPE][5]) {
-                type = 2;
-            } else if (new_y > ANGEL_PARAMS[ANIMAL_TYPE][6] && new_y <= ANGEL_PARAMS[ANIMAL_TYPE][7]) {
-                type = 3;
-            } else {
-                type = 10;
-            }
-        }
-
-        Log.d("DetectorActivity.java", "getAngleCategory==rot_x" + x + "==rot_y==" + y + "===new_x==" + new_x + "===new_y===" + y + "===type==" + type);
-
-        return type;
-    }
-
     @Override
     protected int getLayoutId() {
         //return R.layout.camera_connection_fragment_tracking; //haojie del for test
@@ -677,32 +488,6 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
         LOGGER.i("reInitCurrentCounter-b:", type2Count);
         LOGGER.i("reInitCurrentCounter-c:", type3Count);
     }
-
-
-    public static File saveImage(Bitmap bmp) {
-        // File appDir = new File(new File(Environment.getExternalStorageDirectory(), "innovation"), "test94");
-        new File(Environment.getExternalStorageDirectory(), "animal/ZipImage");
-        File appDir = new File(new File(Environment.getExternalStorageDirectory(), "innovation/animal"),"ZipImage");
-        if (!appDir.exists()) {
-            appDir.mkdir();
-        }
-        SimpleDateFormat tmpSimpleDateFormat = new SimpleDateFormat("yyyyMMddhhmmssSSS", Locale.getDefault());
-        String fileName = tmpSimpleDateFormat.format(new Date(System.currentTimeMillis()));
-        File file = new File(appDir, fileName);
-        try {
-            FileOutputStream fos = new FileOutputStream(file);
-            bmp.compress(Bitmap.CompressFormat.JPEG, 50, fos);
-            fos.flush();
-            fos.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        LOGGER.i("Lu,save to local,path: " + appDir.toString());
-        return file;
-    }
-
 
     //检测图片质量
     private void checkImageQuality(Bitmap bitmap) {

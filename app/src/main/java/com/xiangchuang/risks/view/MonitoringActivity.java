@@ -24,6 +24,8 @@ import com.xiangchuangtec.luolu.animalcounter.R;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
 import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
 
+import static android.webkit.WebSettings.LOAD_NO_CACHE;
+
 /**
  * 监控信息
  */
@@ -60,9 +62,9 @@ public class MonitoringActivity extends AppCompatActivity {
         WebSettings webSettings=webView.getSettings();
         webSettings.setDisplayZoomControls(false);
         webSettings.setJavaScriptEnabled(true);
+        webSettings.setCacheMode(LOAD_NO_CACHE);
 
         ivCancel = (ImageView) findViewById(R.id.iv_cancel);
-
         ivCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,7 +77,6 @@ public class MonitoringActivity extends AppCompatActivity {
                 }else{
                     finish();
                 }
-
             }
         });
     }
