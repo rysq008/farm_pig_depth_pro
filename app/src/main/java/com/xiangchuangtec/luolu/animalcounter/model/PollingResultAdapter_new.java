@@ -23,7 +23,8 @@ public class PollingResultAdapter_new extends BaseAdapter {
     private OnDetailitemClickListener onDetailitemClickListener;
 
     public interface OnDetailClickListener {
-        public void onClick(int sheId);
+//        public void onClick(int sheId);
+        public void onClick(int position);
     }
 
     public PollingResultAdapter_new(Context context, List<SheListBean.DataOffLineBaodanBean> recordList,
@@ -88,9 +89,9 @@ public class PollingResultAdapter_new extends BaseAdapter {
                     dialog.show();
                 } else {
                     Integer position = (Integer) v.getTag();
-                    mListener.onClick(Integer.valueOf(recordList.get(position).getSheId()));
+//                    mListener.onClick(Integer.valueOf(recordList.get(position).getSheId()));
+                    mListener.onClick(position);
                 }
-
             }
         });
         ShowPollingActivity_new activity= (ShowPollingActivity_new) context;

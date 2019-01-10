@@ -35,6 +35,10 @@ proguard/
 # Log Files
 *.log
 
-animalInsurance/release/
-local.properties
 app/release/
+local.properties
+app/debug/
+tatus
+/libuvccamera/*.iml
+/openCVLibrary331/*.iml
+/usbCameraCommon/*.iml

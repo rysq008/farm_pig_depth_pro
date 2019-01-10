@@ -7,12 +7,14 @@ import android.content.Context;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 
 
 import net.gotev.uploadservice.UploadService;
 import net.gotev.uploadservice.okhttp.OkHttpStack;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import innovation.biz.classifier.BreedingPigFaceDetectTFlite;
@@ -59,6 +61,7 @@ public class MyApplication extends Application {
     /* 计时器录制开始时间 */
     public static long timeVideoStart;
 
+    private static WeakReference<Activity> acontext;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -76,6 +79,43 @@ public class MyApplication extends Application {
 
         locationThread = new LocationThread();
         locationThread.start();
+
+        registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
+            @Override
+            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+                acontext = new WeakReference<>(activity);
+            }
+
+            @Override
+            public void onActivityStarted(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityResumed(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityPaused(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityStopped(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+            }
+
+            @Override
+            public void onActivityDestroyed(Activity activity) {
+
+            }
+        });
 
     }
 
@@ -104,5 +144,9 @@ public class MyApplication extends Application {
             ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE,
                     REQUEST_EXTERNAL_STORAGE);
         }
+    }
+
+    public static Context getContext() {
+        return MyApplication.acontext.get();
     }
 }

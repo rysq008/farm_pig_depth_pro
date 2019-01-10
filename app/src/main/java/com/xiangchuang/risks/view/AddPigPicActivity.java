@@ -35,6 +35,7 @@ import android.widget.Toast;
 import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.bean.CommitLiBean;
 import com.xiangchuang.risks.model.bean.StartBean;
+import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.utils.CounterHelper;
 import com.xiangchuangtec.luolu.animalcounter.BuildConfig;
 import com.xiangchuangtec.luolu.animalcounter.CounterActivity_new;
@@ -47,6 +48,7 @@ import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.tensorflow.demo.DetectorActivity;
 
 import java.io.File;
 import java.io.IOException;
@@ -66,6 +68,8 @@ import innovation.utils.MyWatcher;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
+
+import static org.tensorflow.demo.CameraConnectionFragment.collectNumberHandler;
 
 public class AddPigPicActivity extends BaseActivity {
 
@@ -548,11 +552,28 @@ public class AddPigPicActivity extends BaseActivity {
                             }
                         }
                     });
+                }else{
+                    mProgressDialog.dismiss();
+                    showMessageDialogRetry("上传异常，请重试。");
                 }
             }
         });
     }
 
+    // 预理赔/理赔弹框
+    private void showMessageDialogRetry(String msg) {
+
+        AlertDialogManager.showMessageDialogRetry(AddPigPicActivity.this, "提示", msg, new AlertDialogManager.DialogInterface() {
+            @Override
+            public void onPositive() {
+                addPayInfo();
+            }
+            @Override
+            public void onNegative() {
+                finish();
+            }
+        });
+    }
 
     private void showProgressDialog() {
         mProgressDialog = new ProgressDialog(AddPigPicActivity.this);

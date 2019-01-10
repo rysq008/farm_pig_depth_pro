@@ -89,6 +89,7 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 import static android.opengl.ETC1.isValid;
+import static com.xiangchuang.risks.utils.MyTextUtil.isEmojiCharacter;
 import static com.xiangchuang.risks.utils.ValidatorUtils.isMobileNO;
 import static com.xiangchuang.risks.utils.ValidatorUtils.isPhone;
 
@@ -100,10 +101,6 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
     private static final int REQUESTCODE_TAKE = 11111;        // 相机拍照标记
     private static final int REQUESTCODE_CUTTING = 22222;    // 图片裁切标记
     private Uri uritempFile;
-    private int userId;
-    private String str_idcard_zheng_path = "";
-    private String str_idcard_fan_path = "";
-    private String str_bank_path = "";
     public static String TAG = "AddCompanyActivity";
     private AMapLocationClient mLocationClient;
     private AMapLocationClientOption mLocationOption;
@@ -192,11 +189,13 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
         btnIdcardZhengUpload = findViewById(R.id.btn_idcard_zheng_upload);
         btnIdcardFanUpload = findViewById(R.id.btn_idcard_fan_upload);
         btnBankUpload = findViewById(R.id.btn_bank_upload);
+
         btnIdcardZhengUpload.setOnClickListener(this);
         btnwancheng.setOnClickListener(this);
         btnBankUpload.setOnClickListener(this);
         btnIdcardFanUpload.setOnClickListener(this);
         iv_cancel.setOnClickListener(this);
+
         certificateTypeRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             switch (checkedId) {
                 case R.id.id_card_radio_button:
@@ -266,12 +265,11 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
                                     str_idcard_zheng = bean.getData().getCardFront();
                                     Glide.with(AddCompanyActivity.this).load(bean.getData().getCardFront())
                                             .into(btnIdcardZhengUpload);
-
                                 }
                                 if (!bean.getData().getCardBack().isEmpty()) {
-//                                    str_idcard_fan = bean.getData().getCardBack();
-//                                    Glide.with(AddCompanyActivity.this).load(bean.getData().getCardBack())
-//                                            .into(btnIdcardZhengUpload);
+                                    str_idcard_fan = bean.getData().getCardBack();
+                                    Glide.with(AddCompanyActivity.this).load(bean.getData().getCardBack())
+                                            .into(btnIdcardFanUpload);
                                 }
                                 if (!bean.getData().getBankName().isEmpty()) {
                                     tvBaodanOpenbank.setText(bean.getData().getBankName());
@@ -280,10 +278,9 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
                                     tvBaodanBankNum.setText(bean.getData().getBankNo());
                                 }
                                 if (!bean.getData().getBankFront().isEmpty()) {
-                                    str_bank = bean.getData().getBankBack();
+                                    str_bank = bean.getData().getBankFront();
                                     Glide.with(AddCompanyActivity.this).load(bean.getData().getBankFront())
                                             .into(btnBankUpload);
-
                                 }
                                 if (!bean.getData().getEnPhone().isEmpty()) {
                                     tv_baodan_tel.setText(bean.getData().getEnPhone());
@@ -322,14 +319,27 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
                 photograph("bank");
                 break;
             case R.id.btn_wancheng:
+
+
                 if ("".equals(tv_qiyename.getText().toString())) {
                     toastUtils.showLong(this, "企业名称为空");
                     return;
                 }
+                if(isEmo(tv_qiyename.getText().toString())){
+                    Toast.makeText(AddCompanyActivity.this, "企业名称不能包含特殊字符", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+
                 if ("".equals(tvBaodanPeople.getText().toString())) {
                     toastUtils.showLong(this, "企业负责人为空");
                     return;
                 }
+                if(isEmo(tvBaodanPeople.getText().toString())){
+                    Toast.makeText(AddCompanyActivity.this, "企业负责人名不能包含特殊字符", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
 
                 if (certificateType == 1) {
                     String strIDcard = IDCardValidate.validateIDcardNumber(tvBaodanIdcard.getText().toString().trim(), true);
@@ -350,7 +360,6 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
 ////                        Toast.makeText(getApplicationContext(), "请输入正确的统一社会信用代码", Toast.LENGTH_SHORT).show();
 ////                        return;
 ////                    }
-
                 }
 
                 if (certificateType == 1) {
@@ -372,12 +381,18 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
                     toastUtils.showLong(this, "开户行名字为空");
                     return;
                 }
+                if(isEmo(tvBaodanOpenbank.getText().toString())){
+                    Toast.makeText(AddCompanyActivity.this, "开户行名称不能包含特殊字符", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+
                 if ("".equals(tvBaodanBankNum.getText().toString())) {
                     toastUtils.showLong(this, "银行账户为空");
                     return;
                 }
                 if (str_bank.equals("")) {
-                    Toast.makeText(getApplicationContext(), "未上传成功,请重新拍摄银行卡正面照片", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "请上传银行卡正面照片", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -398,6 +413,11 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
                     toastUtils.showLong(this, "企业地址为空");
                     return;
                 }
+                if(isEmo(tvBaodanAddress.getText().toString())){
+                    Toast.makeText(AddCompanyActivity.this, "企业地址不能包含特殊字符", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
                 if ("".equals(qiyepassword.getText().toString())) {
                     toastUtils.showLong(this, "密码为空");
                     return;
@@ -411,6 +431,17 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
             default:
                 break;
         }
+    }
+    //判断是否包含表情符号
+    private boolean isEmo(String s){
+        boolean isemo = false;
+        for(int i=0; i<s.length(); i++){
+            isemo = isEmojiCharacter(s.charAt(i));
+            if(isemo){
+                break;
+            }
+        }
+        return isemo;
     }
 
     private boolean isValid(String businessCode) {
@@ -610,7 +641,7 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
         // 取得SDCard图片路径做显示
         Bitmap photo = BitmapFactory.decodeStream(getContentResolver().openInputStream(uritempFile));
         Drawable drawable = new BitmapDrawable(null, photo);
-        String urlpath = FileUtils.saveFile(AddCompanyActivity.this, "temphead.jpg", photo);
+        String urlpath = FileUtils.saveFile(AddCompanyActivity.this, stampToDate(System.currentTimeMillis())+"temphead.jpg", photo);
 
         // TODO: 2018/8/21 By:LuoLu
         File file = new File(urlpath);
@@ -628,7 +659,6 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
         //upload_zipImage(fileURLPath, userId);
         upload_image(fileURLPath, drawable);
     }
-
     private void upload_image(File fileURLPath, Drawable drawable) {
         Map map = new HashMap();
         map.put(Constants.AppKeyAuthorization, "hopen");
@@ -673,20 +703,14 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
                                                 String data = jsonObject.getString("data");
                                                 if (imageType.contains("idcard_zheng")) {
                                                     str_idcard_zheng = data;
-                                                } else if (imageType.contains("idcard_fan")) {
-                                                    str_idcard_fan = data;
-                                                } else if (imageType.contains("bank")) {
-                                                    str_bank = data;
-                                                }
-
-                                                if (imageType.contains("idcard_zheng")) {
                                                     btnIdcardZhengUpload.setImageDrawable(drawable);
                                                 } else if (imageType.contains("idcard_fan")) {
+                                                    str_idcard_fan = data;
                                                     btnIdcardFanUpload.setImageDrawable(drawable);
                                                 } else if (imageType.contains("bank")) {
+                                                    str_bank = data;
                                                     btnBankUpload.setImageDrawable(drawable);
                                                 }
-
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
                                             }
@@ -702,23 +726,6 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
                 });
             }
         });
-    }
-
-    private UploadImageObject upload_zipImage(File zipFile_image, int uid) {
-        UploadImageObject imgResp = HttpUtils.uploadImage(zipFile_image, uid);
-
-        if (imgResp == null || imgResp.status != HttpRespObject.STATUS_OK) {
-            toastUtils.showLong(this, imgResp.msg);
-            return imgResp;
-        }
-        if (imageType.indexOf("idcard_zheng") > -1) {
-            str_idcard_zheng_path = imgResp.upload_imagePath;
-        } else if (imageType.indexOf("idcard_fan") > -1) {
-            str_idcard_fan_path = imgResp.upload_imagePath;
-        } else if (imageType.indexOf("bank") > -1) {
-            str_bank_path = imgResp.upload_imagePath;
-        }
-        return imgResp;
     }
 
     private void getCurrentLocationLatLng() {

@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="#30425A"
     android:orientation="vertical">
+    <include layout="@layout/activity_title" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -15,18 +16,20 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="40dp"
             android:orientation="vertical">
-
-            <include layout="@layout/activity_title" />
-
             <GridView
                 android:id="@+id/gridview_pic"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:numColumns="2"
-                android:scaleType="centerInside">
+                android:scaleType="centerInside"/>
 
-            </GridView>
+            <VideoView
+                android:id="@+id/vv_sow"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
         </LinearLayout>
 
         <LinearLayout

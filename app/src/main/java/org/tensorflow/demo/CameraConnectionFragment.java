@@ -1423,14 +1423,14 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                         mReCordLayout.setVisibility(View.VISIBLE);
                     }
 
-                    new DetectorActivity().reInitCurrentCounter(0, 0, 0);
-                    if (activity != null) {
-                        new MultiBoxTracker(activity).reInitCounter(0, 0, 0);
-                    }
-//                    if (activity instanceof DetectorActivity) {
-//                        ((DetectorActivity) activity).reInitCurrentCounter(0, 0, 0);
-//                        DetectorActivity.tracker.reInitCounter(0, 0, 0);
+//                    new DetectorActivity().reInitCurrentCounter(0, 0, 0);
+//                    if (activity != null) {
+//                        new MultiBoxTracker(activity).reInitCounter(0, 0, 0);
 //                    }
+                    if (activity instanceof DetectorActivity) {
+                        ((DetectorActivity) activity).reInitCurrentCounter(0, 0, 0);
+                        DetectorActivity.tracker.reInitCounter(0, 0, 0);
+                    }
                     if (trackingOverlay != null) {
                         trackingOverlay.refreshDrawableState();
                         trackingOverlay.invalidate();

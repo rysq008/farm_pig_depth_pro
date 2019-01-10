@@ -471,13 +471,10 @@ public class MediaProcessor {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     Log.e("editRecoed", e.getLocalizedMessage());
-                    editRecoed();
                 }
 
                 @Override
-                public void onResponse(Call call, Response response) throws IOException {
-
-                }
+                public void onResponse(Call call, Response response) throws IOException {}
             });
         }
     }
@@ -666,6 +663,8 @@ public class MediaProcessor {
                                 showErrorDialog("网络异常");
                             }
 
+                        }else{
+
                         }
                     }
                 }
@@ -676,37 +675,18 @@ public class MediaProcessor {
     // 预理赔/理赔弹框
     private void showErrorDialog(String msg) {
 
-        AlertDialogManager.showMessageDialogOne(mActivity, "提示", msg, new AlertDialogManager.DialogInterface() {
-            @Override
-            public void onPositive() {
-                collectNumberHandler.sendEmptyMessage(2);
-                mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
-            }
+        AlertDialogManager.showMessageDialogOne(mActivity, "提示", msg,
+                new AlertDialogManager.DialogInterface() {
+                    @Override
+                    public void onPositive() {
+                        collectNumberHandler.sendEmptyMessage(2);
+                        mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
+                    }
 
-            @Override
-            public void onNegative() {
-
-            }
-        });
-
-
-       /* AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
-        View inflate = View.inflate(mActivity, R.layout.prelipei_result3, null);
-        TextView result3_again = inflate.findViewById(R.id.result3_again);
-        TextView error_msg = inflate.findViewById(R.id.error_msg);
-        error_msg.setText(msg);
-        dialog.setView(inflate);
-        AlertDialog dialogcreate = dialog.create();
-        dialogcreate.setCanceledOnTouchOutside(false);
-        dialogcreate.show();
-        result3_again.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialogcreate.dismiss();
-                mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
-                mActivity.finish();
-            }
-        });*/
+                    @Override
+                    public void onNegative() {
+                    }
+                });
     }
     //预理赔库已有相似度"++"对象
     private void showDialog(CommitBean bean) {
@@ -1150,8 +1130,8 @@ public class MediaProcessor {
     }
 
     private void showTimeOutDialog() {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
-        View inflate = View.inflate(mActivity, R.layout.pre_timeout, null);
+        AlertDialog.Builder dialog = new AlertDialog.Builder(MyApplication.getContext());
+        View inflate = View.inflate(MyApplication.getContext(), R.layout.pre_timeout, null);
         TextView timeout_resert = inflate.findViewById(R.id.timeout_resert);
         TextView timeout_cancel = inflate.findViewById(R.id.timeout_cancel);
         dialog.setView(inflate);
@@ -1162,11 +1142,11 @@ public class MediaProcessor {
             @Override
             public void onClick(View v) {
                 if (!MyApplication.isNetConnected) {
-                    Toast.makeText(mActivity, "断网了，请联网后重试。", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MyApplication.getContext(), "断网了，请联网后重试。", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 dialogcreate.dismiss();
-                showProgressDialog(mActivity);
+                showProgressDialog((Activity) MyApplication.getContext());
                 processUploadOne_Pay();
             }
         });
@@ -1175,9 +1155,9 @@ public class MediaProcessor {
             public void onClick(View v) {
                 dialogcreate.dismiss();
                 if ("pre".equals(PreferencesUtils.getStringValue(Constants.fleg, MyApplication.getAppContext()))){
-                    mActivity.startActivity(new Intent(mActivity, PreparedLiPeiActivity.class));
+                    MyApplication.getContext().startActivity(new Intent(MyApplication.getContext(), PreparedLiPeiActivity.class));
                 }
-                mActivity.finish();
+                ((Activity)MyApplication.getContext()).finish();
             }
         });
     }
@@ -1993,54 +1973,6 @@ public class MediaProcessor {
             //理赔提交
             preCommitForLiPei(zipFile_image2);
         }
-
-        //读猪的编号信息
-            /*String fname_num = "number.txt";
-            String content = null;
-            try {
-                content = FileUtils.getZipFileContent(zipFile_image2, fname_num);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (TextUtils.isEmpty(content)) {
-                return;
-            }*/
-        //读取用户信息
-//            SharedPreferences pref_user = mActivity.getSharedPreferences(Utils.USERINFO_SHAREFILE, Context.MODE_PRIVATE);
-//            int userId = pref_user.getInt("uid", 0);
-//            int userId = 0;
-        // TODO: 2018/8/20 By:LuoLu
-//            if (pref_user == null) {
-//                mHandler.sendEmptyMessage(400);
-//
-//            }
-//            userId = pref_user.getInt("uid", 0);
-        //UploadObject imgResp =
-//            upload_zipImage(model, zipFile_image2, userId, content);
-        //获取ib_id
-        //int lib_id = imgResp.upload_libId;
-//            String piginfo = imgResp.upload_pigInfo;
-            /*int status;
-            if (imgResp == null || imgResp.status != HttpRespObject.STATUS_OK) {
-                status = imgResp == null ? -1 : imgResp.status;
-                publishProgress(model, status);
-                return;
-            }
-            if (emptyPigInfo(imgResp.upload_pigInfo)) {
-                JSONObject jo = new JSONObject();
-                JsonHelper.putInt(jo, Utils.Upload.LIB_ID, imgResp.upload_libId);
-                JSONObject jo_env = new JSONObject();
-                try {
-                    jo_env = new JSONObject(UploadHelper.getEnvInfo(mContext, null));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                JsonHelper.putJsonObject(jo, Utils.Upload.LIB_ENVINFO, jo_env);
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日HH时mm分", Locale.getDefault());
-                JsonHelper.putString(jo, Utils.Upload.LIB_CREATE_TIME, sdf.format(new Date(System.currentTimeMillis())));
-                imgResp.upload_pigInfo = jo.toString();
-            }*/
-        //publishProgress(MSG_UI_FINISH_VERIFY, model, 0, imgResp.upload_pigInfo);
     }
 
     private static boolean emptyPigInfo(String pigInfo) {

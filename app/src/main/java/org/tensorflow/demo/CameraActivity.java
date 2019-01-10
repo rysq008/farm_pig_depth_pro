@@ -36,6 +36,7 @@ import android.widget.Toast;
 import com.xiangchuangtec.luolu.animalcounter.R;
 
 import org.tensorflow.demo.env.Logger;
+import org.tensorflow.demo.tracking.MultiBoxTracker;
 
 import java.nio.ByteBuffer;
 
@@ -74,6 +75,8 @@ public abstract class CameraActivity extends Activity implements OnImageAvailabl
         DetectorActivity.type1Count=0;
         DetectorActivity.type2Count=0;
         DetectorActivity.type3Count=0;
+        DetectorActivity.tracker = new MultiBoxTracker(this);
+        DetectorActivity.tracker.reInitCounter(0,0,0);
     }
 
     @Override

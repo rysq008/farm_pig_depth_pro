@@ -113,6 +113,7 @@ public class Constants {
 
     public static final String SHELIST = BASENEW + "ftnShe/sheList";
     public static final String SHECOMMIT = BASENEW + "inspect/sheCommit";
+    //盘查详情
     public static final String SHEDETAIL_NEW = BASENEW + "inspect/sheDetail";
     public static final String UP_LOAD_IMG = BASENEW + "uploadImg";
     public static final String ADD_PAY_INFO = BASENEW + "payment/addPayInfo";

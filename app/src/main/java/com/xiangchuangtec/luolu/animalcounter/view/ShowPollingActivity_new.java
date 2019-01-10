@@ -112,9 +112,10 @@ public class ShowPollingActivity_new extends BaseActivity {
                                     PollingResultAdapter_new resultAdapter = new PollingResultAdapter_new(
                                             ShowPollingActivity_new.this, mSheBeans, new PollingResultAdapter_new.OnDetailClickListener() {
                                         @Override
-                                        public void onClick(int sheId) {
+                                        public void onClick(int position) {
                                             Intent intent = new Intent(ShowPollingActivity_new.this, HogDetailActivity_new.class);
-                                            intent.putExtra("sheid", String.valueOf(sheId));
+                                            intent.putExtra("sheid", mSheBeans.get(position).getSheId());
+                                            intent.putExtra("pigtype",mSheBeans.get(position).getPigType() );
                                             startActivity(intent);
                                         }
                                     });

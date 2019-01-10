@@ -53,7 +53,7 @@ public class CompanyAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = View.inflate(context, R.layout.companyitem_layout, null);
             viewHolder = new ViewHolder();
-            viewHolder.companyitem_name = (TextView) convertView.findViewById(R.id.companyitem_name);
+            viewHolder.companyitem_name = (EditText) convertView.findViewById(R.id.companyitem_name);
             viewHolder.no_over = convertView.findViewById(R.id.no_over);
 
             convertView.setTag(viewHolder);
@@ -62,7 +62,7 @@ public class CompanyAdapter extends BaseAdapter {
         }
         viewHolder.companyitem_name.setText(companyBeans.get(position).getEnName());
         if(companyBeans.get(position).getCanUse().equals("1")){
-            viewHolder.no_over.setVisibility(View.GONE);
+            viewHolder.no_over.setVisibility(View.INVISIBLE);
         }
         if(companyBeans.get(position).getCanUse().equals("0")){
             viewHolder.no_over.setVisibility(View.VISIBLE);
@@ -97,7 +97,7 @@ public class CompanyAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
-        TextView companyitem_name;
+        EditText companyitem_name;
         TextView no_over;
     }
 }

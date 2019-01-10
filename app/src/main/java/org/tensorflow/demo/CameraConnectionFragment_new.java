@@ -105,6 +105,7 @@ import java.util.Map;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
+import innovation.location.LocationManager_new;
 import innovation.media.MediaInsureItem;
 import innovation.media.MediaPayItem;
 import innovation.media.Model;
@@ -500,10 +501,12 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
             final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         return inflater.inflate(layout, container, false);
     }
+
     private static String mSheId;
     private static String mSheName;
     private static String mOldAutoCount;
     private static String mOldDuration;
+
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState) {
         LOGGER.i("luolu Global.model1: " + Model.BUILD.value());
@@ -523,7 +526,6 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
         view.findViewById(R.id.TV_right).setVisibility(View.GONE);
 
 
-
         mRecordSwitch = view.findViewById(R.id.record_switch);
         mRecordSwitchTxt = (TextView) view.findViewById(R.id.record_switch_txt);
         mRecordSwitchTxt.setTextColor(Color.WHITE);
@@ -540,7 +542,8 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
 
         Intent intent = activity.getIntent();
         mSheId = intent.getStringExtra("sheid");
-        mSheName  = intent.getStringExtra("shename");;
+        mSheName = intent.getStringExtra("shename");
+        ;
         mOldAutoCount = intent.getStringExtra("autocount");
         mOldDuration = intent.getStringExtra("duration");
 
@@ -658,7 +661,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
                     } catch (Exception e) {
                         Log.i("停止视频录制", e.toString());
                     }*/
-                   collectNumberHandler.sendEmptyMessage(1);
+                    collectNumberHandler.sendEmptyMessage(1);
                 } else {
                     try {
                         Global.VIDEO_PROCESS = true;
@@ -796,8 +799,6 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
         public void onClick(View v) {
             mReCordLayout.setVisibility(View.VISIBLE);
             Activity activity = getActivity();
-            //InsureDataProcessor.getInstance(activity).handleMediaResource_build(activity);
-//            MediaProcessor.getInstance(activity).handleMediaResource_build(activity);
 
         }
     };
@@ -1222,11 +1223,9 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
         mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
         mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-        if (Global.model == Model.BUILD.value()) {
-            Global.VideoFileName = Global.mediaInsureItem.getVideoFileName();
-        } else if (Global.model == Model.VERIFY.value()) {
-            Global.VideoFileName = Global.mediaPayItem.getVideoFileName();
-        }
+
+        Global.VideoFileName = Global.mediaInsureItem.getVideoFileName();
+
         Log.i("VideoFileName:", Global.VideoFileName);
         mMediaRecorder.setOutputFile(Global.VideoFileName);
         mMediaRecorder.setVideoEncodingBitRate(600000);
@@ -1240,6 +1239,8 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
 
         mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
         mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        //解决录制视频, 播放器横向问题
+        mMediaRecorder.setOrientationHint(90);
         try {
             mMediaRecorder.prepare();
         } catch (IllegalStateException e) {
@@ -1316,7 +1317,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
                                 mRecordVerify.setEnabled(false);
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                Log.e(TAG, "run: Exception"+e.toString());
+                                Log.e(TAG, "run: Exception" + e.toString());
                                 showToast("视频录制异常！");
                             }
                             mRecordControl.setClickable(true);
@@ -1409,7 +1410,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
 
     // TODO: 2018/8/7 By:LuoLu
     @SuppressLint("HandlerLeak")
-    public static Handler collectNumberHandler = new Handler() {
+    public Handler collectNumberHandler = new Handler() {
         @Override
         @RequiresApi(api = Build.VERSION_CODES.O)
         public void handleMessage(Message msg) {
@@ -1443,14 +1444,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
 //                                }
 //                            }
 //                        }
-
                         uploadRecognitionResult();
-
-                       /* if (Global.model == Model.VERIFY.value()) {
-                            PayDataProcessor.getInstance(activity).handleMediaResource_build(activity);
-                        } else if (Global.model == Model.BUILD.value()) {
-                            InsureDataProcessor.getInstance(activity).handleMediaResource_build(activity);
-                        }*/
                     } catch (WindowManager.BadTokenException e) {
                         //use a log message
                         AlertDialog.Builder builderApplyFinish = new AlertDialog.Builder(activity)
@@ -1471,22 +1465,19 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
                     break;
 
                 case 2:
-//                    new LocationTracker(activity.getResources().getDisplayMetrics()).reInitCounter(0, 0, 0);
-//                    trackingOverlay.refreshDrawableState();
-//                    textureView.refreshDrawableState();
                     if (mReCordLayout != null) {
-                            mReCordLayout.setVisibility(View.VISIBLE);
-                        }
-                        new DetectorActivity_new().reInitCurrentCounter(0, 0, 0);
-                        if (activity != null) {
-                            new MultiBoxTracker_new(activity).reInitCounter(0, 0, 0);
-                        }
-                        if (trackingOverlay != null) {
-                            trackingOverlay.refreshDrawableState();
-                            trackingOverlay.invalidate();
-                        }
-                        if (textureView != null) {
-                            textureView.refreshDrawableState();
+                        mReCordLayout.setVisibility(View.VISIBLE);
+                    }
+                    new DetectorActivity_new().reInitCurrentCounter(0, 0, 0);
+                    if (activity != null) {
+                        new MultiBoxTracker_new(activity).reInitCounter(0, 0, 0);
+                    }
+                    if (trackingOverlay != null) {
+                        trackingOverlay.refreshDrawableState();
+                        trackingOverlay.invalidate();
+                    }
+                    if (textureView != null) {
+                        textureView.refreshDrawableState();
                     }
                     mRecordControl.setClickable(true);
 
@@ -1505,38 +1496,14 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
         //猪舍id 猪圈id 保单号  出险原因
 //        MediaProcessor.getInstance(this.getActivity()).handleMediaResource_build(getActivity(), sheId, inspectNo, reason, mfile);
     }
-// TODO: 2018/9/18 By:LuoLu
-//    /**
-//     * Configure a new camera session with output surfaces and type.
-//     *
-//     * @param camera The CameraDevice to be configured.
-//     * @param outputSurfaces The surface list that used for camera output.
-//     * @param listener The callback CameraDevice will notify when capture results are available.
-//     */
-//    @RequiresApi(api = Build.VERSION_CODES.M)
-//    public static CameraCaptureSession configureCameraSession(CameraDevice camera, List<Surface> outputSurfaces, boolean isHighSpeed, CameraCaptureSession.StateCallback listener, Handler handler) throws CameraAccessException {
-//        BlockingSessionCallback sessionListener = new BlockingSessionCallback(listener);
-//        if (isHighSpeed) {
-//            camera.createConstrainedHighSpeedCaptureSession(outputSurfaces, sessionListener, handler);
-//        } else {
-//            camera.createCaptureSession(outputSurfaces, sessionListener, handler);
-//        }
-//        CameraCaptureSession session = sessionListener.waitAndGetSession(SESSION_CONFIGURE_TIMEOUT_MS);
-//        assertFalse("Camera session should not be a reprocessable session", session.isReprocessable());
-//        String sessionType = isHighSpeed ? "High Speed" : "Normal";
-//        assertTrue("Capture session type must be " + sessionType, isHighSpeed == CameraConstrainedHighSpeedCaptureSession.class.isAssignableFrom(session.getClass()));
-//        return session;
-//    }
 
-
-
-    private static void uploadRecognitionResult() {
+    private void uploadRecognitionResult() {
         Dialog dialog;
         String text = String.format("本次点数采集:\n" +
                         "合计 %d头 时长%d秒\n" +
                         "上次点数采集:\n" +
                         "合计 %s头 时长%s秒", sowCount, (int) ((System.currentTimeMillis() - tmieVideoStart) / 1000),
-               mOldAutoCount, mOldDuration);
+                mOldAutoCount, mOldDuration);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         LayoutInflater inflater = LayoutInflater.from(activity);
@@ -1579,10 +1546,12 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
                 dialog.dismiss();
                 showProgressDialog(activity);
                 mProgressDialog.show();
+                processZip();
+
                 List<RecognitionResult> results = new ArrayList<>();
 
                 results.add(new RecognitionResult(
-                        1,sowCount,null,""
+                        1, sowCount, null, ""
                 ));
 
                 uploadRecognitionResult(mSheId, mSheName, (int) ((System.currentTimeMillis() - tmieVideoStart) / 1000),
@@ -1599,7 +1568,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
                                                 int status = jsonObject.getInt("status");
                                                 String msg = jsonObject.getString("msg");
                                                 if (status != 1) {
-                                                    Toast.makeText(activity, "上传失败！"+msg, Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(activity, "上传失败！" + msg, Toast.LENGTH_SHORT).show();
                                                 } else {
                                                     Toast.makeText(activity, "上传成功！", Toast.LENGTH_SHORT).show();
                                                     new Handler().postDelayed(new Runnable() {
@@ -1627,18 +1596,73 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
         dialog.setCancelable(true);
     }
 
+    //压缩视频文件
+    private void processZip() {
+        File file_num = null;
+
+        String videoDri = "";
+        String zipvideoDri = "";
+        //获取编号文件
+        file_num = Global.mediaInsureItem.getNumberFile();
+        videoDri = Global.mediaInsureItem.getVideoDir();
+        zipvideoDri = Global.mediaInsureItem.getZipVideoDir();
+        /**
+         * 调用方法 生成zip文件存储路径
+         * storage/emulated/0/innovation/animal/ZipVideo
+         */
+        Global.mediaInsureItem.getZipVideoDir();
+        Global.mediaInsureItem.getZipFileName();
+        File videoDirnew = new File(videoDri);//视频目录下的文件
+        File[] filesVideo = videoDirnew.listFiles();
+
+        if (filesVideo == null) {
+            return;
+        }
+        if (filesVideo.length == 0) {
+            return;
+        }
+
+        File[] fsVideo = new File[filesVideo.length + 1];
+        for (int i = 0; i < filesVideo.length; i++) {
+            fsVideo[i] = filesVideo[i];
+        }
+        fsVideo[filesVideo.length] = file_num;
+
+        File fileCurrent = new File(zipvideoDri);
+        File zipFileVideo = new File(fileCurrent, Global.ZipFileName + ".zip");
+        ZipUtil.zipFiles(fsVideo, zipFileVideo);
+        if (!zipFileVideo.exists()) {
+            reInitCurrentDir();
+            return;
+        }
+
+        File videoDirNew = new File(videoDri);//当前视频目录下的文件
+        boolean deleteCurrentVideoResult = FileUtils.deleteFile(videoDirNew);
+        if (deleteCurrentVideoResult) {
+            LOGGER.i("当前视频文件夹删除成功！");
+        }
+        reInitCurrentDir();
+    }
+
+    //重新初始化Current文件
+    public void reInitCurrentDir() {
+        Log.i("reInitCurrentDir:", "重新初始化Current文件");
+        Global.mediaInsureItem.currentDel();
+        Global.mediaInsureItem.currentInit();
+    }
+
     private static ProgressDialog mProgressDialog;
+
     private static void showProgressDialog(Context context) {
         mProgressDialog = new ProgressDialog(context);
         mProgressDialog.setTitle(R.string.dialog_title);
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         mProgressDialog.setCancelable(false);//false
 
-
         mProgressDialog.setCanceledOnTouchOutside(false);//false
         mProgressDialog.setIcon(R.drawable.ic_launcher);
 //        mProgressDialog.setButton(ProgressDialog.BUTTON_POSITIVE, "确定", mProgClickListener);
-        mProgressDialog.setMessage("正在识别......");
+        mProgressDialog.setMessage("正在上传......");
 //        mProgressDialog.show();
 //        Button positive = mProgressDialog.getButton(ProgressDialog.BUTTON_POSITIVE);
 //        if (positive != null) {
@@ -1646,16 +1670,15 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
 //        }
     }
 
-
     public static void uploadRecognitionResult(String sheId, String sheName, int duration,
                                                List<RecognitionResult> results,
                                                Context context, CounterHelper.OnUploadResultListener listener) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String path = com.xiangchuang.risks.utils.FileUtils.createTempDir(context);
+//                String path = com.xiangchuang.risks.utils.FileUtils.createTempDir(context);
                 File[] files = new File[results.size()];
-                files[0] = new File(Global.mediaPayItem.getVideoDir());;
+                files[0] = new File(Global.mediaPayItem.getVideoDir());
 
                 int totalCount = 0;
                 int mAutoCount = 0;
@@ -1665,8 +1688,8 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
                     for (RecognitionResult recognitionResult : results) {
                         JSONObject jsonObject = new JSONObject();
                         //经度 纬度 猪圈名字 图片名字 当前猪圈数
-                        jsonObject.put("lat", recognitionResult.lat);
-                        jsonObject.put("lon", recognitionResult.lon);
+                        jsonObject.put("lat", LocationManager_new.getInstance(MyApplication.getContext()).currentLat);
+                        jsonObject.put("lon", LocationManager_new.getInstance(MyApplication.getContext()).currentLon);
                         jsonObject.put("name", "猪圈" + (recognitionResult.index + 1));
                         jsonObject.put("picName", "");
                         jsonObject.put("count", recognitionResult.count);
@@ -1684,8 +1707,16 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
                     return;
                 }
 
-                File zipFile = new File(path, "out.zip");
-                ZipUtil.zipFiles(files, zipFile);
+//                File zipFile = new File(path, "out.zip");
+//                ZipUtil.zipFiles(files, zipFile);
+
+                // TODO: 视频包
+                String zipVideoDir = Global.mediaInsureItem.getZipVideoDir();
+                Log.i("zipVideoDir:", zipVideoDir);
+                File fileZipVideo = new File(zipVideoDir);
+                String fnameVideo = Global.ZipFileName + ".zip";
+                File zipFileVideo2 = new File(fileZipVideo, fnameVideo); //要上传的文件
+
                 Map map = new HashMap();
                 map.put(Constants.AppKeyAuthorization, "hopen");
                 map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, context));
@@ -1700,7 +1731,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
                 param.put("timeLength", "" + duration);
                 param.put("juanCnt", "" + results.size());
                 param.put("createuser", "" + PreferencesUtils.getIntValue(Constants.userid, MyApplication.getAppContext()));
-                OkHttp3Util.uploadPreFile(Constants.SHECOMMIT, zipFile, "out.zip", param, map, new Callback() {
+                OkHttp3Util.uploadPreFile(Constants.SHECOMMIT, zipFileVideo2, "out.zip", param, map, new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
                         listener.onCompleted(false, "");
@@ -1711,7 +1742,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
                         if (response.code() == 200) {
                             String resutl = response.body().string();
                             listener.onCompleted(true, resutl);
-                        } else{
+                        } else {
                             listener.onCompleted(false, "");
                         }
                     }
