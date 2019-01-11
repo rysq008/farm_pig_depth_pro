@@ -10,16 +10,13 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 
-
 import com.xiangchuang.risks.utils.ShareUtils;
 
 import net.gotev.uploadservice.UploadService;
 import net.gotev.uploadservice.okhttp.OkHttpStack;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 
-import innovation.biz.classifier.BreedingPigFaceDetectTFlite;
 import innovation.crash.CrashHandler;
 import innovation.location.LocationManager_new;
 import innovation.network_status.NetworkChangedReceiver;
@@ -65,6 +62,7 @@ public class MyApplication extends Application {
     public static long timeVideoStart;
 
     private static WeakReference<Activity> acontext;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -136,9 +134,11 @@ public class MyApplication extends Application {
             LocationManager_new.getInstance(getApplicationContext()).startLocation();
         }
     }
+
     public static Context getAppContext() {
         return MyApplication.context;
     }
+
     public static void verifyStoragePermissions(Activity activity) {
         // Check if we have write permission
         int permission = ActivityCompat.checkSelfPermission(activity,
