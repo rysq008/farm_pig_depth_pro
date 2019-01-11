@@ -42,3 +42,4 @@ tatus
 /libuvccamera/*.iml
 /openCVLibrary331/*.iml
 /usbCameraCommon/*.iml
+/local.properties
