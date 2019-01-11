@@ -72,7 +72,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/rel_button"
         android:layout_below="@+id/rel_button"
-        android:divider="@null"></ListView>
+        android:divider="@null"/>
 
 
 </RelativeLayout>

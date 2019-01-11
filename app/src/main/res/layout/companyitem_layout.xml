@@ -7,20 +7,23 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_vertical">
-    <TextView
+    <EditText
         android:id="@+id/companyitem_name"
         android:layout_width="match_parent"
         android:layout_height="49dp"
         android:layout_marginLeft="50dp"
         android:gravity="center_vertical"
         android:padding="5dp"
+        android:focusable="false"
+        android:singleLine="true"
+        android:background="@android:color/transparent"
+        android:layout_toStartOf="@+id/no_over"
         android:text="企业名字"
         android:textSize="18sp" />
     <TextView
         android:id="@+id/no_over"
         android:layout_width="wrap_content"
         android:layout_height="49dp"
-        android:layout_marginLeft="50dp"
         android:gravity="center_vertical"
         android:padding="5dp"
         android:text="待完善"

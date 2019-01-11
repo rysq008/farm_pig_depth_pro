@@ -1,10 +1,16 @@
 package com.xiangchuang.risks.view;
 
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.google.gson.Gson;
 import com.xiangchuang.risks.base.BaseActivity;
@@ -24,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -39,9 +46,12 @@ public class HogDetailActivity_new extends BaseActivity {
     GridView gridview_pic;
     @BindView(R.id.iv_cancel)
     ImageView ivCancel;
+    @BindView(R.id.vv_sow)
+    VideoView vvSow;
     private List<String> picpaths;
 
     private String mSheId;
+    private String pigType;
 
     @Override
     protected int getLayoutId() {
@@ -58,6 +68,7 @@ public class HogDetailActivity_new extends BaseActivity {
             }
         });
         mSheId = getIntent().getExtras().getString("sheid");
+        pigType = getIntent().getStringExtra("pigtype");
         getHogMessage();
     }
 
@@ -104,8 +115,17 @@ public class HogDetailActivity_new extends BaseActivity {
                                     hog_count.setText(count + "");
                                     hog_date.setText(createtime);
                                     picpaths = data.getPics();
-                                    Log.i("size", picpaths.size() + "");
-                                    gridview_pic.setAdapter(new HogDetailAdapter(HogDetailActivity_new.this, picpaths));
+                                    Log.i("size", picpaths.size() + "" + picpaths.toString());
+
+                                    if(pigType.equals("102")){
+                                        vvSow.setVisibility(View.VISIBLE);
+                                        gridview_pic.setVisibility(View.GONE);
+                                        playeVideo(picpaths.get(0));
+                                    }else{
+                                        vvSow.setVisibility(View.GONE);
+                                        gridview_pic.setVisibility(View.VISIBLE);
+                                        gridview_pic.setAdapter(new HogDetailAdapter(HogDetailActivity_new.this, picpaths));
+                                    }
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -117,6 +137,25 @@ public class HogDetailActivity_new extends BaseActivity {
                 }
             }
         });
+    }
+
+
+    private void playeVideo(String url){
+        Uri uri = Uri.parse(url);
+        //设置视频控制器
+        vvSow.setMediaController(new MediaController(this));
+        //播放完成回调
+        vvSow.setOnCompletionListener( new MyPlayerOnCompletionListener());
+        //设置视频路径
+        vvSow.setVideoURI(uri);
+        //开始播放视频
+        vvSow.start();
+    }
+    class MyPlayerOnCompletionListener implements MediaPlayer.OnCompletionListener {
+        @Override
+        public void onCompletion(MediaPlayer mp) {
+            Toast.makeText(HogDetailActivity_new.this, "播放完毕", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

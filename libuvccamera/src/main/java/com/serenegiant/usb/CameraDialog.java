@@ -51,6 +51,10 @@ import com.serenegiant.uvccamera.R;
 public class CameraDialog extends DialogFragment {
 	private static final String TAG = CameraDialog.class.getSimpleName();
 
+	protected USBMonitor mUSBMonitor;
+	private Spinner mSpinner;
+	private DeviceListAdapter mDeviceListAdapter;
+
 	public interface CameraDialogParent {
 		public USBMonitor getUSBMonitor();
 		public void onDialogResult(boolean canceled);
@@ -62,19 +66,34 @@ public class CameraDialog extends DialogFragment {
 		final List<DeviceFilter> filter = DeviceFilter.getDeviceFilters(parent, R.xml.device_filter);
 		dialog.mUSBMonitor.requestPermission((UsbDevice)dialog.mUSBMonitor.getDeviceList(filter.get(0)).get(0));
 	}
-
+	
 	/**
 	 * Helper method
 	 * @param parent FragmentActivity
 	 * @return
 	 */
 	public static CameraDialog showDialog(final Activity parent/* add parameters here if you need */) {
+
 		CameraDialog dialog = newInstance(/* add parameters here if you need */);
+		dialog.onAttach(parent);
+//		final View rootView = parent.getLayoutInflater().inflate(R.layout.dialog_camera, null);
+//		dialog.mSpinner = (Spinner)rootView.findViewById(R.id.spinner1);
+//		final View empty = rootView.findViewById(android.R.id.empty);
+//		dialog.mSpinner.setEmptyView(empty);
+//		final List<DeviceFilter> filter = DeviceFilter.getDeviceFilters(parent, R.xml.device_filter);
+//		dialog.mDeviceListAdapter = new DeviceListAdapter(parent, dialog.mUSBMonitor.getDeviceList(filter.get(0)));
+//		dialog.mSpinner.setAdapter(dialog.mDeviceListAdapter);
+
+		final List<DeviceFilter> filter = DeviceFilter.getDeviceFilters(parent, R.xml.device_filter);
+		dialog.mUSBMonitor.requestPermission((UsbDevice)dialog.mUSBMonitor.getDeviceList(filter.get(0)).get(0));
+		((CameraDialogParent) parent).onDialogResult(false);
+		/*
+		CameraDialog dialog = newInstance(*//* add parameters here if you need *//*);
 		try {
 			dialog.show(parent.getFragmentManager(), TAG);
 		} catch (final IllegalStateException e) {
 			dialog = null;
-		}
+		}*/
     	return dialog;
 	}
 
@@ -86,9 +105,7 @@ public class CameraDialog extends DialogFragment {
 		return dialog;
 	}
 
-	protected USBMonitor mUSBMonitor;
-	public Spinner mSpinner;
-	private DeviceListAdapter mDeviceListAdapter;
+
 
 	public CameraDialog(/* no arguments */) {
 		// Fragment need default constructor

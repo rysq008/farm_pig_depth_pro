@@ -5,7 +5,37 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.xiangchuang.risks.view.SelectFunctionActivity">
+    tools:context="com.xiangchuang.risks.view.SelectFunctionActivity_new">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@android:color/holo_blue_dark">
+
+        <ImageView
+            android:id="@+id/iv_cancel"
+            android:layout_width="25dp"
+            android:layout_height="28dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="6dp"
+            android:background="@mipmap/cancel" />
+
+        <TextView
+            android:id="@+id/select_name"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="XXXXX农厂"
+            android:singleLine="true"
+            android:gravity="center"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:textColor="#ffffff"
+            android:textSize="18sp" />
+
+    </RelativeLayout>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -16,29 +46,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:background="@android:color/holo_blue_dark">
 
-                <ImageView
-                    android:id="@+id/iv_cancel"
-                    android:layout_width="25dp"
-                    android:layout_height="28dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="6dp"
-                    android:background="@mipmap/cancel" />
-
-                <TextView
-                    android:id="@+id/select_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="XXXXX农厂"
-                    android:textColor="#ffffff"
-                    android:textSize="18sp" />
-
-            </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -122,6 +130,24 @@
                     android:background="@drawable/begin_btn_bg"
                     android:gravity="center"
                     android:text="理赔"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rel_webview"
+                android:layout_width="match_parent"
+                android:layout_height="60dp">
+
+                <TextView
+                    android:id="@+id/select_webview"
+                    android:layout_width="150dp"
+                    android:layout_height="40dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/begin_btn_bg"
+                    android:gravity="center"
+                    android:text="猪舍监控"
                     android:textColor="#FFFFFF"
                     android:textSize="16sp" />
 

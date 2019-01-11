@@ -18,7 +18,6 @@ package org.tensorflow.demo;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.pm.PackageManager;
 import android.media.Image.Plane;
 import android.media.ImageReader.OnImageAvailableListener;
@@ -29,6 +28,7 @@ import android.os.HandlerThread;
 import android.util.Log;
 import android.util.Size;
 import android.view.KeyEvent;
+import android.view.Surface;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -36,12 +36,10 @@ import android.widget.Toast;
 import com.xiangchuangtec.luolu.animalcounter.R;
 
 import org.tensorflow.demo.env.Logger;
+import org.tensorflow.demo.tracking.MultiBoxTracker;
 
 import java.nio.ByteBuffer;
 
-import innovation.tensorflow.tracking.LocationTracker;
-
-import static org.tensorflow.demo.DetectorActivity.trackingOverlay;
 
 public abstract class CameraActivity extends Activity implements OnImageAvailableListener {
     private static final Logger LOGGER = new Logger();
@@ -67,11 +65,18 @@ public abstract class CameraActivity extends Activity implements OnImageAvailabl
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         setContentView(R.layout.activity_camera);
+
         if (hasPermission()) {
             setFragment();
         } else {
             requestPermission();
         }
+
+        DetectorActivity.type1Count=0;
+        DetectorActivity.type2Count=0;
+        DetectorActivity.type3Count=0;
+        DetectorActivity.tracker = new MultiBoxTracker(this);
+        DetectorActivity.tracker.reInitCounter(0,0,0);
     }
 
     @Override
@@ -81,12 +86,12 @@ public abstract class CameraActivity extends Activity implements OnImageAvailabl
     }
 
     @Override
-    public synchronized void onResume() {
-        LOGGER.d("onResume " + this);
-        super.onResume();
+        public synchronized void onResume() {
+            LOGGER.d("onResume " + this);
+            super.onResume();
 
-        handlerThread = new HandlerThread("inference");
-        handlerThread.start();
+            handlerThread = new HandlerThread("inference");
+            handlerThread.start();
         handler = new Handler(handlerThread.getLooper());
     }
 
@@ -145,6 +150,8 @@ public abstract class CameraActivity extends Activity implements OnImageAvailabl
                     requestPermission();
                 }
             }
+            default:
+                break;
         }
     }
 
@@ -198,7 +205,18 @@ public abstract class CameraActivity extends Activity implements OnImageAvailabl
             buffer.get(yuvBytes[i]);
         }
     }
-
+    protected int getScreenOrientation() {
+        switch (getWindowManager().getDefaultDisplay().getRotation()) {
+            case Surface.ROTATION_270:
+                return 270;
+            case Surface.ROTATION_180:
+                return 180;
+            case Surface.ROTATION_90:
+                return 90;
+            default:
+                return 0;
+        }
+    }
     public boolean isDebug() {
         return debug;
     }
@@ -241,5 +259,5 @@ public abstract class CameraActivity extends Activity implements OnImageAvailabl
 
     protected abstract int getLayoutId();
 
-    protected abstract int getDesiredPreviewFrameSize();
+    protected abstract Size getDesiredPreviewFrameSize();
 }

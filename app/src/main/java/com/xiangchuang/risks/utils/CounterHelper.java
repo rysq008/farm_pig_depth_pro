@@ -45,6 +45,7 @@ public final class CounterHelper {
 
     private static final Map<String, String> mHeaderMap = new HashMap<>();
     private static final String URL_TEST = "http://58.132.169.38:1011/test";
+    private static final String URL_WEIGHT_TEST = "http://58.132.169.38:1012/supervise";
 
     static {
         mHeaderMap.put("Authorization", "Bearer da3efcbf-0845-4fe3-8aba-ee040be542c0");
@@ -52,6 +53,10 @@ public final class CounterHelper {
 
     public interface OnImageRecognitionListener {
         void onCompleted(int count, Bitmap bitmap);
+    }
+
+    public interface OnImageRecognitionWeightListener {
+        void onCompleted(float weight, int status);
     }
 
     public interface OnUploadResultListener {
@@ -179,6 +184,57 @@ public final class CounterHelper {
             }
         }).start();
     }
+
+    /**
+     * 死猪估重接口
+     * @param bitmap
+     * @param listener
+     */
+    public static void recognitionWeightFromNet(final Bitmap bitmap, final OnImageRecognitionWeightListener listener) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Map param = new HashMap();
+                param.put("picImage", getImgStr(bitmap));
+                param.put("type", "1");
+                OkHttp3Util.doPost(URL_WEIGHT_TEST, param, mHeaderMap, new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        listener.onCompleted(-1, 0);
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        float weight = 0;
+                        int status = 0;
+                        try {
+                            if (response.code() == 200) {
+                                String responseStr = response.body().string();
+                                try {
+                                    JsonParser parser = new JsonParser();  //创建JSON解析器
+                                    JsonObject object = (JsonObject) parser.parse(responseStr);  //创建JsonObject对象
+                                    //返回识别状态 （1：成功，0：失败）
+                                    status = object.get("status").getAsInt();
+                                    // 识别重量结果
+                                    weight = object.get("weight").getAsFloat();
+
+                                } catch (JsonParseException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        } finally {
+                            if (response.body() != null)
+                                response.body().close();
+                            listener.onCompleted(weight, status);
+                        }
+                    }
+                });
+            }
+        }).start();
+    }
+
+
+
 
     private static void saveBitmap(final Bitmap bitmap, final String filename) {
         final File file = new File(filename);

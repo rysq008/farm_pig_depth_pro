@@ -1,4 +1,3 @@
-/*
 package innovation.biz.classifier;
 
 import android.content.Context;
@@ -7,18 +6,24 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.SystemClock;
 import android.os.Trace;
+import android.util.Log;
 
-import com.innovation.base.InnApplication;
-import com.innovation.biz.iterm.AnimalClassifierResultIterm;
-import com.innovation.biz.iterm.PostureItem;
-import com.innovation.biz.iterm.PredictRotationIterm;
-import com.innovation.utils.PointFloat;
+
+import com.xiangchuangtec.luolu.animalcounter.MyApplication;
+
+import innovation.biz.iterm.AnimalClassifierResultIterm;
+import innovation.biz.iterm.PostureItem;
+import innovation.biz.iterm.PredictRotationIterm;
+import innovation.media.Model;
+import innovation.utils.PointFloat;
 
 import org.tensorflow.demo.CameraConnectionFragment;
 import org.tensorflow.demo.Classifier;
+import org.tensorflow.demo.Global;
 import org.tensorflow.demo.env.ImageUtils;
 import org.tensorflow.demo.env.Logger;
 import org.tensorflow.lite.Interpreter;
@@ -37,20 +42,26 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import static com.innovation.utils.ImageUtils.padBitmap2SpRatio;
-import static com.innovation.utils.ImageUtils.zoomImage;
+import static innovation.utils.ImageUtils.padBitmap2SpRatio;
+import static innovation.utils.ImageUtils.zoomImage;
 import static org.tensorflow.demo.DetectorActivity.offsetX;
 import static org.tensorflow.demo.DetectorActivity.offsetY;
 
-*/
 /**
  * @author luolu .2018/8/4
- *//*
-
+ */
 public class PigFaceDetectTFlite implements Classifier {
     private static final Logger sLogger = new Logger(PigFaceDetectTFlite.class);
     private static final boolean DEBUG = false;
-    private static final float MIN_CONFIDENCE = (float) 0.7;
+
+    // 2018/12/18 hedazhi edit start
+    //private static final float MIN_CONFIDENCE = (float) 0.7;
+
+    // 检测模型阈值：理赔时 0.3 投保时 0.5
+    private static final float MIN_CONFIDENCE = (Global.model == Model.VERIFY.value()) ? 0.3f : 0.5f;
+
+    // 2018/12/18 hedazhi edit end
+
     private static final String TAG = "PigFaceDetectTFlite";
     // Only return this many results.
     private static final int NUM_DETECTIONS = 10;
@@ -86,14 +97,14 @@ public class PigFaceDetectTFlite implements Classifier {
         try {
             pigFaceRotationDetector =
                     PigRotationPrediction.create(
-                            InnApplication.getAppContext().getAssets(),
+                            MyApplication.getAppContext().getAssets(),
                             PIG_TFLITE_PREDICTION_MODEL_FILE,
                             "",
                             192,
                             true);
             pigFaceKeyPointsDetector =
                     PigKeyPointsDetectTFlite.create(
-                            InnApplication.getAppContext().getAssets(),
+                            MyApplication.getAppContext().getAssets(),
                             PIG_TFLITE_KEYPOINTS_MODEL_FILE,
                             "",
                             192,
@@ -103,12 +114,9 @@ public class PigFaceDetectTFlite implements Classifier {
             throw new RuntimeException("pigFaceRotationDetector or pigFaceKeyPointsDetector: Error initializing!", e);
         }
     }
-
-    */
-/**
+    /**
      * Memory-map the model file in Assets.
-     *//*
-
+     */
     private static MappedByteBuffer loadModelFile(AssetManager assets, String modelFilename)
             throws IOException {
         AssetFileDescriptor fileDescriptor = assets.openFd(modelFilename);
@@ -119,8 +127,7 @@ public class PigFaceDetectTFlite implements Classifier {
         return fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength);
     }
 
-    */
-/**
+    /**
      * Initializes a native TensorFlow session for classifying images.
      *
      * @param assetManager  The asset manager to be used to load assets.
@@ -128,8 +135,7 @@ public class PigFaceDetectTFlite implements Classifier {
      * @param labelFilename The filepath of label file for classes.
      * @param inputSize     The size of image input
      * @param isQuantized   Boolean representing model is quantized or not
-     *//*
-
+     */
     public static Classifier create(
             final AssetManager assetManager,
             final String modelFilename,
@@ -170,44 +176,17 @@ public class PigFaceDetectTFlite implements Classifier {
     }
 
     @Override
-    public RecognitionAndPostureItem cowRecognitionAndPostureItem(Bitmap bitmap) {
-        return null;
-    }
-
-    @Override
-    public RecognitionAndPostureItem donkeyRecognitionAndPostureItem(Bitmap bitmap) {
-        return null;
-    }
-
-    @Override
     public RecognitionAndPostureItem pigRecognitionAndPostureItem(Bitmap bitmap) {
         return null;
     }
 
-    @Override
-    public RecognitionAndPostureItem donkeyRecognitionAndPostureItemTFlite(Bitmap bitmap) {
-        return null;
-    }
 
-    @Override
-    public RecognitionAndPostureItem cowRecognitionAndPostureItemTFlite(Bitmap bitmap) {
-        return null;
-    }
-
-    @Override
-    public PredictRotationIterm cowRotationPredictionItemTFlite(Bitmap bitmap) {
-        return null;
-    }
 
     @Override
     public PredictRotationIterm pigRotationPredictionItemTFlite(Bitmap bitmap) {
         return null;
     }
 
-    @Override
-    public PredictRotationIterm donkeyRotationPredictionItemTFlite(Bitmap bitmap) {
-        return null;
-    }
 
     @Override
     public void enableStatLogging(boolean debug) {
@@ -225,9 +204,10 @@ public class PigFaceDetectTFlite implements Classifier {
     }
 
     private void saveBitMap(Bitmap bmp, String childFileName, String bitmapFileName) {
-        if (DEBUG) {
-            com.innovation.utils.ImageUtils.saveBitmap(bmp, childFileName, bitmapFileName);
-        }
+        return;
+/*        if (DEBUG) {
+            innovation.utils.ImageUtils.saveBitmap(bmp, childFileName, bitmapFileName);
+        }*/
     }
 
     @Override
@@ -315,14 +295,14 @@ public class PigFaceDetectTFlite implements Classifier {
 
         Trace.endSection();
 
-        if (outputDetectNum[0] > 1) {
+        /*if (outputDetectNum[0] > 1) {
             if(System.currentTimeMillis() - lastToastTime > 5000) {
                 CameraConnectionFragment.showToast("请确保采集范围内只有一头牲畜。");
                 lastToastTime = System.currentTimeMillis();
             }
             saveBitMap(bitmap, "pigDetected_ng3", srcPigBitmapName);
             return pigTFliteRecognitionAndPostureItem;
-        }
+        }*/
 
         if (outputDetectNum[0] < 1) {
             sLogger.i("对象不足：" + outputDetectNum[0]);
@@ -343,6 +323,9 @@ public class PigFaceDetectTFlite implements Classifier {
         float modelY1 = (float) outputLocations[0][0][3];
         float modelX1 = (float) outputLocations[0][0][2];
 
+        Log.e(TAG, "outputLocations: Xmin="+outputLocations[0][0][0]+";Ymin="
+                + outputLocations[0][0][1]+";Xmax="+outputLocations[0][0][2] +";Ymax="+outputLocations[0][0][3]);
+
         float left = modelY0 * padSize - offsetY;
         float top = modelX0 * padSize - offsetX;
         float right = modelY1 * padSize - offsetY;
@@ -362,12 +345,13 @@ public class PigFaceDetectTFlite implements Classifier {
                         "pigLite",
                         outputScores[0][0],
                         detection, null));
+
         Trace.endSection(); // "recognizeImage"
         pigTFliteRecognitionAndPostureItem.setList(recognitions);
 
         saveBitMap(bitmap, "pigDetected_ok", srcPigBitmapName);
         //clip image
-        Bitmap clipBitmap = com.innovation.utils.ImageUtils.clipBitmap(bitmap, modelY0, modelX0, modelY1, modelX1, 1.2f);
+        Bitmap clipBitmap = innovation.utils.ImageUtils.clipBitmap(bitmap, modelY0, modelX0, modelY1, modelX1, 1.2f);
         if (clipBitmap == null) {
             return pigTFliteRecognitionAndPostureItem;
         }
@@ -405,4 +389,3 @@ public class PigFaceDetectTFlite implements Classifier {
         return pigTFliteRecognitionAndPostureItem;
     }
 }
-*/

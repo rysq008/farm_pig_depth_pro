@@ -62,7 +62,6 @@ public class CompanyInfoBean {
          * updatetime :
          * updateuser :
          */
-
         private String address;
         private String animalType;
         private String bankBack;

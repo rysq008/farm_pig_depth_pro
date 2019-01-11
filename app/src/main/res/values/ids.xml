@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="tvBmiValue" type="id">tvBmiValue</item>
-    <item type="id" name="image0">false</item>
-    <item type="id" name="image1">false</item>
-    <item type="id" name="image2">false</item>
-    <item type="id" name="image3">false</item>
-    <item type="id" name="image4">false</item>
-    <item type="id" name="image5">false</item>
-    <item type="id" name="image6">false</item>
-    <item type="id" name="image7">false</item>
-    <item type="id" name="image8">false</item>
-    <item type="id" name="image9">false</item>
+    <item name="tvBmiValue" type="id"/>
+    <item type="id" name="image0"/>
+    <item type="id" name="image1"/>
+    <item type="id" name="image2"/>
+    <item type="id" name="image3"/>
+    <item type="id" name="image4"/>
+    <item type="id" name="image5"/>
+    <item type="id" name="image6"/>
+    <item type="id" name="image7"/>
+    <item type="id" name="image8"/>
+    <item type="id" name="image9"/>
 </resources>

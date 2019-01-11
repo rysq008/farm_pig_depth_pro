@@ -24,5 +24,11 @@ public class TrackerItem {
         this.mRot_z = rot_z;
     }
 
+    public TrackerItem(int angletype, RectF rect)
+    {
+        this.mAngletype = angletype;
+        this.mRect = rect;
+    }
+
 
 }

@@ -52,6 +52,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.tensorflow.demo.DetectorActivity;
 import org.tensorflow.demo.Global;
+import org.tensorflow.demo.SmallVideoActivity;
 import org.tensorflow.demo.ToubaoCowInfoActivity;
 import org.tensorflow.demo.env.Logger;
 
@@ -74,7 +75,7 @@ import innovation.entry.NewBuildResultObject;
 import innovation.location.LocationManager_new;
 import innovation.login.RespObject;
 import innovation.login.Utils;
-import innovation.tensorflow.tracking.FaceDetector;
+//import innovation.tensorflow.tracking.FaceDetector;
 import innovation.upload.UploadHelper;
 import innovation.upload.UploadThread;
 import innovation.utils.ConstUtils;
@@ -92,6 +93,7 @@ import okhttp3.Response;
 
 
 import static android.content.ContentValues.TAG;
+import static com.xiangchuangtec.luolu.animalcounter.MyApplication.isNoCamera;
 import static innovation.entry.InnApplication.ANIMAL_TYPE;
 import static innovation.entry.InnApplication.getCowEarNumber;
 import static innovation.entry.InnApplication.getCowType;
@@ -141,7 +143,7 @@ public class MediaProcessor {
     private static MediaProcessor sInstance;
     private final Context mContext;
     private Activity mActivity = null;
-    private final FaceDetector mFaceDetector_new; //haojie add
+//    private final FaceDetector mFaceDetector_new; //haojie add
     private ProgressDialog mProgressDialog;
     private InsureDialog mInsureDialog = null;
     private final Handler mProcessorHandler_new;
@@ -165,7 +167,6 @@ public class MediaProcessor {
     private String sheId;
     private String inspectNo;
     private String reason;
-    private File mfile;
 
     private ZipOutputStream zipOutputStream;
     private String similarImgUrl;
@@ -209,15 +210,15 @@ public class MediaProcessor {
                 {"image:0", "exist:0,predict:0"},  // animal type=Global.ANIMAL_TYPE_CATTLE
                 {"image:0", "exist:0,predict:0"}   // animal type=Global.ANIMAL_TYPE_DONKEY
         };
-        mFaceDetector_new = FaceDetector.create(mContext.getAssets(),
-                "file:///android_asset/" + ConstUtils.getPBFile(ANIMAL_TYPE),
-                784,
-                192,
-                160,
-                160,
-                MODEL_PARAMS[ANIMAL_TYPE][0],
-                MODEL_PARAMS[ANIMAL_TYPE][1]
-        );
+//        mFaceDetector_new = FaceDetector.create(mContext.getAssets(),
+//                "file:///android_asset/" + ConstUtils.getPBFile(ANIMAL_TYPE),
+//                784,
+//                192,
+//                160,
+//                160,
+//                MODEL_PARAMS[ANIMAL_TYPE][0],
+//                MODEL_PARAMS[ANIMAL_TYPE][1]
+//        );
         HandlerThread mProcessorThread = new HandlerThread("processor-thread");
         mProcessorThread.start();
         mProcessorHandler_new = new ProcessorHandler_new(mProcessorThread.getLooper());
@@ -227,9 +228,9 @@ public class MediaProcessor {
     }
 
     //haojie add
-    public FaceDetector getFaceDetector_new() {
-        return mFaceDetector_new;
-    }
+//    public FaceDetector getFaceDetector_new() {
+//        return mFaceDetector_new;
+//    }
 
     public void handleMediaResource_build(final Activity activity) {
         mActivity = activity;
@@ -237,13 +238,12 @@ public class MediaProcessor {
         str_address = LocationManager_new.getInstance(activity).str_address;
     }
 
-    public void handleMediaResource_build(Activity activity, String sheId, String inspectNo, String reason, File mfile) {
+    public void handleMediaResource_build(Activity activity, String sheId, String inspectNo, String reason) {
         mActivity = activity;
         initDialogs(activity);
         this.sheId = sheId;
         this.inspectNo = inspectNo;
         this.reason = reason;
-        this.mfile = mfile;
         str_address = LocationManager_new.getInstance(activity).str_address;
     }
 
@@ -438,8 +438,10 @@ public class MediaProcessor {
         View.OnClickListener listener_cancel = v -> {
             editRecoed();
             mInsureDialog.dismiss();
-            mActivity.finish();
+            reInitCurrentDir();
+            collectNumberHandler.sendEmptyMessage(2);
             mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
+
         };
         mInsureDialog.setAbortButton("放弃", listener_abort);
         mInsureDialog.setAddeButton("补充", listener_add);
@@ -469,13 +471,10 @@ public class MediaProcessor {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     Log.e("editRecoed", e.getLocalizedMessage());
-                    editRecoed();
                 }
 
                 @Override
-                public void onResponse(Call call, Response response) throws IOException {
-
-                }
+                public void onResponse(Call call, Response response) throws IOException {}
             });
         }
     }
@@ -540,6 +539,7 @@ public class MediaProcessor {
                                             showDialog(bean);
                                         } else if (1 == bean.getStatus() && 0 == bean.getData().getSimilarFlg()) {
                                             //无相似
+                                            lipeiId = bean.getData().getLipeiId() + "";
                                             mProgressDialog.dismiss();
                                             showSuccessDialog(bean.getMsg());
                                         }
@@ -663,6 +663,8 @@ public class MediaProcessor {
                                 showErrorDialog("网络异常");
                             }
 
+                        }else{
+
                         }
                     }
                 }
@@ -670,42 +672,23 @@ public class MediaProcessor {
     }
 
 
-    //预理赔弹框
+    // 预理赔/理赔弹框
     private void showErrorDialog(String msg) {
 
-        AlertDialogManager.showMessageDialogOne(mActivity, "提示", msg, new AlertDialogManager.DialogInterface() {
-            @Override
-            public void onPositive() {
-                mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
-                mActivity.finish();
-            }
+        AlertDialogManager.showMessageDialogOne(mActivity, "提示", msg,
+                new AlertDialogManager.DialogInterface() {
+                    @Override
+                    public void onPositive() {
+                        collectNumberHandler.sendEmptyMessage(2);
+                        mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
+                    }
 
-            @Override
-            public void onNegative() {
-
-            }
-        });
-
-
-       /* AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
-        View inflate = View.inflate(mActivity, R.layout.prelipei_result3, null);
-        TextView result3_again = inflate.findViewById(R.id.result3_again);
-        TextView error_msg = inflate.findViewById(R.id.error_msg);
-        error_msg.setText(msg);
-        dialog.setView(inflate);
-        AlertDialog dialogcreate = dialog.create();
-        dialogcreate.setCanceledOnTouchOutside(false);
-        dialogcreate.show();
-        result3_again.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialogcreate.dismiss();
-                mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
-                mActivity.finish();
-            }
-        });*/
+                    @Override
+                    public void onNegative() {
+                    }
+                });
     }
-
+    //预理赔库已有相似度"++"对象
     private void showDialog(CommitBean bean) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
         View inflate = View.inflate(mActivity, R.layout.pre_result5, null);
@@ -728,8 +711,8 @@ public class MediaProcessor {
             @Override
             public void onClick(View v) {
                 dialogcreate.dismiss();
+                collectNumberHandler.sendEmptyMessage(2);
                 //mActivity.startActivity(new Intent(mActivity, PreparedLiPeiActivity.class));
-                mActivity.finish();
                 mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
 
             }
@@ -741,15 +724,21 @@ public class MediaProcessor {
             }
         });
     }
-
+    //
     private void showSuccessDialog(String mmsg) {
+        if(isNoCamera && !("lipei".equals(PreferencesUtils.getStringValue(Constants.fleg, MyApplication.getAppContext())))){
+            mmsg +="\n为完成理赔，请拍摄死猪和猪舍短视频并上传。";
+        }
         AlertDialogManager.showMessageDialogOne(mActivity, "提示", mmsg, new AlertDialogManager.DialogInterface() {
             @Override
             public void onPositive() {
                 destroyDialogs();
-
                 if ("lipei".equals(PreferencesUtils.getStringValue(Constants.fleg, MyApplication.getAppContext()))){
                     mActivity.startActivity(new Intent(mActivity, AddPigPicActivity.class).putExtra("lipeiid",lipeiId));
+                }else{
+                    if(isNoCamera){
+                        mActivity.startActivity(new Intent(mActivity, SmallVideoActivity.class).putExtra("lipeiid", lipeiId));
+                    }
                 }
                 mActivity.finish();
             }
@@ -832,7 +821,7 @@ public class MediaProcessor {
             @Override
             public void onClick(View v) {
                 dialogcreate.dismiss();
-                mActivity.finish();
+                collectNumberHandler.sendEmptyMessage(2);
                 mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
             }
         });
@@ -992,7 +981,7 @@ public class MediaProcessor {
             @Override
             public void onClick(View v) {
                 dialogcreate.dismiss();
-                mActivity.finish();
+                collectNumberHandler.sendEmptyMessage(2);
                 mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
             }
         });
@@ -1022,7 +1011,7 @@ public class MediaProcessor {
             @Override
             public void onClick(View v) {
                 dialogcreate.dismiss();
-                mActivity.finish();
+                collectNumberHandler.sendEmptyMessage(2);
                 mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
             }
         });
@@ -1039,7 +1028,7 @@ public class MediaProcessor {
 
 
     private void goonLiEnd1(AlertDialog dialogcreate) {
-        Map mapbody = new HashMap();
+        Map<String, String> mapbody = new HashMap<>();
         mapbody.put(Constants.userLibId, String.valueOf(userLibId));
         mapbody.put(Constants.animalId, String.valueOf(animalId));
         mapbody.put(Constants.lipeiId, lipeiId);
@@ -1141,8 +1130,8 @@ public class MediaProcessor {
     }
 
     private void showTimeOutDialog() {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
-        View inflate = View.inflate(mActivity, R.layout.pre_timeout, null);
+        AlertDialog.Builder dialog = new AlertDialog.Builder(MyApplication.getContext());
+        View inflate = View.inflate(MyApplication.getContext(), R.layout.pre_timeout, null);
         TextView timeout_resert = inflate.findViewById(R.id.timeout_resert);
         TextView timeout_cancel = inflate.findViewById(R.id.timeout_cancel);
         dialog.setView(inflate);
@@ -1153,11 +1142,11 @@ public class MediaProcessor {
             @Override
             public void onClick(View v) {
                 if (!MyApplication.isNetConnected) {
-                    Toast.makeText(mActivity, "断网了，请联网后重试。", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MyApplication.getContext(), "断网了，请联网后重试。", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 dialogcreate.dismiss();
-                showProgressDialog(mActivity);
+                showProgressDialog((Activity) MyApplication.getContext());
                 processUploadOne_Pay();
             }
         });
@@ -1166,9 +1155,9 @@ public class MediaProcessor {
             public void onClick(View v) {
                 dialogcreate.dismiss();
                 if ("pre".equals(PreferencesUtils.getStringValue(Constants.fleg, MyApplication.getAppContext()))){
-                    mActivity.startActivity(new Intent(mActivity, PreparedLiPeiActivity.class));
+                    MyApplication.getContext().startActivity(new Intent(MyApplication.getContext(), PreparedLiPeiActivity.class));
                 }
-                mActivity.finish();
+                ((Activity)MyApplication.getContext()).finish();
             }
         });
     }
@@ -1394,7 +1383,7 @@ public class MediaProcessor {
     }
 
     //重新初始化Current文件
-    private void reInitCurrentDir() {
+    public void reInitCurrentDir() {
         Log.i("reInitCurrentDir:", "重新初始化Current文件");
         if (Global.model == Model.BUILD.value()) {
             Global.mediaInsureItem.currentDel();
@@ -1984,54 +1973,6 @@ public class MediaProcessor {
             //理赔提交
             preCommitForLiPei(zipFile_image2);
         }
-
-        //读猪的编号信息
-            /*String fname_num = "number.txt";
-            String content = null;
-            try {
-                content = FileUtils.getZipFileContent(zipFile_image2, fname_num);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (TextUtils.isEmpty(content)) {
-                return;
-            }*/
-        //读取用户信息
-//            SharedPreferences pref_user = mActivity.getSharedPreferences(Utils.USERINFO_SHAREFILE, Context.MODE_PRIVATE);
-//            int userId = pref_user.getInt("uid", 0);
-//            int userId = 0;
-        // TODO: 2018/8/20 By:LuoLu
-//            if (pref_user == null) {
-//                mHandler.sendEmptyMessage(400);
-//
-//            }
-//            userId = pref_user.getInt("uid", 0);
-        //UploadObject imgResp =
-//            upload_zipImage(model, zipFile_image2, userId, content);
-        //获取ib_id
-        //int lib_id = imgResp.upload_libId;
-//            String piginfo = imgResp.upload_pigInfo;
-            /*int status;
-            if (imgResp == null || imgResp.status != HttpRespObject.STATUS_OK) {
-                status = imgResp == null ? -1 : imgResp.status;
-                publishProgress(model, status);
-                return;
-            }
-            if (emptyPigInfo(imgResp.upload_pigInfo)) {
-                JSONObject jo = new JSONObject();
-                JsonHelper.putInt(jo, Utils.Upload.LIB_ID, imgResp.upload_libId);
-                JSONObject jo_env = new JSONObject();
-                try {
-                    jo_env = new JSONObject(UploadHelper.getEnvInfo(mContext, null));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                JsonHelper.putJsonObject(jo, Utils.Upload.LIB_ENVINFO, jo_env);
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日HH时mm分", Locale.getDefault());
-                JsonHelper.putString(jo, Utils.Upload.LIB_CREATE_TIME, sdf.format(new Date(System.currentTimeMillis())));
-                imgResp.upload_pigInfo = jo.toString();
-            }*/
-        //publishProgress(MSG_UI_FINISH_VERIFY, model, 0, imgResp.upload_pigInfo);
     }
 
     private static boolean emptyPigInfo(String pigInfo) {
@@ -2279,12 +2220,10 @@ public class MediaProcessor {
             negative.setOnClickListener(view -> {
 
                 mProgressDialog.dismiss();
-
+                collectNumberHandler.sendEmptyMessage(2);
                 Intent intent = new Intent(mActivity, DetectorActivity.class);
                 intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                 mActivity.startActivity(intent);
-                mActivity.finish();
-
             });
             if (negative != null) {
                 negative.setVisibility(View.VISIBLE);
@@ -2437,11 +2376,11 @@ public class MediaProcessor {
                                         };
                                         View.OnClickListener listener_ReCollect = v -> {
                                             dialogLipeiResult.dismiss();
+                                            collectNumberHandler.sendEmptyMessage(2);
                                             Intent intent = new Intent(mActivity, DetectorActivity.class);
                                             intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                             intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                                             mActivity.startActivity(intent);
-                                            mActivity.finish();
                                         };
 
                                         dialogLipeiResult.setTitle("验证结果");
@@ -2548,6 +2487,7 @@ public class MediaProcessor {
                                         };
                                         View.OnClickListener listener_ReCollect = v -> {
                                             dialogLipeiResult.dismiss();
+                                            collectNumberHandler.sendEmptyMessage(2);
                                             Intent intent = new Intent(mActivity, DetectorActivity.class);
                                             intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                             intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
@@ -2656,11 +2596,11 @@ public class MediaProcessor {
                                         };
                                         View.OnClickListener listener_ReCollect = v -> {
                                             dialogLipeiResult.dismiss();
+                                            collectNumberHandler.sendEmptyMessage(2);
                                             Intent intent = new Intent(mActivity, DetectorActivity.class);
                                             intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                             intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                                             mActivity.startActivity(intent);
-                                            mActivity.finish();
                                         };
                                         dialogLipeiResult.setTitle("验证结果");
                                         dialogLipeiResult.setBtnGoApplication("直接申请", listener_new);
@@ -2754,11 +2694,11 @@ public class MediaProcessor {
                                         };
                                         View.OnClickListener listener_ReCollect = v -> {
                                             dialogLipeiResult.dismiss();
+                                            collectNumberHandler.sendEmptyMessage(2);
                                             Intent intent = new Intent(mActivity, DetectorActivity.class);
                                             intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                             intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                                             mActivity.startActivity(intent);
-                                            mActivity.finish();
                                         };
                                         dialogLipeiResult.setTitle("验证结果");
                                         dialogLipeiResult.setBtnGoApplication("直接申请", listener_new);
@@ -2809,11 +2749,11 @@ public class MediaProcessor {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             dialog.dismiss();
+                                            collectNumberHandler.sendEmptyMessage(2);
                                             Intent intent = new Intent(mActivity, DetectorActivity.class);
                                             intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                             intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                                             mActivity.startActivity(intent);
-                                            mActivity.finish();
                                         }
                                     });
                             builder.create();
@@ -2961,11 +2901,11 @@ public class MediaProcessor {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 dialog.dismiss();
+                                                collectNumberHandler.sendEmptyMessage(2);
                                                 Intent intent = new Intent(mActivity, DetectorActivity.class);
                                                 intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                                 intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                                                 mActivity.startActivity(intent);
-                                                mActivity.finish();
                                             }
                                         });
                                 builder.create();
@@ -2986,11 +2926,11 @@ public class MediaProcessor {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 dialog.dismiss();
+                                                collectNumberHandler.sendEmptyMessage(2);
                                                 Intent intent = new Intent(mActivity, DetectorActivity.class);
                                                 intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                                 intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                                                 mActivity.startActivity(intent);
-                                                mActivity.finish();
                                             }
                                         });
                                 builder.create();
@@ -3005,11 +2945,11 @@ public class MediaProcessor {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             dialog.dismiss();
+                                            collectNumberHandler.sendEmptyMessage(2);
                                             Intent intent = new Intent(mActivity, DetectorActivity.class);
                                             intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                             intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                                             mActivity.startActivity(intent);
-                                            mActivity.finish();
                                         }
                                     });
                             builder.create();
@@ -3024,11 +2964,11 @@ public class MediaProcessor {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
+                                        collectNumberHandler.sendEmptyMessage(2);
                                         Intent intent = new Intent(mActivity, DetectorActivity.class);
                                         intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                         intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                                         mActivity.startActivity(intent);
-                                        mActivity.finish();
                                     }
                                 });
                         builder.create();

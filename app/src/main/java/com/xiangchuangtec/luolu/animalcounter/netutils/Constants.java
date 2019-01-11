@@ -1,5 +1,7 @@
 package com.xiangchuangtec.luolu.animalcounter.netutils;
 
+import innovation.utils.HttpUtils;
+
 public class Constants {
     //生产
     // public static final String BASE = "http://192.168.2.103:8089/app/";
@@ -25,9 +27,9 @@ public class Constants {
     public static final String inspectNo = "inspectNo";
     public static final String file = "file";
 
-
-    public static final String BASENEW = "http://47.92.167.61:8084/nongxian3/app/";
-//    public static final String BASENEW = "http://192.168.1.198:8081/app/";//测试
+    //    60.205.209.245:8081;   47.92.167.61:8081
+//    public static final String BASENEW =  "http://47.92.167.61:8081/nongxian2/app/";
+    public static final String BASENEW = HttpUtils.baseUrl+"app/";
     public static final String LOGINURLNEW = BASENEW + "ftnLogin";
 
     public static final String ZHUSHESHOW = BASENEW + "ftnShe/list";
@@ -42,21 +44,25 @@ public class Constants {
     public static final String ZHUJUANDELETE = BASENEW + "ftnJuan/delete";
     public static final String ZHUJUANADD = BASENEW + "ftnJuan/add";
     public static final String ZHUJUANOUT = BASENEW + "ftnJuan/out";
+    //调起猪舍内的摄像头
     public static final String PRESTART = BASENEW + "payment/prePayStart";
-
+    //预先理赔提交
     public static final String PRECOMMIT = BASENEW + "payment/prePayCommit";
+    //上传预理赔补充视频
+    public static final String ADDPREPAYVIDEO = BASENEW + "payment/addPrePayVideo";
 
     public static final String PREJIXU = BASENEW + "payment/prePayEnd";
     public static final String PRESTOP = BASENEW + "payment/stopVideo";
     public static final String INSURE = BASENEW + "ftnInsure/list";
     public static final String INSURECOMMIT = BASENEW + "ftnInsure/commit";
     public static final String PINZHONG = BASENEW + "ftnJuan/animalType";
-    //理赔调取摄像头
+    //验证是否存在预理赔对象
     public static final String LiSTART = BASENEW + "payment/payStart";
+    //理赔上传
     public static final String LICOMMIT = BASENEW + "payment/payCommit";
     public static final String LIEDD2 = BASENEW + "payment/payEnd2";
     public static final String LIEDD1 = BASENEW + "payment/payEnd1";
-    //判断是否投保
+    // 验证是否存在有效投保
     public static final String CHECKBAODAN = BASENEW + "payment/allStart";
     public static final String POLLINGLIST = BASENEW + "inspect/inspect";
     public static final String XUNJIANTIJIAONEW = BASENEW + "inspect/commit";
@@ -107,16 +113,13 @@ public class Constants {
 
     public static final String SHELIST = BASENEW + "ftnShe/sheList";
     public static final String SHECOMMIT = BASENEW + "inspect/sheCommit";
+    //盘查详情
     public static final String SHEDETAIL_NEW = BASENEW + "inspect/sheDetail";
     public static final String UP_LOAD_IMG = BASENEW + "uploadImg";
     public static final String ADD_PAY_INFO = BASENEW + "payment/addPayInfo";
 
-
     //public static final String BASE8081= "http://47.92.167.61:8081/";
-    public static final String SHEDETAIL = "http://47.92.167.61:8081/numberCheck/app/sheDetail";
-
-
-
+//    public static final String SHEDETAIL = "http://47.92.167.61:8081/numberCheck/app/sheDetail";
 
     public static final String deptIdnew = "dept_id";
     public static final String id = "id";

@@ -134,6 +134,10 @@ public class LoginFamerActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.loginfamer_login:
+                if (!MyApplication.isNetConnected) {
+                    Toast.makeText(this, "断网了，请联网后重试。", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 String musername = mloginfameruserid.getText().toString();
                 String muserpass = mloginfamerpass.getText().toString();
                 if (!TextUtils.isEmpty(musername) && !TextUtils.isEmpty(muserpass)) {

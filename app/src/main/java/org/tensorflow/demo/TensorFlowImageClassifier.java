@@ -34,7 +34,7 @@ import java.util.PriorityQueue;
 import java.util.Vector;
 
 /** InSureCompanyBean classifier specialized to label images using TensorFlow. */
-public class TensorFlowImageClassifier implements Classifier {
+/*public class TensorFlowImageClassifier implements Classifier {
   static {
     System.loadLibrary("tensorflow_demo");
   }
@@ -64,7 +64,7 @@ public class TensorFlowImageClassifier implements Classifier {
 
   private TensorFlowImageClassifier() {}
 
-  /**
+  *//**
    * Initializes a native TensorFlow session for classifying images.
    *
    * @param assetManager The asset manager to be used to load assets.
@@ -77,7 +77,7 @@ public class TensorFlowImageClassifier implements Classifier {
    * @param inputName The label of the image input node.
    * @param outputName The label of the output node.
    * @throws IOException
-   */
+   *//*
   @SuppressLint("LongLogTag")
   public static Classifier create(
       AssetManager assetManager,
@@ -220,4 +220,4 @@ public class TensorFlowImageClassifier implements Classifier {
   public void close() {
     inferenceInterface.close();
   }
-}
+}*/

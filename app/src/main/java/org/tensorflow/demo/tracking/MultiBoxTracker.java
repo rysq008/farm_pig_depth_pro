@@ -15,6 +15,7 @@ limitations under the License.
 
 package org.tensorflow.demo.tracking;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -22,26 +23,47 @@ import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.Paint.Join;
 import android.graphics.Paint.Style;
+import android.graphics.Point;
 import android.graphics.RectF;
+import android.media.Image;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
+import android.widget.Toast;
+
+import innovation.biz.iterm.PostureItem;
+import innovation.biz.iterm.PredictRotationIterm;
+import innovation.biz.iterm.TrackerItem;
+import innovation.utils.PreferencesUtils;
+import innovation.utils.ScreenUtil;
+
+import org.tensorflow.demo.Classifier;
+import org.tensorflow.demo.DetectorActivity;
+import org.tensorflow.demo.env.BorderedText;
+import org.tensorflow.demo.env.ImageUtils;
+import org.tensorflow.demo.env.Logger;
+
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import org.tensorflow.demo.Classifier.Recognition;
-import org.tensorflow.demo.BorderedText;
-import org.tensorflow.demo.Logger;
+import java.util.Vector;
+
+import innovation.biz.iterm.PostureItem;
+import innovation.utils.ScreenUtil;
+
+import static innovation.utils.ConstUtils.ANIMAL_TYPE_PIG;
+
 
 /**
- * InSureCompanyBean tracker wrapping ObjectTracker that also handles non-max suppression and matching existing
+ * A tracker wrapping ObjectTracker that also handles non-max suppression and matching existing
  * objects to new detections.
  */
 public class MultiBoxTracker {
   private final Logger logger = new Logger();
 
-  private static final float TEXT_SIZE_DIP = 18;
+  public static final float TEXT_SIZE_DIP = 18;
 
   // Maximum percentage of a box that can be overlapped by another box at detection time. Otherwise
   // the lower scored box (new or old) will be removed.
@@ -56,8 +78,14 @@ public class MultiBoxTracker {
   // Consider object to be lost if correlation falls below this threshold.
   private static final float MIN_CORRELATION = 0.3f;
 
+  //    private static final int[] COLORS = {
+//            Color.BLUE, Color.RED, Color.GREEN, Color.YELLOW, Color.CYAN, Color.MAGENTA, Color.WHITE,
+//            Color.parseColor("#55FF55"), Color.parseColor("#FFA500"), Color.parseColor("#FF8888"),
+//            Color.parseColor("#AAAAFF"), Color.parseColor("#FFFFAA"), Color.parseColor("#55AAAA"),
+//            Color.parseColor("#AA33AA"), Color.parseColor("#0D0068")
+//    };
   private static final int[] COLORS = {
-    Color.BLUE, Color.RED, Color.GREEN, Color.YELLOW, Color.CYAN, Color.MAGENTA
+          Color.RED
   };
 
   private final Queue<Integer> availableColors = new LinkedList<Integer>();
@@ -65,20 +93,23 @@ public class MultiBoxTracker {
   public ObjectTracker objectTracker;
 
   final List<Pair<Float, RectF>> screenRects = new LinkedList<Pair<Float, RectF>>();
+  private List<Classifier.Recognition> keyPointsResult;
 
   private static class TrackedRecognition {
     ObjectTracker.TrackedObject trackedObject;
+    RectF location;
     float detectionConfidence;
     int color;
     String title;
+    List<Point> points;
   }
 
   private final List<TrackedRecognition> trackedObjects = new LinkedList<TrackedRecognition>();
 
   private final Paint boxPaint = new Paint();
 
-  private final float textSizePx;
-  private final BorderedText borderedText;
+  private float textSizePx;
+  private BorderedText borderedText;
 
   private Matrix frameToCanvasMatrix;
 
@@ -86,8 +117,19 @@ public class MultiBoxTracker {
   private int frameHeight;
 
   private int sensorOrientation;
+  private Context context;
+  // TODO: 2018/9/14 By:LuoLu
+  private List<TrackerItem> mFrameRects = new ArrayList<TrackerItem>();
+  private Vector listAngles_capture = new Vector();
+  private static int type1Sum;
+  private static int type2Sum;
+  private static int type3Sum;
+  private long showTime_start = 0;
+  private long showTime_end = 0;
 
-  public MultiBoxTracker(final DisplayMetrics metrics) {
+
+  public MultiBoxTracker(final Context context) {
+    this.context = context;
     for (final int color : COLORS) {
       availableColors.add(color);
     }
@@ -99,8 +141,12 @@ public class MultiBoxTracker {
     boxPaint.setStrokeJoin(Join.ROUND);
     boxPaint.setStrokeMiter(100);
 
-    textSizePx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, TEXT_SIZE_DIP, metrics);
+    textSizePx =
+            TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, TEXT_SIZE_DIP, context.getResources().getDisplayMetrics());
     borderedText = new BorderedText(textSizePx);
+    // TODO: 2018/9/14 By:LuoLu
+    showTime_start = System.currentTimeMillis();
   }
 
   private Matrix getFrameToCanvasMatrix() {
@@ -145,67 +191,182 @@ public class MultiBoxTracker {
   }
 
   public synchronized void trackResults(
-      final List<Recognition> results, final byte[] frame, final long timestamp) {
+          final List<Classifier.Recognition> results, final byte[] frame, final long timestamp) {
     logger.i("Processing %d results from %d", results.size(), timestamp);
     processResults(timestamp, results, frame);
+    keyPointsResult = results;
   }
 
-  public synchronized void draw(final Canvas canvas) {
-    if (objectTracker == null) {
+  public synchronized void draw(final Canvas canvas, int animalType) {
+    int canvasW = ScreenUtil.getScreenWidth();
+    int canvasH = ScreenUtil.getScreenHeight();
+    Point centerOfCanvas = new Point(canvasW / 2, canvasH / 2);
+    int rectW = canvasW / 2;
+    int rectH = canvasH / 2;
+    int left = centerOfCanvas.x - (rectW);
+    int top = centerOfCanvas.y - (rectH / 2);
+    int right = centerOfCanvas.x + (rectW);
+    int bottom = centerOfCanvas.y + (rectH / 2);
+    listAngles_capture.clear();
+    getCurrentTypeList();
+//
+//        final Paint boxPaint = new Paint();
+//        boxPaint.setColor(Color.BLUE);
+//        boxPaint.setStyle(Style.STROKE);
+//        boxPaint.setStrokeWidth(4f);
+//        canvas.drawRect(canvas.getWidth() * 0.15f, frameWidth * 0.18f, canvas.getWidth() * 0.85f, frameWidth * 0.85f, boxPaint);
+
+    //判断是什么动物画框
+
+
+    if (mFrameRects.isEmpty()) {
+      //return;
+      showTime_end = System.currentTimeMillis();
+      //输出所有捕获的角度
+      long during = showTime_end - showTime_start;
+      //    Log.i("during", String.valueOf(during));
+      if (during > 2000) {
+        showTime_start = System.currentTimeMillis();
+      }
+      int drawY_capture = (int) (borderedText.getTextSize() * listAngles_capture.size());
+      borderedText.drawLines(canvas, 100, drawY_capture + 50, listAngles_capture);
       return;
     }
 
-    // TODO(andrewharp): This may not work for non-90 deg rotations.
-    final float multiplier =
-        Math.min(canvas.getWidth() / (float) frameHeight, canvas.getHeight() / (float) frameWidth);
-//    frameToCanvasMatrix =
-//        ImageUtils.getTransformationMatrix(
-//            frameWidth,
-//            frameHeight,
-//            (int) (multiplier * frameHeight),
-//            (int) (multiplier * frameWidth),
-//            sensorOrientation,
-//            false);
-    for (final TrackedRecognition recognition : trackedObjects) {
-      final ObjectTracker.TrackedObject trackedObject = recognition.trackedObject;
 
-      final RectF trackedPos = trackedObject.getTrackedPositionInPreviewFrame();
+    final boolean rotated = sensorOrientation % 180 == 90;
+    final float multiplier =
+            Math.min(canvas.getHeight() / (float) (rotated ? frameWidth : frameHeight),
+                    canvas.getWidth() / (float) (rotated ? frameHeight : frameWidth));
+    frameToCanvasMatrix =
+            ImageUtils.getTransformationMatrix(
+                    frameWidth,
+                    frameHeight,
+                    (int) (multiplier * (rotated ? frameHeight : frameWidth)),
+                    (int) (multiplier * (rotated ? frameWidth : frameHeight)),
+                    sensorOrientation,
+                    false);
+    for (final TrackedRecognition recognition : trackedObjects) {
+      final RectF trackedPos =
+              (objectTracker != null)
+                      ? recognition.trackedObject.getTrackedPositionInPreviewFrame()
+                      : new RectF(recognition.location);
       getFrameToCanvasMatrix().mapRect(trackedPos);
       boxPaint.setColor(recognition.color);
-
       final float cornerSize = Math.min(trackedPos.width(), trackedPos.height()) / 8.0f;
       canvas.drawRoundRect(trackedPos, cornerSize, cornerSize, boxPaint);
 
       final String labelString =
-          !TextUtils.isEmpty(recognition.title)
-              ? String.format("%s %.2f", recognition.title, recognition.detectionConfidence)
-              : String.format("%.2f", recognition.detectionConfidence);
+              !TextUtils.isEmpty(recognition.title)
+                      ? String.format("%s %.2f", recognition.title, recognition.detectionConfidence)
+                      : String.format("%.2f", recognition.detectionConfidence);
       borderedText.drawText(canvas, trackedPos.left + cornerSize, trackedPos.bottom, labelString);
     }
+
+    for (TrackerItem item : mFrameRects) {
+      RectF trackRectF = item.mRect;
+      float cornerSize = Math.min(trackRectF.width(), trackRectF.height()) / 8.0f;
+      String tempAngle = "未知";
+      if (DetectorActivity.AngleTrackType == 1) {
+        tempAngle = "左脸";
+      } else if (DetectorActivity.AngleTrackType == 2) {
+        tempAngle = "正脸";
+      } else if (DetectorActivity.AngleTrackType == 3) {
+        tempAngle = "右脸";
+      } else if (DetectorActivity.AngleTrackType == 10) {
+        tempAngle = "未识别角度";
+      }else {
+        tempAngle = "未识别角度";
+      }
+      String s1 = tempAngle + "\r\n";
+      Vector<String> vec = new Vector<String>();
+      vec.add(s1);//把字符串str压进容器
+      borderedText.drawLines(canvas, (trackRectF.left + trackRectF.right) / 2, (trackRectF.top + trackRectF.bottom) / 2, vec);
+      //在屏幕上输出已采集到的角度�?
+      showTime_start = System.currentTimeMillis();
+      int drawY_capture = (int) (borderedText.getTextSize() * listAngles_capture.size());
+      borderedText.drawLines(canvas, 100, drawY_capture + 50, listAngles_capture);
+    }
+
+    // canvas.drawRect(100f, 100f, 100f, 100f, boxPaint);
+    borderedText.drawText(canvas, (left + right) / 2 - 190, top, getReminderMsgText());
   }
 
+  /**
+   * 画牛框
+   * @param canvas
+   */
+  private void drawCowBorder(final Canvas canvas){
+    //1280  高
+    Log.e("multibox", "frameWidth: "+frameWidth);
+    //960   宽
+    Log.e("multibox", "frameHeight: "+frameHeight);
+    //1080
+    Log.e("multibox", "canvas.getWidth: "+canvas.getWidth());
+    //2030
+    Log.e("multibox", "canvas.getHeight: "+canvas.getHeight());
+
+    float rate = (float)canvas.getWidth() / (float)frameHeight;
+
+    int realHeight = (int) (frameWidth * rate);
+    int realWidth = canvas.getWidth();
+
+    Log.e("multibox", "realHeight: "+realHeight+"---------realWidth:"+realWidth );
+
+    //画竖线
+    final Paint boxPaint1 = new Paint();
+    boxPaint1.setColor(0xc0000000);
+    boxPaint1.setStyle(Style.STROKE);
+    boxPaint1.setStrokeWidth(realWidth * 0.3f);
+    canvas.drawLine(0f,realHeight*0.15f,0f,realHeight * 0.85f,boxPaint1);
+    canvas.drawLine(realWidth,realHeight * 0.15f,realWidth,realHeight * 0.85f,boxPaint1);
+    //画横线
+    final Paint boxPaint2 = new Paint();
+    boxPaint2.setColor(0xc0000000);
+    boxPaint2.setStyle(Style.STROKE);
+    boxPaint2.setStrokeWidth(realHeight * 0.3f);
+    canvas.drawLine(0f, 0f, realWidth, 0f, boxPaint2);
+    canvas.drawLine(0f, realHeight, realWidth, realHeight, boxPaint2);
+  }
+
+  private boolean initialized = false;
+
   public synchronized void onFrame(
-      final int w,
-      final int h,
-      final int rowStride,
-      final int sensorOrienation,
-      final byte[] frame,
-      final long timestamp) {
-    if (objectTracker == null) {
+          final int w,
+          final int h,
+          final int rowStride,
+          final int sensorOrientation,
+          final byte[] frame,
+          final long timestamp) {
+    if (objectTracker == null && !initialized) {
       ObjectTracker.clearInstance();
 
       logger.i("Initializing ObjectTracker: %dx%d", w, h);
+      logger.i("onFrame Initializing sensorOrientation: %d", sensorOrientation);
       objectTracker = ObjectTracker.getInstance(w, h, rowStride, true);
       frameWidth = w;
       frameHeight = h;
-      this.sensorOrientation = sensorOrienation;
+      this.sensorOrientation = sensorOrientation;
+      initialized = true;
+
+      if (objectTracker == null) {
+        String message =
+                "Object tracking support not found. "
+                        + "See tensorflow/examples/android/README.md for details.";
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+        logger.e(message);
+      }
+    }
+
+    if (objectTracker == null) {
+      return;
     }
 
     objectTracker.nextFrame(frame, null, timestamp, null, true);
 
     // Clean up any objects not worth tracking any more.
     final LinkedList<TrackedRecognition> copyList =
-        new LinkedList<TrackedRecognition>(trackedObjects);
+            new LinkedList<TrackedRecognition>(trackedObjects);
     for (final TrackedRecognition recognition : copyList) {
       final ObjectTracker.TrackedObject trackedObject = recognition.trackedObject;
       final float correlation = trackedObject.getCurrentCorrelation();
@@ -220,13 +381,13 @@ public class MultiBoxTracker {
   }
 
   private void processResults(
-      final long timestamp, final List<Recognition> results, final byte[] originalFrame) {
-    final List<Pair<Float, Recognition>> rectsToTrack = new LinkedList<>();
+          final long timestamp, final List<Classifier.Recognition> results, final byte[] originalFrame) {
+    final List<Pair<Float, Classifier.Recognition>> rectsToTrack = new LinkedList<Pair<Float, Classifier.Recognition>>();
 
     screenRects.clear();
     final Matrix rgbFrameToScreen = new Matrix(getFrameToCanvasMatrix());
 
-    for (final Recognition result : results) {
+    for (final Classifier.Recognition result : results) {
       if (result.getLocation() == null) {
         continue;
       }
@@ -236,7 +397,7 @@ public class MultiBoxTracker {
       rgbFrameToScreen.mapRect(detectionScreenRect, detectionFrameRect);
 
       logger.v(
-          "Result! Frame: " + result.getLocation() + " mapped to screen:" + detectionScreenRect);
+              "Result! Frame: " + result.getLocation() + " mapped to screen:" + detectionScreenRect);
 
       screenRects.add(new Pair<Float, RectF>(result.getConfidence(), detectionScreenRect));
 
@@ -245,7 +406,7 @@ public class MultiBoxTracker {
         continue;
       }
 
-      rectsToTrack.add(new Pair<Float, Recognition>(result.getConfidence(), result));
+      rectsToTrack.add(new Pair<Float, Classifier.Recognition>(result.getConfidence(), result));
     }
 
     if (rectsToTrack.isEmpty()) {
@@ -254,25 +415,39 @@ public class MultiBoxTracker {
     }
 
     if (objectTracker == null) {
-      logger.w("No ObjectTracker, can't track anything!");
+      trackedObjects.clear();
+      for (final Pair<Float, Classifier.Recognition> potential : rectsToTrack) {
+        final TrackedRecognition trackedRecognition = new TrackedRecognition();
+        trackedRecognition.detectionConfidence = potential.first;
+        trackedRecognition.location = new RectF(potential.second.getLocation());
+        trackedRecognition.trackedObject = null;
+        trackedRecognition.title = potential.second.getTitle();
+        trackedRecognition.color = COLORS[trackedObjects.size()];
+        trackedRecognition.points = potential.second.getPoints();
+        trackedObjects.add(trackedRecognition);
+
+        if (trackedObjects.size() >= COLORS.length) {
+          break;
+        }
+      }
       return;
     }
 
     logger.i("%d rects to track", rectsToTrack.size());
-    for (final Pair<Float, Recognition> potential : rectsToTrack) {
+    for (final Pair<Float, Classifier.Recognition> potential : rectsToTrack) {
       handleDetection(originalFrame, timestamp, potential);
     }
   }
 
   private void handleDetection(
-      final byte[] frameCopy, final long timestamp, final Pair<Float, Recognition> potential) {
+          final byte[] frameCopy, final long timestamp, final Pair<Float, Classifier.Recognition> potential) {
     final ObjectTracker.TrackedObject potentialObject =
-        objectTracker.trackObject(potential.second.getLocation(), timestamp, frameCopy);
+            objectTracker.trackObject(potential.second.getLocation(), timestamp, frameCopy);
 
     final float potentialCorrelation = potentialObject.getCurrentCorrelation();
     logger.v(
-        "Tracked object went from %s to %s with correlation %.2f",
-        potential.second, potentialObject.getTrackedPositionInPreviewFrame(), potentialCorrelation);
+            "Tracked object went from %s to %s with correlation %.2f",
+            potential.second, potentialObject.getTrackedPositionInPreviewFrame(), potentialCorrelation);
 
     if (potentialCorrelation < MARGINAL_CORRELATION) {
       logger.v("Correlation too low to begin tracking %s.", potentialObject);
@@ -305,7 +480,7 @@ public class MultiBoxTracker {
       // recognition needs to be removed and possibly replaced with the new one.
       if (intersects && intersectOverUnion > MAX_OVERLAP) {
         if (potential.first < trackedRecognition.detectionConfidence
-            && trackedRecognition.trackedObject.getCurrentCorrelation() > MARGINAL_CORRELATION) {
+                && trackedRecognition.trackedObject.getCurrentCorrelation() > MARGINAL_CORRELATION) {
           // If track for the existing object is still going strong and the detection score was
           // good, reject this new object.
           potentialObject.stopTracking();
@@ -330,7 +505,7 @@ public class MultiBoxTracker {
       for (final TrackedRecognition candidate : trackedObjects) {
         if (candidate.detectionConfidence < potential.first) {
           if (recogToReplace == null
-              || candidate.detectionConfidence < recogToReplace.detectionConfidence) {
+                  || candidate.detectionConfidence < recogToReplace.detectionConfidence) {
             // Save it so that we use this color for the new object.
             recogToReplace = candidate;
           }
@@ -347,10 +522,10 @@ public class MultiBoxTracker {
     // Remove everything that got intersected.
     for (final TrackedRecognition trackedRecognition : removeList) {
       logger.v(
-          "Removing tracked object %s with detection confidence %.2f, correlation %.2f",
-          trackedRecognition.trackedObject,
-          trackedRecognition.detectionConfidence,
-          trackedRecognition.trackedObject.getCurrentCorrelation());
+              "Removing tracked object %s with detection confidence %.2f, correlation %.2f",
+              trackedRecognition.trackedObject,
+              trackedRecognition.detectionConfidence,
+              trackedRecognition.trackedObject.getCurrentCorrelation());
       trackedRecognition.trackedObject.stopTracking();
       trackedObjects.remove(trackedRecognition);
       if (trackedRecognition != recogToReplace) {
@@ -366,19 +541,106 @@ public class MultiBoxTracker {
 
     // Finally safe to say we can track this object.
     logger.v(
-        "Tracking object %s (%s) with detection confidence %.2f at position %s",
-        potentialObject,
-        potential.second.getTitle(),
-        potential.first,
-        potential.second.getLocation());
+            "Tracking object %s (%s) with detection confidence %.2f at position %s",
+            potentialObject,
+            potential.second.getTitle(),
+            potential.first,
+            potential.second.getLocation());
     final TrackedRecognition trackedRecognition = new TrackedRecognition();
     trackedRecognition.detectionConfidence = potential.first;
     trackedRecognition.trackedObject = potentialObject;
     trackedRecognition.title = potential.second.getTitle();
+    trackedRecognition.points = potential.second.getPoints();
 
     // Use the color from a replaced object before taking one from the color queue.
     trackedRecognition.color =
-        recogToReplace != null ? recogToReplace.color : availableColors.poll();
+            recogToReplace != null ? recogToReplace.color : availableColors.poll();
     trackedObjects.add(trackedRecognition);
   }
+
+  // TODO: 2018/9/14 By:LuoLu
+  public void getCountOfCurrentImage(int type1, int type2, int type3) {
+    type1Sum = type1;
+    type2Sum = type2;
+    type3Sum = type3;;
+
+  }
+
+  public void reInitCounter(int type1, int type2, int type3) {
+    type1Sum = type1;
+    type2Sum = type2;
+    type3Sum = type3;
+    getCurrentTypeList();
+    listAngles_capture.clear();
+  }
+
+  public synchronized void trackAnimalResults(PostureItem posture, int angletype) {
+    mFrameRects.clear();
+    if (posture == null) {
+      return;
+    }
+    int canvasW = ScreenUtil.getScreenWidth();
+    int canvasH = ScreenUtil.getScreenHeight();
+    Point centerOfCanvas = new Point(canvasW / 2, canvasH / 2);
+    int rectW = canvasW / 2;
+    int rectH = canvasH / 2;
+    int left = centerOfCanvas.x - (rectW);
+    int top = centerOfCanvas.y - (rectH / 2);
+    int right = centerOfCanvas.x + (rectW);
+    int bottom = centerOfCanvas.y + (rectH / 2);
+    RectF trackRectF = new RectF(left, top, right, bottom);
+    TrackerItem item = new TrackerItem(angletype, trackRectF, posture.rot_x, posture.rot_y, posture.rot_z);
+    mFrameRects.add(item);
+  }
+
+  public synchronized void trackResultsTFlite(PredictRotationIterm predictRotationIterm, int angletype) {
+    mFrameRects.clear();
+    if (predictRotationIterm == null) {
+      return;
+    }
+//    RectF trackRectF = new RectF(predictRotationIterm.screenX0, predictRotationIterm.screenY0, predictRotationIterm.screenX1, predictRotationIterm.screenY1);
+    TrackerItem item = new TrackerItem(angletype, null, (float) predictRotationIterm.rot_x,
+            (float) predictRotationIterm.rot_y, (float) predictRotationIterm.rot_z);
+    mFrameRects.add(item);
+  }
+
+
+
+  public void getCurrentTypeList() {
+
+    listAngles_capture.add("左脸，数量：" + type1Sum + ((type1Sum < PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_LEFT, context)) ? "(不足)" : "(OK)"));
+    listAngles_capture.add("正脸，数量：" + type2Sum + ((type2Sum < PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_MIDDLE, context)) ? "(不足)" : "(OK)"));
+    listAngles_capture.add("右脸，数量：" + type3Sum + ((type3Sum < PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_RIGHT, context)) ? "(不足)" : "(OK)"));
+  }
+
+  public String getReminderMsgText() {
+    int maxLeft = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_LEFT, context);
+    int maxMiddle = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_MIDDLE, context);
+    int maxRight = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_RIGHT, context);
+    boolean b = false;
+    if (type1Sum < maxLeft
+            && type2Sum < maxMiddle
+            && type3Sum < maxRight) {
+      return "请将脸放在正中央";
+    } else {
+      StringBuffer sb = new StringBuffer();
+      sb.append("请将");
+      if (type1Sum < maxLeft) {
+        sb.append("左");
+        b = true;
+      }
+      if (type2Sum < maxMiddle) {
+        if (b) sb.append("/");
+        sb.append("正");
+        b = true;
+      }
+      if (type3Sum < maxRight) {
+        if (b) sb.append("/");
+        sb.append("右");
+      }
+      sb.append("脸放在正中央");
+      return sb.toString();
+    }
+  }
+
 }

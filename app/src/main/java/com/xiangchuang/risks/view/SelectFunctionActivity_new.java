@@ -26,6 +26,7 @@ import com.xiangchuangtec.luolu.animalcounter.view.ShowPollingActivity_new;
 import org.json.JSONObject;
 import org.tensorflow.demo.DetectorActivity;
 import org.tensorflow.demo.Global;
+import org.tensorflow.demo.SmallVideoActivity;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -57,6 +58,8 @@ public class SelectFunctionActivity_new extends BaseActivity {
     TextView mselectlipei;
     @BindView(R.id.rel_lipei)
     RelativeLayout relLipei;
+    @BindView(R.id.select_webview)
+    TextView selectWebview;
 
     private String companyname;
     private String en_id;
@@ -84,9 +87,9 @@ public class SelectFunctionActivity_new extends BaseActivity {
         } else {
             //企业（养殖场）
             rel_toubao.setVisibility(View.GONE);
-            if(MyApplication.isOpenLiPei){
+            if (MyApplication.isOpenLiPei) {
                 relLipei.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 relLipei.setVisibility(View.GONE);
             }
         }
@@ -157,7 +160,7 @@ public class SelectFunctionActivity_new extends BaseActivity {
     }
 
     @OnClick({R.id.select_toubao, R.id.select_lipei,
-            R.id.select_xunjiandianshu, R.id.iv_cancel, R.id.select_yulipei})
+            R.id.select_xunjiandianshu, R.id.iv_cancel, R.id.select_yulipei,  R.id.select_webview})
     public void onClick(View view) {
         switch (view.getId()) {
             //投保
@@ -189,16 +192,20 @@ public class SelectFunctionActivity_new extends BaseActivity {
                     openGPS1(SelectFunctionActivity_new.this);
                 } else {
                     checkBaoDan();
+//                    startActivity(new Intent(SelectFunctionActivity_new.this, SmallVideoActivity.class));
                 }
                 break;
+            case R.id.select_webview:
+                startActivity(new Intent(SelectFunctionActivity_new.this, MonitoringActivity.class));
             default:
                 break;
         }
 
 
     }
+
     private void collectToNetForLiPei() {
-        OkHttp3Util.doPost(Constants.LiSTART, null,new Callback() {
+        OkHttp3Util.doPost(Constants.LiSTART, null, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i(TAG, e.toString());
@@ -234,7 +241,6 @@ public class SelectFunctionActivity_new extends BaseActivity {
 
                                     }
                                 });
-
 
 
                             }
@@ -350,12 +356,5 @@ public class SelectFunctionActivity_new extends BaseActivity {
                 }
             }
         });
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
     }
 }

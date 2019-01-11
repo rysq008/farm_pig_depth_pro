@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">猪险</string>
+    <!--<string name="app_name">猪险</string>-->
+    <string name="app_name">猪险测试版</string>
     <string name="no_camera_permission_granted">No Camera permission granted.</string>
     <string name="loadImage">打开相册</string>
     <string name="description_info">Info</string>
@@ -7,6 +8,7 @@
     <string name="camera_error">This device doesn\'t support Camera2 API.</string>
     <string name="record">录制</string>
     <string name="stop">取消</string>
+    <string name="pause">暂停</string>
     <string name="dialog_title">提示</string>
     <string name="title_activity_login">Sign in</string>
 
@@ -69,4 +71,5 @@
     <string name="appwarning">开启定位权限才可以使用猪险app！</string>
     <string name="locationwarning">您还未开启GPS，现在去开启吗?</string>
     <string name="permission_request">This sample needs permission for camera and audio recording.</string>
+    <string name="title_activity_monitoring">MonitoringActivity</string>
 </resources>

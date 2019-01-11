@@ -55,6 +55,11 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+import static com.xiangchuangtec.luolu.animalcounter.MyApplication.isNoCamera;
+
+/**
+ * 预理赔
+ */
 public class PreparedLiPeiActivity_new extends BaseActivity {
     public static String TAG = "PreparedLiPeiActivity_new";
     @BindView(R.id.pre_zhushe)
@@ -85,6 +90,7 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
     private AMapLocationClient mLocationClient;
     private String msg;
     private List<SheListBean.DataOffLineBaodanBean> mSheBeans;
+    private boolean hasInNo = false;
 
     @Override
     protected int getLayoutId() {
@@ -216,9 +222,11 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
                                 if (status == 1) {
                                     String data = jsonObject.optString("data");
                                     mchuxiannum.setText(data);
+                                    hasInNo = true;
                                 } else {
                                     String msg = jsonObject.optString("msg");
                                     mchuxiannum.setText(msg);
+                                    hasInNo = false;
                                 }
 
                             } catch (Exception e) {
@@ -298,7 +306,7 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.prepared_begin:
-                if (null == mchuxiannum.getText().toString() || "".equals(mchuxiannum.getText().toString())) {
+                if (!hasInNo) {
                     Toast.makeText(MyApplication.getAppContext(), "保单号为空，无法申请预理赔。", Toast.LENGTH_LONG).show();
                 } else {
                     collectToNet();
@@ -347,6 +355,7 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
                                     str = stringBuffer.toString();
                                     Log.i("stringbuffer",str);
                                 }
+                                isNoCamera = false;
                                 PreferencesUtils.saveKeyValue(Constants.preVideoId,str , MyApplication.getAppContext());
                                 Global.model = Model.VERIFY.value();
                                 Intent intent = new Intent(PreparedLiPeiActivity_new.this, DetectorActivity.class);
@@ -355,7 +364,17 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
                                 intent.putExtra(Constants.reason, outreson);
                                 startActivity(intent);
                                 // finish();
-                            } else {
+                            } else if(bean.getStatus() == 0) {
+                                isNoCamera = true;
+                                Global.model = Model.VERIFY.value();
+                                PreferencesUtils.saveKeyValue(Constants.preVideoId,"" , MyApplication.getAppContext());
+                                Intent intent = new Intent(PreparedLiPeiActivity_new.this, DetectorActivity.class);
+                                intent.putExtra(Constants.sheId, sheId + "");
+                                intent.putExtra(Constants.inspectNo, mchuxiannum.getText().toString());
+                                intent.putExtra(Constants.reason, outreson);
+                                startActivity(intent);
+
+                            }else{
                                 AlertDialogManager.showMessageDialog(PreparedLiPeiActivity_new.this, "提示", bean.getMsg(), new AlertDialogManager.DialogInterface() {
                                     @Override
                                     public void onPositive() {
@@ -367,7 +386,7 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
 
                                     }
                                 });
-                                //Toast.makeText(MyApplication.getAppContext(), bean.getMsg(), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(MyApplication.getAppContext(), bean.getMsg(), Toast.LENGTH_LONG).show();
                             }
                         }
                     });
