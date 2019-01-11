@@ -50,6 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:textSize="14sp"
             android:text="账号:" />
 
         <EditText
@@ -60,8 +61,12 @@
             android:gravity="center"
             android:textColorHint="#ffff"
             android:textColor="#ffff"
-            android:text=""
+            android:textSize="14sp"
+            android:paddingEnd="30dp"
+            android:inputType="text"
+            android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
             android:hint="请输入账号"
+            android:singleLine="true"
             android:maxLines="1" />
     </LinearLayout>
 
@@ -94,6 +99,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:textSize="14sp"
             android:text="密码:" />
 
         <EditText
@@ -102,10 +108,11 @@
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:textSize="14sp"
+            android:paddingEnd="30dp"
             android:hint="请输入密码"
             android:textColorHint="#ffff"
             android:textColor="#ffff"
-            android:text=""
             android:inputType="textPassword"
             android:maxLines="1" />
 
@@ -113,21 +120,21 @@
 
     <ImageView
         android:id="@+id/pass_show"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="20dp"
+        android:layout_height="12dp"
         android:layout_alignEnd="@+id/linzhanghao"
         android:layout_below="@+id/linzhanghao"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="22dp"
         android:layout_marginEnd="5dp"
         android:background="@drawable/bg_pass" />
 
     <ImageView
         android:id="@+id/pass_hide"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="20dp"
+        android:layout_height="12dp"
         android:layout_alignEnd="@+id/linzhanghao"
         android:layout_below="@+id/linzhanghao"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="22dp"
         android:layout_marginEnd="5dp"
         android:background="@drawable/bg_pass_none"
         android:visibility="gone" />
