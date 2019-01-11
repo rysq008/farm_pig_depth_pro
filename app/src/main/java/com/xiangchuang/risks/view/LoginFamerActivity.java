@@ -162,6 +162,11 @@ public class LoginFamerActivity extends BaseActivity {
 
     }
 
+    /**
+     * 登录
+     * @param musername
+     * @param muserpass
+     */
     private void getDataFromNet(String musername, String muserpass) {
         Map mapbody = new HashMap();
         mapbody.put(Constants.account, musername);
