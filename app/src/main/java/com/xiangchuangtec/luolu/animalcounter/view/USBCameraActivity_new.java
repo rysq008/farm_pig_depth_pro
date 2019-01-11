@@ -317,6 +317,7 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
         });
         //重新采集
         mGoonButton = findViewById(R.id.usb_goon_button);
+        mGoonButton.setText("重新\n点数");
         mGoonButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
