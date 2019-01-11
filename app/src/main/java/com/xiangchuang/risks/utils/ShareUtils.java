@@ -30,16 +30,17 @@ public class ShareUtils {
     private static SharedPreferences preferences;
 
     public static final void init(Context context) {
-        preferences = PreferenceManager.getDefaultSharedPreferences(context);
-//        preferences = context.getSharedPreferences("yabinlee",Context.MODE_PRIVATE);
+        if (null == preferences)
+            preferences = PreferenceManager.getDefaultSharedPreferences(context);
+//        preferences = context.getSharedPreferences(context.getPackageName()+"_preferences",Context.MODE_PRIVATE);
     }
 
     public static final String getHost(String key) {
         return preferences.getString(key, "http://60.205.209.245:8081/nongxian2/");
     }
 
-    public static final void saveHost(String key, String val) {
-        preferences.edit().putString(key, val).apply();
+    public static final boolean saveHost(String key, String val) {
+        return preferences.edit().putString(key, val).commit();
     }
 
     public static final void saveString(String key, String val) {
@@ -131,11 +132,12 @@ public class ShareUtils {
                                                         if (TextUtils.isEmpty(str)) return;
                                                         if (!slist.contains(str))
                                                             ShareUtils.saveString(et.getText().toString().trim(), "ip");
-                                                        ShareUtils.saveHost("host", str);
-                                                        ((Activity) ct).finish();
-                                                        Intent it = ct.getPackageManager().getLaunchIntentForPackage(ct.getPackageName());
-                                                        it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                                                        ct.startActivity(it);
+                                                        if (ShareUtils.saveHost("host", str)) {
+                                                            ((Activity) ct).finish();
+                                                            Intent it = ct.getPackageManager().getLaunchIntentForPackage(ct.getPackageName());
+                                                            it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                                            ct.startActivity(it);
+                                                        }
                                                     }
                                                 }).setNegativeButton("取消", null).show();
 
@@ -164,13 +166,14 @@ public class ShareUtils {
                                                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                                                             String str = adapterView.getAdapter().getItem(i).toString();
                                                             et.setText(str);//把选择的选项内容展示在EditText上
-                                                            ShareUtils.saveHost("host", str);
                                                             listPopupWindow.dismiss();//如果已经选择了，隐藏起来
                                                             enterDialog.cancel();
-                                                            ((Activity) ct).finish();
-                                                            Intent it = ct.getPackageManager().getLaunchIntentForPackage(ct.getPackageName());
-                                                            it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                                                            ct.startActivity(it);
+                                                            if (ShareUtils.saveHost("host", str)) {
+                                                                ((Activity) ct).finish();
+                                                                Intent it = ct.getPackageManager().getLaunchIntentForPackage(ct.getPackageName());
+                                                                it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                                                ct.startActivity(it);
+                                                            }
                                                         }
                                                     });
                                                     listPopupWindow.show();//把ListPopWindow展示出来
