@@ -17,10 +17,10 @@
         android:id="@+id/have_msg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:textSize="16sp"
-        android:text="预理赔库找到如下相似对象！" />
+        android:layout_marginStart="20dp"
+        android:text="预理赔库找到如下相似对象！"
+        android:textSize="16sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -38,8 +38,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:gravity="left"
-                android:text="相似度"
-                android:textSize="16sp"/>
+                android:text="相似度："
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/xiangsi"
@@ -48,18 +48,32 @@
                 android:layout_marginLeft="20dp"
                 android:gravity="center"
                 android:text="30%"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/pigfleg"
-            android:layout_width="100dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="20dp"
-            android:gravity="left"
-            android:text="猪舍-猪圈"
-            android:textSize="16sp"/>
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:gravity="left"
+                android:text="猪舍名："
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/pigfleg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:gravity="left"
+                android:text="猪舍-猪圈"
+                android:textSize="16sp" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -73,7 +87,7 @@
                 android:layout_marginLeft="20dp"
                 android:gravity="left"
                 android:text="预理赔时间："
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/baodantime"
@@ -81,7 +95,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:gravity="center"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -97,7 +111,7 @@
                 android:layout_marginLeft="20dp"
                 android:gravity="left"
                 android:text="理赔时间："
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/tv_compensatetime"
@@ -105,7 +119,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:gravity="center"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -128,7 +142,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:gravity="center"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -153,7 +167,7 @@
                 android:layout_marginLeft="20dp"
                 android:gravity="center"
                 android:text=""
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
         </LinearLayout>
 
     </LinearLayout>

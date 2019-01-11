@@ -799,7 +799,7 @@ public class MediaProcessor {
             llSeqNo.setVisibility(View.GONE);
         }
         xiangsi.setText(similarityDegree);
-        pigfleg.setText(msheName + "舍");
+        pigfleg.setText(msheName);
         baodantime.setText(mpreCompensateTime);
         baodannum.setText(minsureNo);
         have_msg.setText(showmsg);
