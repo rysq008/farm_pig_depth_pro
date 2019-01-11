@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 
 
+import com.xiangchuang.risks.utils.ShareUtils;
+
 import net.gotev.uploadservice.UploadService;
 import net.gotev.uploadservice.okhttp.OkHttpStack;
 
@@ -21,6 +23,7 @@ import innovation.biz.classifier.BreedingPigFaceDetectTFlite;
 import innovation.crash.CrashHandler;
 import innovation.location.LocationManager_new;
 import innovation.network_status.NetworkChangedReceiver;
+import innovation.utils.HttpUtils;
 import okhttp3.OkHttpClient;
 
 
@@ -67,6 +70,8 @@ public class MyApplication extends Application {
         super.onCreate();
         mCrashHandler = CrashHandler.getInstance();
         mCrashHandler.init(getApplicationContext());
+        ShareUtils.init(this);
+        HttpUtils.baseUrl = ShareUtils.getHost("host");
         UploadService.NAMESPACE = BuildConfig.APPLICATION_ID;
         OkHttpClient client = new OkHttpClient();
         // create your own OkHttp client
