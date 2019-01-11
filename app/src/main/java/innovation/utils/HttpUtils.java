@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.xiangchuang.risks.utils.ShareUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -94,10 +95,10 @@ public class HttpUtils {
     public static String post(String url, RequestBody body) throws IOException {
         Request request = new Request.Builder()
                 .url(url)
-                .header("AppKeyAuthorization","hopen")
+                .header("AppKeyAuthorization", "hopen")
                 .header("Content-Type", "application/x-www-form-urlencoded")
                 // TODO: 2018/8/16 By:LuoLu  添加请求头 animalType Global.ANIMAL_TYPE)  String.valueOf(Global.ANIMAL_TYPE)
-                .header("animalType", String.valueOf(ANIMAL_TYPE) )
+                .header("animalType", String.valueOf(ANIMAL_TYPE))
                 .post(body)
                 .build();
         OkHttpClient client = new OkHttpClient();
