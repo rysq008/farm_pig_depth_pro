@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -20,6 +21,7 @@ import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.utils.AppManager;
+import com.xiangchuang.risks.utils.ShareUtils;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
 import com.xiangchuang.risks.base.BaseActivity;
@@ -57,6 +59,8 @@ public class LoginFamerActivity extends BaseActivity {
     EditText mloginfamerpass;
     @BindView(R.id.pass_show)
     ImageView passshow;
+    @BindView(R.id.pass_tv)
+    TextView passTv;
     @BindView(R.id.pass_hide)
     ImageView passhide;
     private static final String PERMISSION_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
@@ -128,6 +132,8 @@ public class LoginFamerActivity extends BaseActivity {
             mloginfameruserid.setText(PreferencesUtils.getStringValue(Constants.username, MyApplication.getAppContext()));
             mloginfamerpass.setText(PreferencesUtils.getStringValue(Constants.password, MyApplication.getAppContext()));
         }
+
+        ShareUtils.setUpGlobalHost(LoginFamerActivity.this,passTv);
     }
 
     @OnClick({R.id.loginfamer_login, R.id.pass_hide, R.id.pass_show})
