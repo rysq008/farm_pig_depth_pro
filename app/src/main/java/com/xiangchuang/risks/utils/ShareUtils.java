@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,12 +32,12 @@ public class ShareUtils {
 
     public static final void init(Context context) {
         if (null == preferences)
-            preferences = PreferenceManager.getDefaultSharedPreferences(context);
-//        preferences = context.getSharedPreferences(context.getPackageName()+"_preferences",Context.MODE_PRIVATE);
+//            preferences = PreferenceManager.getDefaultSharedPreferences(context);
+            preferences = context.getSharedPreferences(context.getPackageName() + "_pig", Context.MODE_PRIVATE);
     }
 
     public static final String getHost(String key) {
-        return preferences.getString(key, "http://60.205.209.245:8081/nongxian2/");
+        return null == preferences ? "http://60.205.209.245:8081/nongxian2/" : preferences.getString(key, "http://60.205.209.245:8081/nongxian2/");
     }
 
     public static final boolean saveHost(String key, String val) {
@@ -140,6 +139,7 @@ public class ShareUtils {
                                                         if (!slist.contains(str))
                                                             ShareUtils.saveString(et.getText().toString().trim(), "ip");
                                                         if (ShareUtils.saveHost("host", str)) {
+                                                            HttpUtils.resetIp(ShareUtils.getHost("host"));
                                                             ((Activity) ct).finish();
                                                             Intent it = ct.getPackageManager().getLaunchIntentForPackage(ct.getPackageName());
                                                             it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -160,7 +160,7 @@ public class ShareUtils {
                                                 //左右上下分别对应 0  1  2  3
                                                 if (event.getX() > et.getWidth() - et.getCompoundDrawables()[2].getBounds().width()) {
                                                     //点击之后执行的事件
-                                                    Toast.makeText(ct, "右边的drawright被点击了", Toast.LENGTH_SHORT).show();
+//                                                    Toast.makeText(ct, "右边的drawright被点击了", Toast.LENGTH_SHORT).show();
                                                     //textView.setText("我被点击了");
                                                     final ListPopupWindow listPopupWindow;
                                                     listPopupWindow = new ListPopupWindow(ct);
@@ -176,6 +176,7 @@ public class ShareUtils {
                                                             listPopupWindow.dismiss();//如果已经选择了，隐藏起来
                                                             enterDialog.cancel();
                                                             if (ShareUtils.saveHost("host", str)) {
+                                                                HttpUtils.resetIp(ShareUtils.getHost("host"));
                                                                 ((Activity) ct).finish();
                                                                 Intent it = ct.getPackageManager().getLaunchIntentForPackage(ct.getPackageName());
                                                                 it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
