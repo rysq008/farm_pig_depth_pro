@@ -55,7 +55,7 @@ public class BreedingPigFaceDetectTFlite {
     // 2018/12/18 hedazhi edit start
     //private static final float MIN_CONFIDENCE = (float) 0.7;
 
-    // 检测模型分数阈值：0.5
+    // 检测模型分数阈值：0.65
     private static final float MIN_CONFIDENCE = 0.5f;
 
     // 2018/12/18 hedazhi edit end

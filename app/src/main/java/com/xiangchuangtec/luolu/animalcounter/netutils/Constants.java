@@ -13,6 +13,10 @@ public class Constants {
 //    public static final String XUNJIANCHAXUN = BASE + "result";
 //    public static final String XUNFINISH = BASE + "finish";
 //    public static final String NUMFIND = BASE + "search";
+    /**
+     * 标记是否登录的key
+     */
+    public static final String ISLOGIN = "islogin";
 
     public static final String username = "username";
     public static final String password = "password";

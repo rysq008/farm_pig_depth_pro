@@ -321,6 +321,7 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
             case R.id.btn_wancheng:
 
 
+
                 if ("".equals(tv_qiyename.getText().toString())) {
                     toastUtils.showLong(this, "企业名称为空");
                     return;
@@ -401,13 +402,18 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
                     return;
                 }
 
-                if (!isMobileNO(tv_baodan_tel.getText().toString().trim())) {
-                    Toast.makeText(getApplicationContext(), "手机号格式有误", Toast.LENGTH_SHORT).show();
-                    return;
-                } else if (isPhone(tv_baodan_tel.getText().toString().trim())) {
-                    Toast.makeText(getApplicationContext(), "电话号格式异常", Toast.LENGTH_SHORT).show();
+                if(!isMobileNO(tv_baodan_tel.getText().toString().trim()) && !isPhone(tv_baodan_tel.getText().toString().trim())){
+                    Toast.makeText(getApplicationContext(), "联系方式填写有误", Toast.LENGTH_SHORT).show();
                     return;
                 }
+
+//                if (!isMobileNO(tv_baodan_tel.getText().toString().trim())) {
+//                    Toast.makeText(getApplicationContext(), "手机号格式有误", Toast.LENGTH_SHORT).show();
+//                    return;
+//                } else if (!isPhone(tv_baodan_tel.getText().toString().trim())) {
+//                    Toast.makeText(getApplicationContext(), "电话号格式异常", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
 
                 if ("".equals(tvBaodanAddress.getText().toString())) {
                     toastUtils.showLong(this, "企业地址为空");
@@ -550,9 +556,9 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case REQUESTCODE_TAKE:// 调用相机拍照
-                if(data !=null){
+//                if(data !=null){
                     crop(Environment.getExternalStorageDirectory() + "/" + IMAGE_FILE_NAME);
-                }
+//                }
                 break;
             case REQUESTCODE_CUTTING:// 取得裁剪后的图片
                 if (data != null) {

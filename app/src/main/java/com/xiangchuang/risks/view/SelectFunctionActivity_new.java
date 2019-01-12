@@ -1,13 +1,18 @@
 package com.xiangchuang.risks.view;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,12 +65,21 @@ public class SelectFunctionActivity_new extends BaseActivity {
     RelativeLayout relLipei;
     @BindView(R.id.select_webview)
     TextView selectWebview;
+    @BindView(R.id.tv_exit)
+    TextView tvExit;
+    @BindView(R.id.rl_back)
+    RelativeLayout rlBack;
+    @BindView(R.id.rl_edit)
+    RelativeLayout rlEdit;
 
     private String companyname;
     private String en_id;
     private int userid;
     private String companyfleg;
     private boolean isLiPei = true;
+
+    private PopupWindow pop;
+    private TextView loginExit;
 
     @Override
     protected int getLayoutId() {
@@ -84,7 +98,11 @@ public class SelectFunctionActivity_new extends BaseActivity {
         if ("1".equals(companyfleg)) {
             rel_toubao.setVisibility(View.VISIBLE);
             relLipei.setVisibility(View.VISIBLE);
-        } else {
+            iv_cancel.setVisibility(View.VISIBLE);
+            tvExit.setVisibility(View.GONE);
+        } else if("2".equals(companyfleg)){
+            iv_cancel.setVisibility(View.GONE);
+            tvExit.setVisibility(View.VISIBLE);
             //企业（养殖场）
             rel_toubao.setVisibility(View.GONE);
             if (MyApplication.isOpenLiPei) {
@@ -93,6 +111,17 @@ public class SelectFunctionActivity_new extends BaseActivity {
                 relLipei.setVisibility(View.GONE);
             }
         }
+
+        pop = new PopupWindow(SelectFunctionActivity_new.this);
+        View popview = getLayoutInflater().inflate(R.layout.item_setting, null);
+        loginExit = popview.findViewById(R.id.login_exit);
+        pop.setWidth(300);
+        pop.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+        pop.setBackgroundDrawable(new BitmapDrawable());
+        pop.setFocusable(true);
+        pop.setOutsideTouchable(true);
+        pop.setContentView(popview);
+
     }
 
 
@@ -160,7 +189,7 @@ public class SelectFunctionActivity_new extends BaseActivity {
     }
 
     @OnClick({R.id.select_toubao, R.id.select_lipei,
-            R.id.select_xunjiandianshu, R.id.iv_cancel, R.id.select_yulipei,  R.id.select_webview})
+            R.id.select_xunjiandianshu, R.id.iv_cancel, R.id.select_yulipei,  R.id.select_webview, R.id.tv_exit})
     public void onClick(View view) {
         switch (view.getId()) {
             //投保
@@ -197,6 +226,37 @@ public class SelectFunctionActivity_new extends BaseActivity {
                 break;
             case R.id.select_webview:
                 startActivity(new Intent(SelectFunctionActivity_new.this, MonitoringActivity.class));
+                break;
+            case R.id.tv_exit:
+                pop.showAsDropDown(rlEdit);
+                loginExit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        pop.dismiss();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(SelectFunctionActivity_new.this)
+                                .setIcon(R.drawable.cowface).setTitle("提示")
+                                .setMessage("退出登录")
+                                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //如果退出，清空保存的相关状态， 跳转到登录页
+                                        PreferencesUtils.removeAllKey(SelectFunctionActivity_new.this);
+                                        Intent addIntent = new Intent(SelectFunctionActivity_new.this, LoginFamerActivity.class);
+                                        startActivity(addIntent);
+                                        finish();
+                                    }
+                                })
+                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                    }
+                                });
+                        builder.setCancelable(false);
+                        builder.show();
+                    }
+                });
+                break;
             default:
                 break;
         }
@@ -357,4 +417,27 @@ public class SelectFunctionActivity_new extends BaseActivity {
             }
         });
     }
+
+
+    private long firstTime = 0;
+
+    @Override
+    public void onBackPressed() {
+        //判断是养殖场登录 可直接退出
+        if("2".equals(companyfleg)){
+            long secondTime = System.currentTimeMillis();
+            if (secondTime - firstTime > 2000) {
+                Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                firstTime = secondTime;
+            } else {
+                android.os.Process.killProcess(android.os.Process.myPid());
+                System.exit(0);
+            }
+        }else{
+            finish();
+        }
+
+
+    }
+
 }
