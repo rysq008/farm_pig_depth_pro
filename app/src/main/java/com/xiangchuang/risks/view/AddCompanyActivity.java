@@ -550,7 +550,9 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case REQUESTCODE_TAKE:// 调用相机拍照
-                crop(Environment.getExternalStorageDirectory() + "/" + IMAGE_FILE_NAME);
+                if(data !=null){
+                    crop(Environment.getExternalStorageDirectory() + "/" + IMAGE_FILE_NAME);
+                }
                 break;
             case REQUESTCODE_CUTTING:// 取得裁剪后的图片
                 if (data != null) {
