@@ -69,7 +69,7 @@ public class MyApplication extends Application {
         mCrashHandler = CrashHandler.getInstance();
         mCrashHandler.init(getApplicationContext());
         ShareUtils.init(this);
-        HttpUtils.baseUrl = ShareUtils.getHost("host");
+//        HttpUtils.baseUrl = ShareUtils.getHost("host");
         UploadService.NAMESPACE = BuildConfig.APPLICATION_ID;
         OkHttpClient client = new OkHttpClient();
         // create your own OkHttp client

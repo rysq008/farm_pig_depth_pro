@@ -51,6 +51,9 @@ import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * @author 56861
+ */
 public class LoginFamerActivity extends BaseActivity {
 
     @BindView(R.id.loginfamer_login)
@@ -124,15 +127,23 @@ public class LoginFamerActivity extends BaseActivity {
                             });
 
                 }
-
                 @Override
                 public void onNegative() {
                     finish();
                 }
             });
         }else{
-            mloginfameruserid.setText(PreferencesUtils.getStringValue(Constants.username, MyApplication.getAppContext()));
-            mloginfamerpass.setText(PreferencesUtils.getStringValue(Constants.password, MyApplication.getAppContext()));
+            //根据保存的标记判断是否登录
+            if(PreferencesUtils.getBooleanValue(Constants.ISLOGIN, MyApplication.getAppContext())){
+                String type = PreferencesUtils.getStringValue(Constants.companyfleg, MyApplication.getAppContext());
+                if(type.equals("1")){
+                    goToActivity(CompanyActivity.class, null);
+                    finish();
+                }else if(type.equals("2")){
+                    goToActivity(SelectFunctionActivity_new.class, null);
+                    finish();
+                }
+            }
         }
 
         ShareUtils.setUpGlobalHost(LoginFamerActivity.this,passTv);
@@ -176,7 +187,7 @@ public class LoginFamerActivity extends BaseActivity {
      * @param muserpass
      */
     private void getDataFromNet(String musername, String muserpass) {
-        Map mapbody = new HashMap();
+        Map<String, String> mapbody = new HashMap<>();
         mapbody.put(Constants.account, musername);
         mapbody.put(Constants.password, muserpass);
         mProgressDialog.show();
@@ -226,7 +237,9 @@ public class LoginFamerActivity extends BaseActivity {
                                     PreferencesUtils.saveKeyValue(Constants.companyfleg, type + "", MyApplication.getAppContext());
                                     PreferencesUtils.saveKeyValue(Constants.username, musername + "", MyApplication.getAppContext());
                                     PreferencesUtils.saveKeyValue(Constants.password, muserpass + "", MyApplication.getAppContext());
-                                    //1 保险公司  2 企业
+                                    PreferencesUtils.saveBooleanValue(Constants.ISLOGIN, true, MyApplication.getAppContext());
+
+                                    //1 保险公司  2 猪场企业
                                     if (type == 1) {
                                         JSONObject adminUser = data.getJSONObject("adminUser");
                                         String deptName = adminUser.getString("deptName");
@@ -238,6 +251,7 @@ public class LoginFamerActivity extends BaseActivity {
                                         PreferencesUtils.saveKeyValue(Constants.deptId, deptId + "", MyApplication.getAppContext());
                                         PreferencesUtils.saveKeyValue(Constants.id, id + "", MyApplication.getAppContext());
                                         goToActivity(CompanyActivity.class, null);
+                                        finish();
                                     } else {
                                         JSONObject enUser = data.getJSONObject("enUser");
                                         int enId = enUser.getInt("enId");
@@ -247,6 +261,7 @@ public class LoginFamerActivity extends BaseActivity {
                                         PreferencesUtils.saveKeyValue(Constants.companyname, enName, MyApplication.getAppContext());
                                         PreferencesUtils.saveIntValue(Constants.en_user_id, enUserId, MyApplication.getAppContext());
                                         goToActivity(SelectFunctionActivity_new.class, null);
+                                        finish();
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
