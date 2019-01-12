@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.widget.Toast;
 
 import com.xiangchuang.risks.utils.ShareUtils;
 
@@ -70,6 +71,7 @@ public class MyApplication extends Application {
         mCrashHandler.init(getApplicationContext());
         ShareUtils.init(this);
         HttpUtils.baseUrl = ShareUtils.getHost("host");
+        HttpUtils.resetIp(HttpUtils.baseUrl);
         UploadService.NAMESPACE = BuildConfig.APPLICATION_ID;
         OkHttpClient client = new OkHttpClient();
         // create your own OkHttp client
@@ -86,6 +88,12 @@ public class MyApplication extends Application {
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+//                if(null == acontext)
+//                {
+//                    HttpUtils.baseUrl = ShareUtils.getHost("host");
+//                    HttpUtils.resetIp(HttpUtils.baseUrl);
+//                    Toast.makeText(activity, "------->>"+HttpUtils.baseUrl, Toast.LENGTH_LONG).show();
+//                }
                 acontext = new WeakReference<>(activity);
             }
 

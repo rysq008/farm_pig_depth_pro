@@ -6,7 +6,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.xiangchuang.risks.utils.ShareUtils;
+import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -85,6 +85,39 @@ public class HttpUtils {
     public static String GET_SMSCODE_URL = baseUrl + "app/sendcode";
     //注册接口
     public static String GET_REGISTER_URL = baseUrl + "app/register";
+
+    public static void resetIp(String baseUrl) {
+        HttpUtils.baseUrl = baseUrl;
+        Constants.resetBaseIp(baseUrl);
+        //新增投保保单接口
+        INSUR_NEW_URL = baseUrl + "baodan/addApp";
+        //新增投保保单接口
+        INSUR_UPDATE_URL = baseUrl + "baodan/updateApp";
+        //投保保单查询接口
+        INSUR_QUERY_URL = baseUrl + "baodan/detailApp";
+        //投保保单查询接口(根据临时保单号、姓名、身份证号查询)
+        INSUR_DETAIL_QUERY_URL = baseUrl + "baodan/detailQueryApp";
+        //新增牲畜信息接口
+        INSUR_ADDPIG_URL = baseUrl + "pigInfo/addApp";
+        //zip文件上传接口
+        PIG_FILEUPLOAD = baseUrl + "pigApp/upload";
+        //图片上传接口
+        PIG_IMAGEUPLOAD = baseUrl + "pigApp/uploadImage";
+        //    //投保建库
+//    PIG_BUILD = baseUrl + "pigApp/build";
+        //建库
+        PIG_BUILD = baseUrl + "pigApp/cow";
+        //模型查询结果
+        PIG_BUILD_RESULT = baseUrl + "pigApp/queryResult";
+        //新增理赔
+        LIPEI_NEW_URL = baseUrl + "pigLipei/addApp";
+        //理赔验证
+        PIG_VERIFY = baseUrl + "pigApp/recognition";
+        //短信验证码接口
+        GET_SMSCODE_URL = baseUrl + "app/sendcode";
+        //注册接口
+        GET_REGISTER_URL = baseUrl + "app/register";
+    }
 
     /**
      * @param url
