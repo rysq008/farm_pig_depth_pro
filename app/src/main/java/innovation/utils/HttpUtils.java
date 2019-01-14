@@ -119,6 +119,10 @@ public class HttpUtils {
         GET_REGISTER_URL = baseUrl + "app/register";
     }
 
+    public static boolean isOfficialHost() {
+        return "http://60.205.209.245:8081/nongxian2/".equals(HttpUtils.baseUrl);
+    }
+
     /**
      * @param url
      * @param body
