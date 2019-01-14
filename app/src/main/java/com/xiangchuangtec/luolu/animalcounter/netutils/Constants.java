@@ -156,7 +156,8 @@ public class Constants {
     public static String INSURELIST = BASENEW + "ftnInsure/insureList";
 
     public static void resetBaseIp(String host) {
-        BASENEW = /*HttpUtils.baseUrl*/host + "app/";
+        HttpUtils.baseUrl = host;
+        BASENEW = HttpUtils.baseUrl + "app/";
         LOGINURLNEW = BASENEW + "ftnLogin";
 
         ZHUSHESHOW = BASENEW + "ftnShe/list";

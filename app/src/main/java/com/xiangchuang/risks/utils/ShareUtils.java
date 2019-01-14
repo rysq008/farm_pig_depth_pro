@@ -114,12 +114,12 @@ public class ShareUtils {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
                                     String pwd = edittext.getText().toString().trim();
-                                    Toast.makeText(ct, "pwd=" + pwd, Toast.LENGTH_SHORT).show();
-                                    if ("http://60.205.209.245:8081/nongxian2/".equals(HttpUtils.baseUrl)) {
-                                        Toast.makeText(ct, "当前处于正式环境", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Toast.makeText(ct, "当前处于测试环境", Toast.LENGTH_SHORT).show();
-                                    }
+//                                    Toast.makeText(ct, "pwd=" + pwd, Toast.LENGTH_SHORT).show();
+//                                    if ("http://60.205.209.245:8081/nongxian2/".equals(HttpUtils.baseUrl)) {
+//                                        Toast.makeText(ct, "当前处于正式环境", Toast.LENGTH_SHORT).show();
+//                                    } else {
+//                                        Toast.makeText(ct, "当前处于测试环境", Toast.LENGTH_SHORT).show();
+//                                    }
                                     if (pwd.equals("321")) {
 
                                         EditText et = new EditText(ct);
