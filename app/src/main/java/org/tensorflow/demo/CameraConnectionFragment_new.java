@@ -193,7 +193,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
                 }
             };
     private boolean mManualFocusEngaged;
-    private static Activity activity;
+    private Activity activity;
     private CameraCharacteristics characteristics;
     public static TextView textSensorExposureTime;
     private File mfile;
@@ -219,21 +219,21 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
      */
     public static AutoFitTextureView textureView;
 
-    private static RelativeLayout mReCordLayout;
+    private RelativeLayout mReCordLayout;
     /**
      * Button to record video
      */
-    private static TextView mRecordControl;
-    private static View mRecordSwitch;
+    private TextView mRecordControl;
+    private View mRecordSwitch;
     private TextView mRecordSwitchTxt;
     private View mRecordVerify;
     private TextView mRecordVerifyTxt;
 
-    private static SendView mSendView;
+    private SendView mSendView;
 
     //haojie add
     private RelativeLayout mToolLayout;
-    private static long tmieVideoStart;
+    private long tmieVideoStart;
     private long tmieVideoEnd;
 
     //全局定义
@@ -399,7 +399,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
      *
      * @param text The message to show
      */
-    public static void showToast(final String text) {
+    public void showToast(final String text) {
         if (activity != null) {
             activity.runOnUiThread(
                     new Runnable() {
@@ -607,6 +607,65 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
 
     @Override
     public void onStop() {
+
+        try {
+            if (mMediaRecorder == null) {
+                mMediaRecorder = new MediaRecorder();
+            }
+            Global.VIDEO_PROCESS = false;
+            // 录制、暂停按钮所在布局隐藏
+            mReCordLayout.setVisibility(View.GONE);
+            mIsRecordingVideo = false;
+            mRecordControl.setText(R.string.record);
+
+            mRecordSwitch.setEnabled(true);
+            // 停止视频录制
+            Log.i("停止视频录制", "start ");
+
+            try{
+                TimerTask timerTask = new TimerTask() {
+                    @Override
+                    public void run() {
+                        collectNumberHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    mMediaRecorder.stop();
+                                } catch (IllegalStateException e) {
+                                    Log.e(ContentValues.TAG, " mMediaRecorder.stop:Exception "+e);
+                                    // TODO 如果当前java状态和jni里面的状态不一致，
+                                    //e.printStackTrace();
+                                    mMediaRecorder = null;
+                                    mMediaRecorder = new MediaRecorder();
+                                }
+                                mMediaRecorder.reset();
+                            }
+                        });
+                    }
+                };
+                new Timer().schedule(timerTask,30);
+            }catch(RuntimeException e){
+                Log.e("-----停止视频录制-----------","---->>>>>>>>>"+e);
+                e.printStackTrace();
+            }
+            Log.i("停止视频录制", "end ");
+        } catch (WindowManager.BadTokenException e) {
+            //use a log message
+            AlertDialog.Builder builderApplyFinish = new AlertDialog.Builder(activity)
+                    .setIcon(R.drawable.cowface)
+                    .setTitle("提示")
+                    .setMessage("文件处理异常！！")
+                    .setPositiveButton("退出", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            activity.finish();
+                        }
+                    });
+
+            builderApplyFinish.setCancelable(false);
+            builderApplyFinish.show();
+        }
         super.onStop();
     }
 
@@ -626,7 +685,14 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
     public void onResume() {
         super.onResume();
         startBackgroundThread();
+        //删除视频zip文件
+        Global.mediaInsureItem.zipVideoNameDel();
+        //删除视频文件
+        Global.mediaInsureItem.currentDel();
+        //创建视频路径
+        Global.mediaInsureItem.currentInit();
 
+        collectNumberHandler.sendEmptyMessage(2);
         // When the screen is turned off and turned back on, the SurfaceTexture is already
         // available, and "onSurfaceTextureAvailable" will not be called. In that case, we can open
         // a camera and start preview from here (otherwise, we wait until the surface is ready in
@@ -638,6 +704,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
         } else {
             textureView.setSurfaceTextureListener(surfaceTextureListener);
         }
+
     }
 
     @Override
@@ -867,22 +934,6 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
                 }
 
                 CameraConnectionFragment_new.this.cameraId = cameraId;
-
-//                // TODO: 2018/10/15 By:LuoLu
-//                Range<Integer> range2 = characteristics.get(CameraCharacteristics.SENSOR_INFO_SENSITIVITY_RANGE);
-//                int max1 = range2.getUpper();//10000
-//                int min1 = range2.getLower();//100
-////                int iso = ((progress * (max1 - min1)) / 100 + min1);
-////                mPreviewBuilder.set(CaptureRequest.SENSOR_SENSITIVITY, iso);
-//                LOGGER.i("range2 max："+ max1);
-//                LOGGER.i("range2 min："+ min1);
-//
-//                Range<Long> range = characteristics.get(CameraCharacteristics.SENSOR_INFO_EXPOSURE_TIME_RANGE);
-//                long max = range.getUpper();
-//                long min = range.getLower();
-//                long ae = (((max - min)) / 100 + min);
-//                previewRequestBuilder.set(CaptureRequest.SENSOR_EXPOSURE_TIME, ae);
-//                textSensorExposureTime.setText("曝光时间：" + ae);
 
                 cameraConnectionCallback.onPreviewSizeChosen(previewSize, 0);
                 return;
@@ -1503,12 +1554,6 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
                     if (mReCordLayout != null) {
                         mReCordLayout.setVisibility(View.VISIBLE);
                     }
-
-//                    new DetectorActivity_new().reInitCurrentCounter(0, 0, 0);
-//                    if (activity != null) {
-//                        new MultiBoxTracker_new(activity).reInitCounter(0, 0, 0);
-//                    }
-
                     if (activity instanceof DetectorActivity) {
                         ((DetectorActivity) activity).reInitCurrentCounter(0, 0, 0);
                         DetectorActivity.tracker.reInitCounter(0, 0, 0);
@@ -1578,7 +1623,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
                     dialog.dismiss();
                     activity.startActivity(new Intent(activity, DetectorActivity_new.class));
                     //删除视频zip文件
-//                    Global.mediaInsureItem.zipVideoNameDel();
+                    Global.mediaInsureItem.zipVideoNameDel();
                     //删除视频文件
                     Global.mediaInsureItem.currentDel();
                     //创建视频路径

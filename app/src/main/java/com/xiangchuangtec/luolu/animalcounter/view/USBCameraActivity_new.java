@@ -3,6 +3,7 @@ package com.xiangchuangtec.luolu.animalcounter.view;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
@@ -37,6 +38,7 @@ import com.xiangchuang.risks.model.bean.RecognitionResult;
 import com.xiangchuang.risks.utils.CommonUtils;
 import com.xiangchuang.risks.utils.CounterHelper;
 import com.xiangchuangtec.luolu.animalcounter.JuanCountAdapter;
+import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
 
 import org.json.JSONObject;
@@ -413,7 +415,6 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
                 dialogcreate.show();
             }
         });
-
     }
 
 
@@ -474,48 +475,83 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
             @Override
             public void onClick(View v) {
                 showPop();
-                List<RecognitionResult> results = new ArrayList<>(mRecognitionResults);
-                CounterHelper.uploadRecognitionResult(mSheId, mSheName, (int) ((System.currentTimeMillis() - mStartTime) / 1000),
-                        results, USBCameraActivity_new.this, new CounterHelper.OnUploadResultListener() {
-                            @Override
-                            public void onCompleted(boolean succeed, String resutl) {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        pop.dismiss();
-                                        if (succeed) {
-                                            try {
-                                                JSONObject jsonObject = new JSONObject(resutl);
-                                                int status = jsonObject.getInt("status");
-                                                String msg = jsonObject.getString("msg");
-                                                if (status != 1) {
-                                                    Toast.makeText(USBCameraActivity_new.this, "上传失败！"+msg, Toast.LENGTH_SHORT).show();
-                                                } else {
-                                                    Toast.makeText(USBCameraActivity_new.this, "上传成功！", Toast.LENGTH_SHORT).show();
-                                                    new Handler().postDelayed(new Runnable() {
-                                                        @Override
-                                                        public void run() {
-                                                            finish();
-                                                        }
-                                                    }, 500);
-                                                }
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                                Toast.makeText(USBCameraActivity_new.this, "上传失败！", Toast.LENGTH_SHORT).show();
-                                            }
-                                        } else {
-                                            Toast.makeText(USBCameraActivity_new.this, "上传失败！", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                });
-                            }
-                        });
+                upResult();
             }
         });
 
         dialog.getWindow().setGravity(Gravity.CENTER);
         dialog.setCancelable(true);
     }
+
+    /**
+     * 上传操作
+     */
+    private void upResult(){
+        List<RecognitionResult> results = new ArrayList<>(mRecognitionResults);
+        CounterHelper.uploadRecognitionResult(mSheId, mSheName, (int) ((System.currentTimeMillis() - mStartTime) / 1000),
+                results, USBCameraActivity_new.this, new CounterHelper.OnUploadResultListener() {
+                    @Override
+                    public void onCompleted(boolean succeed, String resutl) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                pop.dismiss();
+                                if (succeed) {
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(resutl);
+                                        int status = jsonObject.getInt("status");
+                                        String msg = jsonObject.getString("msg");
+                                        if (status != 1) {
+                                            showErrorDialog();
+                                        } else {
+                                            Toast.makeText(USBCameraActivity_new.this, "上传成功！", Toast.LENGTH_SHORT).show();
+                                            new Handler().postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    finish();
+                                                }
+                                            }, 500);
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        showErrorDialog();
+                                    }
+                                } else {
+                                    showErrorDialog();
+                                }
+                            }
+                        });
+                    }
+                });
+    }
+
+
+    /**
+     * 显示错误提示框
+     */
+    private void showErrorDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(MyApplication.getContext())
+                .setIcon(R.drawable.cowface)
+                .setTitle("提示")
+                .setMessage("上传失败，请重试。")
+                .setPositiveButton("重试", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        upResult();
+                    }
+                })
+                .setNegativeButton("退出", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        finish();
+                    }
+                });
+        builder.create();
+        builder.show();
+    }
+
 
     @Override
     protected void onStart() {

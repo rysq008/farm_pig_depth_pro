@@ -160,10 +160,14 @@ public class LoginFamerActivity extends BaseActivity {
                 }
                 String musername = mloginfameruserid.getText().toString();
                 String muserpass = mloginfamerpass.getText().toString();
+                if(musername.length() < 6 || musername.length() > 20){
+                    toastUtils.showLong(this, "账号长度不正确，应为6-20位字符");
+                    return;
+                }
                 if (!TextUtils.isEmpty(musername) && !TextUtils.isEmpty(muserpass)) {
                     getDataFromNet(musername, muserpass);
                 } else {
-                    toastUtils.showLong(this, "用户名或者密码为空");
+                    toastUtils.showLong(this, "账号或者密码为空");
                 }
                 break;
             case R.id.pass_hide:
@@ -197,6 +201,12 @@ public class LoginFamerActivity extends BaseActivity {
             public void onFailure(Call call, IOException e) {
                 mProgressDialog.dismiss();
                 Log.i("LoginFamerActivity", e.toString());
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(LoginFamerActivity.this,"登录失败，请检查网络后重试。",Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             @Override

@@ -577,6 +577,7 @@ public class BreedingPigFaceDetectTFlite {
                                 * (lasts.get(i).getLocation().bottom - lasts.get(i).getLocation().top) +
                                 (currents.get(j).getLocation().right - currents.get(j).getLocation().left)
                                         * (currents.get(j).getLocation().bottom - currents.get(j).getLocation().left) - wh);
+                Log.e(TAG, "calculateListIou: 前单"+iou);
                 //判断重合部分面积是否大于指定阈值， 大于则证明是已存在对象并计算出水平位移， 否则单独是对象
                 if (iou > 0.53f) {
                     isDan = false;
@@ -628,6 +629,7 @@ public class BreedingPigFaceDetectTFlite {
                                 * (lasts.get(j).getLocation().bottom - lasts.get(j).getLocation().top) +
                                 (currents.get(i).getLocation().right - currents.get(i).getLocation().left)
                                         * (currents.get(i).getLocation().bottom - currents.get(i).getLocation().left) - wh);
+                Log.e(TAG, "calculateListIou: 后单"+iou);
                 if (iou > 0.53f) {
                     isDan = false;
                     break;

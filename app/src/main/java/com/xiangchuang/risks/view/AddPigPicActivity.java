@@ -1,8 +1,6 @@
 package com.xiangchuang.risks.view;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
@@ -13,7 +11,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Environment;
 import android.os.SystemClock;
 import android.provider.MediaStore;
@@ -33,22 +30,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.xiangchuang.risks.base.BaseActivity;
-import com.xiangchuang.risks.model.bean.CommitLiBean;
 import com.xiangchuang.risks.model.bean.StartBean;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.utils.CounterHelper;
 import com.xiangchuangtec.luolu.animalcounter.BuildConfig;
-import com.xiangchuangtec.luolu.animalcounter.CounterActivity_new;
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
 import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
 import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.tensorflow.demo.DetectorActivity;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,23 +50,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
-import innovation.entry.UploadImageObject;
 import innovation.utils.FileUtils;
-import innovation.utils.HttpRespObject;
-import innovation.utils.HttpUtils;
 import innovation.utils.MyWatcher;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-import static org.tensorflow.demo.CameraConnectionFragment.collectNumberHandler;
-
 public class AddPigPicActivity extends BaseActivity {
 
     @BindView(R.id.tv_title)
-    TextView tv_title;
+    TextView tvTitle;
     @BindView(R.id.etAnimalAge)
     EditText etAnimalAge;
     @BindView(R.id.btnPersonAndAnimal)
@@ -92,18 +78,17 @@ public class AddPigPicActivity extends BaseActivity {
     @BindView(R.id.btnCommit)
     Button btnCommit;
     @BindView(R.id.iv_cancel)
-    ImageView iv_cancel;
+    ImageView ivCancel;
 
     private String lipeiId = "";
 
     private PopupWindow pop = null;
-    private LinearLayout ll_popup;
+    private LinearLayout llPopup;
     private static final int REQUESTCODE_PICK = 0;        // 相册选图标记
     private static final int REQUESTCODE_TAKE = 1;        // 相机拍照标记
     private static final int REQUESTCODE_CUTTING = 2;    // 图片裁切标记
 
     private static String IMAGE_FILE_NAME = "";// 头像文件名称
-    private String urlpath;
     private Uri uritempFile;
 
     private int picType = 0;
@@ -122,7 +107,7 @@ public class AddPigPicActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        tv_title.setText("资料采集");
+        tvTitle.setText("资料采集");
         parentView = getWindow().getDecorView();
         lipeiId = getIntent().getStringExtra("lipeiid");
         etAnimalAge.addTextChangedListener(new MyWatcher(3, 1));
@@ -130,7 +115,7 @@ public class AddPigPicActivity extends BaseActivity {
         //选择图片
         pop = new PopupWindow(getApplicationContext());
         View view = getLayoutInflater().inflate(R.layout.item_popupwindows, null);
-        ll_popup = (LinearLayout) view.findViewById(R.id.ll_popup);
+        llPopup = (LinearLayout) view.findViewById(R.id.ll_popup);
         view.findViewById(R.id.ll_item_popupwindows_Photo).setVisibility(View.GONE);
         pop.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
         pop.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -139,7 +124,7 @@ public class AddPigPicActivity extends BaseActivity {
         pop.setOutsideTouchable(true);
         pop.setContentView(view);
 
-        iv_cancel.setOnClickListener(new View.OnClickListener() {
+        ivCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
@@ -160,7 +145,7 @@ public class AddPigPicActivity extends BaseActivity {
             public void onClick(View v) {
                 //  Auto-generated method stub
                 pop.dismiss();
-                ll_popup.clearAnimation();
+                llPopup.clearAnimation();
             }
         });
         //相机
@@ -173,7 +158,7 @@ public class AddPigPicActivity extends BaseActivity {
                 takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getApplicationContext(), BuildConfig.APPLICATION_ID + ".provider", tempFile));
                 startActivityForResult(takeIntent, REQUESTCODE_TAKE);
                 pop.dismiss();
-                ll_popup.clearAnimation();
+                llPopup.clearAnimation();
             }
         });
         //相册
@@ -186,7 +171,7 @@ public class AddPigPicActivity extends BaseActivity {
                 startActivityForResult(pickIntent, REQUESTCODE_PICK);
                 overridePendingTransition(R.anim.activity_translate_in, R.anim.activity_translate_out);
                 pop.dismiss();
-                ll_popup.clearAnimation();
+                llPopup.clearAnimation();
             }
         });
         //取消
@@ -194,7 +179,7 @@ public class AddPigPicActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 pop.dismiss();
-                ll_popup.clearAnimation();
+                llPopup.clearAnimation();
             }
         });
     }
@@ -316,6 +301,7 @@ public class AddPigPicActivity extends BaseActivity {
                             autoWeight = weight + "";
                             etAnimalAge.setText(weight + "");
                         } else {
+                            autoWeight = "";
                             Toast.makeText(AddPigPicActivity.this, "识别失败！", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -330,7 +316,7 @@ public class AddPigPicActivity extends BaseActivity {
      */
     private void picToView(Bitmap photo) {
         Drawable drawable = new BitmapDrawable(null, photo);
-        urlpath = FileUtils.saveFile(getApplicationContext(), "temphead.jpg", photo);
+        String urlpath = FileUtils.saveFile(getApplicationContext(), "temphead.jpg", photo);
 
         if (picType == 0) {
             btnPersonAndAnimal.setImageDrawable(drawable);
@@ -447,17 +433,17 @@ public class AddPigPicActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.btnPersonAndAnimal:
                 picType = 0;
-                ll_popup.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.activity_translate_in));
+                llPopup.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.activity_translate_in));
                 pop.showAtLocation(parentView, Gravity.BOTTOM, 0, 0);
                 break;
             case R.id.btnbuchongleft:
                 picType = 1;
-                ll_popup.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.activity_translate_in));
+                llPopup.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.activity_translate_in));
                 pop.showAtLocation(parentView, Gravity.BOTTOM, 0, 0);
                 break;
             case R.id.btnbuchongright:
                 picType = 2;
-                ll_popup.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.activity_translate_in));
+                llPopup.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.activity_translate_in));
                 pop.showAtLocation(parentView, Gravity.BOTTOM, 0, 0);
                 break;
             case R.id.btnCommit:
@@ -485,6 +471,10 @@ public class AddPigPicActivity extends BaseActivity {
     }
 
     private void addPayInfo() {
+        if(etAnimalAge.getText().toString().trim().isEmpty()){
+            Toast.makeText(getApplicationContext(), "未填写死猪重量", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         String buchongLeftstr = tvbuchongleft.getText().toString();
         String buchongRightstr = tvbuchongright.getText().toString();
@@ -504,7 +494,7 @@ public class AddPigPicActivity extends BaseActivity {
             sb.deleteCharAt(sb.length() - 1);
         }
 
-        Map mapbody = new HashMap();
+        Map<String, String> mapbody = new HashMap<>();
         mapbody.put(Constants.lipeiId, lipeiId);
         mapbody.put("weight", etAnimalAge.getText().toString().trim());
         mapbody.put("weightPic", tvPersonAndAnimalpath.getText().toString().trim());
@@ -512,6 +502,7 @@ public class AddPigPicActivity extends BaseActivity {
         mapbody.put("provePic", "");//无害化证明照片
         mapbody.put("autoWeight", autoWeight);//自动识别返回重量
 
+        Log.e("mapbody", "mapbody: "+mapbody.toString() );
 
         OkHttp3Util.doPost(Constants.ADD_PAY_INFO, mapbody, null, new Callback() {
             @Override

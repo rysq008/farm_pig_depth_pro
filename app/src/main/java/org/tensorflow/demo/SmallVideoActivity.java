@@ -187,6 +187,18 @@ public class SmallVideoActivity extends AppCompatActivity implements SurfaceHold
         Log.d(TAG, "onStart: ");
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mStartButton.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isRunning = false;
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     // SurfaceView回调
     ///////////////////////////////////////////////////////////////////////////
@@ -371,6 +383,7 @@ public class SmallVideoActivity extends AppCompatActivity implements SurfaceHold
             if (mTargetFile.exists()) {
                 upVideo();
             }else{
+                mStartButton.setVisibility(View.VISIBLE);
                 Toast.makeText(this, "视频未找到，请重新录制。", Toast.LENGTH_SHORT).show();
             }
         }
@@ -446,7 +459,7 @@ public class SmallVideoActivity extends AppCompatActivity implements SurfaceHold
     //上传视频
     private void upVideo(){
         showProgressDialog();
-        Map mapbody = new HashMap();
+        Map<String,String> mapbody = new HashMap<>();
         mapbody.put(Constants.lipeiId, lipeiId);
 
         try {
