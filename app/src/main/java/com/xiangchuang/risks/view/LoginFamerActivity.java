@@ -145,7 +145,8 @@ public class LoginFamerActivity extends BaseActivity {
                 }
             }
         }
-
+        if(!HttpUtils.isOfficialHost())
+            Toast.makeText(LoginFamerActivity.this, ShareUtils.getHost("host"), Toast.LENGTH_LONG).show();
         ShareUtils.setUpGlobalHost(LoginFamerActivity.this,passTv);
     }
 

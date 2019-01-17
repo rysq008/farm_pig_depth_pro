@@ -33,46 +33,46 @@ public class Constants {
 
     //    60.205.209.245:8081;   47.92.167.61:8081
 //    public static final String BASENEW =  "http://47.92.167.61:8081/nongxian2/app/";
-    public static final String BASENEW = HttpUtils.baseUrl+"app/";
-    public static final String LOGINURLNEW = BASENEW + "ftnLogin";
+    public static String BASENEW = HttpUtils.baseUrl + "app/";
+    public static String LOGINURLNEW = BASENEW + "ftnLogin";
 
-    public static final String ZHUSHESHOW = BASENEW + "ftnShe/list";
+    public static String ZHUSHESHOW = BASENEW + "ftnShe/list";
 
-    public static final String ZHUSHEADD = BASENEW + "ftnShe/add";
-    public static final String ZHUSHEUPDATE = BASENEW + "ftnShe/update";
-    public static final String ZHUSHEDELETE = BASENEW + "ftnShe/delete";
+    public static String ZHUSHEADD = BASENEW + "ftnShe/add";
+    public static String ZHUSHEUPDATE = BASENEW + "ftnShe/update";
+    public static String ZHUSHEDELETE = BASENEW + "ftnShe/delete";
 
-    public static final String ZHUJUANSHOW = BASENEW + "ftnJuan/list";
+    public static String ZHUJUANSHOW = BASENEW + "ftnJuan/list";
 
-    public static final String ZHUJUANUPDATE = BASENEW + "ftnJuan/update";
-    public static final String ZHUJUANDELETE = BASENEW + "ftnJuan/delete";
-    public static final String ZHUJUANADD = BASENEW + "ftnJuan/add";
-    public static final String ZHUJUANOUT = BASENEW + "ftnJuan/out";
+    public static String ZHUJUANUPDATE = BASENEW + "ftnJuan/update";
+    public static String ZHUJUANDELETE = BASENEW + "ftnJuan/delete";
+    public static String ZHUJUANADD = BASENEW + "ftnJuan/add";
+    public static String ZHUJUANOUT = BASENEW + "ftnJuan/out";
     //调起猪舍内的摄像头
-    public static final String PRESTART = BASENEW + "payment/prePayStart";
+    public static String PRESTART = BASENEW + "payment/prePayStart";
     //预先理赔提交
-    public static final String PRECOMMIT = BASENEW + "payment/prePayCommit";
+    public static String PRECOMMIT = BASENEW + "payment/prePayCommit";
     //上传预理赔补充视频
-    public static final String ADDPREPAYVIDEO = BASENEW + "payment/addPrePayVideo";
+    public static String ADDPREPAYVIDEO = BASENEW + "payment/addPrePayVideo";
 
-    public static final String PREJIXU = BASENEW + "payment/prePayEnd";
-    public static final String PRESTOP = BASENEW + "payment/stopVideo";
-    public static final String INSURE = BASENEW + "ftnInsure/list";
-    public static final String INSURECOMMIT = BASENEW + "ftnInsure/commit";
-    public static final String PINZHONG = BASENEW + "ftnJuan/animalType";
+    public static String PREJIXU = BASENEW + "payment/prePayEnd";
+    public static String PRESTOP = BASENEW + "payment/stopVideo";
+    public static String INSURE = BASENEW + "ftnInsure/list";
+    public static String INSURECOMMIT = BASENEW + "ftnInsure/commit";
+    public static String PINZHONG = BASENEW + "ftnJuan/animalType";
     //验证是否存在预理赔对象
-    public static final String LiSTART = BASENEW + "payment/payStart";
+    public static String LiSTART = BASENEW + "payment/payStart";
     //理赔上传
-    public static final String LICOMMIT = BASENEW + "payment/payCommit";
-    public static final String LIEDD2 = BASENEW + "payment/payEnd2";
-    public static final String LIEDD1 = BASENEW + "payment/payEnd1";
+    public static String LICOMMIT = BASENEW + "payment/payCommit";
+    public static String LIEDD2 = BASENEW + "payment/payEnd2";
+    public static String LIEDD1 = BASENEW + "payment/payEnd1";
     // 验证是否存在有效投保
-    public static final String CHECKBAODAN = BASENEW + "payment/allStart";
-    public static final String POLLINGLIST = BASENEW + "inspect/inspect";
-    public static final String XUNJIANTIJIAONEW = BASENEW + "inspect/commit";
-    public static final String XUNJIANCHAXUNEW = BASENEW + "inspect/result";
-    public static final String XUNFINISHNEW = BASENEW + "inspect/finish";
-    public static final String DIANSHULIST = BASENEW + "ftnInsure/list";
+    public static String CHECKBAODAN = BASENEW + "payment/allStart";
+    public static String POLLINGLIST = BASENEW + "inspect/inspect";
+    public static String XUNJIANTIJIAONEW = BASENEW + "inspect/commit";
+    public static String XUNJIANCHAXUNEW = BASENEW + "inspect/result";
+    public static String XUNFINISHNEW = BASENEW + "inspect/finish";
+    public static String DIANSHULIST = BASENEW + "ftnInsure/list";
     public static final String en_id = "en_id";
     public static final String companyname = "companyname";
     public static final String defaultpig = "defaultpig";
@@ -102,25 +102,25 @@ public class Constants {
     public static final String inspectId = "inspectId";
     public static final String compensateVideoId = "compensateVideoId";
 
-    public static final String ENLIST = BASENEW + "ftnEnList";
+    public static String ENLIST = BASENEW + "ftnEnList";
     public static final String companyfleg = "companyfleg";
     public static final String companyuser = "companyuser";
     public static final String insurecompany = "insurecompany";
-    public static final String adduser = BASENEW +"addEnAndUser";
-    public static final String upload = BASENEW +"uploadImg";
-    public static final String SHESHOW = BASENEW + "ftnCamera/list";
-    public static final String YANZHENG = BASENEW + "ftnCamera/check";
-    public static final String SXADD = BASENEW + "ftnCamera/add";
-    public static final String SXUPDATE = BASENEW + "ftnCamera/update";
-    public static final String CAMERALIST = BASENEW + "ftnCamera/cameraJuanList";
-    public static final String CAMERABINDING = BASENEW + "ftnCamera/cameraJuanBind";
+    public static String adduser = BASENEW + "addEnAndUser";
+    public static String upload = BASENEW + "uploadImg";
+    public static String SHESHOW = BASENEW + "ftnCamera/list";
+    public static String YANZHENG = BASENEW + "ftnCamera/check";
+    public static String SXADD = BASENEW + "ftnCamera/add";
+    public static String SXUPDATE = BASENEW + "ftnCamera/update";
+    public static String CAMERALIST = BASENEW + "ftnCamera/cameraJuanList";
+    public static String CAMERABINDING = BASENEW + "ftnCamera/cameraJuanBind";
 
-    public static final String SHELIST = BASENEW + "ftnShe/sheList";
-    public static final String SHECOMMIT = BASENEW + "inspect/sheCommit";
+    public static String SHELIST = BASENEW + "ftnShe/sheList";
+    public static String SHECOMMIT = BASENEW + "inspect/sheCommit";
     //盘查详情
-    public static final String SHEDETAIL_NEW = BASENEW + "inspect/sheDetail";
-    public static final String UP_LOAD_IMG = BASENEW + "uploadImg";
-    public static final String ADD_PAY_INFO = BASENEW + "payment/addPayInfo";
+    public static String SHEDETAIL_NEW = BASENEW + "inspect/sheDetail";
+    public static String UP_LOAD_IMG = BASENEW + "uploadImg";
+    public static String ADD_PAY_INFO = BASENEW + "payment/addPayInfo";
 
     //public static final String BASE8081= "http://47.92.167.61:8081/";
 //    public static final String SHEDETAIL = "http://47.92.167.61:8081/numberCheck/app/sheDetail";
@@ -137,22 +137,93 @@ public class Constants {
     public static final String cameraId = "cameraId";
     public static final String startVideoId = "startVideoId";
 
-    public static final String STARTRECODE = BASENEW + "payment/startVideo";
-    public static final String JUANEXIT = BASENEW + "ftnJuan/checkJuan";
+    public static String STARTRECODE = BASENEW + "payment/startVideo";
+    public static String JUANEXIT = BASENEW + "ftnJuan/checkJuan";
     //获取保单号
-    public static final String JUANBAONUM = BASENEW + "payment/insureNo";
+    public static String JUANBAONUM = BASENEW + "payment/insureNo";
 
-    public static final String INSURED = BASENEW+"ftnInsure/insure";
+    public static String INSURED = BASENEW + "ftnInsure/insure";
     //获取猪种类
-    public static final String PIGTYPE = BASENEW+"ftnInsure/pigType";//animalType
+    public static String PIGTYPE = BASENEW + "ftnInsure/pigType";//animalType
 
     public static final String enUserId = "enUserId";
     public static final String amount = "amount";
     public static final String ratio = "ratio";
     public static final String pigType = "pigType";
     //获取企业信息
-    public static final String GETEN = BASENEW+"getEn";
+    public static String GETEN = BASENEW + "getEn";
     //获取保单列表
-    public static final String INSURELIST= BASENEW+"ftnInsure/insureList";
+    public static String INSURELIST = BASENEW + "ftnInsure/insureList";
 
+    public static void resetBaseIp(String host) {
+        HttpUtils.baseUrl = host;
+        BASENEW = HttpUtils.baseUrl + "app/";
+        LOGINURLNEW = BASENEW + "ftnLogin";
+
+        ZHUSHESHOW = BASENEW + "ftnShe/list";
+
+        ZHUSHEADD = BASENEW + "ftnShe/add";
+        ZHUSHEUPDATE = BASENEW + "ftnShe/update";
+        ZHUSHEDELETE = BASENEW + "ftnShe/delete";
+
+        ZHUJUANSHOW = BASENEW + "ftnJuan/list";
+
+        ZHUJUANUPDATE = BASENEW + "ftnJuan/update";
+        ZHUJUANDELETE = BASENEW + "ftnJuan/delete";
+        ZHUJUANADD = BASENEW + "ftnJuan/add";
+        ZHUJUANOUT = BASENEW + "ftnJuan/out";
+//调起猪舍内的摄像头
+        PRESTART = BASENEW + "payment/prePayStart";
+//预先理赔提交
+        PRECOMMIT = BASENEW + "payment/prePayCommit";
+//上传预理赔补充视频
+        ADDPREPAYVIDEO = BASENEW + "payment/addPrePayVideo";
+
+        PREJIXU = BASENEW + "payment/prePayEnd";
+        PRESTOP = BASENEW + "payment/stopVideo";
+        INSURE = BASENEW + "ftnInsure/list";
+        INSURECOMMIT = BASENEW + "ftnInsure/commit";
+        PINZHONG = BASENEW + "ftnJuan/animalType";
+//验证是否存在预理赔对象
+        LiSTART = BASENEW + "payment/payStart";
+//理赔上传
+        LICOMMIT = BASENEW + "payment/payCommit";
+        LIEDD2 = BASENEW + "payment/payEnd2";
+        LIEDD1 = BASENEW + "payment/payEnd1";
+// 验证是否存在有效投保
+        CHECKBAODAN = BASENEW + "payment/allStart";
+        POLLINGLIST = BASENEW + "inspect/inspect";
+        XUNJIANTIJIAONEW = BASENEW + "inspect/commit";
+        XUNJIANCHAXUNEW = BASENEW + "inspect/result";
+        XUNFINISHNEW = BASENEW + "inspect/finish";
+        DIANSHULIST = BASENEW + "ftnInsure/list";
+        ENLIST = BASENEW + "ftnEnList";
+        adduser = BASENEW + "addEnAndUser";
+        upload = BASENEW + "uploadImg";
+        SHESHOW = BASENEW + "ftnCamera/list";
+        YANZHENG = BASENEW + "ftnCamera/check";
+        SXADD = BASENEW + "ftnCamera/add";
+        SXUPDATE = BASENEW + "ftnCamera/update";
+        CAMERALIST = BASENEW + "ftnCamera/cameraJuanList";
+        CAMERABINDING = BASENEW + "ftnCamera/cameraJuanBind";
+
+        SHELIST = BASENEW + "ftnShe/sheList";
+        SHECOMMIT = BASENEW + "inspect/sheCommit";
+//盘查详情
+        SHEDETAIL_NEW = BASENEW + "inspect/sheDetail";
+        UP_LOAD_IMG = BASENEW + "uploadImg";
+        ADD_PAY_INFO = BASENEW + "payment/addPayInfo";
+        STARTRECODE = BASENEW + "payment/startVideo";
+        JUANEXIT = BASENEW + "ftnJuan/checkJuan";
+//获取保单号
+        JUANBAONUM = BASENEW + "payment/insureNo";
+
+        INSURED = BASENEW + "ftnInsure/insure";
+//获取猪种类
+        PIGTYPE = BASENEW + "ftnInsure/pigType";//animalType
+        GETEN = BASENEW + "getEn";
+//获取保单列表
+        INSURELIST = BASENEW + "ftnInsure/insureList";
+
+    }
 }
