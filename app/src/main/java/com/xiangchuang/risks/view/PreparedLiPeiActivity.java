@@ -131,11 +131,12 @@ public class PreparedLiPeiActivity extends BaseActivity {
     }
 
     private void getDataFromNet() {
-        Map map = new HashMap();
+        Map<String, String> map = new HashMap<>();
         map.put(Constants.AppKeyAuthorization, "hopen");
         map.put(Constants.en_user_id, String.valueOf(userid));
         map.put(Constants.en_id, en_id);
-        Map mapbody = new HashMap();
+
+        Map<String, String> mapbody = new HashMap<>();
         mapbody.put(Constants.amountFlg, String.valueOf(9));
         mapbody.put(Constants.insureFlg, String.valueOf(1));
         mProgressDialog.show();
@@ -189,16 +190,14 @@ public class PreparedLiPeiActivity extends BaseActivity {
 
             }
         });
-
-
     }
 
     private void getzhujuanMessage(String pighouseid) {
-        Map map = new HashMap();
+        Map<String, String> map = new HashMap<>();
         map.put(Constants.AppKeyAuthorization, "hopen");
         map.put(Constants.en_user_id, userid + "");
         map.put(Constants.en_id, en_id);
-        Map mapbody = new HashMap();
+        Map<String, String> mapbody = new HashMap<>();
         mapbody.put(Constants.amountFlg, 9 + "");
         mapbody.put(Constants.insureFlg, 1 + "");
         mapbody.put(Constants.sheId, pighouseid);
@@ -270,11 +269,11 @@ public class PreparedLiPeiActivity extends BaseActivity {
     }
 
     private void getBaoDanNumber() {
-        Map map = new HashMap();
+        Map<String, String> map = new HashMap<>();
         map.put(Constants.AppKeyAuthorization, "hopen");
         map.put("Content-Type", "application/x-www-form-urlencoded");
         map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, MyApplication.getAppContext(), "0"));
-        Map mapbody = new HashMap();
+        Map<String, String> mapbody = new HashMap<>();
         mapbody.put(Constants.juanId, String.valueOf(juanId));
         OkHttp3Util.doPost(Constants.JUANBAONUM, mapbody, map, new Callback() {
             @Override
@@ -381,11 +380,11 @@ public class PreparedLiPeiActivity extends BaseActivity {
 
     private void goonLi() {
         getCurrentLocationLatLng();
-        Map map = new HashMap();
+        Map<String, String> map = new HashMap<>();
         map.put(Constants.AppKeyAuthorization, "hopen");
         map.put(Constants.en_user_id, String.valueOf(PreferencesUtils.getIntValue(Constants.en_user_id, MyApplication.getAppContext())));
         map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, MyApplication.getAppContext(), "0"));
-        Map mapbody = new HashMap();
+        Map<String, String> mapbody = new HashMap<>();
         mapbody.put(Constants.userLibId, String.valueOf(userLibId));
         mapbody.put(Constants.juanId, String.valueOf(juanId));
         mapbody.put(Constants.sheId, String.valueOf(sheId));
@@ -441,11 +440,11 @@ public class PreparedLiPeiActivity extends BaseActivity {
 
 
     private void collectToNet() {
-        Map map = new HashMap();
+        Map<String, String> map = new HashMap<>();
         map.put(Constants.AppKeyAuthorization, "hopen");
         map.put(Constants.en_user_id, String.valueOf(userid));
         map.put(Constants.en_id, en_id);
-        Map mapbody = new HashMap();
+        Map<String, String> mapbody = new HashMap<>();
         mapbody.put(Constants.juanId, String.valueOf(juanId));
         mapbody.put(Constants.insureNo, mchuxiannum.getText().toString());
 

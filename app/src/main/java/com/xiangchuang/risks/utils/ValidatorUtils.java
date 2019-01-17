@@ -175,5 +175,20 @@ public class ValidatorUtils {
         }
         return true;
     }
+
+
+    /**
+     * 营业执照验证
+     */
+    public static boolean isLicense(String s){
+        String regex18 = "^[^_IOZSVa-z\\W]{2}\\d{6}[^_IOZSVa-z\\W]{10}$";
+        String regex15 = "^[A-Za-z0-9]\\w{14}$";
+
+        boolean result = false;
+        if(s.matches(regex18) || s.matches(regex15)){
+            result = true;
+        }
+        return result;
+    }
 }
 

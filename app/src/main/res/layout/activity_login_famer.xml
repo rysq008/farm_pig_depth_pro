@@ -65,6 +65,7 @@
             android:paddingEnd="30dp"
             android:inputType="text"
             android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            android:maxLength="20"
             android:hint="请输入账号"
             android:singleLine="true"
             android:maxLines="1" />

@@ -90,6 +90,7 @@ import okhttp3.Response;
 
 import static android.opengl.ETC1.isValid;
 import static com.xiangchuang.risks.utils.MyTextUtil.isEmojiCharacter;
+import static com.xiangchuang.risks.utils.ValidatorUtils.isLicense;
 import static com.xiangchuang.risks.utils.ValidatorUtils.isMobileNO;
 import static com.xiangchuang.risks.utils.ValidatorUtils.isPhone;
 
@@ -103,7 +104,6 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
     private Uri uritempFile;
     public static String TAG = "AddCompanyActivity";
     private AMapLocationClient mLocationClient;
-    private AMapLocationClientOption mLocationOption;
 
     private String str_idcard_zheng = "";
     private String str_idcard_fan = "";
@@ -320,13 +320,11 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
                 break;
             case R.id.btn_wancheng:
 
-
-
                 if ("".equals(tv_qiyename.getText().toString())) {
                     toastUtils.showLong(this, "企业名称为空");
                     return;
                 }
-                if(isEmo(tv_qiyename.getText().toString())){
+                if (isEmo(tv_qiyename.getText().toString())) {
                     Toast.makeText(AddCompanyActivity.this, "企业名称不能包含特殊字符", Toast.LENGTH_LONG).show();
                     return;
                 }
@@ -336,7 +334,7 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
                     toastUtils.showLong(this, "企业负责人为空");
                     return;
                 }
-                if(isEmo(tvBaodanPeople.getText().toString())){
+                if (isEmo(tvBaodanPeople.getText().toString())) {
                     Toast.makeText(AddCompanyActivity.this, "企业负责人名不能包含特殊字符", Toast.LENGTH_LONG).show();
                     return;
                 }
@@ -353,14 +351,15 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
                         return;
                     }
                 } else if (certificateType == 2) {
+
                     if ("".equals(tvBaodanIdcard.getText().toString())) {
                         toastUtils.showLong(this, "营业执照号为空");
                         return;
                     }
-//                    if (!isValid(tvBaodanIdcard.getText().toString().trim())) {
-////                        Toast.makeText(getApplicationContext(), "请输入正确的统一社会信用代码", Toast.LENGTH_SHORT).show();
-////                        return;
-////                    }
+                    if (!isLicense(tvBaodanIdcard.getText().toString().trim())) {
+                        Toast.makeText(getApplicationContext(), "请输入正确的营业执照号码", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                 }
 
                 if (certificateType == 1) {
@@ -382,7 +381,7 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
                     toastUtils.showLong(this, "开户行名字为空");
                     return;
                 }
-                if(isEmo(tvBaodanOpenbank.getText().toString())){
+                if (isEmo(tvBaodanOpenbank.getText().toString())) {
                     Toast.makeText(AddCompanyActivity.this, "开户行名称不能包含特殊字符", Toast.LENGTH_LONG).show();
                     return;
                 }
@@ -402,24 +401,16 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
                     return;
                 }
 
-                if(!isMobileNO(tv_baodan_tel.getText().toString().trim()) && !isPhone(tv_baodan_tel.getText().toString().trim())){
+                if (!isMobileNO(tv_baodan_tel.getText().toString().trim()) && !isPhone(tv_baodan_tel.getText().toString().trim())) {
                     Toast.makeText(getApplicationContext(), "联系方式填写有误", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
-//                if (!isMobileNO(tv_baodan_tel.getText().toString().trim())) {
-//                    Toast.makeText(getApplicationContext(), "手机号格式有误", Toast.LENGTH_SHORT).show();
-//                    return;
-//                } else if (!isPhone(tv_baodan_tel.getText().toString().trim())) {
-//                    Toast.makeText(getApplicationContext(), "电话号格式异常", Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
 
                 if ("".equals(tvBaodanAddress.getText().toString())) {
                     toastUtils.showLong(this, "企业地址为空");
                     return;
                 }
-                if(isEmo(tvBaodanAddress.getText().toString())){
+                if (isEmo(tvBaodanAddress.getText().toString())) {
                     Toast.makeText(AddCompanyActivity.this, "企业地址不能包含特殊字符", Toast.LENGTH_LONG).show();
                     return;
                 }
@@ -438,54 +429,27 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
                 break;
         }
     }
+
     //判断是否包含表情符号
-    private boolean isEmo(String s){
+    private boolean isEmo(String s) {
         boolean isemo = false;
-        for(int i=0; i<s.length(); i++){
+        for (int i = 0; i < s.length(); i++) {
             isemo = isEmojiCharacter(s.charAt(i));
-            if(isemo){
+            if (isemo) {
                 break;
             }
         }
         return isemo;
     }
 
-    private boolean isValid(String businessCode) {
-        if ((businessCode.equals("")) || businessCode.length() != 18) {
-            return false;
-        }
-        String baseCode = "0123456789ABCDEFGHJKLMNPQRTUWXY";
-        char[] baseCodeArray = baseCode.toCharArray();
-        Map<Character, Integer> codes = new HashMap<>();
-        for (int i = 0; i < baseCode.length(); i++) {
-            codes.put(baseCodeArray[i], i);
-        }
-        char[] businessCodeArray = businessCode.toCharArray();
-        Character check = businessCodeArray[17];
-        if (baseCode.indexOf(check) == -1) {
-            return false;
-        }
-        int[] wi = {1, 3, 9, 27, 19, 26, 16, 17, 20, 29, 25, 13, 8, 24, 10, 30, 28};
-        int sum = 0;
-        for (int i = 0; i < 17; i++) {
-            Character key = businessCodeArray[i];
-            if (baseCode.indexOf(key) == -1) {
-                return false;
-            }
-            sum += (codes.get(key) * wi[i]);
-        }
-        int value = 31 - sum % 31;
-        return value == codes.get(check);
-    }
-
     private void saveMessageFromNet() {
-        Map map = new HashMap();
+        Map<String,String> map = new HashMap<>();
         map.put(Constants.AppKeyAuthorization, "hopen");
         map.put(Constants.deptIdnew, PreferencesUtils.getStringValue(Constants.deptId, MyApplication.getAppContext()));
 
         map.put(Constants.id, PreferencesUtils.getStringValue(Constants.id, MyApplication.getAppContext(), "0"));
 
-        Map mapbody = new HashMap();
+        Map<String,String> mapbody = new HashMap<>();
         mapbody.put("enName", tv_qiyename.getText().toString());
         mapbody.put("enPerson", tvBaodanPeople.getText().toString());
         mapbody.put("enPhone", tv_baodan_tel.getText().toString());
@@ -498,11 +462,11 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
 
         mapbody.put("cardFront", str_idcard_zheng);
         mapbody.put("cardBack", str_idcard_fan);
-        mapbody.put("bankFront",str_bank);
+        mapbody.put("bankFront", str_bank);
         mapbody.put("bankBack", "");
 
-        if(type){
-            mapbody.put("enId",PreferencesUtils.getStringValue(Constants.en_id, MyApplication.getAppContext()));
+        if (type) {
+            mapbody.put("enId", PreferencesUtils.getStringValue(Constants.en_id, MyApplication.getAppContext()));
         }
 
         OkHttp3Util.doPost(Constants.adduser, mapbody, map, new Callback() {
@@ -557,7 +521,7 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
         switch (requestCode) {
             case REQUESTCODE_TAKE:// 调用相机拍照
 //                if(data !=null){
-                    crop(Environment.getExternalStorageDirectory() + "/" + IMAGE_FILE_NAME);
+                crop(Environment.getExternalStorageDirectory() + "/" + IMAGE_FILE_NAME);
 //                }
                 break;
             case REQUESTCODE_CUTTING:// 取得裁剪后的图片
@@ -649,7 +613,7 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
         // 取得SDCard图片路径做显示
         Bitmap photo = BitmapFactory.decodeStream(getContentResolver().openInputStream(uritempFile));
         Drawable drawable = new BitmapDrawable(null, photo);
-        String urlpath = FileUtils.saveFile(AddCompanyActivity.this, stampToDate(System.currentTimeMillis())+"temphead.jpg", photo);
+        String urlpath = FileUtils.saveFile(AddCompanyActivity.this, stampToDate(System.currentTimeMillis()) + "temphead.jpg", photo);
 
         // TODO: 2018/8/21 By:LuoLu
         File file = new File(urlpath);
@@ -667,8 +631,9 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
         //upload_zipImage(fileURLPath, userId);
         upload_image(fileURLPath, drawable);
     }
+
     private void upload_image(File fileURLPath, Drawable drawable) {
-        Map map = new HashMap();
+        Map<String, String> map = new HashMap<>();
         map.put(Constants.AppKeyAuthorization, "hopen");
         map.put(Constants.id, PreferencesUtils.getStringValue(Constants.id, MyApplication.getAppContext(), "0"));
         OkHttp3Util.uploadPreFile(Constants.upload, fileURLPath, "a.jpg", null, map, new Callback() {
@@ -701,7 +666,6 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
                                             showDialogError(msg);
                                         }
                                     });
-
                                 } else {
                                     runOnUiThread(new Runnable() {
                                         @Override
@@ -728,7 +692,6 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-
                         }
                     }
                 });
@@ -742,7 +705,7 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
         //设置定位回调监听
         mLocationClient.setLocationListener(mLocationListener);
         //初始化AMapLocationClientOption对象
-        mLocationOption = new AMapLocationClientOption();
+        AMapLocationClientOption mLocationOption = new AMapLocationClientOption();
         // 同时使用网络定位和GPS定位,优先返回最高精度的定位结果,以及对应的地址描述信息
         mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
         mLocationOption.setOnceLocation(true);
@@ -772,7 +735,6 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
                             + amapLocation.getErrorInfo());
                 }
             }
-
         }
     };
 
@@ -780,7 +742,6 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                 checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
-
 
     private static final int PERMISSIONS_REQUEST = 1;
 
@@ -831,9 +792,5 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
                 }
             }
         });
-
-
     }
-
-
 }

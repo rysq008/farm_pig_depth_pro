@@ -14,8 +14,8 @@ android {
         targetSdkVersion 28
         //debug versionCode 1101
         //release versionCode 1098
-        versionCode 1101
-        versionName "1.101"
+        versionCode 1102
+        versionName "1.102"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         ndk {
