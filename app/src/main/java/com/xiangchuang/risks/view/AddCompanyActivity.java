@@ -16,16 +16,13 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.FileProvider;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -39,19 +36,11 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
-import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.base.BaseBarActivity;
-import com.xiangchuang.risks.model.adapter.CompanyAdapter;
-import com.xiangchuang.risks.model.bean.CompanyBean;
 import com.xiangchuang.risks.model.bean.CompanyInfoBean;
-import com.xiangchuang.risks.model.bean.ZhuJuanBean;
-import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.utils.IDCard;
 import com.xiangchuangtec.luolu.animalcounter.BuildConfig;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
@@ -70,25 +59,17 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.BindView;
-import butterknife.OnClick;
-import innovation.entry.UploadImageObject;
 import innovation.login.IDCardValidate;
-import innovation.media.DormNextInfoDialog;
 import innovation.utils.FileUtils;
-import innovation.utils.HttpRespObject;
-import innovation.utils.HttpUtils;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-import static android.opengl.ETC1.isValid;
 import static com.xiangchuang.risks.utils.MyTextUtil.isEmojiCharacter;
 import static com.xiangchuang.risks.utils.ValidatorUtils.isLicense;
 import static com.xiangchuang.risks.utils.ValidatorUtils.isMobileNO;
@@ -320,6 +301,12 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
                 break;
             case R.id.btn_wancheng:
 
+                if (!isMobileNO(tv_baodan_tel.getText().toString().trim()) && !isPhone(tv_baodan_tel.getText().toString().trim())) {
+                    Toast.makeText(getApplicationContext(), "联系方式填写有误", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+
                 if ("".equals(tv_qiyename.getText().toString())) {
                     toastUtils.showLong(this, "企业名称为空");
                     return;
@@ -401,10 +388,10 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
                     return;
                 }
 
-                if (!isMobileNO(tv_baodan_tel.getText().toString().trim()) && !isPhone(tv_baodan_tel.getText().toString().trim())) {
-                    Toast.makeText(getApplicationContext(), "联系方式填写有误", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+//                if (!isMobileNO(tv_baodan_tel.getText().toString().trim()) && !isPhone(tv_baodan_tel.getText().toString().trim())) {
+//                    Toast.makeText(getApplicationContext(), "联系方式填写有误", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
 
                 if ("".equals(tvBaodanAddress.getText().toString())) {
                     toastUtils.showLong(this, "企业地址为空");
@@ -521,13 +508,21 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
         switch (requestCode) {
             case REQUESTCODE_TAKE:// 调用相机拍照
 //                if(data !=null){
-                crop(Environment.getExternalStorageDirectory() + "/" + IMAGE_FILE_NAME);
+//                crop(Environment.getExternalStorageDirectory() + "/" + IMAGE_FILE_NAME);
 //                }
+                File temp = new File(Environment.getExternalStorageDirectory() + "/" + IMAGE_FILE_NAME);
+                try {
+                    setPicToView(temp);
+                } catch (Exception e) {
+//                    toastUtils.showLong(this, e.getMessage());
+                    e.printStackTrace();
+                }
+
                 break;
             case REQUESTCODE_CUTTING:// 取得裁剪后的图片
                 if (data != null) {
                     try {
-                        setPicToView();
+//                        setPicToView();
                     } catch (Exception e) {
                         toastUtils.showLong(this, e.getMessage());
                         e.printStackTrace();
@@ -609,37 +604,36 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
     /**
      * 保存裁剪之后的图片数据
      */
-    private void setPicToView() throws Exception {
+    private void setPicToView(File file) throws Exception {
         // 取得SDCard图片路径做显示
-        Bitmap photo = BitmapFactory.decodeStream(getContentResolver().openInputStream(uritempFile));
-        Drawable drawable = new BitmapDrawable(null, photo);
+//        Bitmap photo = BitmapFactory.decodeStream(getContentResolver().openInputStream(uritempFile));
+        Bitmap photo = BitmapFactory.decodeFile(file.getAbsolutePath());
         String urlpath = FileUtils.saveFile(AddCompanyActivity.this, stampToDate(System.currentTimeMillis()) + "temphead.jpg", photo);
 
         // TODO: 2018/8/21 By:LuoLu
-        File file = new File(urlpath);
-        Log.e("file", file.getPath());
-        file.mkdirs();
+        File newFile = new File(urlpath);
+        Log.e("newFile", newFile.getPath());
+        newFile.mkdirs();
         long i = System.currentTimeMillis();
-        file = new File(file.getPath());
-        Log.e("fileNew：", file.getPath());
-        OutputStream out = new FileOutputStream(file.getPath());
+        newFile = new File(newFile.getPath());
+        Log.e("fileNew：", newFile.getPath());
+        OutputStream out = new FileOutputStream(newFile.getPath());
         boolean flag = photo.compress(Bitmap.CompressFormat.JPEG, 30, out);
         Log.e("flag:", "图片压缩成功" + flag);
 
-
         File fileURLPath = new File(urlpath);
         //upload_zipImage(fileURLPath, userId);
-        upload_image(fileURLPath, drawable);
+        uploadImage(fileURLPath);
     }
 
-    private void upload_image(File fileURLPath, Drawable drawable) {
+    private void uploadImage(File fileURLPath) {
         Map<String, String> map = new HashMap<>();
         map.put(Constants.AppKeyAuthorization, "hopen");
         map.put(Constants.id, PreferencesUtils.getStringValue(Constants.id, MyApplication.getAppContext(), "0"));
         OkHttp3Util.uploadPreFile(Constants.upload, fileURLPath, "a.jpg", null, map, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.e("upload_image:", e.toString());
+                Log.e("uploadImage:", e.toString());
             }
 
             @Override
@@ -654,7 +648,7 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                            Log.e("upload_image:", s);
+                            Log.e("uploadImage:", s);
                             try {
                                 JSONObject jsonObject = new JSONObject(s);
                                 int status = jsonObject.getInt("status");
@@ -673,6 +667,8 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
                                             toastUtils.showLong(AddCompanyActivity.this, msg);
                                             try {
                                                 String data = jsonObject.getString("data");
+
+                                                Drawable drawable = new BitmapDrawable(null, BitmapFactory.decodeFile(fileURLPath.getAbsolutePath()));
                                                 if (imageType.contains("idcard_zheng")) {
                                                     str_idcard_zheng = data;
                                                     btnIdcardZhengUpload.setImageDrawable(drawable);

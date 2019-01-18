@@ -99,6 +99,7 @@ public final class CounterHelper {
                     root.put("pigsty", arrays);
                     locationString = root.toString();
                 } catch (JSONException e) {
+                    Log.e("uploadRecognitionResult", "JSONException: "+e.toString() );
                     listener.onCompleted(false, "");
                     return;
                 }
@@ -122,6 +123,7 @@ public final class CounterHelper {
                 OkHttp3Util.uploadPreFile(Constants.SHECOMMIT, zipFile, "out.zip", param, map, new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
+                        Log.e("uploadRecognitionResult", "IOException: "+e.toString() );
                         listener.onCompleted(false, "");
                     }
 
@@ -131,6 +133,7 @@ public final class CounterHelper {
                             String resutl = response.body().string();
                             listener.onCompleted(true, resutl);
                         } else{
+                            Log.e("uploadRecognitionResult", "response.code(): "+response.code() );
                             listener.onCompleted(false, "");
                         }
                     }

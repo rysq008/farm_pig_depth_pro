@@ -474,6 +474,7 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog.dismiss();
                 showPop();
                 upResult();
             }
@@ -497,6 +498,7 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
                             public void run() {
                                 pop.dismiss();
                                 if (succeed) {
+                                    Log.e(TAG, "resutl: "+resutl.toString() );
                                     try {
                                         JSONObject jsonObject = new JSONObject(resutl);
                                         int status = jsonObject.getInt("status");
@@ -514,9 +516,11 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();
+                                        Log.e(TAG, "Exception: "+e.toString() );
                                         showErrorDialog();
                                     }
                                 } else {
+                                    Log.e(TAG, "!succeed: "+succeed );
                                     showErrorDialog();
                                 }
                             }
@@ -538,6 +542,7 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
+                        showPop();
                         upResult();
                     }
                 })
