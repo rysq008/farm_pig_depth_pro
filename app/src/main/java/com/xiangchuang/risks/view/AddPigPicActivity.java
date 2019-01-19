@@ -134,11 +134,11 @@ public class AddPigPicActivity extends BaseActivity {
         IMAGE_FILE_NAME = stampToDate(System.currentTimeMillis()) + ".jpg";
         RelativeLayout parent = (RelativeLayout) view.findViewById(R.id.parent);
         //相机
-        Button bt1 = (Button) view.findViewById(R.id.item_popupwindows_camera);
+        Button bt1 = view.findViewById(R.id.item_popupwindows_camera);
         //相册
-        Button bt2 = (Button) view.findViewById(R.id.item_popupwindows_Photo);
+        Button bt2 = view.findViewById(R.id.item_popupwindows_Photo);
         //取消
-        Button bt3 = (Button) view.findViewById(R.id.item_popupwindows_cancel);
+        Button bt3 = view.findViewById(R.id.item_popupwindows_cancel);
 
         parent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -200,13 +200,21 @@ public class AddPigPicActivity extends BaseActivity {
             // 调用相机拍照
             case REQUESTCODE_TAKE:
                 File temp = new File(Environment.getExternalStorageDirectory() + "/" + IMAGE_FILE_NAME);
-                crop(Environment.getExternalStorageDirectory() + "/" + IMAGE_FILE_NAME);
+//                crop(Environment.getExternalStorageDirectory() + "/" + IMAGE_FILE_NAME);
+
+                try {
+                    setPicToView(temp);
+                } catch (Exception e) {
+                    //Toast.makeText(AddPigPicActivity.this, "图片处理异常，请重试。", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+
                 break;
             // 取得裁剪后的图片
             case REQUESTCODE_CUTTING:
                 if (data != null) {
                     try {
-                        setPicToView();
+//                        setPicToView(temp);
                     } catch (Exception e) {
                         Toast.makeText(AddPigPicActivity.this, "图片处理异常，请重试。", Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
@@ -277,10 +285,12 @@ public class AddPigPicActivity extends BaseActivity {
 
     /**
      * 保存裁剪之后的图片数据
+     * @param file
      */
-    private void setPicToView() throws Exception {
-        // 取得SDCard图片路径做显示
-        Bitmap photo = BitmapFactory.decodeStream(getContentResolver().openInputStream(uritempFile));
+    private void setPicToView(File file) throws Exception {
+//        // 取得SDCard图片路径做显示
+//        Bitmap photo = BitmapFactory.decodeStream(getContentResolver().openInputStream(uritempFile));
+        Bitmap photo = BitmapFactory.decodeFile(file.getAbsolutePath());
         picToView(photo);
     }
 
@@ -296,17 +306,20 @@ public class AddPigPicActivity extends BaseActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        pop.dismiss();
                         if (status == 1) {
+                            mProgressDialog.dismiss();
                             autoWeight = weight + "";
                             etAnimalAge.setText(weight + "");
                         } else {
+                            mProgressDialog.dismiss();
                             autoWeight = "";
                             Toast.makeText(AddPigPicActivity.this, "识别失败！", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
             }
+
+
         });
     }
 
@@ -367,14 +380,15 @@ public class AddPigPicActivity extends BaseActivity {
                                             mProgressDialog.dismiss();
                                             Toast.makeText(AddPigPicActivity.this, "图片上传失败，请检查您的网络。", Toast.LENGTH_SHORT).show();
                                         } else {
-                                            mProgressDialog.dismiss();
                                             Toast.makeText(AddPigPicActivity.this, msg, Toast.LENGTH_SHORT).show();
                                             if (picType == 0) {
                                                 tvPersonAndAnimalpath.setText(data);
                                                 upDeadPig(photo);
                                             } else if (picType == 1) {
+                                                mProgressDialog.dismiss();
                                                 tvbuchongleft.setText(data);
                                             } else {
+                                                mProgressDialog.dismiss();
                                                 tvbuchongright.setText(data);
                                             }
                                             boolean result = FileUtils.deleteFile(fileImage);
@@ -472,6 +486,7 @@ public class AddPigPicActivity extends BaseActivity {
 
     private void addPayInfo() {
         if(etAnimalAge.getText().toString().trim().isEmpty()){
+            mProgressDialog.dismiss();
             Toast.makeText(getApplicationContext(), "未填写死猪重量", Toast.LENGTH_SHORT).show();
             return;
         }

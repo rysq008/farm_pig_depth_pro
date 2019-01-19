@@ -105,34 +105,35 @@ public class CompanyActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.tv_exit:
-                pop.showAsDropDown(rl_edit);
-                loginExit.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        pop.dismiss();
-                        AlertDialog.Builder builder = new AlertDialog.Builder(CompanyActivity.this)
-                                .setIcon(R.drawable.cowface).setTitle("提示")
-                                .setMessage("退出登录")
-                                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        //如果退出，清空保存的相关状态， 跳转到登录页
-                                        PreferencesUtils.removeAllKey(CompanyActivity.this);
-                                        Intent addIntent = new Intent(CompanyActivity.this, LoginFamerActivity.class);
-                                        startActivity(addIntent);
-                                        finish();
-                                    }
-                                })
-                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(CompanyActivity.this)
+                        .setIcon(R.drawable.cowface).setTitle("提示")
+                        .setMessage("退出登录")
+                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //如果退出，清空保存的相关状态， 跳转到登录页
+                                PreferencesUtils.removeAllKey(CompanyActivity.this);
+                                Intent addIntent = new Intent(CompanyActivity.this, LoginFamerActivity.class);
+                                startActivity(addIntent);
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
 
-                                    }
-                                });
-                        builder.setCancelable(false);
-                        builder.show();
-                    }
-                });
+                            }
+                        });
+                builder.setCancelable(false);
+                builder.show();
+//                pop.showAsDropDown(rl_edit);
+//                loginExit.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        pop.dismiss();
+//
+//                    }
+//                });
                 break;
 
             default:

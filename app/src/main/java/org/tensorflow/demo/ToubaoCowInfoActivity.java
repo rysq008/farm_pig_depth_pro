@@ -317,7 +317,7 @@ public class ToubaoCowInfoActivity extends AppCompatActivity {
                     try {
                         setPicToView();
                     } catch (Exception e) {
-                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
                 }

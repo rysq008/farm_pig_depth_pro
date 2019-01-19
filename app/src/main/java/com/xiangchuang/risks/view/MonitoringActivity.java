@@ -45,7 +45,7 @@ public class MonitoringActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_monitoring);
         webView = (WebView) findViewById(R.id.webview);
-        progressBar = (ProgressBar)findViewById(R.id.progressbar);//进度条
+        progressBar = (ProgressBar)findViewById(R.id.progressbar);
 
         en_id = PreferencesUtils.getStringValue(Constants.en_id, MyApplication.getAppContext(), "0");
         Log.e("en_id", "en_id: "+en_id);
