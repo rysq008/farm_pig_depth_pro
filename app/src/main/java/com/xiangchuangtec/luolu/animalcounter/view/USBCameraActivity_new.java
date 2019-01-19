@@ -11,6 +11,9 @@ import android.graphics.drawable.BitmapDrawable;
 import android.hardware.usb.UsbDevice;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
+import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -37,6 +40,7 @@ import com.serenegiant.widget.UVCCameraTextureView;
 import com.xiangchuang.risks.model.bean.RecognitionResult;
 import com.xiangchuang.risks.utils.CommonUtils;
 import com.xiangchuang.risks.utils.CounterHelper;
+import com.xiangchuangtec.luolu.animalcounter.BuildConfig;
 import com.xiangchuangtec.luolu.animalcounter.JuanCountAdapter;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
@@ -45,6 +49,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -125,6 +130,10 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
     @BindView(R.id.juan_list)
     ListView juan_list;
 
+    private boolean isTest = false;
+    private int testCount = 0;
+    private int testNumber = 10;
+
     private Button mCountCompleted;
     private Button mGoonButton;
     private Button mNextButton;
@@ -152,6 +161,24 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
     private int tempNum = 0;
 
     private Dialog dialog;
+
+    private Handler tHandlet = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            Toast.makeText(USBCameraActivity_new.this, "testCount--->" + testCount, Toast.LENGTH_SHORT).show();
+            if (msg.what < testNumber) {
+                if (msg.obj.equals("b")) {
+                    mTakePictureButton.performClick();
+                } else if (msg.obj.equals("a")) {
+                    mNextButton.performClick();
+                }
+            } else {
+                mCountCompleted.performClick();
+                isTest = false;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -192,7 +219,7 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
             public void onClick(View v) {
                 synchronized (USBCameraActivity_new.this) {
                     //最后清点的猪圈尚未保存，请点击[重新采集]或[下一圈]
-                    if( mGoonButton.getVisibility() == View.VISIBLE && mNextButton.getVisibility() == View.VISIBLE){
+                    if (mGoonButton.getVisibility() == View.VISIBLE && mNextButton.getVisibility() == View.VISIBLE) {
                         // "最后清点的猪圈尚未保存，请先选择\n[重新采集]或[下一圈]";
                         //保存当前圈几
                         int tempJuanNum = CounterHelper.number;
@@ -251,9 +278,9 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
                         dialog.setCancelable(true);
                         return;
                     }
-                    if (mRecognitionResults.size() > 0 ) {
+                    if (mRecognitionResults.size() > 0) {
                         uploadRecognitionResult();
-                    } else{
+                    } else {
                         Toast.makeText(USBCameraActivity_new.this, "您还未清点猪舍", Toast.LENGTH_LONG).show();
                     }
                 }
@@ -280,6 +307,33 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
                 return false;
             }
         });
+        if (BuildConfig.DEBUG)
+            count_detail.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    EditText et = new EditText(USBCameraActivity_new.this);
+                    et.setInputType(InputType.TYPE_CLASS_NUMBER);
+                    AlertDialog dialog = new AlertDialog.Builder(USBCameraActivity_new.this).setView(et).
+                            setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    isTest = true;
+                                    testCount = 0;
+                                    Random r = new Random();
+                                    if (TextUtils.isEmpty(et.getText()))
+                                        testNumber = 10 + r.nextInt(100);
+                                    else
+                                        testNumber = Integer.valueOf(et.getText().toString());
+                                    testNumber = testNumber - testNumber % 2;
+                                    if (testNumber < 2) testNumber = 2;
+                                    mTakePictureButton.performClick();
+                                }
+                            }).setNegativeButton("cancel", null).show();
+
+                    return false;
+                }
+            });
         //识别按钮
         mTakePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -287,7 +341,7 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
                 setCurrentBitmap(mCameraTextureView.getBitmap());
                 mResultImageView.setVisibility(View.GONE);
                 Bitmap bitmap = getCurrentBitmap();
-                if(bitmap == null){
+                if (bitmap == null) {
                     return;
                 }
                 showPop();
@@ -310,6 +364,14 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
                                     setCurrentResult(count, bitmap, null);
                                 } else {
                                     Toast.makeText(USBCameraActivity_new.this, "识别失败！", Toast.LENGTH_SHORT).show();
+                                }
+                                if (isTest) {
+                                    testCount++;
+                                    if (testCount <= testNumber) {
+                                        Toast.makeText(USBCameraActivity_new.this, "--->" + testCount, Toast.LENGTH_SHORT).show();
+                                        Message msg = tHandlet.obtainMessage(testCount, "a");
+                                        tHandlet.sendMessage(msg);
+                                    }
                                 }
                             }
                         });
@@ -350,6 +412,19 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
                 llModifier.setVisibility(View.GONE);
                 mTotalCountTextView.setText("总数" + mTotalCount.addAndGet(result.count) + "头");
                 mAutolCount.addAndGet(result.autoCount);
+                if (isTest) {
+                    testCount++;
+                    if (testCount <= testNumber) {
+                        Toast.makeText(USBCameraActivity_new.this, "--->" + testCount, Toast.LENGTH_SHORT).show();
+                        Message msg = tHandlet.obtainMessage(testCount, "b");
+//                        msg.setTarget(tHandlet);
+                        tHandlet.sendMessage(msg);
+                    }/*else{
+                        Message msg = tHandlet.obtainMessage(tempNum, "c");
+//                        msg.setTarget(tHandlet);
+                        tHandlet.sendMessage(msg);
+                    }*/
+                }
             }
         });
 
@@ -360,12 +435,12 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
             public void onClick(View v) {
                 if (llModifier.getVisibility() == View.VISIBLE) {
                     int tempCount = CommonUtils.parseInt(etModifier.getText().toString());
-                    if(tempCount > 0){
-                        tempCount -- ;
+                    if (tempCount > 0) {
+                        tempCount--;
                     }
                     if ((tempNum - tempCount) > 3) {
                         Toast.makeText(USBCameraActivity_new.this, "修正数值已达上限", Toast.LENGTH_SHORT).show();
-                    }else{
+                    } else {
                         etModifier.setText("" + tempCount);
                     }
                 }
@@ -379,13 +454,13 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
             public void onClick(View v) {
                 if (llModifier.getVisibility() == View.VISIBLE) {
                     int tempCount = CommonUtils.parseInt(etModifier.getText().toString());
-                    if(tempCount >= 0){
-                        tempCount ++;
+                    if (tempCount >= 0) {
+                        tempCount++;
                     }
 
-                    if ((tempCount - tempNum)  > 3) {
+                    if ((tempCount - tempNum) > 3) {
                         Toast.makeText(USBCameraActivity_new.this, "修正数值已达上限", Toast.LENGTH_SHORT).show();
-                    }else {
+                    } else {
                         etModifier.setText("" + tempCount);
                     }
 
@@ -418,12 +493,12 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
     }
 
 
-    private void uploadRecognitionResult(){
+    private void uploadRecognitionResult() {
         String text = String.format("本次点数采集:\n" +
                         "合计%d圈 %d头 修正后%d头 时长%d秒\n" +
                         "上次点数采集:\n" +
-                        "合计%s圈 %s头 修正后%s头 时长%s秒", mRecognitionResults.size(),mAutolCount.get(), mTotalCount.get(),
-                (System.currentTimeMillis() - mStartTime) / 1000, mOldJuanCnt, mOldAutoCount,  mOldTotalCount, mOldDuration);
+                        "合计%s圈 %s头 修正后%s头 时长%s秒", mRecognitionResults.size(), mAutolCount.get(), mTotalCount.get(),
+                (System.currentTimeMillis() - mStartTime) / 1000, mOldJuanCnt, mOldAutoCount, mOldTotalCount, mOldDuration);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(USBCameraActivity_new.this);
         LayoutInflater inflater = LayoutInflater.from(USBCameraActivity_new.this);
@@ -487,7 +562,7 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
     /**
      * 上传操作
      */
-    private void upResult(){
+    private void upResult() {
         List<RecognitionResult> results = new ArrayList<>(mRecognitionResults);
         CounterHelper.uploadRecognitionResult(mSheId, mSheName, (int) ((System.currentTimeMillis() - mStartTime) / 1000),
                 results, USBCameraActivity_new.this, new CounterHelper.OnUploadResultListener() {
@@ -533,7 +608,7 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
     /**
      * 显示错误提示框
      */
-    private void showErrorDialog(){
+    private void showErrorDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(MyApplication.getContext())
                 .setIcon(R.drawable.cowface)
                 .setTitle("提示")
@@ -764,13 +839,15 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
 
     /**
      * 画面改变时 进行相关
+     *
      * @param view
      * @param surface
      * @param width
      * @param height
      */
     @Override
-    public void onSurfaceChanged(CameraViewInterface view, Surface surface, int width, int height) {}
+    public void onSurfaceChanged(CameraViewInterface view, Surface surface, int width, int height) {
+    }
 
     @Override
     protected void onResume() {
