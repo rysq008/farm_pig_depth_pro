@@ -13,7 +13,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
         //debug versionCode 1102
-        //release versionCode 1098
+        //release versionCode 1099
         versionCode 1099
         versionName "1.099"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

@@ -106,7 +106,7 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
     TextView qiyezhanghu;
     EditText qiyepassword;
     private boolean type;//判断进入方式，true列表进入，false新建
-
+    File tempFile;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -496,7 +496,7 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
      */
     private void photograph(String imageType) {
         this.imageType = imageType;
-        File tempFile = new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME);
+        tempFile = new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME);
         Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         //下面这句指定调用相机拍照后的照片存储的路径
         takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(AddCompanyActivity.this, BuildConfig.APPLICATION_ID + ".provider", tempFile));
@@ -510,14 +510,16 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
 //                if(data !=null){
 //                crop(Environment.getExternalStorageDirectory() + "/" + IMAGE_FILE_NAME);
 //                }
-                File temp = new File(Environment.getExternalStorageDirectory() + "/" + IMAGE_FILE_NAME);
-                try {
-                    setPicToView(temp);
-                } catch (Exception e) {
-//                    toastUtils.showLong(this, e.getMessage());
-                    e.printStackTrace();
-                }
+//                File temp = new File(Environment.getExternalStorageDirectory() + "/" + IMAGE_FILE_NAME);
 
+                if(tempFile.exists()){
+                    try {
+                        setPicToView(tempFile);
+                    } catch (Exception e) {
+//                    toastUtils.showLong(this, e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
                 break;
             case REQUESTCODE_CUTTING:// 取得裁剪后的图片
                 if (data != null) {
