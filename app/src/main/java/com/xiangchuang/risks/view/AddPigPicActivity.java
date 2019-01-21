@@ -100,6 +100,8 @@ public class AddPigPicActivity extends BaseActivity {
 
     private String autoWeight;
 
+    File tempFile;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_add_pig_pic;
@@ -152,7 +154,7 @@ public class AddPigPicActivity extends BaseActivity {
         bt1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File tempFile = new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME);
+                tempFile = new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME);
                 Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 //下面这句指定调用相机拍照后的照片存储的路径
                 takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getApplicationContext(), BuildConfig.APPLICATION_ID + ".provider", tempFile));
@@ -199,15 +201,17 @@ public class AddPigPicActivity extends BaseActivity {
                 break;
             // 调用相机拍照
             case REQUESTCODE_TAKE:
-                File temp = new File(Environment.getExternalStorageDirectory() + "/" + IMAGE_FILE_NAME);
+//                File temp = new File(Environment.getExternalStorageDirectory() + "/" + IMAGE_FILE_NAME);
 //                crop(Environment.getExternalStorageDirectory() + "/" + IMAGE_FILE_NAME);
-
-                try {
-                    setPicToView(temp);
-                } catch (Exception e) {
-                    //Toast.makeText(AddPigPicActivity.this, "图片处理异常，请重试。", Toast.LENGTH_SHORT).show();
-                    e.printStackTrace();
+                if(tempFile.exists()){
+                    try {
+                        setPicToView(tempFile);
+                    } catch (Exception e) {
+                        //Toast.makeText(AddPigPicActivity.this, "图片处理异常，请重试。", Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    }
                 }
+
 
                 break;
             // 取得裁剪后的图片
