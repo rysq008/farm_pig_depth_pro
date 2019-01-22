@@ -307,7 +307,7 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
                 return false;
             }
         });
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
             count_detail.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
@@ -322,9 +322,9 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
                                     testCount = 0;
                                     Random r = new Random();
                                     if (TextUtils.isEmpty(et.getText()))
-                                        testNumber = 10 + r.nextInt(100);
+                                    { testNumber = 10 + r.nextInt(100);}
                                     else
-                                        testNumber = Integer.valueOf(et.getText().toString());
+                                    {testNumber = Integer.valueOf(et.getText().toString());}
                                     testNumber = testNumber - testNumber % 2;
                                     if (testNumber < 2) testNumber = 2;
                                     mTakePictureButton.performClick();
@@ -334,6 +334,7 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
                     return false;
                 }
             });
+        }
         //识别按钮
         mTakePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -573,7 +574,7 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
                             public void run() {
                                 pop.dismiss();
                                 if (succeed) {
-                                    Log.e(TAG, "resutl: "+resutl.toString() );
+                                    Log.e(TAG, "resutl: " + resutl.toString());
                                     try {
                                         JSONObject jsonObject = new JSONObject(resutl);
                                         int status = jsonObject.getInt("status");
@@ -591,11 +592,11 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();
-                                        Log.e(TAG, "Exception: "+e.toString() );
+                                        Log.e(TAG, "Exception: " + e.toString());
                                         showErrorDialog();
                                     }
                                 } else {
-                                    Log.e(TAG, "!succeed: "+succeed );
+                                    Log.e(TAG, "!succeed: " + succeed);
                                     showErrorDialog();
                                 }
                             }

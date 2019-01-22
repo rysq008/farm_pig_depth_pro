@@ -127,9 +127,9 @@ public class MediaInsureItem {
 
     public void zipVideoNameDel(){
         FileUtils.deleteFile(mZipVideoDir);
+        mZipVideoDir = null;
         Log.i("zipVideoNameDel:","删除当前文件夹");
     }
-
 
     public void currentDel()    {
 

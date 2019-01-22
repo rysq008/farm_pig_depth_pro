@@ -113,6 +113,7 @@ import innovation.media.MediaInsureItem;
 import innovation.media.MediaPayItem;
 import innovation.media.Model;
 import innovation.utils.FileUtils;
+import innovation.utils.ThreadPoolProxyFactory;
 import innovation.utils.ZipUtil;
 import innovation.view.SendView;
 import okhttp3.Call;
@@ -1408,7 +1409,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
         mRecordControl.setText(R.string.record);
         mRecordSwitch.setEnabled(true);
 
-        mMediaRecorder.reset();
+//        mMediaRecorder.reset();
         Global.VIDEO_PROCESS = false;
         startPreview();
 
@@ -1488,12 +1489,12 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
                         mRecordSwitch.setEnabled(true);
                         // 停止视频录制
                         Log.i("停止视频录制", "start ");
-                        try {
-                            captureSession.stopRepeating();
-                            captureSession.abortCaptures();
-                        } catch (CameraAccessException e) {
-                            e.printStackTrace();
-                        }
+//                        try {
+//                            captureSession.stopRepeating();
+//                            captureSession.abortCaptures();
+//                        } catch (CameraAccessException e) {
+//                            e.printStackTrace();
+//                        }
 
                         try{
                             TimerTask timerTask = new TimerTask() {
@@ -1511,7 +1512,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
                                                 mMediaRecorder = null;
                                                 mMediaRecorder = new MediaRecorder();
                                             }
-                                            mMediaRecorder.reset();
+                                            mMediaRecorder.release();
                                         }
                                     });
                                 }
@@ -1665,7 +1666,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
          * 调用方法 生成zip文件存储路径
          * storage/emulated/0/innovation/animal/ZipVideo
          */
-        Global.mediaInsureItem.getZipVideoDir();
+//        Global.mediaInsureItem.getZipVideoDir();
         Global.mediaInsureItem.getZipFileName();
         File videoDirnew = new File(videoDri);//视频目录下的文件
         File[] filesVideo = videoDirnew.listFiles();
@@ -1799,7 +1800,8 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
     }
 
     public void uploadRecognitionResult(CounterHelper.OnUploadResultListener listener) {
-        new Thread(new Runnable() {
+
+        ThreadPoolProxyFactory.getNormalThreadPoolProxy().execute(new Runnable() {
             @Override
             public void run() {
 //                String path = com.xiangchuang.risks.utils.FileUtils.createTempDir(context);
@@ -1876,7 +1878,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
                     }
                 });
             }
-        }).start();
+        });
     }
 
 }
