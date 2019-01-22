@@ -36,6 +36,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import innovation.utils.ThreadPoolProxy;
+import innovation.utils.ThreadPoolProxyFactory;
 import innovation.utils.ZipUtil;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -66,7 +68,8 @@ public final class CounterHelper {
     public static void uploadRecognitionResult(String sheId, String sheName, int duration,
                                                List<RecognitionResult> results,
                                                Context context, OnUploadResultListener listener) {
-        new Thread(new Runnable() {
+
+        ThreadPoolProxyFactory.getNormalThreadPoolProxy().execute(new Runnable() {
             @Override
             public void run() {
                 String path = FileUtils.createTempDir(context);
@@ -78,6 +81,7 @@ public final class CounterHelper {
                     JSONArray arrays = new JSONArray();
                     for (RecognitionResult recognitionResult : results) {
                         String fileName = String.format("%s/%d.jpg", path, recognitionResult.index);
+                        Log.e("CounterHelper", "fileName"+fileName);
                         saveBitmap(recognitionResult.bitmap, fileName);
                         files[recognitionResult.index] = new File(fileName);
                         JSONObject jsonObject = new JSONObject();
@@ -106,7 +110,7 @@ public final class CounterHelper {
 
                 File zipFile = new File(path, "out.zip");
                 ZipUtil.zipFiles(files, zipFile);
-                Map map = new HashMap();
+                Map<String, String> map = new HashMap<>();
                 map.put(Constants.AppKeyAuthorization, "hopen");
                 map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, context));
 
@@ -139,11 +143,12 @@ public final class CounterHelper {
                     }
                 });
             }
-        }).start();
+        });
     }
 
     public static void recognitionFromNet(final Bitmap bitmap, final OnImageRecognitionListener listener) {
-        new Thread(new Runnable() {
+
+        ThreadPoolProxyFactory.getNormalThreadPoolProxy().execute(new Runnable() {
             @Override
             public void run() {
                 Map param = new HashMap();
@@ -185,7 +190,8 @@ public final class CounterHelper {
                     }
                 });
             }
-        }).start();
+        });
+
     }
 
     /**
@@ -194,7 +200,7 @@ public final class CounterHelper {
      * @param listener
      */
     public static void recognitionWeightFromNet(final Bitmap bitmap, final OnImageRecognitionWeightListener listener) {
-        new Thread(new Runnable() {
+        ThreadPoolProxyFactory.getNormalThreadPoolProxy().execute((new Runnable() {
             @Override
             public void run() {
                 Map param = new HashMap();
@@ -233,7 +239,7 @@ public final class CounterHelper {
                     }
                 });
             }
-        }).start();
+        }));
     }
 
 

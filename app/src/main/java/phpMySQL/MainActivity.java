@@ -24,6 +24,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import innovation.utils.ThreadPoolProxyFactory;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     private static final int PICK_FILE_REQUEST = 1;
@@ -60,13 +62,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if(selectedFilePath != null){
                 dialog = ProgressDialog.show(MainActivity.this,"","Uploading File...",true);
 
-                new Thread(new Runnable() {
+                ThreadPoolProxyFactory.getNormalThreadPoolProxy().execute(new Runnable() {
                     @Override
                     public void run() {
                         //creating new thread to handle Http Operations
                         uploadFile(selectedFilePath);
                     }
-                }).start();
+                });
+
             }else{
                 Toast.makeText(MainActivity.this,"Please choose a File First",Toast.LENGTH_SHORT).show();
             }

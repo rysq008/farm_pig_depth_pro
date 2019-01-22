@@ -12,6 +12,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static android.os.Environment.DIRECTORY_PICTURES;
+
 /**
  * Created by kangjh on 2016/4/19.
  */
@@ -153,7 +155,8 @@ public class FileUtils {
     }
 
     public static String createTempDir(Context context) {
-        File root = context.getCacheDir();
+        File root = context.getExternalFilesDir(DIRECTORY_PICTURES);
+        context.getCacheDir();
         String path = null;
         while (true) {
             path = String.format("%s/%d", root, (int) (Math.random() * 1000000));
