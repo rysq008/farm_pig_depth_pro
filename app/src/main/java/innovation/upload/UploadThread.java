@@ -12,10 +12,8 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import org.tensorflow.demo.Global;
-import org.tensorflow.demo.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,8 +27,6 @@ import innovation.media.Model;
 import innovation.utils.FileUtils;
 import innovation.utils.HttpRespObject;
 import innovation.utils.HttpUtils;
-import innovation.utils.NetworkUtil;
-import innovation.utils.StorageUtils;
 import innovation.utils.UploadObject;
 import innovation.utils.ZipUtil;
 
