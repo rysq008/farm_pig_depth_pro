@@ -76,6 +76,7 @@ import innovation.location.LocationManager_new;
 import innovation.login.RespObject;
 import innovation.login.Utils;
 //import innovation.tensorflow.tracking.FaceDetector;
+import innovation.network_status.NetworkUtil;
 import innovation.upload.UploadHelper;
 import innovation.upload.UploadThread;
 import innovation.utils.ConstUtils;
@@ -1141,7 +1142,7 @@ public class MediaProcessor {
         timeout_resert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!MyApplication.isNetConnected) {
+                if (!NetworkUtil.isNetworkConnect(mContext)) {
                     Toast.makeText(MyApplication.getContext(), "断网了，请联网后重试。", Toast.LENGTH_SHORT).show();
                     return;
                 }
