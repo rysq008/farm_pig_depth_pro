@@ -22,12 +22,9 @@ import com.hjq.permissions.XXPermissions;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.utils.AppManager;
 import com.xiangchuang.risks.utils.ShareUtils;
-import com.xiangchuangtec.luolu.animalcounter.BuildConfig;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
 import com.xiangchuang.risks.base.BaseActivity;
-import com.xiangchuang.risks.model.bean.LoginBean;
-import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
 import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
 
 
@@ -39,7 +36,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.OnClick;
 import innovation.entry.InnApplication;
-import innovation.location.LocationManager_new;
+import innovation.network_status.NetworkUtil;
 import innovation.utils.HttpUtils;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -154,7 +151,7 @@ public class LoginFamerActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.loginfamer_login:
-                if (!MyApplication.isNetConnected) {
+                if (!NetworkUtil.isNetworkConnect(LoginFamerActivity.this)) {
                     Toast.makeText(this, "断网了，请联网后重试。", Toast.LENGTH_SHORT).show();
                     return;
                 }

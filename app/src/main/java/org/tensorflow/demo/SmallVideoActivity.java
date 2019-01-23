@@ -47,6 +47,7 @@ import java.util.List;
 import java.util.Map;
 
 import innovation.media.MediaInsureItem;
+import innovation.network_status.NetworkUtil;
 import innovation.utils.FileUtils;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -535,7 +536,7 @@ public class SmallVideoActivity extends AppCompatActivity implements SurfaceHold
         timeout_resert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!MyApplication.isNetConnected) {
+                if (!NetworkUtil.isNetworkConnect(SmallVideoActivity.this)) {
                     Toast.makeText(SmallVideoActivity.this, "断网了，请联网后重试。", Toast.LENGTH_SHORT).show();
                     return;
                 }
