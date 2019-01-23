@@ -3,11 +3,13 @@ package com.xiangchuang.risks.view;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.MediaController;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -48,6 +50,8 @@ public class HogDetailActivity_new extends BaseActivity {
     ImageView ivCancel;
     @BindView(R.id.vv_sow)
     VideoView vvSow;
+    @BindView(R.id.pb_loading)
+    ProgressBar mProgressBar;
     private List<String> picpaths;
 
     private String mSheId;
@@ -110,7 +114,7 @@ public class HogDetailActivity_new extends BaseActivity {
                                     HogDetailBean.DataBean data = hogDetailBean.getData();
                                     int count = data.getCount();
                                     String createtime = data.getCreatetime();
-                                    String name = data.getName();
+                                                            String name = data.getName();
                                     hog_name.setText(name);
                                     hog_count.setText(count + "");
                                     hog_date.setText(createtime);
@@ -150,7 +154,28 @@ public class HogDetailActivity_new extends BaseActivity {
         vvSow.setVideoURI(uri);
         //开始播放视频
         vvSow.start();
+        handler.postDelayed(runnable,0);
     }
+
+
+    int old_duration;
+    final Handler handler = new Handler();
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            int duration = vvSow.getCurrentPosition();
+            if(vvSow.isPlaying()){
+                if (old_duration == duration) {
+                    mProgressBar.setVisibility(View.VISIBLE);
+                } else {
+                    mProgressBar.setVisibility(View.GONE);
+                }
+            }
+            old_duration = duration;
+            handler.postDelayed(runnable, 500);
+        }
+    };
+
     class MyPlayerOnCompletionListener implements MediaPlayer.OnCompletionListener {
         @Override
         public void onCompletion(MediaPlayer mp) {
@@ -161,5 +186,12 @@ public class HogDetailActivity_new extends BaseActivity {
     @Override
     public void onBackPressed() {
         finish();
+    }
+
+    //关闭activity时销毁检测线程
+    @Override
+    protected void onDestroy() {
+        handler.removeCallbacks(runnable);
+        super.onDestroy();
     }
 }

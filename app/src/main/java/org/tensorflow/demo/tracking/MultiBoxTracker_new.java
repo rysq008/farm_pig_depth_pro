@@ -69,7 +69,7 @@ import static org.tensorflow.demo.DetectorActivity_new.offsetY;
 public class MultiBoxTracker_new {
     private final Logger logger = new Logger();
 
-    public static final float TEXT_SIZE_DIP = 18;
+    public static final float TEXT_SIZE_DIP = 24;
 
     // Maximum percentage of a box that can be overlapped by another box at detection time. Otherwise
     // the lower scored box (new or old) will be removed.
@@ -258,7 +258,6 @@ public class MultiBoxTracker_new {
         float height = canvas.getHeight();
 
         for (int i = 0; i < trackedObjects.size(); i++) {
-//        for (final TrackedRecognition recognition : trackedObjects) {
             final RectF trackedPos =
                     (objectTracker != null)
                             ? trackedObjects.get(i).trackedObject.getTrackedPositionInPreviewFrame()
@@ -268,41 +267,9 @@ public class MultiBoxTracker_new {
             final float cornerSize = Math.min(trackedPos.width(), trackedPos.height()) / 8.0f;
             canvas.drawRoundRect(trackedPos, cornerSize, cornerSize, boxPaint);
 
-//            final String labelString = "x="+x+";y="+y +"trackedPos="+trackedPos.toString()+";\noffsetX="+offsetX +";offsetY="+offsetY;
-//                    !TextUtils.isEmpty(trackedObjects.get(i).title)
-//                            ? String.format("%s %.2f", trackedObjects.get(i).title, trackedObjects.get(i).detectionConfidence)
-//                            : String.format("%.2f", trackedObjects.get(i).detectionConfidence);
-//            Log.e("labelString", "labelString: "+labelString);
-            borderedText.drawText(canvas, trackedPos.left + cornerSize, trackedPos.bottom, (sowCount-i)+"头");
+            //            borderedText.drawText(canvas, trackedPos.left + cornerSize, trackedPos.bottom, (sowCount-i)+"头");
         }
-
-//        for (TrackerItem item : mFrameRects) {
-//            RectF trackRectF = item.mRect;
-//            float cornerSize = Math.min(trackRectF.width(), trackRectF.height()) / 8.0f;
-//            String tempAngle = "未知";
-//            if (DetectorActivity_new.AngleTrackType == 1) {
-//                tempAngle = "左脸";
-//            } else if (DetectorActivity_new.AngleTrackType == 2) {
-//                tempAngle = "正脸";
-//            } else if (DetectorActivity_new.AngleTrackType == 3) {
-//                tempAngle = "右脸";
-//            } else if (DetectorActivity_new.AngleTrackType == 10) {
-//                tempAngle = "未识别角度";
-//            }else {
-//                tempAngle = "未识别角度";
-//            }
-//            String s1 = tempAngle + "\r\n";
-//            Vector<String> vec = new Vector<String>();
-//            vec.add(s1);//把字符串str压进容器
-//            borderedText.drawLines(canvas, (trackRectF.left + trackRectF.right) / 2, (trackRectF.top + trackRectF.bottom) / 2, vec);
-//            //在屏幕上输出已采集到的角度�?
-//            showTime_start = System.currentTimeMillis();
-//            int drawY_capture = (int) (borderedText.getTextSize() * listAngles_capture.size());
-//            borderedText.drawLines(canvas, 100, drawY_capture + 50, listAngles_capture);
-//        }
-//
-//        // canvas.drawRect(100f, 100f, 100f, 100f, boxPaint);
-//        borderedText.drawText(canvas, (left + right) / 2 - 190, top, getReminderMsgText());
+        borderedText.drawText(canvas, 50,70,sowCount+"头");
     }
 
     /**
