@@ -42,7 +42,7 @@ import innovation.utils.PreferencesUtils;
 import innovation.utils.ScreenUtil;
 
 import org.tensorflow.demo.DetectorActivity_new;
-import org.tensorflow.demo.env.BorderedText;
+import org.tensorflow.demo.env.BorderedText_Breeding;
 import org.tensorflow.demo.env.ImageUtils;
 import org.tensorflow.demo.env.Logger;
 
@@ -115,7 +115,7 @@ public class MultiBoxTracker_new {
     private final Paint boxPaint = new Paint();
 
     private float textSizePx;
-    private BorderedText borderedText;
+    private BorderedText_Breeding borderedText;
 
     private Matrix frameToCanvasMatrix;
 
@@ -150,7 +150,7 @@ public class MultiBoxTracker_new {
         textSizePx =
                 TypedValue.applyDimension(
                         TypedValue.COMPLEX_UNIT_DIP, TEXT_SIZE_DIP, context.getResources().getDisplayMetrics());
-        borderedText = new BorderedText(textSizePx);
+        borderedText = new BorderedText_Breeding(textSizePx);
         // TODO: 2018/9/14 By:LuoLu
         showTime_start = System.currentTimeMillis();
     }
@@ -269,7 +269,7 @@ public class MultiBoxTracker_new {
 
             //            borderedText.drawText(canvas, trackedPos.left + cornerSize, trackedPos.bottom, (sowCount-i)+"头");
         }
-        borderedText.drawText(canvas, 50,70,sowCount+"头");
+        borderedText.drawText(canvas, 100,100,sowCount+"头");
     }
 
     /**

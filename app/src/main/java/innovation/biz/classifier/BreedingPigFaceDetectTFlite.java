@@ -571,15 +571,15 @@ public class BreedingPigFaceDetectTFlite {
                 float w = rightx1 - leftx1;
                 float h = righty1 - lefty1;
                 //计算重合部分面积
-                float wh = w * h;
-                float iou = wh /
-                        ((lasts.get(i).getLocation().right - lasts.get(i).getLocation().left)
-                                * (lasts.get(i).getLocation().bottom - lasts.get(i).getLocation().top) +
-                                (currents.get(j).getLocation().right - currents.get(j).getLocation().left)
-                                        * (currents.get(j).getLocation().bottom - currents.get(j).getLocation().left) - wh);
-                Log.e(TAG, "calculateListIou: 前单"+iou);
+                float wh = (w * h) < 0 ? 0 : (w * h);
+                float area = (lasts.get(i).getLocation().right - lasts.get(i).getLocation().left)
+                        * (lasts.get(i).getLocation().bottom - lasts.get(i).getLocation().top) +
+                        (currents.get(j).getLocation().right - currents.get(j).getLocation().left)
+                                * (currents.get(j).getLocation().bottom - currents.get(j).getLocation().left) - wh;
+                float iou = wh /area;
+//                Log.e(TAG, "calculateListIou: 前单"+iou);
                 //判断重合部分面积是否大于指定阈值， 大于则证明是已存在对象并计算出水平位移， 否则单独是对象
-                if (iou > 0.53f) {
+                if (iou > 0.43f) {
                     isDan = false;
                     centerXOffset = ((lasts.get(i).getLocation().right + lasts.get(i).getLocation().left) / 2) -
                             ((currents.get(j).getLocation().right + currents.get(j).getLocation().left) / 2);
@@ -602,8 +602,9 @@ public class BreedingPigFaceDetectTFlite {
             for (int k = 0; k < shanTiaoBeanList.size(); k++) {
                 float xMi = shanTiaoBeanList.get(k).getxMin();
                 float xMa = shanTiaoBeanList.get(k).getxMax();
-                shanTiaoBeanList.get(k).setxMin(xMi + 0.5f * centerXOffset);
-                shanTiaoBeanList.get(k).setxMax(xMa + 1.5f * centerXOffset);
+                float xCenter = (xMi+xMa)/2;
+                shanTiaoBeanList.get(k).setxMin(xCenter + 0.5f * centerXOffset);
+                shanTiaoBeanList.get(k).setxMax(xCenter + 1.5f * centerXOffset);
                 float tempCenter = (shanTiaoBeanList.get(k).getxMax() + shanTiaoBeanList.get(k).getxMin()) / 2;
                 //判断闪跳集合中的对象中心点是否超出范围 超出则删除当前对象
                 if (tempCenter > maxBase) {
@@ -623,14 +624,13 @@ public class BreedingPigFaceDetectTFlite {
                 float w = rightx1 - leftx1;
                 float h = righty1 - lefty1;
                 //计算重合部分面积
-                float wh = w * h;
-                float iou = wh /
-                        ((lasts.get(j).getLocation().right - lasts.get(j).getLocation().left)
-                                * (lasts.get(j).getLocation().bottom - lasts.get(j).getLocation().top) +
-                                (currents.get(i).getLocation().right - currents.get(i).getLocation().left)
-                                        * (currents.get(i).getLocation().bottom - currents.get(i).getLocation().left) - wh);
-                Log.e(TAG, "calculateListIou: 后单"+iou);
-                if (iou > 0.53f) {
+                float wh = (w * h) < 0 ? 0 : (w * h);
+                float area = (lasts.get(j).getLocation().right - lasts.get(j).getLocation().left)
+                        * (lasts.get(j).getLocation().bottom - lasts.get(j).getLocation().top) +
+                        (currents.get(i).getLocation().right - currents.get(i).getLocation().left)
+                                * (currents.get(i).getLocation().bottom - currents.get(i).getLocation().left) - wh;
+                float iou = wh / area;
+                if (iou > 0.43f) {
                     isDan = false;
                     break;
                 } else {

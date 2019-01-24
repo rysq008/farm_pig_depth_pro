@@ -228,18 +228,18 @@ public abstract class CameraActivity_new extends Activity implements OnImageAvai
 
     @Override
     public boolean onKeyDown(final int keyCode, final KeyEvent event) {
-        Log.i("keyCode:", "返回"+keyCode);
-        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-            debug = !debug;
-            requestRender();
-            onSetDebug(debug);
-            return true;
-        } else if (keyCode == 4) {
-            Log.i("onKeyDown:", "返回");
-            boolean b = moveTaskToBack(false);
-            finish();
-            Log.i("onKeyDown:", "==" + b);
-        }
+//        Log.i("keyCode:", "返回"+keyCode);
+//        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+//            debug = !debug;
+//            requestRender();
+//            onSetDebug(debug);
+//            return true;
+//        } else if (keyCode == 4) {
+//            Log.i("onKeyDown:", "返回");
+//            boolean b = moveTaskToBack(false);
+//            finish();
+//            Log.i("onKeyDown:", "==" + b);
+//        }
         return super.onKeyDown(keyCode, event);
     }
 

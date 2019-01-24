@@ -45,7 +45,7 @@ import com.xiangchuangtec.luolu.animalcounter.R;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
 
 import org.tensorflow.demo.OverlayView.DrawCallback;
-import org.tensorflow.demo.env.BorderedText;
+import org.tensorflow.demo.env.BorderedText_Breeding;
 import org.tensorflow.demo.env.ImageUtils;
 import org.tensorflow.demo.env.Logger;
 import org.tensorflow.demo.tracking.MultiBoxTracker_new;
@@ -116,7 +116,7 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
 
     private byte[] luminance;
 
-    private BorderedText borderedText;
+    private BorderedText_Breeding borderedText;
 
     //haojie add
     private int image_count = 0;
@@ -192,7 +192,7 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
             mFragment.setParmes(sheId,inspectNo, reason);
         }
         final float textSizePx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, TEXT_SIZE_DIP, getResources().getDisplayMetrics());
-        borderedText = new BorderedText(textSizePx);
+        borderedText = new BorderedText_Breeding(textSizePx);
         borderedText.setTypeface(Typeface.MONOSPACE);
         tracker = new MultiBoxTracker_new(this);
 
@@ -310,14 +310,12 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
 //        } catch (InterruptedException e) {
 //            e.printStackTrace();
 //        }
-        Log.i("====== " ,"===onImageAvailable=======");
         Image image = null;
         ++timestamp;
         final long currTimestamp = timestamp;
         try {
             image = reader.acquireLatestImage();
             if (image == null) {
-                Log.i("====== " ,"===onImageAvailable1=======");
                 return;
             }
             Trace.beginSection("imageAvailable");
@@ -359,7 +357,6 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
             }
             LOGGER.e(e, "Exception!");
             Trace.endSection();
-            Log.i("====== " ,"===onImageAvailable4=======");
             return;
         }
 
@@ -379,14 +376,12 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
         imageErrMsg = "";
 
         if (!Global.VIDEO_PROCESS) {
-            Log.i("====== " ,"===onImageAvailable3=======");
             return;
         }
 
         // 图像质量检查
         checkImageQuality(croppedBitmap);
         if (imageok) {
-            Log.i("====== " ,"===onImageAvailable6=======");
 
             Bitmap rotateBitmap = innovation.utils.ImageUtils.rotateBitmap(croppedBitmap, 90);
 
@@ -415,7 +410,6 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
         Log.d(TAG, "猪分类器");
         pigTFliteDetector.pigRecognitionAndPostureItemTFlite(padBitmap);
         if (BreedingPigFaceDetectTFlite.recognitionAndPostureItem != null) {
-            Log.i("====== " ,"===onImageAvailable7=======");
 
             tracker.trackAnimalResults(BreedingPigFaceDetectTFlite.recognitionAndPostureItem.getPostureItem(), PigRotationPrediction.pigPredictAngleType);
 
@@ -426,11 +420,9 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
                 BreedingPigFaceDetectTFlite.Recognition recognition;
                 for (final BreedingPigFaceDetectTFlite.Recognition result : BreedingPigFaceDetectTFlite.recognitionAndPostureItem.getList()) {
 
-                    Log.i("======" ,"===onImageAvailable8=======");
                     final RectF location = result.getLocation();
                     Log.e("RectF", "RectF: " + location);
                     if (location != null) {
-                        Log.i("====== " ,"===onImageAvailable9=======");
                         canvas.drawRect(location, paint);
 
                         Matrix tempMatrix = new Matrix();
@@ -450,7 +442,6 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
                         mappedRecognitions.add(recognition);
                     }
                 }
-                Log.i("====== " ,"===onImageAvailableA=======");
                 Log.e("mappedRecognitions", "mappedRecognitions "+mappedRecognitions.size());
                 tracker.trackResults(mappedRecognitions, luminance, currTimestamp);
             }

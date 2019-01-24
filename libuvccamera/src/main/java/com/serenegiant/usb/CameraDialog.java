@@ -42,6 +42,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.serenegiant.usb.DeviceFilter;
 import com.serenegiant.usb.USBMonitor;
@@ -64,8 +65,30 @@ public class CameraDialog extends DialogFragment {
 		CameraDialog dialog = newInstance(/* add parameters here if you need */);
 		dialog.onAttach(parent);
 		final List<DeviceFilter> filter = DeviceFilter.getDeviceFilters(parent, R.xml.device_filter);
-		dialog.mUSBMonitor.requestPermission((UsbDevice)dialog.mUSBMonitor.getDeviceList(filter.get(0)).get(0));
+		if(filter.size()>0){
+			List<UsbDevice> usbDeviceList = dialog.mUSBMonitor.getDeviceList(filter.get(0));
+			if(usbDeviceList.size()>0){
+				dialog.mUSBMonitor.requestPermission(usbDeviceList.get(0));
+			}else{
+				parent.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						Toast.makeText(parent, "连接外界摄像头失败，请尝试重新连接外接摄像头。",Toast.LENGTH_LONG).show();
+					}
+				});
+			}
+//			dialog.mUSBMonitor.requestPermission((UsbDevice)dialog.mUSBMonitor.getDeviceList(filter.get(0)).get(0));
+		}else{
+			parent.runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					Toast.makeText(parent, "连接外界摄像头失败，请尝试重新连接外接摄像头。",Toast.LENGTH_LONG).show();
+				}
+			});
+		}
 	}
+
+
 	
 	/**
 	 * Helper method

@@ -20,10 +20,10 @@ import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-        import android.graphics.Color;
-        import android.graphics.Matrix;
-        import android.graphics.Paint;
-        import android.graphics.RectF;
+import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -44,7 +44,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-        import java.util.List;
+import java.util.List;
 import java.util.Locale;
 
 import innovation.entry.InnApplication;
@@ -54,17 +54,18 @@ import static android.app.PendingIntent.getActivity;
 /**
  * Created by luolu on 2018/3/1.
  */
-public class Utils{
+public class Utils {
     private static final String TAG = "Utils";
     private static Logger mlogger = new Logger();
     private TextToSpeech textToSpeech;
     private Context mcontex;
-public Utils(){
-}
-    public static int getRotation(int frameRotation){
+
+    public Utils() {
+    }
+
+    public static int getRotation(int frameRotation) {
         int rotation = 0;
-        switch (frameRotation)
-        {
+        switch (frameRotation) {
             case 270:
                 rotation = 90;
                 break;
@@ -77,6 +78,7 @@ public Utils(){
         }
         return rotation;
     }
+
     private static Matrix getTransformationMatrix(
             final int srcWidth,
             final int srcHeight,
@@ -87,7 +89,7 @@ public Utils(){
 
         if (applyRotation != 0) {
             if (applyRotation % 90 != 0) {
-                Log.w(TAG, "Rotation of " + applyRotation +" % 90 != 0");
+                Log.w(TAG, "Rotation of " + applyRotation + " % 90 != 0");
             }
 
             // Translate so center of image is at origin.
@@ -122,7 +124,7 @@ public Utils(){
 
     public static void drawRecognitions(
             Canvas canvas, List<Recognition> recognitions, Paint rectPaint,
-            Paint textPaint, float textSize){
+            Paint textPaint, float textSize) {
 
         int count = 0;
         for (Recognition recognition : recognitions) {
@@ -143,8 +145,8 @@ public Utils(){
                 canvas.getHeight() - 150, textPaint);
     }
 
-    public static float setAttributes(Context context, Paint rectPaint, Paint textPaint){
-        Resources resources= context.getResources();
+    public static float setAttributes(Context context, Paint rectPaint, Paint textPaint) {
+        Resources resources = context.getResources();
 
 //        rectPaint.setColor(resources.getColor(R.color.colorRect));
 //        luolu
