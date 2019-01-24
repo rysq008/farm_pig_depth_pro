@@ -81,7 +81,7 @@ public final class CounterHelper {
                     JSONArray arrays = new JSONArray();
                     for (RecognitionResult recognitionResult : results) {
                         String fileName = String.format("%s/%d.jpg", path, recognitionResult.index);
-                        Log.e("CounterHelper", "fileName"+fileName);
+                        Log.e("CounterHelper", "fileName" + fileName);
                         saveBitmap(recognitionResult.bitmap, fileName);
                         files[recognitionResult.index] = new File(fileName);
                         JSONObject jsonObject = new JSONObject();
@@ -95,15 +95,15 @@ public final class CounterHelper {
                         jsonObject.put("count", recognitionResult.count);
                         jsonObject.put("autoCount", recognitionResult.autoCount);
                         arrays.put(jsonObject);
-                        totalCount += recognitionResult.count;
-                        mAutoCount += recognitionResult.autoCount;
+                        totalCount += (recognitionResult.count < 0 ? 0 : recognitionResult.count);
+                        mAutoCount += (recognitionResult.autoCount < 0 ? 0 : recognitionResult.autoCount);
 
                     }
                     JSONObject root = new JSONObject();
                     root.put("pigsty", arrays);
                     locationString = root.toString();
                 } catch (JSONException e) {
-                    Log.e("uploadRecognitionResult", "JSONException: "+e.toString() );
+                    Log.e("uploadRecognitionResult", "JSONException: " + e.toString());
                     listener.onCompleted(false, "");
                     return;
                 }
@@ -127,7 +127,7 @@ public final class CounterHelper {
                 OkHttp3Util.uploadPreFile(Constants.SHECOMMIT, zipFile, "out.zip", param, map, new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        Log.e("uploadRecognitionResult", "IOException: "+e.toString() );
+                        Log.e("uploadRecognitionResult", "IOException: " + e.toString());
                         listener.onCompleted(false, "");
                     }
 
@@ -136,8 +136,8 @@ public final class CounterHelper {
                         if (response.code() == 200) {
                             String resutl = response.body().string();
                             listener.onCompleted(true, resutl);
-                        } else{
-                            Log.e("uploadRecognitionResult", "response.code(): "+response.code() );
+                        } else {
+                            Log.e("uploadRecognitionResult", "response.code(): " + response.code());
                             listener.onCompleted(false, "");
                         }
                     }
@@ -196,6 +196,7 @@ public final class CounterHelper {
 
     /**
      * 死猪估重接口
+     *
      * @param bitmap
      * @param listener
      */
@@ -243,8 +244,6 @@ public final class CounterHelper {
     }
 
 
-
-
     private static void saveBitmap(final Bitmap bitmap, final String filename) {
         final File file = new File(filename);
         if (file.exists()) {
@@ -287,7 +286,7 @@ public final class CounterHelper {
 
             int tempCount = 0;
             for (int i = 0; i < array.size(); i++) {
-                tempCount ++;
+                tempCount++;
                 JsonArray xyArray = array.get(i).getAsJsonArray();
 //                xyArray.get(0).getAsDouble();
 //                xyArray.get(1).getAsDouble();
@@ -311,9 +310,9 @@ public final class CounterHelper {
                 Log.i("xyayleftbottom", left + "," + top + "," + right + "," + bottom);
 
                 //canvas.drawRect(left, top, right, bottom, rectPaint);
-                canvas.drawCircle((float)x,(float)y,35,pointPaint);
+                canvas.drawCircle((float) x, (float) y, 35, pointPaint);
                 textPaint.setColor(Color.YELLOW);
-                canvas.drawText(tempCount+"", (float)x,(float)y+12f,textPaint);
+                canvas.drawText(tempCount + "", (float) x, (float) y + 12f, textPaint);
             }
 //            canvas.drawText("圈" + number, 150,
 //                    canvas.getHeight() - 100, textPaint);
@@ -322,7 +321,7 @@ public final class CounterHelper {
             textPaint.setColor(Color.RED);
             canvas.drawText("圈" + number, 80,
                     120, textPaint);
-            canvas.drawText("识别"+text + "头", 300,
+            canvas.drawText("识别" + text + "头", 300,
                     120, textPaint);
 
 
@@ -344,8 +343,8 @@ public final class CounterHelper {
         textPaint.setTextAlign(Paint.Align.CENTER);
         textPaint.setColor(Color.RED);
 
-        canvas.drawText("修正为" + text+"头", canvas.getWidth() - 200,
-                    120, textPaint);
+        canvas.drawText("修正为" + text + "头", canvas.getWidth() - 200,
+                120, textPaint);
         return copyBitmap;
     }
 
@@ -366,7 +365,7 @@ public final class CounterHelper {
         float scale = 1f;
 
         int max = Math.max(width, height);
-        if(max > 1080) {
+        if (max > 1080) {
             scale = 1080f / max;
         }
         // 取得想要缩放的matrix参数

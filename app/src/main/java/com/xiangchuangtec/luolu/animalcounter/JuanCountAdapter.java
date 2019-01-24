@@ -61,8 +61,9 @@ public class JuanCountAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         viewHolder.left_juan.setText("猪圈" + (mRecognitionResults.get(position).index + 1));
-        viewHolder.right_count.setText(mRecognitionResults.get(position).count +"头");
-        viewHolder.auto_count.setText(mRecognitionResults.get(position).autoCount +"头");
+        viewHolder.right_count.setText((mRecognitionResults.get(position).count < 0 ? 0 : mRecognitionResults.get(position).count)+"头");
+
+        viewHolder.auto_count.setText((mRecognitionResults.get(position).autoCount <0?0:mRecognitionResults.get(position).autoCount) +"头");
         listner.getname("猪圈" + (mRecognitionResults.get(position).index + 1));
         return convertView;
     }

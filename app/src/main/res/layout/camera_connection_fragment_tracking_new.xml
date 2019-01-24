@@ -124,7 +124,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="@android:color/black"
                 android:textSize="16sp"
-                android:text="@string/record"/>
+                android:text="开始\n点数"/>
 
             <RelativeLayout
                 android:id="@+id/record_switch"

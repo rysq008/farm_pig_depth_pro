@@ -23,12 +23,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:numColumns="2"
-                android:scaleType="centerInside"/>
+                android:scaleType="centerInside"
+                android:visibility="gone"/>
 
-            <VideoView
-                android:id="@+id/vv_sow"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="wrap_content">
+                <VideoView
+                    android:id="@+id/vv_sow"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <ProgressBar
+                    android:id="@+id/pb_loading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"/>
+            </RelativeLayout>
+
 
         </LinearLayout>
 
@@ -66,7 +78,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="300"
+                        android:text="--"
                         android:textColor="#ffffff"
                         android:textSize="14sp" />
 
@@ -89,7 +101,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:text="2018-10-04"
+                    android:text=""
                     android:textColor="#ffffff"
                     android:textSize="14sp" />
             </RelativeLayout>

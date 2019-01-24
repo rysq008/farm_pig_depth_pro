@@ -80,6 +80,8 @@ import android.widget.Toast;
 
 import com.xiangchuang.risks.model.bean.RecognitionResult;
 import com.xiangchuang.risks.utils.CounterHelper;
+import com.xiangchuang.risks.view.LoginFamerActivity;
+import com.xiangchuang.risks.view.SelectFunctionActivity_new;
 import com.xiangchuangtec.luolu.animalcounter.CounterActivity_new;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
@@ -617,7 +619,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
             // 录制、暂停按钮所在布局隐藏
             mReCordLayout.setVisibility(View.GONE);
             mIsRecordingVideo = false;
-            mRecordControl.setText(R.string.record);
+            mRecordControl.setText("开始\n点数");
 
             mRecordSwitch.setEnabled(true);
             // 停止视频录制
@@ -685,13 +687,18 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
     @Override
     public void onResume() {
         super.onResume();
+        activity = getActivity();
         startBackgroundThread();
-        //删除视频zip文件
-        Global.mediaInsureItem.zipVideoNameDel();
-        //删除视频文件
-        Global.mediaInsureItem.currentDel();
-        //创建视频路径
-        Global.mediaInsureItem.currentInit();
+
+        if(resultDialog ==null || !resultDialog.isShowing()){
+            //删除视频zip文件
+            Global.mediaInsureItem.zipVideoNameDel();
+            //删除视频文件
+            Global.mediaInsureItem.currentDel();
+            //创建视频路径
+            Global.mediaInsureItem.currentInit();
+        }
+
 
         collectNumberHandler.sendEmptyMessage(2);
         // When the screen is turned off and turned back on, the SurfaceTexture is already
@@ -739,14 +746,15 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
                     }*/
                     collectNumberHandler.sendEmptyMessage(1);
                 } else {
-                    try {
-                        Global.VIDEO_PROCESS = true;
-                        tmieVideoStart = System.currentTimeMillis();
-                        startRecordingVideo();
-                    } catch (Exception e) {
-                        Log.e(TAG, "record_control_IOException: " + e.toString());
-                        e.printStackTrace();
-                    }
+                    showGuideInformation();
+//                    try {
+//                        Global.VIDEO_PROCESS = true;
+//                        tmieVideoStart = System.currentTimeMillis();
+//                        startRecordingVideo();
+//                    } catch (Exception e) {
+//                        Log.e(TAG, "record_control_IOException: " + e.toString());
+//                        e.printStackTrace();
+//                    }
 
                 }
                 break;
@@ -769,6 +777,31 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
                 break;
         }
     }
+
+    /**
+     * 显示引导提示框
+     */
+    private void showGuideInformation() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity)
+                .setIcon(R.drawable.cowface).setTitle("提示")
+                .setMessage("请保持手机竖屏，从右向左移动拍摄进行点数")
+                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        try {
+                            Global.VIDEO_PROCESS = true;
+                            tmieVideoStart = System.currentTimeMillis();
+                            startRecordingVideo();
+                        } catch (Exception e) {
+                            Log.e(TAG, "record_control_IOException: " + e.toString());
+                            e.printStackTrace();
+                        }
+                    }
+                });
+        builder.setCancelable(false);
+        builder.show();
+    }
+
 
     private View.OnTouchListener textureViewTouchFocusClickListener = new View.OnTouchListener() {
         @Override
@@ -1406,14 +1439,13 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
         // UI
         //mMediaRecorder = new MediaRecorder();
         mIsRecordingVideo = false;
-        mRecordControl.setText(R.string.record);
         mRecordSwitch.setEnabled(true);
 
 //        mMediaRecorder.reset();
         Global.VIDEO_PROCESS = false;
         startPreview();
 
-        mRecordControl.setText(R.string.record);
+        mRecordControl.setText("开始\n点数");
         mRecordControl.setClickable(true);
     }
 
@@ -1484,7 +1516,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
                         // 录制、暂停按钮所在布局隐藏
                         mReCordLayout.setVisibility(View.GONE);
                         mIsRecordingVideo = false;
-                        mRecordControl.setText(R.string.record);
+                        mRecordControl.setText("开始\n点数");
 
                         mRecordSwitch.setEnabled(true);
                         // 停止视频录制
@@ -1584,9 +1616,8 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
         //猪舍id 猪圈id 保单号  出险原因
 //        MediaProcessor.getInstance(this.getActivity()).handleMediaResource_build(getActivity(), sheId, inspectNo, reason, mfile);
     }
-
+    private Dialog resultDialog;
     private void uploadRecognitionResult() {
-        Dialog dialog;
         String text = String.format("本次点数采集:\n" +
                         "合计 %d头 时长%d秒\n" +
                         "上次点数采集:\n" +
@@ -1605,14 +1636,14 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
         TextView title = view.findViewById(R.id.TV_title);
         title.setText("确认完成");
 
-        dialog = builder.create();
-        dialog.show();
-        dialog.getWindow().setContentView(view);
+        resultDialog = builder.create();
+        resultDialog.show();
+        resultDialog.getWindow().setContentView(view);
 
         view.findViewById(R.id.TV_close).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.dismiss();
+                resultDialog.dismiss();
             }
         });
 
@@ -1621,7 +1652,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
             @Override
             public void onClick(View v) {
                 synchronized (activity) {
-                    dialog.dismiss();
+                    resultDialog.dismiss();
                     activity.startActivity(new Intent(activity, DetectorActivity_new.class));
                     //删除视频zip文件
                     Global.mediaInsureItem.zipVideoNameDel();
@@ -1637,7 +1668,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.dismiss();
+                resultDialog.dismiss();
                 showProgressDialog(activity);
                 mProgressDialog.show();
                 processZip();
@@ -1648,8 +1679,8 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
             }
         });
 
-        dialog.getWindow().setGravity(Gravity.CENTER);
-        dialog.setCancelable(true);
+        resultDialog.getWindow().setGravity(Gravity.CENTER);
+        resultDialog.setCancelable(false);
     }
 
     //压缩视频文件
@@ -1794,7 +1825,8 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
                         dialog.dismiss();
                         activity.finish();
                     }
-                });
+                })
+                .setCancelable(false);
         builder.create();
         builder.show();
     }
@@ -1847,7 +1879,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
 
                 Map map = new HashMap();
                 map.put(Constants.AppKeyAuthorization, "hopen");
-                map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, MyApplication.getContext()));
+                map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, activity));
 
 //                String url = "http://47.92.167.61:8081/numberCheck/app/sheCommit";
                 Map<String, String> param = new HashMap<>();

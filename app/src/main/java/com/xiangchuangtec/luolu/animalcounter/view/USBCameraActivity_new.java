@@ -260,16 +260,20 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
                                 dialog.dismiss();
                                 CounterHelper.number++;
                                 RecognitionResult result = saveResultToList();
-                                Bitmap temp = CounterHelper.drawModifierBitmap(result.getBitmap(), String.valueOf(result.count));
-                                result.setBitmap(temp);
+
+                                if (result.autoCount >= 0) {
+                                    Bitmap temp = CounterHelper.drawModifierBitmap(result.getBitmap(), String.valueOf(result.count));
+                                    result.setBitmap(temp);
+                                }
+
                                 mJuanCountAdapter.addResult(result);
                                 mNextButton.setVisibility(View.GONE);
                                 mGoonButton.setVisibility(View.GONE);
                                 mResultImageView.setVisibility(View.GONE);
                                 mTakePictureButton.setVisibility(View.VISIBLE);
                                 llModifier.setVisibility(View.GONE);
-                                mTotalCountTextView.setText("总数" + mTotalCount.addAndGet(result.count) + "头");
-                                mAutolCount.addAndGet(result.autoCount);
+                                mTotalCountTextView.setText("总数" + mTotalCount.addAndGet(result.count < 0 ? 0 : result.count) + "头");
+                                mAutolCount.addAndGet(result.autoCount < 0 ? 0 : result.autoCount);
 
                                 uploadRecognitionResult();
                             }
@@ -321,10 +325,11 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
                                     isTest = true;
                                     testCount = 0;
                                     Random r = new Random();
-                                    if (TextUtils.isEmpty(et.getText()))
-                                    { testNumber = 10 + r.nextInt(100);}
-                                    else
-                                    {testNumber = Integer.valueOf(et.getText().toString());}
+                                    if (TextUtils.isEmpty(et.getText())) {
+                                        testNumber = 10 + r.nextInt(100);
+                                    } else {
+                                        testNumber = Integer.valueOf(et.getText().toString());
+                                    }
                                     testNumber = testNumber - testNumber % 2;
                                     if (testNumber < 2) testNumber = 2;
                                     mTakePictureButton.performClick();
@@ -341,12 +346,12 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
             public void onClick(View v) {
                 setCurrentBitmap(mCameraTextureView.getBitmap());
                 mResultImageView.setVisibility(View.GONE);
-                Bitmap bitmap = getCurrentBitmap();
-                if (bitmap == null) {
+                Bitmap tBitmap = getCurrentBitmap();
+                if (tBitmap == null) {
                     return;
                 }
                 showPop();
-                CounterHelper.recognitionFromNet(bitmap, new CounterHelper.OnImageRecognitionListener() {
+                CounterHelper.recognitionFromNet(tBitmap, new CounterHelper.OnImageRecognitionListener() {
                     @Override
                     public void onCompleted(int count, Bitmap bitmap) {
                         runOnUiThread(new Runnable() {
@@ -364,7 +369,13 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
                                     etModifier.setText(count + "");
                                     setCurrentResult(count, bitmap, null);
                                 } else {
-                                    Toast.makeText(USBCameraActivity_new.this, "识别失败！", Toast.LENGTH_SHORT).show();
+                                    tempNum = 0;
+                                    setCurrentResult(-1, tBitmap, null);
+                                    etModifier.setText(-1 + "");
+                                    mGoonButton.setVisibility(View.VISIBLE);
+                                    mNextButton.setVisibility(View.VISIBLE);
+                                    mTakePictureButton.setVisibility(View.GONE);
+                                    Toast.makeText(USBCameraActivity_new.this, "识别失败，\n请重点本圈或点下一圈由AI为您完成本圈点数。", Toast.LENGTH_LONG).show();
                                 }
                                 if (isTest) {
                                     testCount++;
@@ -382,7 +393,7 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
         });
         //重新采集
         mGoonButton = findViewById(R.id.usb_goon_button);
-        mGoonButton.setText("重新\n点数");
+        mGoonButton.setText("重点\n本圈");
         mGoonButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -402,8 +413,10 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
                 CounterHelper.number++;
                 RecognitionResult result = saveResultToList();
 
-                Bitmap temp = CounterHelper.drawModifierBitmap(result.getBitmap(), String.valueOf(result.count));
-                result.setBitmap(temp);
+                if (result.autoCount >= 0) {
+                    Bitmap temp = CounterHelper.drawModifierBitmap(result.getBitmap(), String.valueOf(result.count));
+                    result.setBitmap(temp);
+                }
 
                 mJuanCountAdapter.addResult(result);
                 mNextButton.setVisibility(View.GONE);
@@ -411,8 +424,8 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
                 mResultImageView.setVisibility(View.GONE);
                 mTakePictureButton.setVisibility(View.VISIBLE);
                 llModifier.setVisibility(View.GONE);
-                mTotalCountTextView.setText("总数" + mTotalCount.addAndGet(result.count) + "头");
-                mAutolCount.addAndGet(result.autoCount);
+                mTotalCountTextView.setText("总数" + mTotalCount.addAndGet(result.count < 0 ? 0 : result.count) + "头");
+                mAutolCount.addAndGet(result.autoCount < 0 ? 0 : result.autoCount);
                 if (isTest) {
                     testCount++;
                     if (testCount <= testNumber) {
@@ -512,10 +525,11 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
         submit.setText("完成");
         TextView title = view.findViewById(R.id.TV_title);
         title.setText("确认完成");
-
+        builder.setView(view);
         dialog = builder.create();
+//        dialog.getWindow().setContentView(view);
         dialog.show();
-        dialog.getWindow().setContentView(view);
+
 
         view.findViewById(R.id.TV_close).setOnClickListener(new View.OnClickListener() {
             @Override

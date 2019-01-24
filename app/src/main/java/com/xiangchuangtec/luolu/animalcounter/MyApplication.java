@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 
+import com.tencent.bugly.crashreport.CrashReport;
 import com.xiangchuang.risks.utils.ShareUtils;
 
 import net.gotev.uploadservice.UploadService;
@@ -78,6 +79,8 @@ public class MyApplication extends Application {
         UploadService.HTTP_STACK = new OkHttpStack(client);
         // make the library use your own OkHttp client
         MyApplication.context = getApplicationContext();
+        //初始化 bugly
+        CrashReport.initCrashReport(getApplicationContext(), "2d3ff546dd", false);
         networkChangedReceiver = new NetworkChangedReceiver();
         IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(networkChangedReceiver, intentFilter);
