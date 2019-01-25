@@ -699,7 +699,6 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
             Global.mediaInsureItem.currentInit();
         }
 
-
         collectNumberHandler.sendEmptyMessage(2);
         // When the screen is turned off and turned back on, the SurfaceTexture is already
         // available, and "onSurfaceTextureAvailable" will not be called. In that case, we can open
