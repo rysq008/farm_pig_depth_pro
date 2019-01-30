@@ -558,42 +558,50 @@ public class BreedingPigFaceDetectTFlite {
     //计算重合区域面积与总面积的百分比
     private void calculateListIou(ArrayList<Recognition> currents, ArrayList<Recognition> lasts) {
         Log.e("time==", "star-calculate: "+System.currentTimeMillis());
+        //获取数据长度
+        int currentsSize = currents.size();
+        int lastsSize = lasts.size();
+        //临时变量 存储循环的对象
+        Recognition last;
+        Recognition current;
         //循环判断前一帧中是否有单独的对象框
-        for (int i = 0; i < lasts.size(); i++) {
+        for (int i = 0; i < lastsSize; i++) {
             //标记是否是单独对象
             boolean isDan = true;
-            for (int j = 0; j < currents.size(); j++) {
+            last = lasts.get(i);
+            for (int j = 0; j < currentsSize; j++) {
+                current = currents.get(j);
                 //获取两帧中的xMin最大值
-                float leftx1 = Math.max(lasts.get(i).getLocation().left, currents.get(j).getLocation().left);
+                float leftx1 = Math.max(last.getLocation().left, current.getLocation().left);
                 //获取两帧中的yMin最大值
-                float lefty1 = Math.max(lasts.get(i).getLocation().top, currents.get(j).getLocation().top);
+                float lefty1 = Math.max(last.getLocation().top, current.getLocation().top);
                 //获取两帧中的xMax最大值
-                float rightx1 = Math.min(lasts.get(i).getLocation().right, currents.get(j).getLocation().right);
+                float rightx1 = Math.min(last.getLocation().right, current.getLocation().right);
                 //获取两帧中的yMax最大值
-                float righty1 = Math.min(lasts.get(i).getLocation().bottom, currents.get(j).getLocation().bottom);
+                float righty1 = Math.min(last.getLocation().bottom, current.getLocation().bottom);
                 //计算宽、高
                 float w = rightx1 - leftx1;
                 float h = righty1 - lefty1;
                 //计算重合部分面积
                 float wh = (w * h) < 0 ? 0 : (w * h);
-                float area = (lasts.get(i).getLocation().right - lasts.get(i).getLocation().left)
-                        * (lasts.get(i).getLocation().bottom - lasts.get(i).getLocation().top) +
-                        (currents.get(j).getLocation().right - currents.get(j).getLocation().left)
-                                * (currents.get(j).getLocation().bottom - currents.get(j).getLocation().left) - wh;
+                float area = (last.getLocation().right - last.getLocation().left)
+                        * (last.getLocation().bottom - last.getLocation().top) +
+                        (current.getLocation().right - current.getLocation().left)
+                                * (current.getLocation().bottom - current.getLocation().left) - wh;
                 float iou = wh /area;
 //                Log.e(TAG, "calculateListIou: 前单"+iou);
                 //判断重合部分面积是否大于指定阈值， 大于则证明是已存在对象并计算出水平位移， 否则单独是对象
                 if (iou > 0.43f) {
                     isDan = false;
-                    centerXOffset = ((lasts.get(i).getLocation().right + lasts.get(i).getLocation().left) / 2) -
-                            ((currents.get(j).getLocation().right + currents.get(j).getLocation().left) / 2);
+                    centerXOffset = ((last.getLocation().right + last.getLocation().left) / 2) -
+                            ((current.getLocation().right + current.getLocation().left) / 2);
                     break;
                 } else {
                     isDan = true;
                 }
             }
             if (isDan) {
-                float c = ((lasts.get(i).getLocation().right + lasts.get(i).getLocation().left) / 2);
+                float c = ((last.getLocation().right + last.getLocation().left) / 2);
                 //判断闪跳对象是不是在基线范围内
                 if (c < maxBase) {
                     //将闪跳对象添加到集合保存
@@ -617,22 +625,24 @@ public class BreedingPigFaceDetectTFlite {
             }
         }
         //循环判断后一帧中是否有单独对象
-        for (int i = 0; i < currents.size(); i++) {
+        for (int i = 0; i < currentsSize; i++) {
             boolean isDan = false;
-            for (int j = 0; j < lasts.size(); j++) {
-                float leftx1 = Math.max(lasts.get(j).getLocation().left, currents.get(i).getLocation().left);
-                float lefty1 = Math.max(lasts.get(j).getLocation().top, currents.get(i).getLocation().top);
-                float rightx1 = Math.min(lasts.get(j).getLocation().right, currents.get(i).getLocation().right);
-                float righty1 = Math.min(lasts.get(j).getLocation().bottom, currents.get(i).getLocation().bottom);
+            current = currents.get(i);
+            for (int j = 0; j < lastsSize; j++) {
+                last = lasts.get(j);
+                float leftx1 = Math.max(last.getLocation().left, current.getLocation().left);
+                float lefty1 = Math.max(last.getLocation().top, current.getLocation().top);
+                float rightx1 = Math.min(last.getLocation().right, current.getLocation().right);
+                float righty1 = Math.min(last.getLocation().bottom, current.getLocation().bottom);
                 //计算宽、高
                 float w = rightx1 - leftx1;
                 float h = righty1 - lefty1;
                 //计算重合部分面积
                 float wh = (w * h) < 0 ? 0 : (w * h);
-                float area = (lasts.get(j).getLocation().right - lasts.get(j).getLocation().left)
-                        * (lasts.get(j).getLocation().bottom - lasts.get(j).getLocation().top) +
-                        (currents.get(i).getLocation().right - currents.get(i).getLocation().left)
-                                * (currents.get(i).getLocation().bottom - currents.get(i).getLocation().left) - wh;
+                float area = (last.getLocation().right - last.getLocation().left)
+                        * (last.getLocation().bottom - last.getLocation().top) +
+                        (current.getLocation().right - current.getLocation().left)
+                                * (current.getLocation().bottom - current.getLocation().left) - wh;
                 float iou = wh / area;
 
                 if (iou > 0.43f) {
@@ -646,7 +656,7 @@ public class BreedingPigFaceDetectTFlite {
                 }
             }
             if (isDan) {
-                float c = (currents.get(i).getLocation().right + currents.get(i).getLocation().left) / 2;
+                float c = (current.getLocation().right + current.getLocation().left) / 2;
                 float lastC = (lasts.get(0).getLocation().right + lasts.get(0).getLocation().left) / 2;
                 if (shanTiaoBeanList.size() > 0) {
                     boolean isInXOffset = false;
