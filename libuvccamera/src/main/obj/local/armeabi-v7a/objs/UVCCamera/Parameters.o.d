@@ -6,10 +6,10 @@
   jni/libuvc/android/jni/../../include\libuvc/libuvc_config.h \
   jni/UVCCamera/..\utilbase.h jni/UVCCamera/../localdefines.h \
   jni/UVCCamera/../rapidjson/include\rapidjson/rapidjson.h \
-  C:/ndk-bundle/android-ndk-r17b/build//../sources/cxx-stl/system/include\cstdlib \
-  C:/ndk-bundle/android-ndk-r17b/build//../sources/cxx-stl/system/include\cstring \
-  C:/ndk-bundle/android-ndk-r17b/build//../sources/cxx-stl/system/include\cstddef \
-  C:/ndk-bundle/android-ndk-r17b/build//../sources/cxx-stl/system/include\cassert \
+  D:/android-ndk-r17b/build//../sources/cxx-stl/system/include\cstdlib \
+  D:/android-ndk-r17b/build//../sources/cxx-stl/system/include\cstring \
+  D:/android-ndk-r17b/build//../sources/cxx-stl/system/include\cstddef \
+  D:/android-ndk-r17b/build//../sources/cxx-stl/system/include\cassert \
   jni/UVCCamera/../rapidjson/include\rapidjson/allocators.h \
   jni/UVCCamera/../rapidjson/include\rapidjson/encodings.h \
   jni/UVCCamera/../rapidjson/include\rapidjson/stringbuffer.h \
@@ -18,7 +18,7 @@
   jni/UVCCamera/../rapidjson/include\rapidjson/internal/strfunc.h \
   jni/UVCCamera/../rapidjson/include\rapidjson/internal/dtoa.h \
   jni/UVCCamera/../rapidjson/include\rapidjson/internal/itoa.h \
-  C:/ndk-bundle/android-ndk-r17b/build//../sources/cxx-stl/system/include\new \
+  D:/android-ndk-r17b/build//../sources/cxx-stl/system/include\new \
   jni/libuvc/android/jni/../../include\libuvc/libuvc_internal.h \
   jni/libuvc/android/jni/../../include\utlist.h
 
@@ -38,13 +38,13 @@ jni/UVCCamera/../localdefines.h:
 
 jni/UVCCamera/../rapidjson/include\rapidjson/rapidjson.h:
 
-C:/ndk-bundle/android-ndk-r17b/build//../sources/cxx-stl/system/include\cstdlib:
+D:/android-ndk-r17b/build//../sources/cxx-stl/system/include\cstdlib:
 
-C:/ndk-bundle/android-ndk-r17b/build//../sources/cxx-stl/system/include\cstring:
+D:/android-ndk-r17b/build//../sources/cxx-stl/system/include\cstring:
 
-C:/ndk-bundle/android-ndk-r17b/build//../sources/cxx-stl/system/include\cstddef:
+D:/android-ndk-r17b/build//../sources/cxx-stl/system/include\cstddef:
 
-C:/ndk-bundle/android-ndk-r17b/build//../sources/cxx-stl/system/include\cassert:
+D:/android-ndk-r17b/build//../sources/cxx-stl/system/include\cassert:
 
 jni/UVCCamera/../rapidjson/include\rapidjson/allocators.h:
 
@@ -62,7 +62,7 @@ jni/UVCCamera/../rapidjson/include\rapidjson/internal/dtoa.h:
 
 jni/UVCCamera/../rapidjson/include\rapidjson/internal/itoa.h:
 
-C:/ndk-bundle/android-ndk-r17b/build//../sources/cxx-stl/system/include\new:
+D:/android-ndk-r17b/build//../sources/cxx-stl/system/include\new:
 
 jni/libuvc/android/jni/../../include\libuvc/libuvc_internal.h:
 

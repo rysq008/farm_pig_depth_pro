@@ -1,6 +1,7 @@
 package com.xiangchuang.risks.view;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
@@ -15,6 +16,7 @@ import android.os.Environment;
 import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -155,10 +157,11 @@ public class AddPigPicActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 tempFile = new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME);
-                Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                //下面这句指定调用相机拍照后的照片存储的路径
-                takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getApplicationContext(), BuildConfig.APPLICATION_ID + ".provider", tempFile));
-                startActivityForResult(takeIntent, REQUESTCODE_TAKE);
+                WeightPicCollectActivity.start(AddPigPicActivity.this);
+//                Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                //下面这句指定调用相机拍照后的照片存储的路径
+//                takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getApplicationContext(), BuildConfig.APPLICATION_ID + ".provider", tempFile));
+//                startActivityForResult(takeIntent, REQUESTCODE_TAKE);
                 pop.dismiss();
                 llPopup.clearAnimation();
             }
@@ -191,19 +194,21 @@ public class AddPigPicActivity extends BaseActivity {
 
         switch (requestCode) {
             // 直接从相册获取
-            case REQUESTCODE_PICK:
-                try {
-                    startPhotoZoom(data.getData());
-                } catch (NullPointerException e) {
-                    // 用户点击取消操作
-                    e.printStackTrace();
-                }
-                break;
+//            case REQUESTCODE_PICK:
+//                try {
+////                    startPhotoZoom(data.getData());
+//                } catch (NullPointerException e) {
+//                    // 用户点击取消操作
+//                    e.printStackTrace();
+//                }
+//                break;
             // 调用相机拍照
             case REQUESTCODE_TAKE:
-//                File temp = new File(Environment.getExternalStorageDirectory() + "/" + IMAGE_FILE_NAME);
-//                crop(Environment.getExternalStorageDirectory() + "/" + IMAGE_FILE_NAME);
-                if(tempFile.exists()){
+                if (resultCode != Activity.RESULT_OK) {
+                    return;
+                }
+                tempFile = new File(data.getStringExtra("path"));
+                if (tempFile.exists()) {
                     try {
                         setPicToView(tempFile);
                     } catch (Exception e) {
@@ -215,18 +220,18 @@ public class AddPigPicActivity extends BaseActivity {
 
                 break;
             // 取得裁剪后的图片
-            case REQUESTCODE_CUTTING:
-                if (data != null) {
-                    try {
-//                        setPicToView(temp);
-                    } catch (Exception e) {
-                        Toast.makeText(AddPigPicActivity.this, "图片处理异常，请重试。", Toast.LENGTH_SHORT).show();
-                        e.printStackTrace();
-                    }
-                } else {
-                    Toast.makeText(AddPigPicActivity.this, "图片处理异常，请重试。", Toast.LENGTH_SHORT).show();
-                }
-                break;
+//            case REQUESTCODE_CUTTING:
+//                if (data != null) {
+//                    try {
+////                        setPicToView(temp);
+//                    } catch (Exception e) {
+//                        Toast.makeText(AddPigPicActivity.this, "图片处理异常，请重试。", Toast.LENGTH_SHORT).show();
+//                        e.printStackTrace();
+//                    }
+//                } else {
+//                    Toast.makeText(AddPigPicActivity.this, "图片处理异常，请重试。", Toast.LENGTH_SHORT).show();
+//                }
+//                break;
             default:
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -237,58 +242,59 @@ public class AddPigPicActivity extends BaseActivity {
      *
      * @param uri
      */
-    public void startPhotoZoom(Uri uri) {
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(uri, "image/jpeg");
-        // crop=true是设置在开启的Intent中设置显示的VIEW可裁剪
-        intent.putExtra("crop", "true");
-        /*if (picType == 0) {
-            // aspectX aspectY 是宽高的比例
-            intent.putExtra("aspectX", 1);
-            intent.putExtra("aspectY", 1);
-            // outputX outputY 是裁剪图片宽高
-            intent.putExtra("outputX", 300);
-            intent.putExtra("outputY", 300);
-        }*/
-//        intent.putExtra("return-data", true);
-        //裁剪后的图片Uri路径，uritempFile为Uri类变量
-        uritempFile = Uri.parse("file://" + "/" + Environment.getExternalStorageDirectory().getPath() + "/" + "small.jpg");
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, uritempFile);
-        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
-        startActivityForResult(intent, REQUESTCODE_CUTTING);
-    }
+//    public void startPhotoZoom(Uri uri) {
+//        Intent intent = new Intent("com.android.camera.action.CROP");
+//        intent.setDataAndType(uri, "image/jpeg");
+//        // crop=true是设置在开启的Intent中设置显示的VIEW可裁剪
+//        intent.putExtra("crop", "true");
+//        /*if (picType == 0) {
+//            // aspectX aspectY 是宽高的比例
+//            intent.putExtra("aspectX", 1);
+//            intent.putExtra("aspectY", 1);
+//            // outputX outputY 是裁剪图片宽高
+//            intent.putExtra("outputX", 300);
+//            intent.putExtra("outputY", 300);
+//        }*/
+////        intent.putExtra("return-data", true);
+//        //裁剪后的图片Uri路径，uritempFile为Uri类变量
+//        uritempFile = Uri.parse("file://" + "/" + Environment.getExternalStorageDirectory().getPath() + "/" + "small.jpg");
+//        intent.putExtra(MediaStore.EXTRA_OUTPUT, uritempFile);
+//        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+//        startActivityForResult(intent, REQUESTCODE_CUTTING);
+//    }
 
     /**
      * 裁剪相机图片方法实现
      */
-    public void crop(String imagePath) {
-        try {
-            Intent intent = new Intent("com.android.camera.action.CROP");
-            intent.setDataAndType(getImageContentUri(new File(imagePath)), "image/jpeg");
-            intent.putExtra("crop", "true");
-            /*if (picType == 0) {
-                // aspectX aspectY 是宽高的比例
-                intent.putExtra("aspectX", 1);
-                intent.putExtra("aspectY", 1);
-                intent.putExtra("outputX", 300);
-                intent.putExtra("outputY", 300);
-            }*/
-            intent.putExtra("scale", true);
-            intent.putExtra("return-data", false);
-            uritempFile = Uri.parse("file://" + "/" + Environment.getExternalStorageDirectory().getPath() + "/" + "small.jpg");
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, uritempFile);
-            intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
-            startActivityForResult(intent, REQUESTCODE_CUTTING);
-        } catch (ActivityNotFoundException anfe) {
-            //display an error message
-            String errorMessage = "你的设备不支持图片裁剪，请更换其他设备重试。";
-            Toast toast = Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT);
-            toast.show();
-        }
-    }
+//    public void crop(String imagePath) {
+//        try {
+//            Intent intent = new Intent("com.android.camera.action.CROP");
+//            intent.setDataAndType(getImageContentUri(new File(imagePath)), "image/jpeg");
+//            intent.putExtra("crop", "true");
+//            /*if (picType == 0) {
+//                // aspectX aspectY 是宽高的比例
+//                intent.putExtra("aspectX", 1);
+//                intent.putExtra("aspectY", 1);
+//                intent.putExtra("outputX", 300);
+//                intent.putExtra("outputY", 300);
+//            }*/
+//            intent.putExtra("scale", true);
+//            intent.putExtra("return-data", false);
+//            uritempFile = Uri.parse("file://" + "/" + Environment.getExternalStorageDirectory().getPath() + "/" + "small.jpg");
+//            intent.putExtra(MediaStore.EXTRA_OUTPUT, uritempFile);
+//            intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+//            startActivityForResult(intent, REQUESTCODE_CUTTING);
+//        } catch (ActivityNotFoundException anfe) {
+//            //display an error message
+//            String errorMessage = "你的设备不支持图片裁剪，请更换其他设备重试。";
+//            Toast toast = Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT);
+//            toast.show();
+//        }
+//    }
 
     /**
      * 保存裁剪之后的图片数据
+     *
      * @param file
      */
     private void setPicToView(File file) throws Exception {
@@ -300,6 +306,7 @@ public class AddPigPicActivity extends BaseActivity {
 
     /**
      * 上传死猪图片给后台模型进行称重识别
+     *
      * @param photo
      */
     private void upDeadPig(Bitmap photo) {
@@ -329,6 +336,7 @@ public class AddPigPicActivity extends BaseActivity {
 
     /**
      * 将照片显示在view上，并调用上传
+     *
      * @param photo
      */
     private void picToView(Bitmap photo) {
@@ -402,6 +410,7 @@ public class AddPigPicActivity extends BaseActivity {
                                         }
                                     }
                                 });
+                                FileUtils.deleteFile(tempFile);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                                 Toast.makeText(AddPigPicActivity.this, "图片上传失败，请检查您的网络。", Toast.LENGTH_SHORT).show();
@@ -489,7 +498,7 @@ public class AddPigPicActivity extends BaseActivity {
     }
 
     private void addPayInfo() {
-        if(etAnimalAge.getText().toString().trim().isEmpty()){
+        if (etAnimalAge.getText().toString().trim().isEmpty()) {
             mProgressDialog.dismiss();
             Toast.makeText(getApplicationContext(), "未填写死猪重量", Toast.LENGTH_SHORT).show();
             return;
@@ -521,7 +530,7 @@ public class AddPigPicActivity extends BaseActivity {
         mapbody.put("provePic", "");//无害化证明照片
         mapbody.put("autoWeight", autoWeight);//自动识别返回重量
 
-        Log.e("mapbody", "mapbody: "+mapbody.toString() );
+        Log.e("mapbody", "mapbody: " + mapbody.toString());
 
         OkHttp3Util.doPost(Constants.ADD_PAY_INFO, mapbody, null, new Callback() {
             @Override
@@ -562,7 +571,7 @@ public class AddPigPicActivity extends BaseActivity {
                             }
                         }
                     });
-                }else{
+                } else {
                     mProgressDialog.dismiss();
                     showMessageDialogRetry("上传异常，请重试。");
                 }
@@ -578,6 +587,7 @@ public class AddPigPicActivity extends BaseActivity {
             public void onPositive() {
                 addPayInfo();
             }
+
             @Override
             public void onNegative() {
                 finish();

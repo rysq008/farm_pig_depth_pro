@@ -166,6 +166,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity
+            android:name="com.xiangchuang.risks.view.WeightPicCollectActivity"
+            android:label="@string/title_activity_monitoring"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity
             android:name="org.tensorflow.demo.SmallVideoActivity"
             android:exported="true"
             android:launchMode="singleTask"
