@@ -117,7 +117,8 @@
         <activity
             android:name="org.tensorflow.demo.DetectorActivity_new"
             android:exported="true"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.xiangchuang.risks.view.CompanyActivity"
             android:screenOrientation="portrait"

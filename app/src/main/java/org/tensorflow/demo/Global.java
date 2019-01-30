@@ -58,5 +58,7 @@ public class Global {
     public static final int Func_Pay = 2;
     public static int waitUploadCount ;
 
+    public static boolean dilogIsShowing = false;
+
 
 }

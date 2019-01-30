@@ -11,10 +11,10 @@ android {
     defaultConfig {
         applicationId "com.xiangchuangtec.luolu.animalcounter"
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 26
         //release versionCode 1100
-        versionCode 1100
-        versionName "1.100"
+        versionCode 1102
+        versionName "1.102"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi", "armeabi-v7a", "x86", "mips"

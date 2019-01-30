@@ -52,14 +52,8 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Vector;
 
-import innovation.biz.iterm.PostureItem;
-import innovation.utils.ScreenUtil;
 
-import static com.xiangchuangtec.luolu.animalcounter.MyApplication.currentPadSize;
 import static com.xiangchuangtec.luolu.animalcounter.MyApplication.sowCount;
-import static innovation.utils.ConstUtils.ANIMAL_TYPE_PIG;
-import static org.tensorflow.demo.DetectorActivity_new.offsetX;
-import static org.tensorflow.demo.DetectorActivity_new.offsetY;
 
 
 /**
@@ -127,9 +121,6 @@ public class MultiBoxTracker_new {
     // TODO: 2018/9/14 By:LuoLu
     private List<TrackerItem> mFrameRects = new ArrayList<TrackerItem>();
     private Vector listAngles_capture = new Vector();
-    private static int type1Sum;
-    private static int type2Sum;
-    private static int type3Sum;
     private long showTime_start = 0;
     private long showTime_end = 0;
 
@@ -159,43 +150,6 @@ public class MultiBoxTracker_new {
         return frameToCanvasMatrix;
     }
 
-    public synchronized void drawDebug(final Canvas canvas) {
-        final Paint textPaint = new Paint();
-        textPaint.setColor(Color.WHITE);
-        textPaint.setTextSize(60.0f);
-
-        final Paint boxPaint = new Paint();
-        boxPaint.setColor(Color.RED);
-        boxPaint.setAlpha(200);
-        boxPaint.setStyle(Style.STROKE);
-
-        for (final Pair<Float, RectF> detection : screenRects) {
-            final RectF rect = detection.second;
-            canvas.drawRect(rect, boxPaint);
-            canvas.drawText("" + detection.first, rect.left, rect.top, textPaint);
-            borderedText.drawText(canvas, rect.centerX(), rect.centerY(), "" + detection.first);
-        }
-
-        if (objectTracker == null) {
-            return;
-        }
-
-        // Draw correlations.
-        for (final TrackedRecognition recognition : trackedObjects) {
-            final ObjectTracker.TrackedObject trackedObject = recognition.trackedObject;
-
-            final RectF trackedPos = trackedObject.getTrackedPositionInPreviewFrame();
-
-            if (getFrameToCanvasMatrix().mapRect(trackedPos)) {
-                final String labelString = String.format("%.2f", trackedObject.getCurrentCorrelation());
-                borderedText.drawText(canvas, trackedPos.right, trackedPos.bottom, labelString);
-            }
-        }
-
-        final Matrix matrix = getFrameToCanvasMatrix();
-        objectTracker.drawDebug(canvas, matrix);
-    }
-
     public synchronized void trackResults(
             final List<BreedingPigFaceDetectTFlite.Recognition> results, final byte[] frame, final long timestamp) {
         logger.i("Processing %d results from %d", results.size(), timestamp);
@@ -204,6 +158,8 @@ public class MultiBoxTracker_new {
     }
 
     public synchronized void draw(final Canvas canvas, int animalType) {
+        long drawStar = System.currentTimeMillis();
+        Log.e("huakuangdraw", "drawStar "+drawStar );
         int canvasW = ScreenUtil.getScreenWidth();
         int canvasH = ScreenUtil.getScreenHeight();
         Point centerOfCanvas = new Point(canvasW / 2, canvasH / 2);
@@ -270,6 +226,7 @@ public class MultiBoxTracker_new {
             //            borderedText.drawText(canvas, trackedPos.left + cornerSize, trackedPos.bottom, (sowCount-i)+"头");
         }
         borderedText.drawText(canvas, 100,100,sowCount+"头");
+        Log.e("huakuangdraw", "drawEnd "+(System.currentTimeMillis()-drawStar) );
     }
 
     /**
@@ -543,22 +500,6 @@ public class MultiBoxTracker_new {
         trackedObjects.add(trackedRecognition);
     }
 
-    // TODO: 2018/9/14 By:LuoLu
-    public void getCountOfCurrentImage(int type1, int type2, int type3) {
-        type1Sum = type1;
-        type2Sum = type2;
-        type3Sum = type3;;
-
-    }
-
-    public void reInitCounter(int type1, int type2, int type3) {
-        type1Sum = type1;
-        type2Sum = type2;
-        type3Sum = type3;
-//        getCurrentTypeList();
-        listAngles_capture.clear();
-    }
-
     public synchronized void trackAnimalResults(List<PostureItem> postureItemList, int angletype) {
         mFrameRects.clear();
         if (postureItemList == null) {
@@ -580,55 +521,4 @@ public class MultiBoxTracker_new {
             mFrameRects.add(item);
         }
     }
-
-    public synchronized void trackResultsTFlite(PredictRotationIterm predictRotationIterm, int angletype) {
-        mFrameRects.clear();
-        if (predictRotationIterm == null) {
-            return;
-        }
-//    RectF trackRectF = new RectF(predictRotationIterm.screenX0, predictRotationIterm.screenY0, predictRotationIterm.screenX1, predictRotationIterm.screenY1);
-        TrackerItem item = new TrackerItem(angletype, null, (float) predictRotationIterm.rot_x,
-                (float) predictRotationIterm.rot_y, (float) predictRotationIterm.rot_z);
-        mFrameRects.add(item);
-    }
-
-
-
-    public void getCurrentTypeList() {
-
-        listAngles_capture.add("左脸，数量：" + type1Sum + ((type1Sum < PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_LEFT, context)) ? "(不足)" : "(OK)"));
-        listAngles_capture.add("正脸，数量：" + type2Sum + ((type2Sum < PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_MIDDLE, context)) ? "(不足)" : "(OK)"));
-        listAngles_capture.add("右脸，数量：" + type3Sum + ((type3Sum < PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_RIGHT, context)) ? "(不足)" : "(OK)"));
-    }
-
-    public String getReminderMsgText() {
-        int maxLeft = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_LEFT, context);
-        int maxMiddle = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_MIDDLE, context);
-        int maxRight = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_RIGHT, context);
-        boolean b = false;
-        if (type1Sum < maxLeft
-                && type2Sum < maxMiddle
-                && type3Sum < maxRight) {
-            return "请将脸放在正中央";
-        } else {
-            StringBuffer sb = new StringBuffer();
-            sb.append("请将");
-            if (type1Sum < maxLeft) {
-                sb.append("左");
-                b = true;
-            }
-            if (type2Sum < maxMiddle) {
-                if (b) sb.append("/");
-                sb.append("正");
-                b = true;
-            }
-            if (type3Sum < maxRight) {
-                if (b) sb.append("/");
-                sb.append("右");
-            }
-            sb.append("脸放在正中央");
-            return sb.toString();
-        }
-    }
-
 }

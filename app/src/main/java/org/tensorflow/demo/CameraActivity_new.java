@@ -49,8 +49,6 @@ public abstract class CameraActivity_new extends Activity implements OnImageAvai
     private static final String PERMISSION_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String PERMISSION_PHONE = Manifest.permission.READ_PHONE_STATE;
 
-    private boolean debug = false;
-
     private Handler handler;
     private HandlerThread handlerThread;
 
@@ -140,6 +138,9 @@ public abstract class CameraActivity_new extends Activity implements OnImageAvai
                     requestPermission();
                 }
             }
+            break;
+            default:
+                break;
         }
     }
 
@@ -193,6 +194,7 @@ public abstract class CameraActivity_new extends Activity implements OnImageAvai
             buffer.get(yuvBytes[i]);
         }
     }
+
     protected int getScreenOrientation() {
         switch (getWindowManager().getDefaultDisplay().getRotation()) {
             case Surface.ROTATION_270:
@@ -204,26 +206,6 @@ public abstract class CameraActivity_new extends Activity implements OnImageAvai
             default:
                 return 0;
         }
-    }
-    public boolean isDebug() {
-        return debug;
-    }
-
-    public void requestRender() {
-        final OverlayView overlay = (OverlayView) findViewById(R.id.debug_overlay);
-        if (overlay != null) {
-            overlay.postInvalidate();
-        }
-    }
-
-    public void addCallback(final OverlayView.DrawCallback callback) {
-        final OverlayView overlay = (OverlayView) findViewById(R.id.debug_overlay);
-        if (overlay != null) {
-            overlay.addCallback(callback);
-        }
-    }
-
-    public void onSetDebug(final boolean debug) {
     }
 
     @Override

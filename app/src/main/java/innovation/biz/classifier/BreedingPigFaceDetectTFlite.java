@@ -79,7 +79,6 @@ public class BreedingPigFaceDetectTFlite {
     private float[][] outputClassifyResult;
     private ByteBuffer imgData;
     private Interpreter tfLite;
-    private Context context;
     public static String srcPigBitmapName;
 
     public static RecognitionAndPostureItem recognitionAndPostureItem;
@@ -265,7 +264,8 @@ public class BreedingPigFaceDetectTFlite {
         }
 
         final ArrayList<Recognition> recognitions = new ArrayList<>();
-
+        long jisuanweizhiStar = System.currentTimeMillis();
+        Log.e(TAG, "jisuanweizhi_star "+jisuanweizhiStar );
         for (int i = 0; i < outputScores[0].length; ++i) {
             if (outputScores[0][i] > 1 || outputScores[0][i] < MIN_CONFIDENCE) {
                 sLogger.i("分值超出/分值不足：" + outputScores[0][0]);
@@ -326,15 +326,18 @@ public class BreedingPigFaceDetectTFlite {
 
             postureItemList.add(posture);
         }
-
+        Log.e(TAG, "jisuanweizhi_end "+(System.currentTimeMillis()- jisuanweizhiStar));
         Trace.endSection(); // "recognizeImage"
 
+        long paixuStar = System.currentTimeMillis();
+        Log.e(TAG, "paixu_star:"+paixuStar);
         Collections.sort(recognitions, new Comparator<Recognition>() {
             @Override
             public int compare(Recognition o1, Recognition o2) {
                 return Float.compare((o1.location.left + o1.location.right) / 2, (o2.location.left + o2.location.right) / 2);
             }
         });
+        Log.e(TAG, "paixu_end:"+(System.currentTimeMillis()- paixuStar));
 
         //获取的画框集合size大于0 时
         if (recognitions.size() > 0) {
@@ -554,6 +557,7 @@ public class BreedingPigFaceDetectTFlite {
 
     //计算重合区域面积与总面积的百分比
     private void calculateListIou(ArrayList<Recognition> currents, ArrayList<Recognition> lasts) {
+        Log.e("time==", "star-calculate: "+System.currentTimeMillis());
         //循环判断前一帧中是否有单独的对象框
         for (int i = 0; i < lasts.size(); i++) {
             //标记是否是单独对象
@@ -630,10 +634,14 @@ public class BreedingPigFaceDetectTFlite {
                         (currents.get(i).getLocation().right - currents.get(i).getLocation().left)
                                 * (currents.get(i).getLocation().bottom - currents.get(i).getLocation().left) - wh;
                 float iou = wh / area;
+
                 if (iou > 0.43f) {
                     isDan = false;
                     break;
                 } else {
+                    Log.e("isDaniou", "iou=====:"+iou);
+                    Log.e("isDan", "isDan");
+                    Log.e("isDanX", "isDanXcenter==="+ w/2);
                     isDan = true;
                 }
             }
@@ -661,9 +669,11 @@ public class BreedingPigFaceDetectTFlite {
                     }
                     if (!isInXOffset && c < lastC) {
                         sowCount++;
+                        Log.e("isDanAll", "总数: "+sowCount );
                     }
                 }
             }
         }
+        Log.e("time==", "end-calculate: "+System.currentTimeMillis());
     }
 }
