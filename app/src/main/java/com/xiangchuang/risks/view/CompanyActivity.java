@@ -97,10 +97,9 @@ public class CompanyActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.addcompany:
-                WeightPicCollectActivity.start(this);
-//                Bundle bundle = new Bundle();
-//                bundle.putBoolean("type", false);
-//                goToActivity(AddCompanyActivity.class, bundle);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("type", false);
+                goToActivity(AddCompanyActivity.class, bundle);
                 break;
             case R.id.iv_cancel:
                 finish();
