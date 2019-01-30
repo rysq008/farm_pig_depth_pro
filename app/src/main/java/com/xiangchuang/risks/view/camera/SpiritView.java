@@ -8,6 +8,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -30,6 +32,7 @@ public class SpiritView extends View {
     Bitmap bubble;
     //定义水平仪中气泡的X、Y坐标
     public int bubbleX, bubbleY;
+    private Paint mPaint;
 
     public SpiritView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -39,9 +42,13 @@ public class SpiritView extends View {
 //        Display display = wm.getDefaultDisplay();
 //        DisplayMetrics metrics = new DisplayMetrics();
 //        display.getMetrics(metrics);
-        int screenWidth = innovation.utils.UIUtils.dp2px(context, 80.0f);
+        int screenWidth = innovation.utils.UIUtils.dp2px(context, 120.0f);
         //int screenHeight = metrics.heightPixels;
-
+        mPaint = new Paint();
+        mPaint.setAntiAlias(true);
+        mPaint.setStyle(Paint.Style.FILL);
+        mPaint.setStrokeWidth(5);
+        mPaint.setColor(Color.WHITE);
         //创建位图
         back = Bitmap.createBitmap(screenWidth, screenWidth, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(back);
@@ -60,9 +67,10 @@ public class SpiritView extends View {
         //设置绘制风格：仅绘制边框
         paint2.setStyle(Paint.Style.STROKE);
         paint2.setStrokeWidth(5);
-        paint2.setColor(Color.BLACK);
+        paint2.setColor(Color.WHITE);
         //绘制圆形边框
         canvas.drawCircle(screenWidth / 2, screenWidth / 2, screenWidth / 2, paint2);
+//        canvas.drawCircle(screenWidth / 4, screenWidth / 2, screenWidth / 2, paint2);
         //绘制水平横线
         canvas.drawLine(0, screenWidth / 2, screenWidth, screenWidth / 2, paint2);
         //绘制垂直横线
@@ -76,7 +84,7 @@ public class SpiritView extends View {
         canvas.drawLine(screenWidth / 2, screenWidth / 2 - 30, screenWidth / 2,
                 screenWidth / 2 + 30, paint2);
         //加载气泡图片
-        bubble = BitmapFactory.decodeResource(getResources(), R.drawable.bubble);
+        bubble = BitmapFactory.decodeResource(getResources(), R.mipmap.iv_take_picture_press);
     }
 
     @Override
@@ -84,8 +92,13 @@ public class SpiritView extends View {
         super.onDraw(canvas);
         //绘制水平仪表盘
         canvas.drawBitmap(back, 0, 0, null);
+
         //根据气泡坐标绘制气泡
-        canvas.drawBitmap(bubble, bubbleX, bubbleY, null);
+        canvas.drawBitmap(bubble, bubbleX, bubbleY, mPaint);
+    }
+
+    public void setColor(int color ){
+       mPaint.setAlpha(color);
     }
 
     public Bitmap getBack() {

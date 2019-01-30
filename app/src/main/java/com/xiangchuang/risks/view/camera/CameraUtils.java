@@ -2,6 +2,7 @@ package com.xiangchuang.risks.view.camera;
 
 import android.app.Activity;
 import android.hardware.Camera;
+import android.os.Build;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
@@ -58,7 +59,7 @@ public class CameraUtils {
 
         Camera.Parameters parameters = mCamera.getParameters();
         mCameraPreviewFps = CameraUtils.chooseFixedPreviewFps(parameters, expectFps * 1000);
-        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
         parameters.setRecordingHint(true);
         mCamera.setParameters(parameters);
         setPreviewSize(mCamera, CameraUtils.DEFAULT_WIDTH, CameraUtils.DEFAULT_HEIGHT);
@@ -124,6 +125,22 @@ public class CameraUtils {
         openCamera(cameraID, CameraUtils.DESIRED_PREVIEW_FPS);
         // 打开预览
         startPreviewDisplay(holder);
+    }
+
+    // handle button auto focus
+    public static void doAutoFocus() {
+        if(mCamera == null)return;
+        Camera.Parameters parameters = mCamera.getParameters();
+        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+        mCamera.setParameters(parameters);
+        mCamera.autoFocus(new Camera.AutoFocusCallback() {
+            @Override
+            public void onAutoFocus(boolean success, Camera camera) {
+                if (success) {
+                    camera.cancelAutoFocus();// 只有加上了这一句，才会自动对焦。
+                }
+            }
+        });
     }
 
     /**

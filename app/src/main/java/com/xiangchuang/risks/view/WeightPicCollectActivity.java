@@ -6,14 +6,17 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.hardware.Camera;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -51,8 +54,6 @@ public class WeightPicCollectActivity extends BaseActivity implements SensorEven
     private static final String TAG = "WeightPicCollectActivit";
     @BindView(R.id.iv_preview)
     ImageView iv_preview;
-    @BindView(R.id.btn_take)
-    ImageView btn_take;
     @BindView(R.id.btn_upload)
     ImageView btn_upload;
     @BindView(R.id.btn_finish)
@@ -72,7 +73,7 @@ public class WeightPicCollectActivity extends BaseActivity implements SensorEven
     private float angle[] = new float[3];
     private String mFileDirectory, mFilePath;
     private int mOrientation;
-    private boolean mSafeToTakePicture = true, mGrantedCameraRequested;
+    private boolean mSafeToTakePicture = true, mGrantedCameraRequested, isCanTakePic;
 
     public static void start(AppCompatActivity context) {
         Intent intent = new Intent(context, WeightPicCollectActivity.class);
@@ -87,6 +88,11 @@ public class WeightPicCollectActivity extends BaseActivity implements SensorEven
     @Override
     protected void initData() {
 //        mFilePath = getIntent().getStringExtra("path");
+    }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         new CameraSurfaceView(this);
         mFileDirectory = PathUtils.weightcollect;
         mFilePath = mFileDirectory + "/" + System.currentTimeMillis() + ".jpg";
@@ -218,11 +224,11 @@ public class WeightPicCollectActivity extends BaseActivity implements SensorEven
         setResult(Activity.RESULT_OK, intent);
     }
 
-    @OnClick({R.id.btn_take, R.id.btn_finish, R.id.btn_upload})
+    @OnClick({R.id.spiritwiew, R.id.btn_finish, R.id.btn_upload, R.id.camera_surfaceview})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.btn_take:
-                if (btn_upload.getVisibility() == View.VISIBLE) {
+            case R.id.spiritwiew:
+                if (btn_upload.getVisibility() == View.VISIBLE || !isCanTakePic) {
                     return;
                 }
                 if (mSafeToTakePicture) {
@@ -248,6 +254,9 @@ public class WeightPicCollectActivity extends BaseActivity implements SensorEven
                     finish();
                 }
                 break;
+            case R.id.camera_surfaceview:
+                CameraUtils.doAutoFocus();
+                break;
             default:
                 break;
         }
@@ -265,7 +274,8 @@ public class WeightPicCollectActivity extends BaseActivity implements SensorEven
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (btn_upload.getVisibility() == View.VISIBLE) {
-            btn_take.setVisibility(View.VISIBLE);
+            spiritwiew.setColor(255);
+            spiritwiew.postInvalidate();
             return;
         }
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
@@ -325,13 +335,17 @@ public class WeightPicCollectActivity extends BaseActivity implements SensorEven
 
             float anglez = (float) (event.values[2]);
             long curr_time = SystemClock.elapsedRealtime();
-            long last_time = btn_take.getTag() == null ? 0 : (long) (btn_take.getTag());
+            long last_time = spiritwiew.getTag() == null ? 0 : (long) (spiritwiew.getTag());
             if (curr_time - last_time < 1000)
                 return;
             if (angley > -10 && angley < 5 && anglez > -5 && anglez < 4) {
-                btn_take.setVisibility(View.VISIBLE);
+//                btn_take.setVisibility(View.VISIBLE);
+                spiritwiew.setColor(255);
+                isCanTakePic = true;
             } else {
-                btn_take.setVisibility(View.GONE);
+                spiritwiew.setColor(150);
+                isCanTakePic = false;
+//                btn_take.setVisibility(View.GONE);
             }
 //            tv_position.setText("x: " + (int) anglex + "  y: " + (int) angley + "   z: " + (int) anglez);
         }

@@ -205,7 +205,7 @@ public class AddPigPicActivity extends BaseActivity {
 //                break;
             // 调用相机拍照
             case REQUESTCODE_TAKE:
-                if (resultCode != Activity.RESULT_OK) {
+                if (TextUtils.isEmpty(data.getStringExtra("path"))) {
                     return;
                 }
                 tempFile = new File(data.getStringExtra("path"));

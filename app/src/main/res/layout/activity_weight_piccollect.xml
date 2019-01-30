@@ -17,7 +17,7 @@
             android:layout_height="match_parent" />
     </FrameLayout>
 
-   <ImageView
+    <ImageView
         android:layout_width="240dp"
         android:layout_height="300dp"
         android:layout_centerInParent="true"
@@ -31,15 +31,13 @@
         android:scaleType="fitXY"
         android:visibility="visible" />
 
-    <ImageView
-        android:id="@+id/btn_take"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+    <com.xiangchuang.risks.view.camera.SpiritView
+        android:id="@+id/spiritwiew"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="50dp"
-        android:src="@mipmap/iv_take_picture_press"
-        android:tint="@color/WHITE" />
+        android:layout_marginBottom="50dp" />
 
     <ImageView
         android:id="@+id/btn_upload"
@@ -66,22 +64,15 @@
         android:src="@mipmap/iv_round_back"
         android:tint="@color/WHITE" />
 
-    <com.xiangchuang.risks.view.camera.SpiritView
-        android:id="@+id/spiritwiew"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="40dp" />
 
     <TextView
         android:id="@+id/tv_tips"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/spiritwiew"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="15dp"
-        android:layout_toRightOf="@+id/spiritwiew"
-        android:text="请保持手机水平，将刻度尺放入蓝色双虚线内拍照"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="30dp"
+        android:text="提示\n1、请保持手机水平，将刻度尺放入蓝色双虚线内；\n2、当拍照按钮变为白色时可拍照；"
         android:textColor="@color/WHITE"
         android:textSize="14dp" />
 </RelativeLayout>
