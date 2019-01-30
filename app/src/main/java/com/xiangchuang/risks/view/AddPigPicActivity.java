@@ -55,6 +55,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import innovation.utils.FileUtils;
 import innovation.utils.MyWatcher;
+import innovation.utils.PathUtils;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -410,7 +411,7 @@ public class AddPigPicActivity extends BaseActivity {
                                         }
                                     }
                                 });
-                                FileUtils.deleteFile(tempFile);
+                                FileUtils.deleteFile(PathUtils.weightcollect);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                                 Toast.makeText(AddPigPicActivity.this, "图片上传失败，请检查您的网络。", Toast.LENGTH_SHORT).show();
