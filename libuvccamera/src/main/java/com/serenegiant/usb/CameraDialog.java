@@ -70,12 +70,18 @@ public class CameraDialog extends DialogFragment {
 			if(usbDeviceList.size()>0){
 				dialog.mUSBMonitor.requestPermission(usbDeviceList.get(0));
 			}else{
-				parent.runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						Toast.makeText(parent, "连接外界摄像头失败，请尝试重新连接外接摄像头。",Toast.LENGTH_LONG).show();
-					}
-				});
+				List<UsbDevice> usbDeviceList1 = dialog.mUSBMonitor.getDeviceList(filter.get(1));
+
+				if(usbDeviceList1.size()>0){
+					dialog.mUSBMonitor.requestPermission(usbDeviceList1.get(0));
+				}else{
+					parent.runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Toast.makeText(parent, "连接外界摄像头失败，请尝试重新连接外接摄像头。",Toast.LENGTH_LONG).show();
+						}
+					});
+				}
 			}
 //			dialog.mUSBMonitor.requestPermission((UsbDevice)dialog.mUSBMonitor.getDeviceList(filter.get(0)).get(0));
 		}else{
