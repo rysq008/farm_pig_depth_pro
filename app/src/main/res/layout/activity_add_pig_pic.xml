@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:nzltext="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -20,7 +21,6 @@
             android:layout_height="match_parent"
             android:background="#fff"
             android:orientation="vertical">
-
 
 
             <View
@@ -76,9 +76,10 @@
                     android:id="@+id/etAnimalAge"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
                     android:layout_toRightOf="@+id/tv_transparent_helper"
+                    android:layout_weight="1"
                     android:background="@android:color/transparent"
+                    android:focusable="false"
                     android:hint="请输入猪的重量"
                     android:inputType="number|numberDecimal"
                     android:maxLength="50"
@@ -86,6 +87,7 @@
                     android:textColor="#333"
                     android:textColorHint="#999"
                     android:textSize="16sp" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -95,6 +97,27 @@
                     android:textColor="@android:color/black"
                     android:textSize="16sp" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_adjust"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
+                android:text="手动调整"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+            <SeekBar
+                android:id="@+id/seekbar"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="10dp"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -106,17 +129,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <TextView
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="15dp"
                         android:layout_marginRight="26dp"
+                        android:layout_weight="1"
                         android:text="死猪照片"
                         android:textColor="@android:color/black" />
 
                 </LinearLayout>
-
 
 
                 <LinearLayout
@@ -127,8 +150,8 @@
                     <ImageView
                         android:id="@+id/btnbuchongleft"
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="120dp"
+                        android:layout_weight="1"
                         android:src="@mipmap/add_photo" />
 
                     <TextView
