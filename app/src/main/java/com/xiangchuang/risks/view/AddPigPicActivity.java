@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -28,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,7 +38,7 @@ import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.bean.StartBean;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.utils.CounterHelper;
-import com.xiangchuangtec.luolu.animalcounter.BuildConfig;
+import com.xiangchuang.risks.utils.ToastUtils;
 import com.xiangchuangtec.luolu.animalcounter.R;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
 import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
@@ -82,6 +85,10 @@ public class AddPigPicActivity extends BaseActivity {
     Button btnCommit;
     @BindView(R.id.iv_cancel)
     ImageView ivCancel;
+    @BindView(R.id.seekbar)
+    SeekBar seekbar;
+    @BindView(R.id.tv_adjust)
+    TextView tv_adjust;
 
     private String lipeiId = "";
 
@@ -104,6 +111,7 @@ public class AddPigPicActivity extends BaseActivity {
     private String autoWeight;
 
     File tempFile;
+    private float[] mWeightRange = new float[3];
 
     @Override
     protected int getLayoutId() {
@@ -187,6 +195,23 @@ public class AddPigPicActivity extends BaseActivity {
                 pop.dismiss();
                 llPopup.clearAnimation();
             }
+        });
+
+        seekbar = (SeekBar) findViewById(R.id.seekbar);
+        seekbar.setMax(20);
+        seekbar.getThumb().setColorFilter(Color.parseColor("#00adff"), PorterDuff.Mode.SRC_ATOP);
+        seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                float currentValues = mWeightRange[0] + (i - 10.0f) / 10.0f * (mWeightRange[0] - mWeightRange[1]);
+                etAnimalAge.setText(String.valueOf(currentValues));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
         });
     }
 
@@ -321,8 +346,17 @@ public class AddPigPicActivity extends BaseActivity {
                         if (status == 1) {
                             mProgressDialog.dismiss();
                             autoWeight = weight + "";
+
                             etAnimalAge.setText(weight + "");
+                            seekbar.setVisibility(View.VISIBLE);
+                            tv_adjust.setVisibility(View.VISIBLE);
+                            mWeightRange[0] = weight;
+                            mWeightRange[1] = (float) Math.floor(weight * 0.9);
+                            mWeightRange[2] = (float) Math.floor(weight * 1.1);
+                            seekbar.setProgress(10);
                         } else {
+                            seekbar.setVisibility(View.GONE);
+                            tv_adjust.setVisibility(View.GONE);
                             mProgressDialog.dismiss();
                             autoWeight = "";
                             Toast.makeText(AddPigPicActivity.this, "识别失败！", Toast.LENGTH_SHORT).show();
@@ -504,7 +538,11 @@ public class AddPigPicActivity extends BaseActivity {
             Toast.makeText(getApplicationContext(), "未填写死猪重量", Toast.LENGTH_SHORT).show();
             return;
         }
-
+        float weight = Float.valueOf(etAnimalAge.getText().toString().trim());
+        if (mWeightRange[1] > weight || mWeightRange[2] > weight) {
+            ToastUtils.getInstance().showShort(this, "重量不在调节区间内");
+            return;
+        }
         String buchongLeftstr = tvbuchongleft.getText().toString();
         String buchongRightstr = tvbuchongright.getText().toString();
         StringBuilder sb = new StringBuilder();
