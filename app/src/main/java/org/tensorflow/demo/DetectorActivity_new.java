@@ -29,8 +29,6 @@ import android.media.Image;
 import android.media.Image.Plane;
 import android.media.ImageReader;
 import android.media.ImageReader.OnImageAvailableListener;
-import android.os.Environment;
-import android.os.SystemClock;
 import android.os.Trace;
 import android.util.Log;
 import android.util.Size;
@@ -50,28 +48,14 @@ import org.tensorflow.demo.env.ImageUtils;
 import org.tensorflow.demo.env.Logger;
 import org.tensorflow.demo.tracking.MultiBoxTracker_new;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
-import java.util.Vector;
 
 import innovation.biz.classifier.BreedingPigFaceDetectTFlite;
 import innovation.biz.classifier.PigRotationPrediction;
-import innovation.media.MediaInsureItem;
-import innovation.media.MediaProcessor;
-import innovation.media.Model;
-import innovation.utils.FileUtils;
 
 import static com.xiangchuangtec.luolu.animalcounter.MyApplication.lastXmin;
-import static innovation.entry.InnApplication.ANIMAL_TYPE;
-import static innovation.entry.InnApplication.SCREEN_ORIENTATION;
-import static org.tensorflow.demo.CameraConnectionFragment_new.textureView;
+import static org.tensorflow.demo.Global.dilogIsShowing;
 
 /**
  * An activity that uses a TensorFlowMultiBoxDetector and ObjectTracker to detect and then track
@@ -96,48 +80,30 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
 
     private Integer sensorOrientation;
 
-    private Classifier detector;
-
-
     private byte[][] yuvBytes;
     private int[] rgbBytes = null;
     private Bitmap rgbFrameBitmap = null;
     private Bitmap croppedBitmap = null;
-
-    private boolean computing = false;
 
     private long timestamp = 0;
 
     private Matrix frameToCropTransform;
     private Matrix cropToFrameTransform;
 
-
     public static MultiBoxTracker_new tracker;
 
     private byte[] luminance;
 
     private BorderedText_Breeding borderedText;
-
     //haojie add
-    private int image_count = 0;
-    private int ok_count = 0;  //图像良好次数
-    private int dark_count = 0;//图像过暗次数
-    private int blur_count = 0;//图像模糊次数
-    private int bright_count = 0;//图像过亮次数
     private boolean imageok = true;//图像良好标识
     private String imageErrMsg = "";
-    private static final int CHECK_COUNT = 1; //允许的最大错误图像次数   //定义提示类型
 
-
-    public static int imageWidth;
-    public static int imageHeight;
     private String sheId;
     private String inspectNo;
     private String reason;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private static final Size DESIRED_PREVIEW_SIZE = new Size(1280, 960);
 
     private BreedingPigFaceDetectTFlite pigTFliteDetector;
 
@@ -145,7 +111,6 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
     private int previewHeight = 0;
 
     private int imageCounter = 0;
-    private int imageOkCounter = 0;  //图像良好次数
     private int imageDarkCounter = 0;//图像过暗次数
     private int imageBlurCounter = 0;//图像模糊次数
     private int imageBrightCounter = 0;//图像过亮次数
@@ -158,36 +123,28 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
     private static final String PIG_TFLITE_DETECT_MODEL_FILE = "detect.tflite";
 //    private static final String PIG_TFLITE_DETECT_MODEL_FILE = "ssd_mobilenet_v2_focal_quantized_coco.tflite";
 
-    public static int type1Count = 0;
-    public static int type2Count = 0;
-    public static int type3Count = 0;
-    public static int AngleTrackType = 0;
     public static int offsetX;
     public static int offsetY;
 
     private static long last_toast_time = 0;
 
-    private Bitmap cropCopyBitmap;
     @Override
     public synchronized void onResume() {
-        type1Count = 0;
-        type2Count = 0;
-        type3Count = 0;
-        MyApplication.sowCount = 0;
-        lastXmin = 0f;
+        if(!dilogIsShowing){
+            MyApplication.sowCount = 0;
+            lastXmin = 0f;
+            Intent intent = getIntent();
+            sheId = intent.getStringExtra(Constants.sheId);
+            inspectNo = intent.getStringExtra(Constants.inspectNo);
+            reason = intent.getStringExtra(Constants.reason);
+        }
         super.onResume();
-        Intent intent = getIntent();
-        sheId = intent.getStringExtra(Constants.sheId);
-        inspectNo = intent.getStringExtra(Constants.inspectNo);
-        reason = intent.getStringExtra(Constants.reason);
+
     }
 
     @Override
     public void onPreviewSizeChosen(final Size size, final int rotation) {
         Log.i("====== " ,"===再次=======");
-        type1Count = 0;
-        type2Count = 0;
-        type3Count = 0;
         if (sheId != null && inspectNo != null && reason != null) {
             mFragment.setParmes(sheId,inspectNo, reason);
         }
@@ -248,68 +205,19 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
             public void drawCallback(final Canvas canvas) {
 //                mLocationTracker.draw(canvas);
                 tracker.draw(canvas, 1);
-                if (isDebug()) {
-                    tracker.drawDebug(canvas);
-                }
             }
         });
-
-        addCallback(new DrawCallback() {
-            @Override
-            public void drawCallback(final Canvas canvas) {
-                if (!isDebug()) {
-                    return;
-                }
-                final Bitmap copy = cropCopyBitmap;
-                if (copy == null) {
-                    return;
-                }
-
-                final int backgroundColor = Color.argb(100, 0, 0, 0);
-                canvas.drawColor(backgroundColor);
-
-                final Matrix matrix = new Matrix();
-                final float scaleFactor = 2;
-                matrix.postScale(scaleFactor, scaleFactor);
-                matrix.postTranslate(
-                        canvas.getWidth() - copy.getWidth() * scaleFactor,
-                        canvas.getHeight() - copy.getHeight() * scaleFactor);
-                canvas.drawBitmap(copy, matrix, new Paint());
-
-                final Vector<String> lines = new Vector<String>();
-                if (detector != null) {
-                    final String statString = detector.getStatString();
-                    final String[] statLines = statString.split("\n");
-                    for (final String line : statLines) {
-                        lines.add(line);
-                    }
-                }
-                lines.add("");
-
-                lines.add("Frame: " + previewWidth + "x" + previewHeight);
-                lines.add("Crop: " + copy.getWidth() + "x" + copy.getHeight());
-                lines.add("View: " + canvas.getWidth() + "x" + canvas.getHeight());
-                lines.add("Rotation: " + sensorOrientation);
-
-
-                borderedText.drawLines(canvas, 10, canvas.getHeight() - 10, lines);
-            }
-        });
-/*        new DetectorActivity().reInitCurrentCounter(0, 0, 0);
-        new LocationTracker(getResources().getDisplayMetrics()).reInitCounter(0, 0, 0);
-        trackingOverlay.refreshDrawableState();
-        textureView.refreshDrawableState();*/
     }
 
     public static OverlayView trackingOverlay;
 
     @Override
     public void onImageAvailable(final ImageReader reader) {
-//        try {
-//            Thread.sleep(200);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         Image image = null;
         ++timestamp;
         final long currTimestamp = timestamp;
@@ -378,21 +286,19 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
         if (!Global.VIDEO_PROCESS) {
             return;
         }
-
+        long checkImageStar = System.currentTimeMillis();
+        Log.e(TAG, "checkImageStar: "+checkImageStar);
         // 图像质量检查
         checkImageQuality(croppedBitmap);
+        Log.e(TAG, "checkImageEnd: "+(System.currentTimeMillis()-checkImageStar));
         if (imageok) {
-
+            long pidStar = System.currentTimeMillis();
+            Log.e(TAG, "pidStar: "+pidStar);
             Bitmap rotateBitmap = innovation.utils.ImageUtils.rotateBitmap(croppedBitmap, 90);
 
             //com.innovation.utils.ImageUtils.saveImage(rotateBitmap);
             padBitmap = innovation.utils.ImageUtils.padBitmap(rotateBitmap);
 
-
-            cropCopyBitmap = Bitmap.createBitmap(padBitmap);
-
-
-            //final Canvas canvas = new Canvas(cropCopyBitmap);
             paint.setColor(Color.RED);
             paint.setStyle(Paint.Style.STROKE);
             paint.setStrokeWidth(2.0f);
@@ -401,6 +307,7 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
             int padSize = padBitmap.getWidth();
             offsetX = (padSize - croppedBitmapWidth) / 2;
             offsetY = (padSize - croppedBitmapHeight) / 2;
+            Log.e(TAG, "pidEnd: "+(System.currentTimeMillis()-pidStar));
         } else {
             LOGGER.i("图像质量不合格！" + "不合格原因：" + imageErrMsg);
             return;
@@ -408,16 +315,21 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
 
 
         Log.d(TAG, "猪分类器");
+        long gotoDetectStar = System.currentTimeMillis();
+        Log.e(TAG, "gotoDetectStar: "+gotoDetectStar );
         pigTFliteDetector.pigRecognitionAndPostureItemTFlite(padBitmap);
         if (BreedingPigFaceDetectTFlite.recognitionAndPostureItem != null) {
 
+            long trackAnimalResultsStar = System.currentTimeMillis();
             tracker.trackAnimalResults(BreedingPigFaceDetectTFlite.recognitionAndPostureItem.getPostureItem(), PigRotationPrediction.pigPredictAngleType);
 
             final List<BreedingPigFaceDetectTFlite.Recognition> mappedRecognitions =  new LinkedList<BreedingPigFaceDetectTFlite.Recognition>();
+
             if (BreedingPigFaceDetectTFlite.recognitionAndPostureItem.getList() != null) {
 
                 Log.e("ListSize", "--"+BreedingPigFaceDetectTFlite.recognitionAndPostureItem.getList().size());
                 BreedingPigFaceDetectTFlite.Recognition recognition;
+                long neixunhuanStar = System.currentTimeMillis();
                 for (final BreedingPigFaceDetectTFlite.Recognition result : BreedingPigFaceDetectTFlite.recognitionAndPostureItem.getList()) {
 
                     final RectF location = result.getLocation();
@@ -446,38 +358,21 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
                 tracker.trackResults(mappedRecognitions, luminance, currTimestamp);
             }
         }
+        Log.e(TAG, "gotoDetectEnd: "+(System.currentTimeMillis()-gotoDetectStar));
 
         trackingOverlay.postInvalidate();
-        requestRender();
         Trace.endSection();
 
     }
 
     @Override
     protected int getLayoutId() {
-        //return R.layout.camera_connection_fragment_tracking; //haojie del for test
-        return R.layout.camera_connection_fragment_tracking_new;
+        return R.layout.camera_connection_fragment_tracking_breedingpig;
     }
 
     @Override
     protected int getDesiredPreviewFrameSize() {
         return CROP_SIZE;
-    }
-
-    @Override
-    public void onSetDebug(final boolean debug) {
-        detector.enableStatLogging(debug);
-    }
-
-    public void reInitCurrentCounter(int a, int b, int c) {
-        type1Count = a;
-        type2Count = b;
-        type3Count = c;
-        MyApplication.sowCount = 0;
-        lastXmin = 0f;
-        LOGGER.i("reInitCurrentCounter-a:", type1Count);
-        LOGGER.i("reInitCurrentCounter-b:", type2Count);
-        LOGGER.i("reInitCurrentCounter-c:", type3Count);
     }
 
     //检测图片质量
@@ -510,7 +405,6 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
 
         if (!ifDark && !ifBright && !isBlur) {
             imageok = true;
-            imageOkCounter++;
             Log.d(TAG, "图像 质量良好 imageok ===" + imageok);
         } else {
             imageok = false; //图片质量有问题，不进行捕捉图片的保存
@@ -561,7 +455,6 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
 
     private void initImageCheckPara() {
         imageCounter = 0;
-        imageOkCounter = 0;
         imageDarkCounter = 0;
         imageBlurCounter = 0;
         imageBrightCounter = 0;

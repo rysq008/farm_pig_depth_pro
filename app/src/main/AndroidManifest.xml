@@ -117,7 +117,8 @@
         <activity
             android:name="org.tensorflow.demo.DetectorActivity_new"
             android:exported="true"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.xiangchuang.risks.view.CompanyActivity"
             android:screenOrientation="portrait"
@@ -162,6 +163,11 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.xiangchuang.risks.view.MonitoringActivity"
+            android:label="@string/title_activity_monitoring"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity
+            android:name="com.xiangchuang.risks.view.WeightPicCollectActivity"
             android:label="@string/title_activity_monitoring"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
