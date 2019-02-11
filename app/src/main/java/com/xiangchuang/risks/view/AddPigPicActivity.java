@@ -1,9 +1,7 @@
 package com.xiangchuang.risks.view;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -17,33 +15,29 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.SystemClock;
 import android.provider.MediaStore;
-import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
-import android.widget.SeekBar;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.widget.*;
+import butterknife.BindView;
+import butterknife.OnClick;
 import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.bean.StartBean;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.utils.CounterHelper;
-import com.xiangchuang.risks.utils.ToastUtils;
 import com.xiangchuangtec.luolu.animalcounter.R;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
 import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
 import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
-
+import innovation.utils.FileUtils;
+import innovation.utils.MyWatcher;
+import innovation.utils.PathUtils;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -53,15 +47,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import butterknife.BindView;
-import butterknife.OnClick;
-import innovation.utils.FileUtils;
-import innovation.utils.MyWatcher;
-import innovation.utils.PathUtils;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
 
 public class AddPigPicActivity extends BaseActivity {
 
@@ -203,15 +188,19 @@ public class AddPigPicActivity extends BaseActivity {
         seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                float currentValues = mWeightRange[0] + (i - 10.0f) / 10.0f * (mWeightRange[0] - mWeightRange[1]);
-                etAnimalAge.setText(String.valueOf(currentValues));
+
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {}
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                float currentValues = mWeightRange[0] + (seekBar.getProgress() - 10.0f) / 10.0f * (mWeightRange[0] - mWeightRange[1]);
+                if(currentValues < mWeightRange[1]) currentValues = mWeightRange[1];
+                if(currentValues> mWeightRange[2])currentValues = mWeightRange[2];
+                etAnimalAge.setText(String.valueOf(currentValues));
+            }
         });
     }
 
@@ -353,8 +342,10 @@ public class AddPigPicActivity extends BaseActivity {
                             mWeightRange[0] = weight;
                             mWeightRange[1] = (float) Math.floor(weight * 0.9);
                             mWeightRange[2] = (float) Math.floor(weight * 1.1);
+                            Log.d("","=================== " + weight + "   " + mWeightRange[1] + "   " + mWeightRange[2]);
                             seekbar.setProgress(10);
                         } else {
+                            etAnimalAge.setText("");
                             seekbar.setVisibility(View.GONE);
                             tv_adjust.setVisibility(View.GONE);
                             mProgressDialog.dismiss();
@@ -429,8 +420,8 @@ public class AddPigPicActivity extends BaseActivity {
                                         } else {
                                             Toast.makeText(AddPigPicActivity.this, msg, Toast.LENGTH_SHORT).show();
                                             if (picType == 0) {
-                                                tvPersonAndAnimalpath.setText(data);
                                                 upDeadPig(photo);
+                                                tvPersonAndAnimalpath.setText(data);
                                             } else if (picType == 1) {
                                                 mProgressDialog.dismiss();
                                                 tvbuchongleft.setText(data);
@@ -522,7 +513,6 @@ public class AddPigPicActivity extends BaseActivity {
                     Toast.makeText(getApplicationContext(), "请先拍摄死猪照片。", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                showProgressDialog();
                 addPayInfo();
 
                 break;
@@ -536,11 +526,6 @@ public class AddPigPicActivity extends BaseActivity {
         if (etAnimalAge.getText().toString().trim().isEmpty()) {
             mProgressDialog.dismiss();
             Toast.makeText(getApplicationContext(), "未填写死猪重量", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        float weight = Float.valueOf(etAnimalAge.getText().toString().trim());
-        if (mWeightRange[1] > weight || mWeightRange[2] > weight) {
-            ToastUtils.getInstance().showShort(this, "重量不在调节区间内");
             return;
         }
         String buchongLeftstr = tvbuchongleft.getText().toString();
@@ -560,7 +545,7 @@ public class AddPigPicActivity extends BaseActivity {
         if (sb.length() > 0) {
             sb.deleteCharAt(sb.length() - 1);
         }
-
+        showProgressDialog();
         Map<String, String> mapbody = new HashMap<>();
         mapbody.put(Constants.lipeiId, lipeiId);
         mapbody.put("weight", etAnimalAge.getText().toString().trim());
