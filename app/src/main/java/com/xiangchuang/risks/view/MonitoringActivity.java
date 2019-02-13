@@ -24,6 +24,8 @@ import com.xiangchuangtec.luolu.animalcounter.R;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
 import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
 
+import innovation.utils.HttpUtils;
+
 import static android.webkit.WebSettings.LOAD_NO_CACHE;
 
 /**
@@ -50,7 +52,7 @@ public class MonitoringActivity extends AppCompatActivity {
         en_id = PreferencesUtils.getStringValue(Constants.en_id, MyApplication.getAppContext(), "0");
         Log.e("en_id", "en_id: "+en_id);
 
-        url = "http://47.92.167.61:8007/list.html?enId="+en_id;
+        url = "http://47.92.167.61:8007/list.html?enId="+en_id+"&url="+ HttpUtils.baseUrl;
         Log.e("en_id", "url====="+url);
 //        webView.loadUrl("http://www.baidu.com");
         webView.loadUrl(url);
