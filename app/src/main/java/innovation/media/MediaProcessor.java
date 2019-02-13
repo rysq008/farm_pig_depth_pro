@@ -1131,8 +1131,8 @@ public class MediaProcessor {
     }
 
     private void showTimeOutDialog() {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(MyApplication.getAppContext());
-        View inflate = View.inflate(MyApplication.getContext(), R.layout.pre_timeout, null);
+        AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
+        View inflate = View.inflate(mActivity, R.layout.pre_timeout, null);
         TextView timeout_resert = inflate.findViewById(R.id.timeout_resert);
         TextView timeout_cancel = inflate.findViewById(R.id.timeout_cancel);
         dialog.setView(inflate);
@@ -1143,11 +1143,11 @@ public class MediaProcessor {
             @Override
             public void onClick(View v) {
                 if (!NetworkUtil.isNetworkConnect(mContext)) {
-                    Toast.makeText(MyApplication.getContext(), "断网了，请联网后重试。", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, "断网了，请联网后重试。", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 dialogcreate.dismiss();
-                showProgressDialog((Activity) MyApplication.getContext());
+                showProgressDialog(mActivity);
                 processUploadOne_Pay();
             }
         });
@@ -1156,7 +1156,7 @@ public class MediaProcessor {
             public void onClick(View v) {
                 dialogcreate.dismiss();
                 if ("pre".equals(PreferencesUtils.getStringValue(Constants.fleg, MyApplication.getAppContext()))){
-                    MyApplication.getContext().startActivity(new Intent(MyApplication.getContext(), PreparedLiPeiActivity.class));
+                    mActivity.startActivity(new Intent(MyApplication.getContext(), PreparedLiPeiActivity.class));
                 }
                 ((Activity)MyApplication.getContext()).finish();
             }

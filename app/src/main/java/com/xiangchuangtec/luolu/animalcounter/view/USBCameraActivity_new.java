@@ -624,7 +624,7 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
      * 显示错误提示框
      */
     private void showErrorDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(MyApplication.getAppContext())
+        AlertDialog.Builder builder = new AlertDialog.Builder(USBCameraActivity_new.this)
                 .setIcon(R.drawable.cowface)
                 .setTitle("提示")
                 .setMessage("上传失败，请重试。")
