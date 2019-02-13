@@ -211,13 +211,15 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
 
     public static OverlayView trackingOverlay;
 
+    private long endTime = 0L;
     @Override
     public void onImageAvailable(final ImageReader reader) {
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+
+        if (System.currentTimeMillis() - endTime < 200) {
+            return;
         }
+        endTime = System.currentTimeMillis();
+
         Image image = null;
         ++timestamp;
         final long currTimestamp = timestamp;
@@ -362,6 +364,7 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
 
         trackingOverlay.postInvalidate();
         Trace.endSection();
+
 
     }
 
