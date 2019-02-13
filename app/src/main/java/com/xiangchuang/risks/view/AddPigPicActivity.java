@@ -1,9 +1,7 @@
 package com.xiangchuang.risks.view;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -17,32 +15,32 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.SystemClock;
 import android.provider.MediaStore;
-import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
-import android.widget.SeekBar;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
+
+import butterknife.BindView;
+import butterknife.OnClick;
 
 import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.bean.StartBean;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.utils.CounterHelper;
-import com.xiangchuang.risks.utils.ToastUtils;
 import com.xiangchuangtec.luolu.animalcounter.R;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
 import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
 import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
+
+import innovation.utils.FileUtils;
+import innovation.utils.MyWatcher;
+import innovation.utils.PathUtils;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,15 +51,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import butterknife.BindView;
-import butterknife.OnClick;
-import innovation.utils.FileUtils;
-import innovation.utils.MyWatcher;
-import innovation.utils.PathUtils;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
 
 public class AddPigPicActivity extends BaseActivity {
 
@@ -83,23 +72,19 @@ public class AddPigPicActivity extends BaseActivity {
     TextView tvbuchongright;
     @BindView(R.id.btnCommit)
     Button btnCommit;
-    @BindView(R.id.iv_cancel)
-    ImageView ivCancel;
     @BindView(R.id.seekbar)
     SeekBar seekbar;
     @BindView(R.id.tv_adjust)
     TextView tv_adjust;
 
-    private String lipeiId = "";
-
-    private PopupWindow pop = null;
-    private LinearLayout llPopup;
     private static final int REQUESTCODE_PICK = 0;        // 相册选图标记
     private static final int REQUESTCODE_TAKE = 1;        // 相机拍照标记
     private static final int REQUESTCODE_CUTTING = 2;    // 图片裁切标记
 
-    private static String IMAGE_FILE_NAME = "";// 头像文件名称
-    private Uri uritempFile;
+    private String lipeiId = "";
+
+    private PopupWindow pop = null;
+    private LinearLayout llPopup;
 
     private int picType = 0;
     private View parentView;
@@ -111,7 +96,8 @@ public class AddPigPicActivity extends BaseActivity {
     private String autoWeight;
 
     File tempFile;
-    private float[] mWeightRange = new float[3];
+    //0最小值1返回称重值2最大值 3差值
+    private float[] mWeightRange = new float[4];
 
     @Override
     protected int getLayoutId() {
@@ -120,9 +106,9 @@ public class AddPigPicActivity extends BaseActivity {
 
     @Override
     protected void initData() {
+        lipeiId = getIntent().getStringExtra("lipeiid");
         tvTitle.setText("资料采集");
         parentView = getWindow().getDecorView();
-        lipeiId = getIntent().getStringExtra("lipeiid");
         etAnimalAge.addTextChangedListener(new MyWatcher(3, 1));
 
         //选择图片
@@ -137,14 +123,6 @@ public class AddPigPicActivity extends BaseActivity {
         pop.setOutsideTouchable(true);
         pop.setContentView(view);
 
-        ivCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-        IMAGE_FILE_NAME = stampToDate(System.currentTimeMillis()) + ".jpg";
         RelativeLayout parent = (RelativeLayout) view.findViewById(R.id.parent);
         //相机
         Button bt1 = view.findViewById(R.id.item_popupwindows_camera);
@@ -156,7 +134,6 @@ public class AddPigPicActivity extends BaseActivity {
         parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //  Auto-generated method stub
                 pop.dismiss();
                 llPopup.clearAnimation();
             }
@@ -165,7 +142,6 @@ public class AddPigPicActivity extends BaseActivity {
         bt1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tempFile = new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME);
                 WeightPicCollectActivity.start(AddPigPicActivity.this);
 //                Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 //                //下面这句指定调用相机拍照后的照片存储的路径
@@ -176,18 +152,18 @@ public class AddPigPicActivity extends BaseActivity {
             }
         });
         //相册
-        bt2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent pickIntent = new Intent(Intent.ACTION_PICK, null);
-                // 如果朋友们要限制上传到服务器的图片类型时可以直接写如："image/jpeg 、 image/png等的类型"
-                pickIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/jpeg");
-                startActivityForResult(pickIntent, REQUESTCODE_PICK);
-                overridePendingTransition(R.anim.activity_translate_in, R.anim.activity_translate_out);
-                pop.dismiss();
-                llPopup.clearAnimation();
-            }
-        });
+//        bt2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // 如果朋友们要限制上传到服务器的图片类型时可以直接写如："image/jpeg 、 image/png等的类型"
+//                Intent pickIntent = new Intent(Intent.ACTION_PICK, null);
+//                pickIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/jpeg");
+//                startActivityForResult(pickIntent, REQUESTCODE_PICK);
+//                overridePendingTransition(R.anim.activity_translate_in, R.anim.activity_translate_out);
+//                pop.dismiss();
+//                llPopup.clearAnimation();
+//            }
+//        });
         //取消
         bt3.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -197,21 +173,23 @@ public class AddPigPicActivity extends BaseActivity {
             }
         });
 
-        seekbar = (SeekBar) findViewById(R.id.seekbar);
         seekbar.setMax(20);
         seekbar.getThumb().setColorFilter(Color.parseColor("#00adff"), PorterDuff.Mode.SRC_ATOP);
         seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                float currentValues = mWeightRange[0] + (i - 10.0f) / 10.0f * (mWeightRange[0] - mWeightRange[1]);
-                etAnimalAge.setText(String.valueOf(currentValues));
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {}
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                float currentValues = mWeightRange[1] + (seekBar.getProgress() - 10.0f) / 10.0f * mWeightRange[3];
+                if (currentValues < mWeightRange[0]) currentValues = mWeightRange[0];
+                if (currentValues > mWeightRange[2]) currentValues = mWeightRange[2];
+                etAnimalAge.setText(String.valueOf(currentValues));
+            }
         });
     }
 
@@ -242,8 +220,6 @@ public class AddPigPicActivity extends BaseActivity {
                         e.printStackTrace();
                     }
                 }
-
-
                 break;
             // 取得裁剪后的图片
 //            case REQUESTCODE_CUTTING:
@@ -259,6 +235,7 @@ public class AddPigPicActivity extends BaseActivity {
 //                }
 //                break;
             default:
+                break;
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -331,66 +308,17 @@ public class AddPigPicActivity extends BaseActivity {
     }
 
     /**
-     * 上传死猪图片给后台模型进行称重识别
-     *
-     * @param photo
-     */
-    private void upDeadPig(Bitmap photo) {
-        //上传死猪照片时候调用称重接口
-        CounterHelper.recognitionWeightFromNet(photo, new CounterHelper.OnImageRecognitionWeightListener() {
-            @Override
-            public void onCompleted(float weight, int status) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (status == 1) {
-                            mProgressDialog.dismiss();
-                            autoWeight = weight + "";
-
-                            etAnimalAge.setText(weight + "");
-                            seekbar.setVisibility(View.VISIBLE);
-                            tv_adjust.setVisibility(View.VISIBLE);
-                            mWeightRange[0] = weight;
-                            mWeightRange[1] = (float) Math.floor(weight * 0.9);
-                            mWeightRange[2] = (float) Math.floor(weight * 1.1);
-                            seekbar.setProgress(10);
-                        } else {
-                            seekbar.setVisibility(View.GONE);
-                            tv_adjust.setVisibility(View.GONE);
-                            mProgressDialog.dismiss();
-                            autoWeight = "";
-                            Toast.makeText(AddPigPicActivity.this, "识别失败！", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-            }
-
-
-        });
-    }
-
-    /**
      * 将照片显示在view上，并调用上传
      *
      * @param photo
      */
     private void picToView(Bitmap photo) {
-        Drawable drawable = new BitmapDrawable(null, photo);
-        String urlpath = FileUtils.saveFile(getApplicationContext(), "temphead.jpg", photo);
-
-        if (picType == 0) {
-            btnPersonAndAnimal.setImageDrawable(drawable);
-        } else if (picType == 1) {
-            btnbuchongleft.setImageDrawable(drawable);
-        } else {
-            btnbuchongright.setImageDrawable(drawable);
-        }
-
-        File file = new File(urlpath);
+//        String urlpath = FileUtils.saveFile(getApplicationContext(), "temphead.jpg", photo);
+//        File file = new File(urlpath);
 
         showProgressDialog();
         // 上传图片文件
-        upLoadImg(file, photo);
+        upLoadImg(tempFile, photo);
     }
 
     //上传照片
@@ -400,10 +328,11 @@ public class AddPigPicActivity extends BaseActivity {
                     @Override
                     public void onFailure(Call call, IOException e) {
                         Log.e("upLoadImg", e.getLocalizedMessage());
-                        mProgressDialog.dismiss();
+
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                mProgressDialog.dismiss();
                                 Toast.makeText(AddPigPicActivity.this, "图片上传失败，请检查您的网络。", Toast.LENGTH_SHORT).show();
                             }
                         });
@@ -427,10 +356,18 @@ public class AddPigPicActivity extends BaseActivity {
                                             mProgressDialog.dismiss();
                                             Toast.makeText(AddPigPicActivity.this, "图片上传失败，请检查您的网络。", Toast.LENGTH_SHORT).show();
                                         } else {
+                                            Drawable drawable = new BitmapDrawable(null, photo);
+                                            if (picType == 0) {
+                                                btnPersonAndAnimal.setImageDrawable(drawable);
+                                            } else if (picType == 1) {
+                                                btnbuchongleft.setImageDrawable(drawable);
+                                            } else {
+                                                btnbuchongright.setImageDrawable(drawable);
+                                            }
                                             Toast.makeText(AddPigPicActivity.this, msg, Toast.LENGTH_SHORT).show();
                                             if (picType == 0) {
-                                                tvPersonAndAnimalpath.setText(data);
                                                 upDeadPig(photo);
+                                                tvPersonAndAnimalpath.setText(data);
                                             } else if (picType == 1) {
                                                 mProgressDialog.dismiss();
                                                 tvbuchongleft.setText(data);
@@ -456,41 +393,83 @@ public class AddPigPicActivity extends BaseActivity {
         );
     }
 
-    public Uri getImageContentUri(File imageFile) {
-        String filePath = imageFile.getAbsolutePath();
-        Cursor cursor = getContentResolver().query(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                new String[]{MediaStore.Images.Media._ID},
-                MediaStore.Images.Media.DATA + "=? ",
-                new String[]{filePath}, null);
+    /**
+     * 上传死猪图片给后台模型进行称重识别
+     *
+     * @param photo
+     */
+    private void upDeadPig(Bitmap photo) {
+        //上传死猪照片时候调用称重接口
+        CounterHelper.recognitionWeightFromNet(photo, new CounterHelper.OnImageRecognitionWeightListener() {
+            @Override
+            public void onCompleted(float weight, int status) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (status == 1) {
+                            mProgressDialog.dismiss();
+                            autoWeight = weight + "";
 
-        if (cursor != null && cursor.moveToFirst()) {
-            int id = cursor.getInt(cursor
-                    .getColumnIndex(MediaStore.MediaColumns._ID));
-            Uri baseUri = Uri.parse("content://media/external/images/media");
-            return Uri.withAppendedPath(baseUri, "" + id);
-        } else {
-            if (imageFile.exists()) {
-                ContentValues values = new ContentValues();
-                values.put(MediaStore.Images.Media.DATA, filePath);
-                return getContentResolver().insert(
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-            } else {
-                return null;
+                            etAnimalAge.setText(weight + "");
+                            seekbar.setVisibility(View.VISIBLE);
+                            tv_adjust.setVisibility(View.VISIBLE);
+                            mWeightRange[1] = weight;
+                            mWeightRange[0] = (float) Math.floor(weight * 0.9);
+                            mWeightRange[2] = (float) Math.floor(weight * 1.1);
+                            mWeightRange[3] = mWeightRange[1] - mWeightRange[0];
+
+                            seekbar.setProgress(10);
+                        } else {
+                            etAnimalAge.setText("");
+                            seekbar.setVisibility(View.GONE);
+                            tv_adjust.setVisibility(View.GONE);
+                            mProgressDialog.dismiss();
+                            autoWeight = "";
+                            Toast.makeText(AddPigPicActivity.this, "识别失败！", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
-        }
+
+
+        });
     }
 
+//    public Uri getImageContentUri(File imageFile) {
+//        String filePath = imageFile.getAbsolutePath();
+//        Cursor cursor = getContentResolver().query(
+//                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+//                new String[]{MediaStore.Images.Media._ID},
+//                MediaStore.Images.Media.DATA + "=? ",
+//                new String[]{filePath}, null);
+//
+//        if (cursor != null && cursor.moveToFirst()) {
+//            int id = cursor.getInt(cursor
+//                    .getColumnIndex(MediaStore.MediaColumns._ID));
+//            Uri baseUri = Uri.parse("content://media/external/images/media");
+//            return Uri.withAppendedPath(baseUri, "" + id);
+//        } else {
+//            if (imageFile.exists()) {
+//                ContentValues values = new ContentValues();
+//                values.put(MediaStore.Images.Media.DATA, filePath);
+//                return getContentResolver().insert(
+//                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+//            } else {
+//                return null;
+//            }
+//        }
+//    }
 
-    public String stampToDate(long timeMillis) {
-        @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-        Date date = new Date(timeMillis);
-        return simpleDateFormat.format(date);
-    }
+
+//    public String stampToDate(long timeMillis) {
+//        @SuppressLint("SimpleDateFormat")
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+//        Date date = new Date(timeMillis);
+//        return simpleDateFormat.format(date);
+//    }
 
 
-    @OnClick({R.id.btnPersonAndAnimal, R.id.btnbuchongleft, R.id.btnbuchongright, R.id.btnCommit})
+    @OnClick({R.id.btnPersonAndAnimal, R.id.btnbuchongleft, R.id.btnbuchongright, R.id.btnCommit, R.id.iv_cancel})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btnPersonAndAnimal:
@@ -498,16 +477,16 @@ public class AddPigPicActivity extends BaseActivity {
                 llPopup.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.activity_translate_in));
                 pop.showAtLocation(parentView, Gravity.BOTTOM, 0, 0);
                 break;
-            case R.id.btnbuchongleft:
-                picType = 1;
-                llPopup.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.activity_translate_in));
-                pop.showAtLocation(parentView, Gravity.BOTTOM, 0, 0);
-                break;
-            case R.id.btnbuchongright:
-                picType = 2;
-                llPopup.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.activity_translate_in));
-                pop.showAtLocation(parentView, Gravity.BOTTOM, 0, 0);
-                break;
+//            case R.id.btnbuchongleft:
+//                picType = 1;
+//                llPopup.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.activity_translate_in));
+//                pop.showAtLocation(parentView, Gravity.BOTTOM, 0, 0);
+//                break;
+//            case R.id.btnbuchongright:
+//                picType = 2;
+//                llPopup.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.activity_translate_in));
+//                pop.showAtLocation(parentView, Gravity.BOTTOM, 0, 0);
+//                break;
             case R.id.btnCommit:
                 if (SystemClock.elapsedRealtime() - lastClickTime < MIN_CLICK_DELAY_TIME) {
                     Toast.makeText(AddPigPicActivity.this, "正在处理，请勿连续多次点击！", Toast.LENGTH_SHORT).show();
@@ -522,11 +501,11 @@ public class AddPigPicActivity extends BaseActivity {
                     Toast.makeText(getApplicationContext(), "请先拍摄死猪照片。", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                showProgressDialog();
                 addPayInfo();
-
                 break;
-
+            case R.id.iv_cancel:
+                finish();
+                break;
             default:
                 break;
         }
@@ -536,11 +515,6 @@ public class AddPigPicActivity extends BaseActivity {
         if (etAnimalAge.getText().toString().trim().isEmpty()) {
             mProgressDialog.dismiss();
             Toast.makeText(getApplicationContext(), "未填写死猪重量", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        float weight = Float.valueOf(etAnimalAge.getText().toString().trim());
-        if (mWeightRange[1] > weight || mWeightRange[2] > weight) {
-            ToastUtils.getInstance().showShort(this, "重量不在调节区间内");
             return;
         }
         String buchongLeftstr = tvbuchongleft.getText().toString();
@@ -560,7 +534,7 @@ public class AddPigPicActivity extends BaseActivity {
         if (sb.length() > 0) {
             sb.deleteCharAt(sb.length() - 1);
         }
-
+        showProgressDialog();
         Map<String, String> mapbody = new HashMap<>();
         mapbody.put(Constants.lipeiId, lipeiId);
         mapbody.put("weight", etAnimalAge.getText().toString().trim());
@@ -575,8 +549,13 @@ public class AddPigPicActivity extends BaseActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.e("pregoon", e.getLocalizedMessage());
-                mProgressDialog.dismiss();
-                Toast.makeText(AddPigPicActivity.this, "信息提交失败，请检查您的网络。", Toast.LENGTH_SHORT).show();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressDialog.dismiss();
+                        Toast.makeText(AddPigPicActivity.this, "信息提交失败，请检查您的网络。", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             @Override
@@ -611,8 +590,13 @@ public class AddPigPicActivity extends BaseActivity {
                         }
                     });
                 } else {
-                    mProgressDialog.dismiss();
-                    showMessageDialogRetry("上传异常，请重试。");
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mProgressDialog.dismiss();
+                            showMessageDialogRetry("上传异常，请重试。");
+                        }
+                    });
                 }
             }
         });
@@ -652,6 +636,4 @@ public class AddPigPicActivity extends BaseActivity {
             negative.setVisibility(View.GONE);
         }
     }
-
-
 }
