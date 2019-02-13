@@ -23,6 +23,7 @@ import innovation.crash.CrashHandler;
 import innovation.location.LocationManager_new;
 import innovation.network_status.NetworkChangedReceiver;
 import innovation.utils.HttpUtils;
+import innovation.utils.ImageLoaderUtils;
 import okhttp3.OkHttpClient;
 
 
@@ -79,6 +80,8 @@ public class MyApplication extends Application {
         UploadService.HTTP_STACK = new OkHttpStack(client);
         // make the library use your own OkHttp client
         MyApplication.context = getApplicationContext();
+        //初始化 ImageLoader
+        ImageLoaderUtils.initImageLoader(this);
         //初始化 bugly
         CrashReport.initCrashReport(getApplicationContext(), "2d3ff546dd", false);
         networkChangedReceiver = new NetworkChangedReceiver();

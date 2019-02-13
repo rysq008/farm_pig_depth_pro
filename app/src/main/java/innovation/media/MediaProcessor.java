@@ -1131,7 +1131,7 @@ public class MediaProcessor {
     }
 
     private void showTimeOutDialog() {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(MyApplication.getContext());
+        AlertDialog.Builder dialog = new AlertDialog.Builder(MyApplication.getAppContext());
         View inflate = View.inflate(MyApplication.getContext(), R.layout.pre_timeout, null);
         TextView timeout_resert = inflate.findViewById(R.id.timeout_resert);
         TextView timeout_cancel = inflate.findViewById(R.id.timeout_cancel);
