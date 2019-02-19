@@ -122,9 +122,13 @@ public class HogDetailActivity_new extends BaseActivity {
                                     Log.i("size", picpaths.size() + "" + picpaths.toString());
 
                                     if(pigType.equals("102")){
-                                        vvSow.setVisibility(View.VISIBLE);
-                                        gridview_pic.setVisibility(View.GONE);
-                                        playeVideo(picpaths.get(0));
+                                        if(picpaths != null || picpaths.size() < 1){
+                                            vvSow.setVisibility(View.VISIBLE);
+                                            gridview_pic.setVisibility(View.GONE);
+                                            playeVideo(picpaths.get(0));
+                                        }else{
+                                            Toast.makeText(HogDetailActivity_new.this, "播放视频失败", Toast.LENGTH_SHORT).show();
+                                        }
                                     }else{
                                         vvSow.setVisibility(View.GONE);
                                         gridview_pic.setVisibility(View.VISIBLE);

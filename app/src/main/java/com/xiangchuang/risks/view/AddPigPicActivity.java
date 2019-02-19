@@ -474,8 +474,9 @@ public class AddPigPicActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.btnPersonAndAnimal:
                 picType = 0;
-                llPopup.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.activity_translate_in));
-                pop.showAtLocation(parentView, Gravity.BOTTOM, 0, 0);
+//                llPopup.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.activity_translate_in));
+//                pop.showAtLocation(parentView, Gravity.BOTTOM, 0, 0);
+                WeightPicCollectActivity.start(AddPigPicActivity.this);
                 break;
 //            case R.id.btnbuchongleft:
 //                picType = 1;
