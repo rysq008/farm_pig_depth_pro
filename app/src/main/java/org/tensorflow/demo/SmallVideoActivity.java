@@ -47,6 +47,7 @@ import java.util.List;
 import java.util.Map;
 
 import innovation.media.MediaInsureItem;
+import innovation.media.MediaSmalVideoItem;
 import innovation.network_status.NetworkUtil;
 import innovation.utils.FileUtils;
 import okhttp3.Call;
@@ -91,7 +92,7 @@ public class SmallVideoActivity extends AppCompatActivity implements SurfaceHold
     private TextView mTvTip;
     private boolean isRunning;
 
-    private String lipeiId;
+    private String lipeiId = "";
     private ProgressDialog mProgressDialog;
 
     @Override
@@ -314,10 +315,10 @@ public class SmallVideoActivity extends AppCompatActivity implements SurfaceHold
                         SystemClock.currentThreadTimeMillis() + ".mp4");
                 mMediaRecorder.setOutputFile(mTargetFile.getAbsolutePath());*/
 
-                Global.mediaInsureItem = new MediaInsureItem(SmallVideoActivity.this);
-                Global.VideoFileName = Global.mediaInsureItem.getVideoFileName();
+                Global.mediaSmalVideoItem = new MediaSmalVideoItem(SmallVideoActivity.this);
+                Global.VideoSmalVideoFileName = Global.mediaSmalVideoItem.getVideoFileName();
 
-                mMediaRecorder.setOutputFile(Global.VideoFileName);
+                mMediaRecorder.setOutputFile(Global.VideoSmalVideoFileName);
                 mMediaRecorder.setPreviewDisplay(mSurfaceHolder.getSurface());
                 //解决录制视频, 播放器横向问题
                 mMediaRecorder.setOrientationHint(90);
@@ -378,7 +379,7 @@ public class SmallVideoActivity extends AppCompatActivity implements SurfaceHold
             isRunning = false;
             stopMedia();
             isRecording = false;
-            mTargetFile = new File(Global.VideoFileName);
+            mTargetFile = new File(Global.VideoSmalVideoFileName);
             //Toast.makeText(this, "视频已经放至" + mTargetFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
 
             if (mTargetFile.exists()) {
@@ -502,7 +503,7 @@ public class SmallVideoActivity extends AppCompatActivity implements SurfaceHold
                                         mProgressDialog.dismiss();
                                         Toast.makeText(SmallVideoActivity.this, "上传成功。", Toast.LENGTH_SHORT).show();
                                         boolean result = FileUtils.deleteFile(mTargetFile);
-                                        if (result == true) {
+                                        if (result) {
                                             Log.i("yulipeidetete:", "本地图片打包文件删除成功！！");
                                             finish();
                                         }
@@ -511,7 +512,7 @@ public class SmallVideoActivity extends AppCompatActivity implements SurfaceHold
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            Log.e("uploadZipImage", "uploadZipImage1: " + e.toString());
+                            Log.e("uploadZipVideo", "uploadZipVideo1: " + e.toString());
                         }
 
                     }
@@ -519,7 +520,7 @@ public class SmallVideoActivity extends AppCompatActivity implements SurfaceHold
             });
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e("uploadZipImage", "uploadZipImage2: " + e.toString());
+            Log.e("uploadZipVideo", "uploadZipVideo2: " + e.toString());
         }
     }
 
@@ -565,7 +566,7 @@ public class SmallVideoActivity extends AppCompatActivity implements SurfaceHold
             isRunning = false;
             mMediaRecorder.stop();
             isRecording = false;
-            mTargetFile = new File(Global.VideoFileName);
+            mTargetFile = new File(Global.VideoSmalVideoFileName);
             if (mTargetFile.exists()) {
                 //不保存直接删掉
                 mTargetFile.delete();

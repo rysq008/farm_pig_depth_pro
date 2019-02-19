@@ -6,6 +6,7 @@ import java.util.Vector;
 
 import innovation.media.MediaInsureItem;
 import innovation.media.MediaPayItem;
+import innovation.media.MediaSmalVideoItem;
 import innovation.media.Model;
 
 
@@ -22,6 +23,7 @@ public class Global {
     public static int GloabalWidth = 0;
     public static MediaInsureItem mediaInsureItem = null;
     public static MediaPayItem mediaPayItem = null;
+    public static MediaSmalVideoItem mediaSmalVideoItem = null;
     public static String zipVideoFileName = "";
     public static String ZipImageFileName = "";
     public static String ZipFileName = "";
@@ -50,6 +52,7 @@ public class Global {
     public static boolean DeviceOrientation = false;
 
     public static String VideoFileName = "";
+    public static String VideoSmalVideoFileName = "";
 
     public static Vector<String> listAngles_capture = new Vector<String>();
 
