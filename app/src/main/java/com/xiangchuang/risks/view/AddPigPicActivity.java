@@ -18,6 +18,7 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
@@ -38,6 +39,7 @@ import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
 import innovation.utils.FileUtils;
 import innovation.utils.MyWatcher;
 import innovation.utils.PathUtils;
+import innovation.view.dialog.DialogHelper;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -54,10 +56,14 @@ import java.util.Map;
 
 public class AddPigPicActivity extends BaseActivity {
 
+    @BindView(R.id.iv_cancel)
+    ImageView iv_cancel;
     @BindView(R.id.tv_title)
     TextView tvTitle;
-    @BindView(R.id.etAnimalAge)
-    EditText etAnimalAge;
+    @BindView(R.id.etPigAge)
+    EditText etPigAge;
+    @BindView(R.id.etAnimalWeight)
+    EditText etAnimalWeight;
     @BindView(R.id.btnPersonAndAnimal)
     ImageView btnPersonAndAnimal;
     @BindView(R.id.tvPersonAndAnimalpath)
@@ -108,8 +114,9 @@ public class AddPigPicActivity extends BaseActivity {
     protected void initData() {
         lipeiId = getIntent().getStringExtra("lipeiid");
         tvTitle.setText("资料采集");
+        iv_cancel.setVisibility(View.GONE);
         parentView = getWindow().getDecorView();
-        etAnimalAge.addTextChangedListener(new MyWatcher(3, 1));
+        etAnimalWeight.addTextChangedListener(new MyWatcher(3, 1));
 
         //选择图片
         pop = new PopupWindow(getApplicationContext());
@@ -188,7 +195,7 @@ public class AddPigPicActivity extends BaseActivity {
                 float currentValues = mWeightRange[1] + (seekBar.getProgress() - 10.0f) / 10.0f * mWeightRange[3];
                 if (currentValues < mWeightRange[0]) currentValues = mWeightRange[0];
                 if (currentValues > mWeightRange[2]) currentValues = mWeightRange[2];
-                etAnimalAge.setText(String.valueOf(currentValues));
+                etAnimalWeight.setText(String.valueOf(currentValues));
             }
         });
     }
@@ -410,7 +417,7 @@ public class AddPigPicActivity extends BaseActivity {
                             mProgressDialog.dismiss();
                             autoWeight = weight + "";
 
-                            etAnimalAge.setText(weight + "");
+                            etAnimalWeight.setText(weight + "");
                             seekbar.setVisibility(View.VISIBLE);
                             tv_adjust.setVisibility(View.VISIBLE);
                             mWeightRange[1] = weight;
@@ -420,7 +427,7 @@ public class AddPigPicActivity extends BaseActivity {
 
                             seekbar.setProgress(10);
                         } else {
-                            etAnimalAge.setText("");
+                            etAnimalWeight.setText("");
                             seekbar.setVisibility(View.GONE);
                             tv_adjust.setVisibility(View.GONE);
                             mProgressDialog.dismiss();
@@ -513,7 +520,12 @@ public class AddPigPicActivity extends BaseActivity {
     }
 
     private void addPayInfo() {
-        if (etAnimalAge.getText().toString().trim().isEmpty()) {
+        if (TextUtils.isEmpty(etPigAge.getText().toString())) {
+            mProgressDialog.dismiss();
+            Toast.makeText(getApplicationContext(), "猪龄不能为空", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (TextUtils.isEmpty(etAnimalWeight.getText().toString())) {
             mProgressDialog.dismiss();
             Toast.makeText(getApplicationContext(), "未填写死猪重量", Toast.LENGTH_SHORT).show();
             return;
@@ -538,7 +550,8 @@ public class AddPigPicActivity extends BaseActivity {
         showProgressDialog();
         Map<String, String> mapbody = new HashMap<>();
         mapbody.put(Constants.lipeiId, lipeiId);
-        mapbody.put("weight", etAnimalAge.getText().toString().trim());
+        mapbody.put("age", etPigAge.getText().toString().trim());
+        mapbody.put("weight", etAnimalWeight.getText().toString().trim());
         mapbody.put("weightPic", tvPersonAndAnimalpath.getText().toString().trim());
         mapbody.put("deadPics", sb.toString());
         mapbody.put("provePic", "");//无害化证明照片
@@ -636,5 +649,10 @@ public class AddPigPicActivity extends BaseActivity {
         if (negative != null) {
             negative.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        DialogHelper.exitCheckDialog(this);
     }
 }
