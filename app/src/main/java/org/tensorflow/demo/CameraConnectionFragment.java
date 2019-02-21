@@ -97,6 +97,7 @@ import java.util.concurrent.TimeUnit;
 
 import static android.content.ContentValues.TAG;
 import static com.xiangchuangtec.luolu.animalcounter.MyApplication.timeVideoStart;
+import static org.tensorflow.demo.DetectorActivity.tracker;
 import static org.tensorflow.demo.DetectorActivity.trackingOverlay;
 
 @SuppressLint("ValidFragment")
@@ -704,7 +705,7 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                                         try {
                                             mMediaRecorder.stop();
                                         } catch (IllegalStateException e) {
-                                            Log.e(TAG, " mMediaRecorder.stop:Exception "+e);
+                                            Log.e(TAG, " mMediaRecorder.stop:Exception " + e);
                                             // TODO 如果当前java状态和jni里面的状态不一致，
                                             //e.printStackTrace();
                                             mMediaRecorder = null;
@@ -1363,7 +1364,7 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                                             try {
                                                 mMediaRecorder.stop();
                                             } catch (IllegalStateException e) {
-                                                Log.e(TAG, " mMediaRecorder.stop:Exception "+e);
+                                                Log.e(TAG, " mMediaRecorder.stop:Exception " + e);
                                                 // TODO 如果当前java状态和jni里面的状态不一致，
                                                 //e.printStackTrace();
                                                 mMediaRecorder = null;
@@ -1429,7 +1430,12 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
 //                    }
                     if (activity instanceof DetectorActivity) {
                         ((DetectorActivity) activity).reInitCurrentCounter(0, 0, 0);
-                        DetectorActivity.tracker.reInitCounter(0, 0, 0);
+
+                        if (tracker != null) {
+                            tracker.reInitCounter(0, 0, 0);
+                        } else {
+                            new MultiBoxTracker(activity).reInitCounter(0, 0, 0);
+                        }
                     }
                     if (trackingOverlay != null) {
                         trackingOverlay.refreshDrawableState();
@@ -1438,7 +1444,7 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                     if (textureView != null) {
                         textureView.refreshDrawableState();
                     }
-//                    MyApplication.debugNub = 0;
+                    MyApplication.debugNub = 0;
                     MyApplication.during = 0;
                     LOGGER.i("collectNumberHandler Message 2！");
                     break;
@@ -1487,22 +1493,30 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                             e.printStackTrace();
                         }
 
-                        try{
+                        try {
                             TimerTask timerTask = new TimerTask() {
                                 @Override
                                 public void run() {
                                     collectNumberHandler.post(new Runnable() {
                                         @Override
                                         public void run() {
-                                            mMediaRecorder.stop();
+                                            try {
+                                                mMediaRecorder.stop();
+                                            } catch (IllegalStateException e) {
+                                                Log.e(TAG, " mMediaRecorder.stop:Exception " + e);
+                                                // TODO 如果当前java状态和jni里面的状态不一致，
+                                                //e.printStackTrace();
+                                                mMediaRecorder = null;
+                                                mMediaRecorder = new MediaRecorder();
+                                            }
                                             mMediaRecorder.reset();
                                         }
                                     });
                                 }
                             };
-                            new Timer().schedule(timerTask,30);
-                        }catch(RuntimeException e){
-                            Log.e("-----停止视频录制-----------","---->>>>>>>>>"+e);
+                            new Timer().schedule(timerTask, 30);
+                        } catch (RuntimeException e) {
+                            Log.e("-----停止视频录制-----------", "---->>>>>>>>>" + e);
                             e.printStackTrace();
                         }
                     } catch (Exception e) {

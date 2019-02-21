@@ -365,6 +365,7 @@ public class MediaProcessor {
                 if (pignum.length() > 0) {
                     saveLibId(pignum);
                 }
+                mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
                 reInitCurrentDir();
                 collectNumberHandler.sendEmptyMessage(2);
                 Log.i("initInsureDialog:", "listener_abort");
@@ -483,7 +484,7 @@ public class MediaProcessor {
         }
     }
 
-    private void preCommit(File zipFile_image2) {
+    private void preCommit(File zipFile) {
         Map mapbody = new HashMap();
         mapbody.put(Constants.sheId, String.valueOf(sheId));
         mapbody.put(Constants.insureNo, String.valueOf(inspectNo));
@@ -492,11 +493,11 @@ public class MediaProcessor {
 
         mapbody.put(Constants.address, str_address);
 
-        Log.e("precommit:zipimage2", zipFile_image2.getAbsolutePath());
+        Log.e("precommit:zipimage2", zipFile.getAbsolutePath());
 
         Log.e("precommit:mapbody", mapbody.toString());
         try {
-            OkHttp3Util.uploadPreFile(Constants.PRECOMMIT, zipFile_image2, "a.zip", mapbody, null, new Callback() {
+            OkHttp3Util.uploadPreFile(Constants.PRECOMMIT, zipFile, "a.zip", mapbody, null, new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     Log.e("precommit", "onFailure======" + e.getLocalizedMessage());
@@ -547,7 +548,7 @@ public class MediaProcessor {
                                             mProgressDialog.dismiss();
                                             showSuccessDialog(bean.getMsg());
                                         }
-                                        boolean result = FileUtils.deleteFile(zipFile_image2);
+                                        boolean result = FileUtils.deleteFile(zipFile);
                                         if (result == true) {
                                             Log.i("yulipeidetete:", "本地图片打包文件删除成功！！");
                                         }
@@ -568,10 +569,10 @@ public class MediaProcessor {
         }
     }
 
-    private void preCommitForLiPei(File zipFile_image2) {
-        Log.e("precommit:zipimage2", "path=" + zipFile_image2.getAbsolutePath());
+    private void preCommitForLiPei(File zipFile) {
+        Log.e("precommit:zipimage2", "path=" + zipFile.getAbsolutePath());
         Activity appContext = (Activity) mActivity;
-        OkHttp3Util.uploadPreFile(Constants.LICOMMIT, zipFile_image2, "a.zip", null, null, new Callback() {
+        OkHttp3Util.uploadPreFile(Constants.LICOMMIT, zipFile, "a.zip", null, null, new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
                         Log.e("lipeiprecommit", e.getLocalizedMessage());
@@ -654,7 +655,7 @@ public class MediaProcessor {
                                                 seqNo = bean.getData().getSimilarList().get(0).getSeqNo();
                                                 showDialoglipei();
                                             }
-                                            boolean result = FileUtils.deleteFile(zipFile_image2);
+                                            boolean result = FileUtils.deleteFile(zipFile);
                                             if (result) {
                                                 Log.i("lipeidetete:", "本地图片打包文件删除成功！！");
                                             }
@@ -1952,15 +1953,28 @@ public class MediaProcessor {
 
         int model = Model.VERIFY.value();
         //publishProgress(MSG_UI_PROGRESS_UPLOAD_IMG_ONE);
+
+        /* 处理图片文件 start*/
         String zipImageDir = Global.mediaPayItem.getZipImageDir();
+        File fileZip = new File(zipImageDir);
+        String fnameImage = Global.ZipFileName + ".zip";
+        Log.e(TAG, "processUploadOne_Pay: " + fnameImage);
+        File zipFileImage2 = new File(fileZip, fnameImage); //要上传的图片ZIP文件
+        /* 处理图片文件 end*/
+
+        /* 处理视频文件 start */
         String zipVideoDir = Global.mediaPayItem.getZipVideoDir();
         Log.i("zipVideoDir:", zipVideoDir);
-        File file_zip = new File(zipImageDir);
-        String fname_image = Global.ZipFileName + ".zip";
-        Log.e(TAG, "processUploadOne_Pay: " + fname_image);
-        File zipFile_image2 = new File(file_zip, fname_image); //要上传的图片文件
+        File fileZipVideo = new File(zipVideoDir);
+        String fnameVideo = Global.ZipFileName + ".zip";
+        File zipFileVideo2 = new File(fileZipVideo, fnameVideo); //要上传的视频ZIP文件
+        Log.i("zipVideo=====:", zipFileVideo2.getAbsolutePath());
+        /* 处理视频文件 end */
 
-        if (!zipFile_image2.exists()) {
+        //如果图片文件不存在直接返回
+        if (!zipFileImage2.exists()) {
+            Log.i("zipImage:", "压缩图片文件夹不存在！！");
+            Toast.makeText(mActivity, "压缩视频文件夹为空。", Toast.LENGTH_SHORT).show();
             return;
         }
         String mfleg = PreferencesUtils.getStringValue(Constants.fleg, MyApplication.getAppContext());
@@ -1968,14 +1982,21 @@ public class MediaProcessor {
         if (mActivity != null) {
             editRecoed();
         }
+
+        if (!zipFileVideo2.exists()) {
+            Log.i("zipVideo:", "压缩视频文件夹不存在！！");
+            Toast.makeText(mActivity, "压缩视频文件夹为空。", Toast.LENGTH_SHORT).show();
+        }
+
+
         //预理赔
         if ("pre".equals(mfleg)) {
             Log.i("预理赔调用", "===");
             //预理赔提交
-            preCommit(zipFile_image2);
+            preCommit(zipFileImage2);
         } else if ("lipei".equals(mfleg)) {
             //理赔提交
-            preCommitForLiPei(zipFile_image2);
+            preCommitForLiPei(zipFileImage2);
         }
     }
 
