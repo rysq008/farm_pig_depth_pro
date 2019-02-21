@@ -122,12 +122,14 @@ public class HogDetailActivity_new extends BaseActivity {
                                     Log.i("size", picpaths.size() + "" + picpaths.toString());
 
                                     if(pigType.equals("102")){
-                                        if(picpaths != null || picpaths.size() < 1){
+                                        if(picpaths != null && picpaths.size() > 0){
                                             vvSow.setVisibility(View.VISIBLE);
                                             gridview_pic.setVisibility(View.GONE);
                                             playeVideo(picpaths.get(0));
                                         }else{
-                                            Toast.makeText(HogDetailActivity_new.this, "播放视频失败", Toast.LENGTH_SHORT).show();
+                                            handler.postDelayed(runnable,0);
+                                            mProgressBar.setVisibility(View.GONE);
+                                            Toast.makeText(HogDetailActivity_new.this, "当前无可播放视频。", Toast.LENGTH_SHORT).show();
                                         }
                                     }else{
                                         vvSow.setVisibility(View.GONE);

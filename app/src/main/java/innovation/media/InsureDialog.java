@@ -12,7 +12,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
+import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
+import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
 
 import java.util.Map;
 
@@ -28,12 +31,12 @@ import static android.content.ContentValues.TAG;
 public class InsureDialog extends Dialog {
 
 
-    private  Button insurecancel;
+    private Button insurecancel;
     private ImageView mImage2, mImage7;
     private ImageView mImage6, mImage8, mImage3, mImage1;
     private Button mAbortBtn;
     private Button mAddBtn;
-    private Button mNextBtn, mUpOneBtn, mUpAllBtn, caijiRetry,insure_cowInfo;
+    private Button mNextBtn, mUpOneBtn, mUpAllBtn, caijiRetry, insure_cowInfo;
     ;
     private TextView mTips;
     public static EditText mNumberEdit;
@@ -108,7 +111,7 @@ public class InsureDialog extends Dialog {
 
     private boolean getAngleMissData(Map<String, String> map) {
 
-        Log.e(TAG, "img_map: "+map.toString() );
+        Log.e(TAG, "img_map: " + map.toString());
 
         boolean angleok = true;
         missInfo = "";
@@ -136,7 +139,7 @@ public class InsureDialog extends Dialog {
             missInfo += "3" + "， ";
             angleok = false;
         } else {
-          //  mImage1.setBackgroundResource(R.drawable.cow_angle2);
+            //  mImage1.setBackgroundResource(R.drawable.cow_angle2);
         }
         if (count2 < 7) {
             missInfo += "2" + "， ";
@@ -148,14 +151,14 @@ public class InsureDialog extends Dialog {
             missInfo += "1" + "， ";
             angleok = false;
         } else {
-          //  mImage3.setBackgroundResource(R.drawable.cow_angle0);
+            //  mImage3.setBackgroundResource(R.drawable.cow_angle0);
         }
         // TODO: 2018/8/25 By:LuoLu
         if (count1 >= 3 && count2 >= 7 && count3 >= 3) {
             mAddBtn.setVisibility(View.GONE);
         }
 
-        Log.e("shuling", "count1: "+count1+"===count2: "+count2+"===count3: "+count3 );
+        Log.e("shuling", "count1: " + count1 + "===count2: " + count2 + "===count3: " + count3);
 
 
 //        if (!angleok) {
@@ -176,9 +179,11 @@ public class InsureDialog extends Dialog {
     public void setAbortButton(String text, View.OnClickListener listener) {
         mAbortBtn.setOnClickListener(listener);
     }
+
     public void setCancelButton(String text, View.OnClickListener listener) {
         insurecancel.setOnClickListener(listener);
     }
+
     public void setAddeButton(String text, View.OnClickListener listener) {
         //mAddBtn.setText(text);
         mAddBtn.setOnClickListener(listener);
@@ -214,47 +219,83 @@ public class InsureDialog extends Dialog {
     public void updateView(Map<String, String> showMap, boolean haveimage, boolean havezip, String libid, boolean havevideo) {
 
         initView();
-        angleOK = getAngleMissData(showMap);
 
-        if (angleOK)//必要角度齐全
-        {
+        if (MyApplication.debugNub == 1) {
+            int n = PreferencesUtils.getIntValue(Constants.lipein, 120, MyApplication.getContext());
+
+            mTips.setText("系统检测到您的采集时间已超过" + n + "秒，" +
+                    "您可以继续采集理赔图像，也可以强制提交当前已采集的内容，系统进行人工复核。\n" +
+                    "请选择 直接提交或继续采集");
+            mTips.setVisibility(View.VISIBLE);
+            mNextBtn.setVisibility(View.GONE);
+            mAddBtn.setVisibility(View.GONE);
+            insurecancel.setVisibility(View.GONE);
+            mUpOneBtn.setVisibility(View.VISIBLE);
+            mAbortBtn.setVisibility(View.VISIBLE);
+            mUpOneBtn.setText("直接提交");
+            mAbortBtn.setText("继续采集");
+        } else if (MyApplication.debugNub == 2) {
+            String customServ = PreferencesUtils.getStringValue(Constants.customServ, MyApplication.getContext());
+            int m = PreferencesUtils.getIntValue(Constants.lipeim, 240, MyApplication.getContext());
+
+            mTips.setText("系统检测到您的采集时间已超过" + m + "秒，" +
+                    "建议您强制提交当前已采集的内容，系统将进行人工复核。强制提交后请用手机直接对着牲畜的左、中、右脸拍摄一段不少于2分钟视频，留存作为档案提交到" + customServ + "处。\n" +
+                    "请选择 直接提交或重新采集");
+            mTips.setVisibility(View.VISIBLE);
+            mNextBtn.setVisibility(View.GONE);
+            mAddBtn.setVisibility(View.GONE);
+            insurecancel.setVisibility(View.GONE);
+            mUpOneBtn.setVisibility(View.VISIBLE);
+            mUpOneBtn.setText("直接提交");
+            mAbortBtn.setVisibility(View.VISIBLE);
+            mAbortBtn.setText("重新采集");
+        } else {
+            mAbortBtn.setVisibility(View.GONE);
+            mTips.setVisibility(View.GONE);
+            insurecancel.setVisibility(View.VISIBLE);
+            mUpOneBtn.setVisibility(View.VISIBLE);
+            angleOK = getAngleMissData(showMap);
+
+            if (angleOK)//必要角度齐全
+            {
            /* mUpOneBtn.setVisibility(View.VISIBLE);
             insurecancel.setVisibility(View.VISIBLE);
             mNextBtn.setVisibility(View.GONE);
             mAddBtn.setVisibility(View.GONE);
             mAbortBtn.setVisibility(View.GONE);*/
-        } else {
+            } else {
            /* insurecancel.setVisibility(View.GONE);
             mUpOneBtn.setVisibility(View.GONE);
             mNextBtn.setVisibility(View.GONE);*/
-        }
+            }
 
-        if (haveimage)// 图片文件存在，补充按钮可见，回看图片按钮可见
-        {
+            if (haveimage)// 图片文件存在，补充按钮可见，回看图片按钮可见
+            {
 //            mTips.setText(missInfo);
 //            mAddBtn.setVisibility(View.VISIBLE);
-            mSeeImage.setVisibility(View.GONE);
+                mSeeImage.setVisibility(View.GONE);
 //            insure_cowInfo.setVisibility(View.VISIBLE);
-        } else {
-            mAddBtn.setVisibility(View.GONE);
-            mSeeImage.setVisibility(View.GONE);
+            } else {
+                mAddBtn.setVisibility(View.GONE);
+                mSeeImage.setVisibility(View.GONE);
 //            insure_cowInfo.setVisibility(View.GONE);
-        }
+            }
 
-        if (havezip)// zip文件存在，全部上传按钮可见
-        {
+            if (havezip)// zip文件存在，全部上传按钮可见
+            {
 //            mUpAllBtn.setVisibility(View.VISIBLE);
-        } else {
-            mUpAllBtn.setVisibility(View.GONE);
-        }
+            } else {
+                mUpAllBtn.setVisibility(View.GONE);
+            }
 
-        if (havevideo) {// zip文件存在，全部上传按钮可见
-            mSeeVideo.setVisibility(View.GONE);
-        } else {
-            mSeeVideo.setVisibility(View.GONE);
-        }
-        mNumberEdit.setText(libid);
+            if (havevideo) {// zip文件存在，全部上传按钮可见
+                mSeeVideo.setVisibility(View.GONE);
+            } else {
+                mSeeVideo.setVisibility(View.GONE);
+            }
+            mNumberEdit.setText(libid);
 
+        }
     }
 
     public void setTextTips(String text) {

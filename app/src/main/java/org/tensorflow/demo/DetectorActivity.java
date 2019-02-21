@@ -37,8 +37,12 @@ import android.view.Display;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
+import com.xiangchuangtec.luolu.animalcounter.BuildConfig;
+import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
+import com.xiangchuangtec.luolu.animalcounter.Utils;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
+import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
 
 import org.tensorflow.demo.OverlayView.DrawCallback;
 import org.tensorflow.demo.env.BorderedText;
@@ -46,12 +50,19 @@ import org.tensorflow.demo.env.ImageUtils;
 import org.tensorflow.demo.env.Logger;
 import org.tensorflow.demo.tracking.MultiBoxTracker;
 
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
 import innovation.biz.classifier.PigFaceDetectTFlite;
 import innovation.biz.classifier.PigRotationPrediction;
+import innovation.utils.FileUtils;
+
+import static com.xiangchuangtec.luolu.animalcounter.MyApplication.lastCurrentTime;
+import static com.xiangchuangtec.luolu.animalcounter.Utils.setLowThreshold;
+import static innovation.utils.ImageUtils.compressBitmap;
+import static org.tensorflow.demo.CameraConnectionFragment.collectNumberHandler;
 
 
 /**
@@ -139,6 +150,12 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     private static long last_toast_time = 0;
 
     private Bitmap cropCopyBitmap;
+
+    //大于标准值
+    private boolean aboveStandard = false;
+    //不能识别状态下 保存的原图
+    private int saveImgOricount = 0;
+
     @Override
     public synchronized void onResume() {
 //        type1Count = 0;
@@ -153,10 +170,10 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
     @Override
     public void onPreviewSizeChosen(final Size size, final int rotation) {
-        Log.i("====== " ,"===再次=======");
+        Log.i("====== ", "===再次=======");
 
         if (sheId != null && inspectNo != null && reason != null) {
-            mFragment.setParmes(sheId,inspectNo, reason);
+            mFragment.setParmes(sheId, inspectNo, reason);
         }
         final float textSizePx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, TEXT_SIZE_DIP, getResources().getDisplayMetrics());
         borderedText = new BorderedText(textSizePx);
@@ -205,7 +222,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         trackingOverlay.addCallback(new DrawCallback() {
             @Override
             public void drawCallback(final Canvas canvas) {
-                 tracker.draw(canvas, 1);
+                tracker.draw(canvas, 1);
                 if (isDebug()) {
                     tracker.drawDebug(canvas);
                 }
@@ -259,14 +276,14 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
     @Override
     public void onImageAvailable(final ImageReader reader) {
-        Log.i("====== " ,"===onImageAvailable=======");
+        Log.i("====== ", "===onImageAvailable=======");
         Image image = null;
         ++timestamp;
         final long currTimestamp = timestamp;
         try {
             image = reader.acquireLatestImage();
             if (image == null) {
-                Log.i("====== " ,"===onImageAvailable1=======");
+                Log.i("====== ", "===onImageAvailable1=======");
                 return;
             }
             Trace.beginSection("imageAvailable");
@@ -308,7 +325,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             }
             LOGGER.e(e, "Exception!");
             Trace.endSection();
-            Log.i("====== " ,"===onImageAvailable4=======");
+            Log.i("====== ", "===onImageAvailable4=======");
             return;
         }
 
@@ -328,15 +345,17 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         imageErrMsg = "";
 
         if (!Global.VIDEO_PROCESS) {
-            Log.i("====== " ,"===onImageAvailable3=======");
+            Log.i("====== ", "===onImageAvailable3=======");
             return;
         }
 
         //                            图像质量检查
         checkImageQuality(croppedBitmap);
+
+        Bitmap rotateBitmap;
         if (imageok) {
-            Log.i("====== " ,"===onImageAvailable6=======");
-            Bitmap rotateBitmap = innovation.utils.ImageUtils.rotateBitmap(croppedBitmap, 90);
+            Log.i("====== ", "===onImageAvailable6=======");
+            rotateBitmap = innovation.utils.ImageUtils.rotateBitmap(croppedBitmap, 90);
 
             //com.innovation.utils.ImageUtils.saveImage(rotateBitmap);
             padBitmap = innovation.utils.ImageUtils.padBitmap(rotateBitmap);
@@ -356,20 +375,80 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             return;
         }
 
+        int a =10;// PreferencesUtils.getIntValue(Constants.lipeia, 30, DetectorActivity.this);
+        int b =10;// PreferencesUtils.getIntValue(Constants.lipeib, 30, DetectorActivity.this);
+        int n =30;// PreferencesUtils.getIntValue(Constants.lipein, 120, DetectorActivity.this);
+        int m =60;// PreferencesUtils.getIntValue(Constants.lipeim, 240, DetectorActivity.this);
+
+        int pastSeconds = 5;
+        //获取当前时间戳
+        long c = System.currentTimeMillis();
+
+        // 未达到判定图片数量是否达标时
+        long duringTime = Utils.getDuring(c) / 1000;
+        if (!aboveStandard) {
+            aboveStandard = (Utils.getDuring(c) / 1000) > a;
+        } else {
+            //图片数量未达标,且（初次保存图片，或距离上次保存图片时间超过5秒）
+            if (Utils.notUpToStandard(c, pastSeconds) && (lastCurrentTime == 0 || (c - lastCurrentTime) > pastSeconds * 1000)) {
+                if (saveImgOricount < 15) {
+                    //存图
+                    //保存原图
+                    File file = new File(Global.mediaPayItem.getOriBitmapFileName());
+                    FileUtils.saveBitmapToFile(compressBitmap(rotateBitmap), file);
+                    saveImgOricount++;
+                    Log.i("图片数量未达标", duringTime + ":" + String.valueOf(c));
+                    //保存当前存图的时间戳
+                    lastCurrentTime = c;
+                }
+            }
+        }
+
+        /**
+         * b时间后自动降低拍摄的阈值
+         * InnApplication.lipeib
+         */
+        if ((Utils.getDuring(c) / 1000) > b) {
+            setLowThreshold();
+        }
+
+        /*
+         * m时间后 停止拍摄弹出强制上传
+         * InnApplication.lipeim
+         */
+        if ((Utils.getDuring(c) / 1000) > m && MyApplication.debugNub >= 0) {
+            MyApplication.debugNub = 2;
+            collectNumberHandler.sendEmptyMessage(6);
+            if (BuildConfig.DEBUG)
+                Toast.makeText(this, "m时间后 停止拍摄弹出强制上传", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        /*
+         * n时间后 停止拍摄弹出是否强制上传或重新拍摄
+         * InnApplication.lipein
+         */
+        if ((Utils.getDuring(c) / 1000) > n && MyApplication.debugNub != 1 && MyApplication.debugNub >= 0) {
+            MyApplication.debugNub = 1;
+            collectNumberHandler.sendEmptyMessage(6);
+            if (BuildConfig.DEBUG)
+                Toast.makeText(this, " n时间后 停止拍摄弹出是否强制上传或重新拍摄", Toast.LENGTH_LONG).show();
+        }
+
         Log.d(TAG, "猪脸分类器");
-        pigTFliteDetector.pigRecognitionAndPostureItemTFlite(padBitmap);
+        pigTFliteDetector.pigRecognitionAndPostureItemTFlite(padBitmap, rotateBitmap);
         if (PigFaceDetectTFlite.pigTFliteRecognitionAndPostureItem != null) {
-            Log.i("====== " ,"===onImageAvailable7=======");
+            Log.i("====== ", "===onImageAvailable7=======");
             tracker.trackAnimalResults(PigFaceDetectTFlite.pigTFliteRecognitionAndPostureItem.getPostureItem(), PigRotationPrediction.pigPredictAngleType);
-            final List<Classifier.Recognition> mappedRecognitions =  new LinkedList<Classifier.Recognition>();
+            final List<Classifier.Recognition> mappedRecognitions = new LinkedList<Classifier.Recognition>();
             if (PigFaceDetectTFlite.pigTFliteRecognitionAndPostureItem.getList() != null) {
                 for (final Classifier.Recognition result : PigFaceDetectTFlite.pigTFliteRecognitionAndPostureItem.getList()) {
 
-                    Log.i("====== " ,"===onImageAvailable8=======");
+                    Log.i("====== ", "===onImageAvailable8=======");
                     final RectF location = result.getLocation();
-                    Log.e("RectF", "RectF: "+location );
+                    Log.e("RectF", "RectF: " + location);
                     if (location != null) {
-                        Log.i("====== " ,"===onImageAvailable9=======");
+                        Log.i("====== ", "===onImageAvailable9=======");
                         canvas.drawRect(location, paint);
 
                         Matrix tempMatrix = new Matrix();
@@ -382,7 +461,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                         mappedRecognitions.add(result);
                     }
                 }
-                Log.i("====== " ,"===onImageAvailableA=======");
+                Log.i("====== ", "===onImageAvailableA=======");
                 tracker.trackResults(mappedRecognitions, luminance, currTimestamp);
             }
         }
@@ -456,7 +535,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     }
 
     private void checkImageresult() {
-        if(imageCounter < CHECK_COUNTER){
+        if (imageCounter < CHECK_COUNTER) {
             return;
         }
         //判断图片质量，用于图片错误提示（过亮、过暗、模糊）
@@ -469,7 +548,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
         if (imageDarkCounter > tmpDark) {
             tipMsg = "当前环境光线过暗，不利于采集";
-        }else if (imageBrightCounter > tmpBright) {
+        } else if (imageBrightCounter > tmpBright) {
             tipMsg = "当前环境光线过亮，不利于采集";
         } else if (imageBlurCounter > tmpBlur) {
             tipMsg = "采集图像模糊，请调整拍摄距离";
@@ -477,8 +556,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
         if ((tipMsg.length() > 0)) {
             Log.d(TAG, tipMsg + "== 图片不可用" + last_toast_time);
-            if(System.currentTimeMillis() - last_toast_time > 5000) {
-                Log.d(TAG, "DetectorActivity.parent = " + DetectorActivity.this );
+            if (System.currentTimeMillis() - last_toast_time > 5000) {
+                Log.d(TAG, "DetectorActivity.parent = " + DetectorActivity.this);
 
                 String finalTipMsg = tipMsg;
                 runOnUiThread(new Runnable() {
@@ -502,6 +581,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         imageBlurCounter = 0;
         imageBrightCounter = 0;
     }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == 4) {

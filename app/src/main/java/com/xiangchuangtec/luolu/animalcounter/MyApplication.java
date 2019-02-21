@@ -64,7 +64,15 @@ public class MyApplication extends Application {
     /* 计时器录制开始时间 */
     public static long timeVideoStart;
 
+    /* 存储当前保存图片的时间戳 */
+    public static long lastCurrentTime = 0;
+
+    //记录失败次数
+    public static int debugNub = 0;
+
     private static WeakReference<Activity> acontext;
+
+
 
     @Override
     public void onCreate() {

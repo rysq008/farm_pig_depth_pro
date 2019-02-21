@@ -18,8 +18,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.xiangchuang.risks.base.BaseActivity;
+import com.xiangchuang.risks.model.bean.QueryVideoFlagDataBean;
 import com.xiangchuang.risks.model.bean.StartBean;
 import com.xiangchuang.risks.utils.AlertDialogManager;
+import com.xiangchuangtec.luolu.animalcounter.BuildConfig;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
@@ -36,6 +38,7 @@ import org.tensorflow.demo.SmallVideoActivity;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,6 +46,8 @@ import butterknife.OnClick;
 import innovation.media.Model;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class SelectFunctionActivity_new extends BaseActivity {
@@ -100,7 +105,7 @@ public class SelectFunctionActivity_new extends BaseActivity {
             relLipei.setVisibility(View.VISIBLE);
             iv_cancel.setVisibility(View.VISIBLE);
             tvExit.setVisibility(View.GONE);
-        } else if("2".equals(companyfleg)){
+        } else if ("2".equals(companyfleg)) {
             iv_cancel.setVisibility(View.GONE);
             tvExit.setVisibility(View.VISIBLE);
             //企业（养殖场）
@@ -111,6 +116,8 @@ public class SelectFunctionActivity_new extends BaseActivity {
                 relLipei.setVisibility(View.GONE);
             }
         }
+
+        queryVideoFlag();
 
         pop = new PopupWindow(SelectFunctionActivity_new.this);
         View popview = getLayoutInflater().inflate(R.layout.item_setting, null);
@@ -125,9 +132,79 @@ public class SelectFunctionActivity_new extends BaseActivity {
     }
 
 
+    private void queryVideoFlag() {
+        Map<String, String> map = new HashMap<>();
+        map.put("animalType", "1");
+        mProgressDialog.show();
+
+        OkHttp3Util.doPost(Constants.QUERY_VIDEOFLAG_NEW, null, map, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                mProgressDialog.dismiss();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String string = response.body().string();
+                mProgressDialog.dismiss();
+                Log.i(TAG, string);
+                QueryVideoFlagDataBean queryVideoFlagData = GsonUtils.getBean(string, QueryVideoFlagDataBean.class);
+                if (queryVideoFlagData.getStatus() == 1) {
+                    QueryVideoFlagDataBean.thresholdList thresholdList =
+                            GsonUtils.getBean(queryVideoFlagData.getData().getThreshold(), QueryVideoFlagDataBean.thresholdList.class);
+
+                    Log.e(TAG, "queryVideoFlag thresholdList: " + thresholdList.toString());
+
+                    //存储理赔的时间条件信息
+                    PreferencesUtils.saveIntValue(Constants.lipeia, Integer.parseInt(thresholdList.getLipeiA()), SelectFunctionActivity_new.this);
+                    PreferencesUtils.saveIntValue(Constants.lipeib, Integer.parseInt(thresholdList.getLipeiB()), SelectFunctionActivity_new.this);
+                    PreferencesUtils.saveIntValue(Constants.lipein, Integer.parseInt(thresholdList.getLipeiN()), SelectFunctionActivity_new.this);
+                    PreferencesUtils.saveIntValue(Constants.lipeim, Integer.parseInt(thresholdList.getLipeiM()), SelectFunctionActivity_new.this);
+
+                    PreferencesUtils.saveKeyValue(Constants.phone, queryVideoFlagData.getData().getServiceTelephone(), SelectFunctionActivity_new.this);
+                    PreferencesUtils.saveKeyValue(Constants.customServ, thresholdList.getCustomServ(), SelectFunctionActivity_new.this);
+
+                    PreferencesUtils.saveKeyValue(Constants.THRESHOLD_LIST, queryVideoFlagData.getData().getThreshold(), SelectFunctionActivity_new.this);
+
+                    if (null != queryVideoFlagData.getData() && !"".equals(queryVideoFlagData.getData())) {
+                        String left = (queryVideoFlagData.getData().getLeftNum() == null) ? "8" : queryVideoFlagData.getData().getLeftNum();
+                        String middleNum = (queryVideoFlagData.getData().getLeftNum() == null) ? "8" : queryVideoFlagData.getData().getMiddleNum();
+                        String rightNum = (queryVideoFlagData.getData().getLeftNum() == null) ? "8" : queryVideoFlagData.getData().getRightNum();
+                        if(BuildConfig.DEBUG){
+                            Log.e(TAG, "\nleft:\n" + left);
+                            Log.e(TAG, "\nmiddleNum:\n" + middleNum);
+                            Log.e(TAG, "\nrightNum:\n" + rightNum);
+                        }
+                        PreferencesUtils.saveKeyValue(PreferencesUtils.FACE_ANGLE_MAX_LEFT, left, SelectFunctionActivity_new.this);
+                        PreferencesUtils.saveKeyValue(PreferencesUtils.FACE_ANGLE_MAX_MIDDLE, middleNum, SelectFunctionActivity_new.this);
+                        PreferencesUtils.saveKeyValue(PreferencesUtils.FACE_ANGLE_MAX_RIGHT, rightNum, SelectFunctionActivity_new.this);
+                    }
+                } else {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            new AlertDialog.Builder(SelectFunctionActivity_new.this)
+                                    .setIcon(R.drawable.cowface)
+                                    .setTitle("提示")
+                                    .setMessage(queryVideoFlagData.getMsg())
+                                    .setPositiveButton("退出", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                            SelectFunctionActivity_new.this.finish();
+                                        }
+                                    })
+                                    .setCancelable(false).show();
+                        }
+                    });
+                }
+            }
+        });
+    }
+
     //校验是否有保单
     private void checkBaoDan() {
-        Map map = new HashMap();
+        Map<String, String> map = new HashMap<>();
         map.put(Constants.AppKeyAuthorization, "hopen");
         map.put(Constants.en_user_id, String.valueOf(userid));
         map.put(Constants.en_id, en_id);
@@ -136,6 +213,7 @@ public class SelectFunctionActivity_new extends BaseActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i(TAG, e.toString());
+                mProgressDialog.dismiss();
             }
 
             @Override
@@ -189,7 +267,7 @@ public class SelectFunctionActivity_new extends BaseActivity {
     }
 
     @OnClick({R.id.select_toubao, R.id.select_lipei,
-            R.id.select_xunjiandianshu, R.id.iv_cancel, R.id.select_yulipei,  R.id.select_webview, R.id.tv_exit})
+            R.id.select_xunjiandianshu, R.id.iv_cancel, R.id.select_yulipei, R.id.select_webview, R.id.tv_exit})
     public void onClick(View view) {
         switch (view.getId()) {
             //投保
@@ -424,7 +502,7 @@ public class SelectFunctionActivity_new extends BaseActivity {
     @Override
     public void onBackPressed() {
         //判断是养殖场登录 可直接退出
-        if("2".equals(companyfleg)){
+        if ("2".equals(companyfleg)) {
             long secondTime = System.currentTimeMillis();
             if (secondTime - firstTime > 2000) {
                 Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
@@ -433,7 +511,7 @@ public class SelectFunctionActivity_new extends BaseActivity {
                 android.os.Process.killProcess(android.os.Process.myPid());
                 System.exit(0);
             }
-        }else{
+        } else {
             finish();
         }
 

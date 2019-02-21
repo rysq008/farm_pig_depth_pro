@@ -357,15 +357,18 @@ public class MediaProcessor {
         mInsureDialog.setTitle(R.string.dialog_title);
 
         View.OnClickListener listener_abort = v -> {
-            String pignum = meditText.getText().toString().trim();
-            if (pignum.length() > 0) {
-                saveLibId(pignum);
-            }
             mInsureDialog.dismiss();
-            reInitCurrentDir();
-
-            collectNumberHandler.sendEmptyMessage(2);
-            Log.i("initInsureDialog:", "listener_abort");
+            if (MyApplication.debugNub == 1) {
+                collectNumberHandler.sendEmptyMessage(5);
+            }else{
+                String pignum = meditText.getText().toString().trim();
+                if (pignum.length() > 0) {
+                    saveLibId(pignum);
+                }
+                reInitCurrentDir();
+                collectNumberHandler.sendEmptyMessage(2);
+                Log.i("initInsureDialog:", "listener_abort");
+            }
         };
         View.OnClickListener listener_add = v -> {
             String pignum = meditText.getText().toString().trim();

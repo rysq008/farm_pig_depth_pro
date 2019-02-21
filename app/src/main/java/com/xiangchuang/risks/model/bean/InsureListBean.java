@@ -5,7 +5,10 @@ import java.util.List;
 public class InsureListBean {
 
     /**
-     * data : [{"amount":500,"baodanId":117,"baodanNo":"20181128153728292","baodanNoReal":"123123","baodanStatus":1,"baodanStatusName":"已审核","costSum":"","count":"","createtime":"2018-11-28 15:37:28","createuser":104,"delFlag":0,"enId":45,"enName":"","pigType":102,"pigTypeName":"能繁母猪","ratio":2,"remark":"","seqNo":"","seqNoRange":"","term":"20181130-20181230","updatetime":"","updateuser":""},{"amount":2000,"baodanId":122,"baodanNo":"20181129171426373","baodanNoReal":"1233","baodanStatus":1,"baodanStatusName":"已审核","costSum":"","count":"","createtime":"2018-11-29 17:14:26","createuser":122,"delFlag":0,"enId":45,"enName":"","pigType":104,"pigTypeName":"后备猪","ratio":63,"remark":"","seqNo":"","seqNoRange":"","term":"20181130-20181230","updatetime":"2018-11-29 19:08:37","updateuser":122}]
+     * data : [ {"amount":500,"baodanId":117,"baodanNo":"20181128153728292","baodanNoReal":"123123","baodanStatus":1,"baodanStatusName":"已审核",
+     *              "costSum":"","count":"","createtime":"2018-11-28 15:37:28","createuser":104,"delFlag":0,"enId":45,"enName":"","pigType":102,"pigTypeName":"能繁母猪","ratio":2,"remark":"","seqNo":"","seqNoRange":"","term":"20181130-20181230","updatetime":"","updateuser":""},
+     *          {"amount":2000,"baodanId":122,"baodanNo":"20181129171426373","baodanNoReal":"1233","baodanStatus":1,"baodanStatusName":"已审核",
+     *              "costSum":"","count":"","createtime":"2018-11-29 17:14:26","createuser":122,"delFlag":0,"enId":45,"enName":"","pigType":104,"pigTypeName":"后备猪","ratio":63,"remark":"","seqNo":"","seqNoRange":"","term":"20181130-20181230","updatetime":"2018-11-29 19:08:37","updateuser":122}]
      * msg : 投保成功！
      * status : 1
      */

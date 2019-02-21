@@ -531,8 +531,8 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
         mSendView.selectLayout.setOnClickListener(mSaveClickListener);
         mSendView.stopAnim();
 
-//        myTest = (TextView) view.findViewById(R.id.myTest);
-//        myTest.setOnClickListener(this);
+        myTest = (TextView) view.findViewById(R.id.myTest);
+        myTest.setOnClickListener(this);
 
         tvNotice = view.findViewById(R.id.tv_notice);
 
@@ -748,16 +748,16 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                     mRecordSwitchTxt.setTextColor(Color.DKGRAY);
                 }
                 break;
-//            case R.id.myTest:
-//                try {
-//                    Global.VIDEO_PROCESS = true;
-//                    timeVideoStart = System.currentTimeMillis();
-//                    startRecordingVideo();
-//                } catch (Exception e) {
-//                    Log.e(TAG, "record_control_IOException: " + e.toString());
-//                    e.printStackTrace();
-//                }
-//                break;
+            case R.id.myTest:
+                try {
+                    Global.VIDEO_PROCESS = true;
+                    timeVideoStart = System.currentTimeMillis();
+                    startRecordingVideo();
+                } catch (Exception e) {
+                    Log.e(TAG, "record_control_IOException: " + e.toString());
+                    e.printStackTrace();
+                }
+                break;
             default:
         }
     }
@@ -1454,7 +1454,7 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                     tvBtnRight.setVisibility(View.GONE);
                     ivRight.setVisibility(View.GONE);
                     break;
-                /*//继续录制
+                //继续录制
                 case 5:
                     myTest.performClick();
                     break;
@@ -1509,7 +1509,8 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                         Log.i("tv_ 停止视频录制", e.toString());
                     }
                     MediaProcessor.getInstance(activity).handleMediaResource_build(activity);
-                    break;*/
+                    MediaProcessor.getInstance(activity).showInsureDialog();
+                    break;
                 default:
                     break;
             }

@@ -37,6 +37,14 @@ import android.util.Log;
 import android.view.Display;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.xiangchuang.risks.model.bean.QueryVideoFlagDataBean;
+import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
+import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
+
+import org.tensorflow.demo.DetectorActivity;
+import org.tensorflow.demo.Global;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -47,9 +55,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import innovation.biz.classifier.PigFaceDetectTFlite;
 import innovation.entry.InnApplication;
+import innovation.media.Model;
+import innovation.utils.ConstUtils;
 
 import static android.app.PendingIntent.getActivity;
+import static com.xiangchuangtec.luolu.animalcounter.MyApplication.timeVideoStart;
 
 /**
  * Created by luolu on 2018/3/1.
@@ -161,6 +173,44 @@ public class Utils {
         textPaint.setTextAlign(Paint.Align.CENTER);
 
         return textSize;
+    }
+
+    /**
+     * 获取录制开始到当前节点的时长
+     */
+    public static Long getDuring(long timestamp) {
+        Log.i("图片数量计算---1", "总长" + MyApplication.during + ":当前时间戳" + timestamp + ":开始时间戳" + timeVideoStart);
+        return MyApplication.during + (timestamp - timeVideoStart);
+    }
+
+    /**
+     * 判断已成功采集图片数未达到相应要求
+     */
+    public static Boolean notUpToStandard(long timestamp, int pastSeconds) {
+        return (getDuring(timestamp) / 1000 / (DetectorActivity.type1Count + DetectorActivity.type2Count + DetectorActivity.type3Count + 1)) > pastSeconds;
+    }
+
+    /**
+     * 获取投保或理赔的牲畜识别阈值
+     */
+    public static void getThreshold() {
+        String tlist = PreferencesUtils.getStringValue(Constants.THRESHOLD_LIST, MyApplication.getContext());
+        QueryVideoFlagDataBean.thresholdList thresholdList = new Gson().fromJson(tlist, QueryVideoFlagDataBean.thresholdList.class);
+        Log.e("getThreshold", thresholdList.toString());
+
+        PigFaceDetectTFlite.MIN_CONFIDENCE = Float.parseFloat(thresholdList.getPigtoubao());
+
+    }
+
+    /**
+     * 获取理赔的牲畜识别 降低后的阈值
+     */
+    public static void setLowThreshold() {
+        String tlist = PreferencesUtils.getStringValue(Constants.THRESHOLD_LIST, MyApplication.getContext());
+        QueryVideoFlagDataBean.thresholdList thresholdList = new Gson().fromJson(tlist, QueryVideoFlagDataBean.thresholdList.class);
+        Log.e("getLowThreshold", thresholdList.toString());
+
+        PigFaceDetectTFlite.MIN_CONFIDENCE = Float.parseFloat(thresholdList.getPiglipei2());
     }
 
 }

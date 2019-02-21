@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import innovation.biz.classifier.PigFaceDetectTFlite;
 import innovation.utils.FileUtils;
 import innovation.utils.StorageUtils;
 
@@ -175,6 +176,26 @@ public class MediaPayItem {
         String strBitmapfile = new File(mtmpBimmapDir, fname).getAbsolutePath() + Global.IMAGE_SUFFIX;
         return strBitmapfile;
     }
+
+    /**
+     * 保存原图
+     * @return
+     */
+    public String getOriBitmapFileName(){
+        File mtmpBimmapDir = null;
+        if (mtmpBimmapDir == null) {
+            mtmpBimmapDir = new File(StorageUtils.getExternalCacheDir(mContext), mBitmapName + "/" + "Ori");
+            if (!mtmpBimmapDir.exists()) {
+                mtmpBimmapDir.mkdirs();
+            }
+        }
+        SimpleDateFormat tmpSimpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS", Locale.getDefault());
+        String fname = tmpSimpleDateFormat.format(new Date(System.currentTimeMillis()));
+        String pigPath = ("").equals(PigFaceDetectTFlite.srcPigBitmapName)?fname: PigFaceDetectTFlite.srcPigBitmapName;
+        String strBitmapfile = new File(mtmpBimmapDir, pigPath).getAbsolutePath();
+        return strBitmapfile;
+    }
+
 
     //获得存储角度信息的txt文件名
     public String getTxtFileNme(int type) {
