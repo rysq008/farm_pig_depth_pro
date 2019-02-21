@@ -105,4 +105,9 @@ dependencies {
     //noinspection GradleCompatible
     implementation 'com.android.support:support-v13:27.0.2'
     implementation files('libs/classes.jar')
+    implementation 'com.zhy:okhttputils:2.6.2'
+    debugImplementation "io.objectbox:objectbox-android-objectbrowser:$objectboxVersion"
+    releaseImplementation "io.objectbox:objectbox-android:$objectboxVersion"
+    compile project(path: ':uplibrary')
 }
+apply plugin: 'io.objectbox'

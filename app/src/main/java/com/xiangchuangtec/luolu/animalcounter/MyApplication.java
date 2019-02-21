@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.widget.Toast;
 
 import com.tencent.bugly.crashreport.CrashReport;
 import com.xiangchuang.risks.utils.ShareUtils;
@@ -20,10 +19,13 @@ import net.gotev.uploadservice.okhttp.OkHttpStack;
 import java.lang.ref.WeakReference;
 
 import innovation.crash.CrashHandler;
+import innovation.database.MyObjectBox;
 import innovation.location.LocationManager_new;
 import innovation.network_status.NetworkChangedReceiver;
 import innovation.utils.HttpUtils;
 import innovation.utils.ImageLoaderUtils;
+import io.objectbox.BoxStore;
+import io.objectbox.android.AndroidObjectBrowser;
 import okhttp3.OkHttpClient;
 
 
@@ -53,7 +55,6 @@ public class MyApplication extends Application {
     //记录每次抓图最小的Xmin值
     public static float lastXmin = 0f;
 
-
     public static int currentPadSize;
 
     public static boolean isNoCamera = false;
@@ -72,7 +73,7 @@ public class MyApplication extends Application {
 
     private static WeakReference<Activity> acontext;
 
-
+    private static BoxStore boxStore;
 
     @Override
     public void onCreate() {
@@ -142,6 +143,9 @@ public class MyApplication extends Application {
             }
         });
 
+        boxStore = MyObjectBox.builder().androidContext(this).build();
+        if (BuildConfig.DEBUG)
+            new AndroidObjectBrowser(boxStore).start(this);
     }
 
     @Override
@@ -171,6 +175,10 @@ public class MyApplication extends Application {
             ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE,
                     REQUEST_EXTERNAL_STORAGE);
         }
+    }
+
+    public static BoxStore getBoxStore() {
+        return boxStore;
     }
 
     public static Context getContext() {

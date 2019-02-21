@@ -322,7 +322,7 @@ public class BreedingPigFaceDetectTFlite {
             PostureItem posture = new PostureItem(0, 0, 0,
                     modelX0, modelY0, modelX1, modelY1, outputScores[0][i],
                     modelY0 * padSize, modelX0 * padSize,
-                    modelY1 * padSize, modelX1 * padSize, resizeClipBitmap, bitmap);
+                    modelY1 * padSize, modelX1 * padSize, resizeClipBitmap, bitmap, null);
 
             postureItemList.add(posture);
         }

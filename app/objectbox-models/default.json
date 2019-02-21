@@ -1,0 +1,59 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:2752295958625450474",
+      "lastPropertyId": "1:247087724707285962",
+      "name": "BaseTable",
+      "properties": [
+        {
+          "id": "1:247087724707285962",
+          "name": "_ID"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:8651269746728191324",
+      "lastPropertyId": "7:8397522320393181039",
+      "name": "VideoUploadTable",
+      "properties": [
+        {
+          "id": "1:4795164896175574333",
+          "name": "_ID"
+        },
+        {
+          "id": "2:1346900867879486444",
+          "name": "FILE_PATH"
+        },
+        {
+          "id": "4:1022329793580276971",
+          "indexId": "1:8571097289940263979",
+          "name": "TIME_FLAG"
+        },
+        {
+          "id": "7:8397522320393181039",
+          "name": "IS_COMPLETE"
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "2:8651269746728191324",
+  "lastIndexId": "1:8571097289940263979",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 4,
+  "modelVersionParserMinimum": 4,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [
+    6567735104822132517,
+    8851966062926909989,
+    8090072533198523424
+  ],
+  "retiredRelationUids": [],
+  "version": 1
+}
