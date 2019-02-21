@@ -375,10 +375,10 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             return;
         }
 
-        int a =10;// PreferencesUtils.getIntValue(Constants.lipeia, 30, DetectorActivity.this);
-        int b =10;// PreferencesUtils.getIntValue(Constants.lipeib, 30, DetectorActivity.this);
-        int n =30;// PreferencesUtils.getIntValue(Constants.lipein, 120, DetectorActivity.this);
-        int m =60;// PreferencesUtils.getIntValue(Constants.lipeim, 240, DetectorActivity.this);
+        int a =PreferencesUtils.getIntValue(Constants.lipeia, 30, DetectorActivity.this);//10;
+        int b =PreferencesUtils.getIntValue(Constants.lipeib, 30, DetectorActivity.this);//10;
+        int n =PreferencesUtils.getIntValue(Constants.lipein, 120, DetectorActivity.this);//30;
+        int m =PreferencesUtils.getIntValue(Constants.lipeim, 240, DetectorActivity.this);//60;
 
         int pastSeconds = 5;
         //获取当前时间戳
