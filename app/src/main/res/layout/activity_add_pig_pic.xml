@@ -28,7 +28,44 @@
                 android:layout_height="0.5dp"
                 android:layout_marginLeft="15dp"
                 android:background="#ccc" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:gravity="center_vertical"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:text="畜龄："
+                    android:textSize="16dp"
+                    android:textColor="@android:color/black" />
+                <EditText
+                    android:id="@+id/etPigAge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="100dp"
+                    android:background="@android:color/transparent"
+                    android:hint="请输入养殖天数"
+                    android:inputType="number"
+                    android:maxLength="50"
+                    android:maxLines="1"
+                    android:textColor="#333"
+                    android:textColorHint="#999"
+                    android:textSize="16dp" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="天"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="16dp"
+                    android:textColor="@android:color/black" />
+            </LinearLayout>
+            <!--称重拍照-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
@@ -41,7 +78,8 @@
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="26dp"
                     android:layout_marginTop="20dp"
-                    android:text="估重拍照:"
+                    android:textSize="16dp"
+                    android:text="估重拍照："
                     android:textColor="@android:color/black" />
 
                 <ImageView
@@ -54,9 +92,10 @@
                     android:id="@+id/tvPersonAndAnimalpath"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textSize="16dp"
                     android:visibility="gone" />
             </LinearLayout>
-
+            <!--称重值-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
@@ -67,17 +106,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
-                    android:layout_marginRight="26dp"
-                    android:text="体重:"
+                    android:layout_marginRight="10dp"
+                    android:text="体重："
                     android:textColor="@android:color/black"
-                    android:textSize="16sp" />
+                    android:textSize="16dp" />
 
                 <EditText
-                    android:id="@+id/etAnimalAge"
-                    android:layout_width="0dp"
+                    android:id="@+id/etAnimalWeight"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:minWidth="100dp"
                     android:layout_toRightOf="@+id/tv_transparent_helper"
-                    android:layout_weight="1"
                     android:background="@android:color/transparent"
                     android:focusable="false"
                     android:hint="请输入猪的重量"
@@ -86,27 +125,27 @@
                     android:maxLines="1"
                     android:textColor="#333"
                     android:textColorHint="#999"
-                    android:textSize="16sp" />
+                    android:textSize="16dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
-                    android:layout_marginRight="26dp"
+                    android:layout_marginRight="10dp"
                     android:text="kg"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp" />
+                    android:textSize="16dp" />
             </LinearLayout>
-
+            <!--手动调整称重值-->
             <TextView
                 android:id="@+id/tv_adjust"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="10dp"
-                android:text="手动调整"
+                android:text="手动调整："
                 android:textColor="@android:color/black"
-                android:textSize="16sp"
+                android:textSize="16dp"
                 android:visibility="gone" />
 
             <SeekBar
@@ -136,6 +175,7 @@
                         android:layout_marginLeft="15dp"
                         android:layout_marginRight="26dp"
                         android:layout_weight="1"
+                        android:textSize="16dp"
                         android:text="死猪照片"
                         android:textColor="@android:color/black" />
 
@@ -187,6 +227,18 @@
                 android:layout_marginRight="15dp"
                 android:background="#ccc" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="70dp"
+                android:layout_gravity="center_horizontal"
+                android:text="请拍照估重后提交"
+                android:textSize="18dp"
+                android:textColor="#ff0000" />
+
+            <!--提交按钮-->
             <Button
                 android:id="@+id/btnCommit"
                 android:layout_width="match_parent"
@@ -195,7 +247,7 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
-                android:layout_marginTop="100dp"
+                android:layout_marginTop="20dp"
                 android:background="@drawable/button_onclick"
                 android:gravity="center"
                 android:text="提交"

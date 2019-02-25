@@ -2,6 +2,7 @@ package com.xiangchuang.risks.view;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -44,6 +45,7 @@ import java.io.IOException;
 import butterknife.BindView;
 import butterknife.OnClick;
 import innovation.utils.PathUtils;
+import innovation.view.dialog.DialogHelper;
 
 /**
  * @Author: Lucas.Cui
@@ -88,6 +90,7 @@ public class WeightPicCollectActivity extends BaseActivity implements SensorEven
     @Override
     protected void initData() {
 //        mFilePath = getIntent().getStringExtra("path");
+
     }
 
     @Override
@@ -100,6 +103,7 @@ public class WeightPicCollectActivity extends BaseActivity implements SensorEven
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
         mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
         camera_surfaceview.getViewTreeObserver().addOnGlobalLayoutListener(this);
+        DialogHelper.weightCheckDialog(this);
     }
 
     @Override
@@ -180,18 +184,15 @@ public class WeightPicCollectActivity extends BaseActivity implements SensorEven
      * 拍照
      */
     private void takePicture() {
-        CameraUtils.takePicture(new Camera.ShutterCallback() {
-            @Override
-            public void onShutter() {
-
-            }
-        }, null, new Camera.PictureCallback() {
+        CameraUtils.takePicture(null, null, new Camera.PictureCallback() {
             @Override
             public void onPictureTaken(byte[] data, Camera camera) {
                 CameraUtils.startPreview();
                 Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+
                 if (bitmap != null) {
                     bitmap = ImageUtils.getRotatedBitmap(bitmap, mOrientation);
+                    bitmap = innovation.utils.ImageUtils.compressBitmap(bitmap);
                     btn_upload.setVisibility(View.VISIBLE);
                     iv_preview.setVisibility(View.VISIBLE);
                     iv_preview.setImageBitmap(bitmap);

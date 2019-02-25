@@ -66,6 +66,7 @@ import java.util.Map;
 
 import innovation.login.IDCardValidate;
 import innovation.utils.FileUtils;
+import innovation.utils.ImageUtils;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -610,21 +611,11 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
         // 取得SDCard图片路径做显示
 //        Bitmap photo = BitmapFactory.decodeStream(getContentResolver().openInputStream(uritempFile));
         Bitmap photo = BitmapFactory.decodeFile(file.getAbsolutePath());
+        photo = ImageUtils.compressBitmap(photo);
         String urlpath = FileUtils.saveFile(AddCompanyActivity.this, stampToDate(System.currentTimeMillis()) + "temphead.jpg", photo);
-
-        // TODO: 2018/8/21 By:LuoLu
-        File newFile = new File(urlpath);
-        Log.e("newFile", newFile.getPath());
-        newFile.mkdirs();
-        long i = System.currentTimeMillis();
-        newFile = new File(newFile.getPath());
-        Log.e("fileNew：", newFile.getPath());
-        OutputStream out = new FileOutputStream(newFile.getPath());
-        boolean flag = photo.compress(Bitmap.CompressFormat.JPEG, 30, out);
-        Log.e("flag:", "图片压缩成功" + flag);
-
+        FileUtils.deleteFile(file);
+        // TODO: 2019/2/22 上传保存的图片暂时未删除，后面确认一下是否删除 
         File fileURLPath = new File(urlpath);
-        //upload_zipImage(fileURLPath, userId);
         uploadImage(fileURLPath);
     }
 
