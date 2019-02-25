@@ -184,12 +184,7 @@ public class WeightPicCollectActivity extends BaseActivity implements SensorEven
      * 拍照
      */
     private void takePicture() {
-        CameraUtils.takePicture(new Camera.ShutterCallback() {
-            @Override
-            public void onShutter() {
-
-            }
-        }, null, new Camera.PictureCallback() {
+        CameraUtils.takePicture(null, null, new Camera.PictureCallback() {
             @Override
             public void onPictureTaken(byte[] data, Camera camera) {
                 CameraUtils.startPreview();
