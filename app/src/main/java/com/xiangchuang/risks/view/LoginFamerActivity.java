@@ -44,6 +44,7 @@ import innovation.database.VideoUploadTable;
 import innovation.database.VideoUploadTable_;
 import innovation.entry.InnApplication;
 import innovation.network_status.NetworkUtil;
+import innovation.upload.UploadService;
 import innovation.utils.HttpUtils;
 import io.objectbox.Box;
 import io.objectbox.android.AndroidScheduler;
@@ -79,6 +80,10 @@ public class LoginFamerActivity extends BaseActivity {
 
     @Override
     protected void initData() {
+
+        startService(new Intent(this, UploadService.class));
+
+
 //        Box<VideoUploadTable> box = MyApplication.getBoxStore().boxFor(VideoUploadTable.class);
 //        box.removeAll();
 //        List<VideoUploadTable> list = new ArrayList<>();

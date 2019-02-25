@@ -1361,9 +1361,22 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                                     collectNumberHandler.post(new Runnable() {
                                         @Override
                                         public void run() {
+//                                            if (mMediaRecorder != null) {
+//                                                // clear recorder configuration
+//                                                mMediaRecorder.reset();
+//                                                // release the recorder object
+//                                                mMediaRecorder.release();
+//                                                mMediaRecorder = null;
+//                                            }
                                             try {
                                                 mMediaRecorder.stop();
                                             } catch (IllegalStateException e) {
+                                                Log.e(TAG, " mMediaRecorder.stop:Exception " + e);
+                                                // TODO 如果当前java状态和jni里面的状态不一致，
+                                                //e.printStackTrace();
+                                                mMediaRecorder = null;
+                                                mMediaRecorder = new MediaRecorder();
+                                            } catch (RuntimeException e){
                                                 Log.e(TAG, " mMediaRecorder.stop:Exception " + e);
                                                 // TODO 如果当前java状态和jni里面的状态不一致，
                                                 //e.printStackTrace();
@@ -1500,9 +1513,22 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                                     collectNumberHandler.post(new Runnable() {
                                         @Override
                                         public void run() {
+//                                            if (mMediaRecorder != null) {
+//                                                // clear recorder configuration
+//                                                mMediaRecorder.reset();
+//                                                // release the recorder object
+//                                                mMediaRecorder.release();
+//                                                mMediaRecorder = null;
+//                                            }
                                             try {
                                                 mMediaRecorder.stop();
                                             } catch (IllegalStateException e) {
+                                                Log.e(TAG, " mMediaRecorder.stop:Exception " + e);
+                                                // TODO 如果当前java状态和jni里面的状态不一致，
+                                                //e.printStackTrace();
+                                                mMediaRecorder = null;
+                                                mMediaRecorder = new MediaRecorder();
+                                            } catch (RuntimeException e) {
                                                 Log.e(TAG, " mMediaRecorder.stop:Exception " + e);
                                                 // TODO 如果当前java状态和jni里面的状态不一致，
                                                 //e.printStackTrace();

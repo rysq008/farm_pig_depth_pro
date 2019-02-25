@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 
+import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -34,12 +35,15 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.mainaer.wjoklib.okhttp.upload.UploadTask;
+import com.mainaer.wjoklib.okhttp.upload.UploadTaskListener;
 import com.xiangchuang.risks.model.bean.CommitBean;
 import com.xiangchuang.risks.model.bean.CommitLiBean;
 import com.xiangchuang.risks.model.bean.StartBean;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.view.AddPigPicActivity;
 import com.xiangchuang.risks.view.PreparedLiPeiActivity;
+import com.xiangchuangtec.luolu.animalcounter.BuildConfig;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
@@ -80,6 +84,7 @@ import innovation.login.Utils;
 import innovation.network_status.NetworkUtil;
 import innovation.upload.UploadHelper;
 import innovation.upload.UploadThread;
+import innovation.upload.UploadUtils;
 import innovation.utils.ConstUtils;
 import innovation.utils.FileUtils;
 import innovation.utils.HttpRespObject;
@@ -146,7 +151,7 @@ public class MediaProcessor {
     private static MediaProcessor sInstance;
     private final Context mContext;
     private Activity mActivity = null;
-//    private final FaceDetector mFaceDetector_new; //haojie add
+    //    private final FaceDetector mFaceDetector_new; //haojie add
     private ProgressDialog mProgressDialog;
     private InsureDialog mInsureDialog = null;
     private final Handler mProcessorHandler_new;
@@ -362,7 +367,7 @@ public class MediaProcessor {
             mInsureDialog.dismiss();
             if (MyApplication.debugNub == 1) {
                 collectNumberHandler.sendEmptyMessage(5);
-            }else{
+            } else {
                 String pignum = meditText.getText().toString().trim();
                 if (pignum.length() > 0) {
                     saveLibId(pignum);
@@ -445,6 +450,7 @@ public class MediaProcessor {
         View.OnClickListener listener_cancel = v -> {
             editRecoed();
             mInsureDialog.dismiss();
+            MyApplication.during = 0;
             reInitCurrentDir();
             collectNumberHandler.sendEmptyMessage(2);
             mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
@@ -481,25 +487,35 @@ public class MediaProcessor {
                 }
 
                 @Override
-                public void onResponse(Call call, Response response) throws IOException {}
+                public void onResponse(Call call, Response response) throws IOException {
+                }
             });
         }
     }
 
-    private void preCommit(File zipFile) {
-        Map mapbody = new HashMap();
+    private void preCommit(File zipFile, String timesFlag) {
+        Map<String, String> mapbody = new HashMap<>();
         mapbody.put(Constants.sheId, String.valueOf(sheId));
         mapbody.put(Constants.insureNo, String.valueOf(inspectNo));
         mapbody.put(Constants.reason, reason);
         mapbody.put(Constants.preCompensateVideoId, PreferencesUtils.getStringValue(Constants.preVideoId, MyApplication.getAppContext(), "0"));
 
         mapbody.put(Constants.address, str_address);
+        mapbody.put(Constants.timesFlag, timesFlag);
 
         Log.e("precommit:zipimage2", zipFile.getAbsolutePath());
 
         Log.e("precommit:mapbody", mapbody.toString());
+
         try {
-            OkHttp3Util.uploadPreFile(Constants.PRECOMMIT, zipFile, "a.zip", mapbody, null, new Callback() {
+            String currenUrl = Constants.PRECOMMIT;
+            if (MyApplication.debugNub > 0) {
+                currenUrl = Constants.PREPAY_FORCE_COMMIT;
+            } else {
+                currenUrl = Constants.PRECOMMIT;
+            }
+
+            OkHttp3Util.uploadPreFile(currenUrl, zipFile, "a.zip", mapbody, null, new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     Log.e("precommit", "onFailure======" + e.getLocalizedMessage());
@@ -571,111 +587,200 @@ public class MediaProcessor {
         }
     }
 
-    private void preCommitForLiPei(File zipFile) {
+    private void preCommitForLiPei(File zipFile, String timesFlag) {
         Log.e("precommit:zipimage2", "path=" + zipFile.getAbsolutePath());
-        Activity appContext = (Activity) mActivity;
-        OkHttp3Util.uploadPreFile(Constants.LICOMMIT, zipFile, "a.zip", null, null, new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        Log.e("lipeiprecommit", e.getLocalizedMessage());
-                        mProgressDialog.dismiss();
-                        appContext.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                showTimeOutDialog();
-                            }
-                        });
-                    }
 
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        if (response.isSuccessful()) {
-                            String s = response.body().string();
-                            Log.e("lipeicommit", "上传--" + s);
-                            JSONObject jsonObject = null;
-                            try {
-                                jsonObject = new JSONObject(s);
-                                int status = jsonObject.getInt("status");
-                                String msg = jsonObject.getString("msg");
-                                appContext.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (status == -1 || 0 == status) {
-                                            mProgressDialog.dismiss();
-                                            showErrorDialog(msg);
-                                        } else {
-                                            CommitLiBean bean = GsonUtils.getBean(s, CommitLiBean.class);
-                                            Log.e("lipeicommit", "SimilarFlg--" + bean.getData().getSimilarFlg() + "");
-                                            isChongFu = false;
-                                            if (1 == bean.getStatus() && 1 == bean.getData().getSimilarFlg()) {
-                                                //有相似
-                                                animalId = bean.getData().getSimilarList().get(0).getAnimalId();
-                                                lipeiId = bean.getData().getSimilarList().get(0).getLipeiId();
-                                                similarImgUrl = bean.getData().getSimilarList().get(0).getSimilarImgUrl();
-                                                minsureNo = bean.getData().getSimilarList().get(0).getInsureNo();
-                                                mpreCompensateTime = bean.getData().getSimilarList().get(0).getPreCompensateTime();
-                                                mjuanName = bean.getData().getSimilarList().get(0).getJuanName();
-                                                msheName = bean.getData().getSimilarList().get(0).getSheName();
-                                                similarityDegree = bean.getData().getSimilarList().get(0).getSimilarityDegree();
-                                                userLibId = bean.getData().getUserLibId();
+        Map<String, String> mapbody = new HashMap<>();
+        mapbody.put(Constants.timesFlag, timesFlag);
+
+        Activity appContext = (Activity) mActivity;
+
+        if (MyApplication.debugNub > 0) {
+            OkHttp3Util.uploadPreFile(Constants.PAY_FORCE_COMMIT, zipFile, "a.zip", mapbody, null, new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    mProgressDialog.dismiss();
+                    appContext.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showTimeOutDialog();
+                        }
+                    });
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    mProgressDialog.dismiss();
+                    if (response.isSuccessful()) {
+                        String s = response.body().string();
+                        Log.e("lipeicommit", "上传--" + s);
+                        JSONObject jsonObject = null;
+                        try {
+                            jsonObject = new JSONObject(s);
+                            int status = jsonObject.getInt("status");
+                            String mymsg = jsonObject.getString("msg");
+                            appContext.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if(status == 1){
+                                        showPayForce();
+                                    }else{
+                                        showErrorDialog(mymsg);
+                                    }
+                                }
+                            });
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            showRetryDialog("网络异常，请检查网络后重试。");
+                        }
+                    }else{
+                        showRetryDialog("网络异常，请检查网络后重试。");
+                    }
+                }
+            });
+        } else {
+            OkHttp3Util.uploadPreFile(Constants.LICOMMIT, zipFile, "a.zip", mapbody, null, new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            Log.e("lipeiprecommit", e.getLocalizedMessage());
+                            mProgressDialog.dismiss();
+                            appContext.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    showTimeOutDialog();
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                            if (response.isSuccessful()) {
+                                String s = response.body().string();
+                                Log.e("lipeicommit", "上传--" + s);
+                                JSONObject jsonObject = null;
+                                try {
+                                    jsonObject = new JSONObject(s);
+                                    int status = jsonObject.getInt("status");
+                                    String mymsg = jsonObject.getString("msg");
+                                    appContext.runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (status == -1 || 0 == status) {
                                                 mProgressDialog.dismiss();
-                                                showmsg = bean.getMsg();
-                                                seqNo = bean.getData().getSimilarList().get(0).getSeqNo();
-                                                showDialoglipei();
-                                            } else if (1 == bean.getStatus() && 0 == bean.getData().getSimilarFlg()) {
-                                                userLibId = bean.getData().getUserLibId();
-                                                PreferencesUtils.saveKeyValue(Constants.userLibId, userLibId + "", mActivity);
-                                                showmsg = bean.getMsg();
-                                                //无相似
-                                                mProgressDialog.dismiss();
-                                                showDialogLiNone();
-                                            } else if (1 == bean.getStatus() && 2 == bean.getData().getSimilarFlg()) {
-                                                userLibId = bean.getData().getUserLibId();
-                                                similarList = bean.getData().getSimilarList();
+                                                showErrorDialog(mymsg);
+                                            } else {
+                                                CommitLiBean bean = GsonUtils.getBean(s, CommitLiBean.class);
+                                                Log.e("lipeicommit", "SimilarFlg--" + bean.getData().getSimilarFlg() + "");
+                                                isChongFu = false;
+                                                if (1 == bean.getStatus() && 1 == bean.getData().getSimilarFlg()) {
+                                                    //有相似
+                                                    animalId = bean.getData().getSimilarList().get(0).getAnimalId();
+                                                    lipeiId = bean.getData().getSimilarList().get(0).getLipeiId();
+                                                    similarImgUrl = bean.getData().getSimilarList().get(0).getSimilarImgUrl();
+                                                    minsureNo = bean.getData().getSimilarList().get(0).getInsureNo();
+                                                    mpreCompensateTime = bean.getData().getSimilarList().get(0).getPreCompensateTime();
+                                                    mjuanName = bean.getData().getSimilarList().get(0).getJuanName();
+                                                    msheName = bean.getData().getSimilarList().get(0).getSheName();
+                                                    similarityDegree = bean.getData().getSimilarList().get(0).getSimilarityDegree();
+                                                    userLibId = bean.getData().getUserLibId();
+                                                    mProgressDialog.dismiss();
+                                                    showmsg = bean.getMsg();
+                                                    seqNo = bean.getData().getSimilarList().get(0).getSeqNo();
+                                                    showDialoglipei();
+                                                } else if (1 == bean.getStatus() && 0 == bean.getData().getSimilarFlg()) {
+                                                    userLibId = bean.getData().getUserLibId();
+                                                    PreferencesUtils.saveKeyValue(Constants.userLibId, userLibId + "", mActivity);
+                                                    showmsg = bean.getMsg();
+                                                    //无相似
+                                                    mProgressDialog.dismiss();
+                                                    showDialogLiNone();
+                                                } else if (1 == bean.getStatus() && 2 == bean.getData().getSimilarFlg()) {
+                                                    userLibId = bean.getData().getUserLibId();
+                                                    similarList = bean.getData().getSimilarList();
                                               /*  mjuanName = bean.getData().getSimilarList().get(2).getJuanName();
                                                 msheName = bean.getData().getSimilarList().get(2).getSheName();*/
 
-                                                //有近似
-                                                mProgressDialog.dismiss();
-                                                showmsg = bean.getMsg();
-                                                showDialogLiJin(similarList);
-                                            } else if(1 == bean.getStatus() && 3 == bean.getData().getSimilarFlg()){
-                                                //重复理赔情况
-                                                //isChongFu = true;
-                                                animalId = bean.getData().getSimilarList().get(0).getAnimalId();
-                                                lipeiId = bean.getData().getSimilarList().get(0).getLipeiId();
-                                                similarImgUrl = bean.getData().getSimilarList().get(0).getSimilarImgUrl();
-                                                minsureNo = bean.getData().getSimilarList().get(0).getInsureNo();
-                                                mpreCompensateTime = bean.getData().getSimilarList().get(0).getPreCompensateTime();
-                                                mjuanName = bean.getData().getSimilarList().get(0).getJuanName();
-                                                msheName = bean.getData().getSimilarList().get(0).getSheName();
-                                                similarityDegree = bean.getData().getSimilarList().get(0).getSimilarityDegree();
-                                                userLibId = bean.getData().getUserLibId();
-                                                mProgressDialog.dismiss();
-                                                showmsg = bean.getMsg();
-                                                compensateTime = bean.getData().getSimilarList().get(0).getCompensateTime();
-                                                seqNo = bean.getData().getSimilarList().get(0).getSeqNo();
-                                                showDialoglipei();
-                                            }
-                                            boolean result = FileUtils.deleteFile(zipFile);
-                                            if (result) {
-                                                Log.i("lipeidetete:", "本地图片打包文件删除成功！！");
+                                                    //有近似
+                                                    mProgressDialog.dismiss();
+                                                    showmsg = bean.getMsg();
+                                                    showDialogLiJin(similarList);
+                                                } else if (1 == bean.getStatus() && 3 == bean.getData().getSimilarFlg()) {
+                                                    //重复理赔情况
+                                                    //isChongFu = true;
+                                                    animalId = bean.getData().getSimilarList().get(0).getAnimalId();
+                                                    lipeiId = bean.getData().getSimilarList().get(0).getLipeiId();
+                                                    similarImgUrl = bean.getData().getSimilarList().get(0).getSimilarImgUrl();
+                                                    minsureNo = bean.getData().getSimilarList().get(0).getInsureNo();
+                                                    mpreCompensateTime = bean.getData().getSimilarList().get(0).getPreCompensateTime();
+                                                    mjuanName = bean.getData().getSimilarList().get(0).getJuanName();
+                                                    msheName = bean.getData().getSimilarList().get(0).getSheName();
+                                                    similarityDegree = bean.getData().getSimilarList().get(0).getSimilarityDegree();
+                                                    userLibId = bean.getData().getUserLibId();
+                                                    mProgressDialog.dismiss();
+                                                    showmsg = bean.getMsg();
+                                                    compensateTime = bean.getData().getSimilarList().get(0).getCompensateTime();
+                                                    seqNo = bean.getData().getSimilarList().get(0).getSeqNo();
+                                                    showDialoglipei();
+                                                }
+                                                boolean result = FileUtils.deleteFile(zipFile);
+                                                if (result) {
+                                                    Log.i("lipeidetete:", "本地图片打包文件删除成功！！");
+                                                }
                                             }
                                         }
-                                    }
-                                });
+                                    });
 
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                                showErrorDialog("网络异常");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    showRetryDialog("网络异常，请检查网络后重试。");
+                                }
+
+                            } else {
+                                showRetryDialog("网络异常，请检查网络后重试。");
                             }
-
-                        }else{
-
                         }
                     }
+            );
+        }
+    }
+
+    /**
+     * 上传失败重试
+     * @param msg
+     */
+    private void showRetryDialog(String msg){
+        AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
+        View inflate = View.inflate(mActivity, R.layout.pre_timeout, null);
+        TextView timeout_resert = inflate.findViewById(R.id.timeout_resert);
+        TextView timeout_cancel = inflate.findViewById(R.id.timeout_cancel);
+        TextView tv_msg = inflate.findViewById(R.id.tv_msg);
+        tv_msg.setText(msg);
+        dialog.setView(inflate);
+        AlertDialog dialogcreate = dialog.create();
+        dialogcreate.setCanceledOnTouchOutside(false);
+        dialogcreate.show();
+        timeout_resert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!NetworkUtil.isNetworkConnect(mContext)) {
+                    Toast.makeText(mActivity, "断网了，请联网后重试。", Toast.LENGTH_SHORT).show();
+                    return;
                 }
-        );
+                dialogcreate.dismiss();
+                showProgressDialog(mActivity);
+                processUploadOne_Pay();
+            }
+        });
+        timeout_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogcreate.dismiss();
+                if ("pre".equals(PreferencesUtils.getStringValue(Constants.fleg, MyApplication.getAppContext()))) {
+                    mActivity.startActivity(new Intent(MyApplication.getContext(), PreparedLiPeiActivity.class));
+                }
+                ((Activity) MyApplication.getContext()).finish();
+            }
+        });
     }
 
 
@@ -686,8 +791,9 @@ public class MediaProcessor {
                 new AlertDialogManager.DialogInterface() {
                     @Override
                     public void onPositive() {
-                        collectNumberHandler.sendEmptyMessage(2);
+                        MyApplication.during = 0;
                         mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
+                        collectNumberHandler.sendEmptyMessage(2);
                     }
 
                     @Override
@@ -695,6 +801,7 @@ public class MediaProcessor {
                     }
                 });
     }
+
     //预理赔库已有相似度"++"对象
     private void showDialog(CommitBean bean) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
@@ -718,9 +825,10 @@ public class MediaProcessor {
             @Override
             public void onClick(View v) {
                 dialogcreate.dismiss();
+                mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
                 collectNumberHandler.sendEmptyMessage(2);
                 //mActivity.startActivity(new Intent(mActivity, PreparedLiPeiActivity.class));
-                mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
+
 
             }
         });
@@ -731,19 +839,20 @@ public class MediaProcessor {
             }
         });
     }
+
     //
     private void showSuccessDialog(String mmsg) {
-        if(isNoCamera && !("lipei".equals(PreferencesUtils.getStringValue(Constants.fleg, MyApplication.getAppContext())))){
-            mmsg +="\n为完成理赔，请拍摄死猪和猪舍短视频并上传。";
+        if (isNoCamera && !("lipei".equals(PreferencesUtils.getStringValue(Constants.fleg, MyApplication.getAppContext())))) {
+            mmsg += "\n为完成理赔，请拍摄死猪和猪舍短视频并上传。";
         }
         AlertDialogManager.showMessageDialogOne(mActivity, "提示", mmsg, new AlertDialogManager.DialogInterface() {
             @Override
             public void onPositive() {
                 destroyDialogs();
-                if ("lipei".equals(PreferencesUtils.getStringValue(Constants.fleg, MyApplication.getAppContext()))){
-                    mActivity.startActivity(new Intent(mActivity, AddPigPicActivity.class).putExtra("lipeiid",lipeiId));
-                }else{
-                    if(isNoCamera){
+                if ("lipei".equals(PreferencesUtils.getStringValue(Constants.fleg, MyApplication.getAppContext()))) {
+                    mActivity.startActivity(new Intent(mActivity, AddPigPicActivity.class).putExtra("lipeiid", lipeiId));
+                } else {
+                    if (isNoCamera) {
                         mActivity.startActivity(new Intent(mActivity, SmallVideoActivity.class).putExtra("lipeiid", lipeiId));
                     }
                 }
@@ -792,17 +901,17 @@ public class MediaProcessor {
         TextView tvCompensateTime = inflate.findViewById(R.id.tv_compensatetime);
         LinearLayout llCompensateTime = inflate.findViewById(R.id.ll_compensatetime);
 
-        if(!compensateTime.isEmpty()){
+        if (!compensateTime.isEmpty()) {
             llCompensateTime.setVisibility(View.VISIBLE);
             tvCompensateTime.setText(compensateTime);
-        }else{
+        } else {
             llCompensateTime.setVisibility(View.GONE);
         }
 
-        if(!seqNo.isEmpty()){
+        if (!seqNo.isEmpty()) {
             llSeqNo.setVisibility(View.VISIBLE);
             tvSeqNo.setText(seqNo);
-        }else{
+        } else {
             llSeqNo.setVisibility(View.GONE);
         }
         xiangsi.setText(similarityDegree);
@@ -816,7 +925,7 @@ public class MediaProcessor {
             Glide.with(mContext).load(similarImgUrl).into(result1_image);
         }
 
-        if(isChongFu){
+        if (isChongFu) {
             result5_goon.setVisibility(View.GONE);
         }
         dialog.setView(inflate);
@@ -828,8 +937,9 @@ public class MediaProcessor {
             @Override
             public void onClick(View v) {
                 dialogcreate.dismiss();
-                collectNumberHandler.sendEmptyMessage(2);
                 mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
+                collectNumberHandler.sendEmptyMessage(2);
+
             }
         });
         result5_goon.setOnClickListener(new View.OnClickListener() {
@@ -988,8 +1098,9 @@ public class MediaProcessor {
             @Override
             public void onClick(View v) {
                 dialogcreate.dismiss();
-                collectNumberHandler.sendEmptyMessage(2);
                 mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
+                collectNumberHandler.sendEmptyMessage(2);
+
             }
         });
         //继续
@@ -1000,6 +1111,7 @@ public class MediaProcessor {
             }
         });
     }
+
     //未找到相似对象的处理
     private void showDialogLiNone() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
@@ -1018,8 +1130,9 @@ public class MediaProcessor {
             @Override
             public void onClick(View v) {
                 dialogcreate.dismiss();
-                collectNumberHandler.sendEmptyMessage(2);
                 mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
+                collectNumberHandler.sendEmptyMessage(2);
+
             }
         });
         /*liresult1_goon.setOnClickListener(new View.OnClickListener() {
@@ -1161,13 +1274,46 @@ public class MediaProcessor {
             @Override
             public void onClick(View v) {
                 dialogcreate.dismiss();
-                if ("pre".equals(PreferencesUtils.getStringValue(Constants.fleg, MyApplication.getAppContext()))){
+                if ("pre".equals(PreferencesUtils.getStringValue(Constants.fleg, MyApplication.getAppContext()))) {
                     mActivity.startActivity(new Intent(MyApplication.getContext(), PreparedLiPeiActivity.class));
                 }
-                ((Activity)MyApplication.getContext()).finish();
+                ((Activity) MyApplication.getContext()).finish();
             }
         });
     }
+
+    private void showPayForce() {
+        String customServ = PreferencesUtils.getStringValue(Constants.customServ, MyApplication.getContext());
+        String phone = PreferencesUtils.getStringValue(Constants.phone, MyApplication.getContext());
+
+        new AlertDialog.Builder(mActivity)
+                .setIcon(R.drawable.cowface)
+                .setTitle("提示")
+                .setMessage("提交成功，系统无法找到对应牲畜。\n" +
+                        "请用手机直接对着牲畜的左、中、右脸拍摄一段不少于2分钟视频，留存作为档案提交到" + customServ + "处。\n" +
+                        "后台将进行人工复核，复核结果会通过短信方式通知。如有疑问请致电人工坐席服务电话：" + phone + "。")
+                .setPositiveButton("拨打客服电话", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        Intent intent = new Intent(Intent.ACTION_DIAL);
+                        Uri data = Uri.parse("tel:" + phone);
+                        intent.setData(data);
+                        mActivity.startActivity(intent);
+                        mActivity.finish();
+                    }
+                })
+                .setNegativeButton("退出", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        mActivity.finish();
+                    }
+                })
+                .setCancelable(false)
+                .show();
+    }
+
 
     private void showErrorDialogLi(String msg) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
@@ -1990,21 +2136,53 @@ public class MediaProcessor {
             Toast.makeText(mActivity, "压缩视频文件夹为空。", Toast.LENGTH_SHORT).show();
         }
 
+        String timesflag = zipFileVideo2.getName();
+        /* 将视频文件插入数据库 */
         Box<VideoUploadTable> box = MyApplication.getBoxStore().boxFor(VideoUploadTable.class);
         VideoUploadTable bean = new VideoUploadTable();
-        bean.fpath=""+zipFileVideo2.getAbsolutePath();
-        bean.timesflag="";
+        bean.fpath = "" + zipFileVideo2.getAbsolutePath();
+        bean.timesflag = "" + zipFileVideo2.getName();
         bean.iscomplete = false;
         box.put(bean);
+
+        List<VideoUploadTable> list = new ArrayList<>();
+        list.add(bean);
+        /* 开启视频断点续传 */
+        UploadUtils.uploadFile(MyApplication.getContext(), new UploadTaskListener() {
+            @Override
+            public void onUploading(UploadTask uploadTask, String percent, int position) {
+
+            }
+
+            @Override
+            public void onUploadSuccess(UploadTask uploadTask, File file) {
+                if(BuildConfig.DEBUG){
+                    Toast.makeText(MyApplication.getContext(),"提交成功", Toast.LENGTH_LONG).show();
+                }
+                VideoUploadTable videoUpLoadBean = (VideoUploadTable) uploadTask.getT();
+                videoUpLoadBean.iscomplete = true;
+                box.put(videoUpLoadBean);
+            }
+
+            @Override
+            public void onError(UploadTask uploadTask, int errorCode, int position) {
+
+            }
+
+            @Override
+            public void onPause(UploadTask uploadTask) {
+
+            }
+        }, list);
 
         //预理赔
         if ("pre".equals(mfleg)) {
             Log.i("预理赔调用", "===");
             //预理赔提交
-            preCommit(zipFileImage2);
+            preCommit(zipFileImage2, timesflag);
         } else if ("lipei".equals(mfleg)) {
             //理赔提交
-            preCommitForLiPei(zipFileImage2);
+            preCommitForLiPei(zipFileImage2, timesflag);
         }
     }
 

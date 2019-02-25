@@ -118,7 +118,7 @@
                     android:minWidth="100dp"
                     android:layout_toRightOf="@+id/tv_transparent_helper"
                     android:background="@android:color/transparent"
-                    android:focusable="false"
+                    android:enabled="false"
                     android:hint="请输入猪的重量"
                     android:inputType="number|numberDecimal"
                     android:maxLength="50"
@@ -234,8 +234,8 @@
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="70dp"
                 android:layout_gravity="center_horizontal"
-                android:text="请拍照估重后提交"
-                android:textSize="18dp"
+                android:text="为防止理赔失败，请拍摄整只死猪照片提交"
+                android:textSize="16dp"
                 android:textColor="#ff0000" />
 
             <!--提交按钮-->
@@ -247,7 +247,7 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="30dp"
                 android:background="@drawable/button_onclick"
                 android:gravity="center"
                 android:text="提交"

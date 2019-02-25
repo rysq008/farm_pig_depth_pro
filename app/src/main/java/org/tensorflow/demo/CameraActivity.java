@@ -76,6 +76,8 @@ public abstract class CameraActivity extends Activity implements OnImageAvailabl
         MyApplication.debugNub = 0;
         MyApplication.during = 0;
 
+        Global.VIDEO_PROCESS = false;
+
         DetectorActivity.type1Count = 0;
         DetectorActivity.type2Count = 0;
         DetectorActivity.type3Count = 0;

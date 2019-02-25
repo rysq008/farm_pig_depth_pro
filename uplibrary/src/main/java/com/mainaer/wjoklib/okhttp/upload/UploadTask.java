@@ -106,7 +106,7 @@ public class UploadTask<T> implements Runnable {
                 builder.addFormDataPart("mFile", file.getName(), requestBody);
 
                 Request request = new Request.Builder()
-                        .url(url + "lipeiVideo")
+                        .url(url)
                         .addHeader("AppKeyAuthorization", "hopen")
                         .post(builder.build())
                         .build();

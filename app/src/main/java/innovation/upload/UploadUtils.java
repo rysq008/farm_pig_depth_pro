@@ -3,7 +3,16 @@ package innovation.upload;
 import android.content.Context;
 import android.util.Log;
 
+import com.mainaer.wjoklib.okhttp.upload.UploadManager;
+import com.mainaer.wjoklib.okhttp.upload.UploadTask;
 import com.mainaer.wjoklib.okhttp.upload.UploadTaskListener;
+import com.xiangchuangtec.luolu.animalcounter.MyApplication;
+import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
+import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -119,13 +128,13 @@ public class UploadUtils {
 
     public static Map makeBean2Map(VideoUploadTable bean) {
         Map<String, String> params = new HashMap<String, String>();
-//        params.put("libNum", bean.libNub);//保单号
-//        params.put("userId", bean.userId);//用户id
-//        params.put("libEnvinfo", bean.libEnvinfo);//设备信息
-//        params.put("animalType", bean.animalType);//牲畜类型
-//        params.put("collectTimes", bean.collectTimes);//
-//        params.put("timesFlag", bean.timesFlag);//
-//        params.put("collectTime", bean.collectTime);//
+        String type = PreferencesUtils.getStringValue(Constants.companyfleg, MyApplication.getAppContext());
+        if (type.equals("1")) {
+            params.put("userId", PreferencesUtils.getStringValue(Constants.id, MyApplication.getAppContext()));//用户id
+        } else {
+            params.put("userId", PreferencesUtils.getIntValue(Constants.en_user_id, MyApplication.getAppContext())+"");//用户id
+        }
+        params.put("timesFlag", bean.timesflag);
         return params;
     }
 
@@ -139,30 +148,30 @@ public class UploadUtils {
             params.put("filename", file.getName());
             params.put("timesFlag", bean.timesflag);
             Log.e("uploadFile", "断点开始....");
-//            OkHttpRequestUtils.getInstance(context).OkHttpGetStringRequest(HttpUtils.UPLOAD_URL + "check", params, new StringCallback() {
-//                @Override
-//                public void onError(Call call, Exception e, int id) {
-//
-//                }
-//
-//                @Override
-//                public void onResponse(String response, int id) {
-//                    Log.i("ckeck", response);
-//                    JSONObject jsonObject = null;
-//                    try {
-//                        jsonObject = new JSONObject(response);
-////                        Toast.makeText(context, jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
-//                        if (jsonObject.optInt("status") != 1) return;
-//                        final int chunk = Integer.valueOf(jsonObject.get("data").toString());
-//                        params.putAll(makeBean2Map(bean));
-////                        UploadTask task = new UploadTask.Builder().setT(bean).setParams(params).setId(bean.timesflag).setUrl(HttpUtils.UPLOAD_URL)
-////                                .setChunck(chunk).setFileName(bean.fpath).setListener(uploadTaskListener).build();
-////                        UploadManager.getInstance().addUploadTask(task);
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            });
+            OkHttpRequestUtils.getInstance(context).OkHttpGetStringRequest(Constants.UPLOAD_CHECK, params, new StringCallback() {
+                @Override
+                public void onError(Call call, Exception e, int id) {
+
+                }
+
+                @Override
+                public void onResponse(String response, int id) {
+                    Log.i("ckeck", response);
+                    JSONObject jsonObject = null;
+                    try {
+                        jsonObject = new JSONObject(response);
+//                        Toast.makeText(context, jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
+                        if (jsonObject.optInt("status") != 1) return;
+                        final int chunk = Integer.valueOf(jsonObject.get("data").toString());
+                        params.putAll(makeBean2Map(bean));
+                        UploadTask task = new UploadTask.Builder().setT(bean).setParams(params).setId(bean.timesflag).setUrl(Constants.UPLOAD_VIDEO)
+                                .setChunck(chunk).setFileName(bean.fpath).setListener(uploadTaskListener).build();
+                        UploadManager.getInstance().addUploadTask(task);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
     }
 }

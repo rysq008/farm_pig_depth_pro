@@ -71,7 +71,7 @@ public class MyApplication extends Application {
     //记录失败次数
     public static int debugNub = 0;
 
-    private static WeakReference<Activity> acontext;
+    private static Activity acontext;
 
     private static BoxStore boxStore;
 
@@ -109,7 +109,7 @@ public class MyApplication extends Application {
 //                    HttpUtils.resetIp(HttpUtils.baseUrl);
 //                    Toast.makeText(activity, "------->>"+HttpUtils.baseUrl, Toast.LENGTH_LONG).show();
 //                }
-                acontext = new WeakReference<>(activity);
+                acontext = activity;
             }
 
             @Override
@@ -182,6 +182,6 @@ public class MyApplication extends Application {
     }
 
     public static Context getContext() {
-        return MyApplication.acontext.get();
+        return MyApplication.acontext;
     }
 }

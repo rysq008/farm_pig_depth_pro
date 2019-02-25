@@ -349,7 +349,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             return;
         }
 
-        //                            图像质量检查
+        //图像质量检查
         checkImageQuality(croppedBitmap);
 
         Bitmap rotateBitmap;

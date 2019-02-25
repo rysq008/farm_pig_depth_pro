@@ -105,6 +105,8 @@ public class AddPigPicActivity extends BaseActivity {
     //0最小值1返回称重值2最大值 3差值
     private float[] mWeightRange = new float[4];
 
+    private static int failureTime = 0;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_add_pig_pic;
@@ -431,14 +433,20 @@ public class AddPigPicActivity extends BaseActivity {
                             seekbar.setVisibility(View.GONE);
                             tv_adjust.setVisibility(View.GONE);
                             mProgressDialog.dismiss();
-                            autoWeight = "";
-                            Toast.makeText(AddPigPicActivity.this, "识别失败！", Toast.LENGTH_SHORT).show();
+                            if(failureTime > 1){
+                                autoWeight = "0";
+                                etAnimalWeight.setEnabled(true);
+                                DialogHelper.weightCheckFailureDialog(AddPigPicActivity.this);
+                            }else{
+                                autoWeight = "";
+                                DialogHelper.weightCheckDialog1(AddPigPicActivity.this);
+                                failureTime += 1;
+                            }
+//                            Toast.makeText(AddPigPicActivity.this, "识别失败！", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
             }
-
-
         });
     }
 
@@ -522,9 +530,17 @@ public class AddPigPicActivity extends BaseActivity {
     private void addPayInfo() {
         if (TextUtils.isEmpty(etPigAge.getText().toString())) {
             mProgressDialog.dismiss();
-            Toast.makeText(getApplicationContext(), "猪龄不能为空", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "畜龄不能为空", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        int age = Integer.parseInt(etPigAge.getText().toString());
+        if(age <= 0 || age > 10000 ){
+            mProgressDialog.dismiss();
+            Toast.makeText(getApplicationContext(), "畜龄超出范围", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         if (TextUtils.isEmpty(etAnimalWeight.getText().toString())) {
             mProgressDialog.dismiss();
             Toast.makeText(getApplicationContext(), "未填写死猪重量", Toast.LENGTH_SHORT).show();
@@ -654,5 +670,11 @@ public class AddPigPicActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         DialogHelper.exitCheckDialog(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        failureTime = 0;
     }
 }

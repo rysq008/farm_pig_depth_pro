@@ -280,7 +280,8 @@ public class MediaPayItem {
     //获得压缩文件名
     public String getZipFileName() {
         SimpleDateFormat tmpSimpleDateFormat = new SimpleDateFormat("yyyy_MM_dd_HHmmss", Locale.getDefault());
-        String name =  "Time-" + tmpSimpleDateFormat.format(new Date(System.currentTimeMillis()));
+//        String name =  "Time-" + tmpSimpleDateFormat.format(new Date(System.currentTimeMillis()));
+        String name = String.valueOf(System.currentTimeMillis());
         Global.ZipFileName = name;
         return name;
     }
