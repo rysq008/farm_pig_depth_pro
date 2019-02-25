@@ -102,7 +102,7 @@ public class LocationManager_new {
                 currentLon = amapLocation.getLongitude();//获取经度
                 str_address = amapLocation.getAddress();
                 str_address = mLocationClient.getLastKnownLocation().getAddress();
-             //   Log.i("===str_address====", "str_address" + str_address);
+                Log.i("===str_address====", "str_address" + str_address);
                 PreferencesUtils.saveKeyValue(Constants.longitude, currentLon+"", MyApplication.getAppContext());
                 PreferencesUtils.saveKeyValue(Constants.latitude, currentLat+"", MyApplication.getAppContext());
                 getAddress.getaddress(str_address);

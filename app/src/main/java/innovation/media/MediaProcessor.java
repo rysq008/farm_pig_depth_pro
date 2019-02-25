@@ -69,6 +69,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.zip.ZipOutputStream;
 
+import innovation.database.VideoUploadTable;
 import innovation.entry.GsonBean;
 import innovation.entry.InnApplication;
 import innovation.entry.NewBuildResultObject;
@@ -86,6 +87,7 @@ import innovation.utils.HttpUtils;
 import innovation.utils.JsonHelper;
 import innovation.utils.UploadObject;
 import innovation.utils.ZipUtil;
+import io.objectbox.Box;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -1447,7 +1449,7 @@ public class MediaProcessor {
         mProcessorHandler_new.sendMessage(msg);
     }
 
-    //上传投保图片zip文件
+    /*---------------------------------------------上传投保图片zip文件-----------------------------------------------*/
     private void dialogProcessUploadOneImage() {
         Message msg = Message.obtain(mProcessorHandler_new, MSG_PROCESSOR_UPLOAD_IMAGEONE);
         mProcessorHandler_new.sendMessage(msg);
@@ -1684,15 +1686,15 @@ public class MediaProcessor {
             File imageDri_new = new File(imageDri);//当前图片目录下的文件
             boolean deleteCurrentVideoResult = FileUtils.deleteFile(videoDir_new);
             boolean deleteCurrentImageResult = FileUtils.deleteFile(imageDri_new);
-            if (deleteCurrentVideoResult == true) {
+            if (deleteCurrentVideoResult) {
                 mLogger.i("当前投保视频文件夹删除成功！");
             }
-            if (deleteCurrentImageResult == true) {
+            if (deleteCurrentImageResult) {
                 mLogger.i("当前投保图片文件夹删除成功！");
             }
 
             // TODO: 2018/8/18 By:LuoLu  是否传视频设置
-            if (Global.UPLOAD_VIDEO_FLAG == true) {
+            if (Global.UPLOAD_VIDEO_FLAG) {
                 // TODO: 2018/8/16 By:LuoLu  投保建库上传图片包和视频包
                 String zipImageDir = Global.mediaInsureItem.getZipImageDir();
                 String zipVideoDir = Global.mediaInsureItem.getZipVideoDir();
@@ -1943,10 +1945,10 @@ public class MediaProcessor {
         File imageDriNew = new File(imageDri);//当前图片目录下的文件
         boolean deleteCurrentVideoResult = FileUtils.deleteFile(videoDirNew);
         boolean deleteCurrentImageResult = FileUtils.deleteFile(imageDriNew);
-        if (deleteCurrentVideoResult == true) {
+        if (deleteCurrentVideoResult) {
             mLogger.i("当前理赔视频文件夹删除成功！");
         }
-        if (deleteCurrentImageResult == true) {
+        if (deleteCurrentImageResult) {
             mLogger.i("当前理赔图片文件夹删除成功！");
         }
 
@@ -1988,6 +1990,12 @@ public class MediaProcessor {
             Toast.makeText(mActivity, "压缩视频文件夹为空。", Toast.LENGTH_SHORT).show();
         }
 
+        Box<VideoUploadTable> box = MyApplication.getBoxStore().boxFor(VideoUploadTable.class);
+        VideoUploadTable bean = new VideoUploadTable();
+        bean.fpath=""+zipFileVideo2.getAbsolutePath();
+        bean.timesflag="";
+        bean.iscomplete = false;
+        box.put(bean);
 
         //预理赔
         if ("pre".equals(mfleg)) {

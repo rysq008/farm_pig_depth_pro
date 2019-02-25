@@ -150,6 +150,7 @@ public class AnimalClassifierResultIterm {
         }
 
         if (DetectorActivity.type1Count >= maxLeft && DetectorActivity.type2Count >= maxMiddle && DetectorActivity.type3Count >= maxRight) {
+            MyApplication.debugNub = -1;
             CameraConnectionFragment.collectNumberHandler.sendEmptyMessage(1);
             if (BuildConfig.DEBUG){
                 Toast.makeText(MyApplication.getAppContext(), "猪脸数据采集完成!!!", Toast.LENGTH_LONG).show();

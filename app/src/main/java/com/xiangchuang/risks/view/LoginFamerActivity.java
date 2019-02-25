@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.StrictMode;
+import android.os.SystemClock;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
@@ -32,15 +33,22 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import innovation.database.VideoUploadTable;
+import innovation.database.VideoUploadTable_;
 import innovation.entry.InnApplication;
 import innovation.network_status.NetworkUtil;
 import innovation.utils.HttpUtils;
+import io.objectbox.Box;
+import io.objectbox.android.AndroidScheduler;
+import io.objectbox.reactive.DataObserver;
+import io.objectbox.reactive.DataSubscriptionList;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -71,7 +79,28 @@ public class LoginFamerActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        
+//        Box<VideoUploadTable> box = MyApplication.getBoxStore().boxFor(VideoUploadTable.class);
+//        box.removeAll();
+//        List<VideoUploadTable> list = new ArrayList<>();
+//        for (int i = 0; i <5 ; i++) {
+//            VideoUploadTable bean = new VideoUploadTable();
+//            bean.iscomplete = false;
+//            bean.timesflag = SystemClock.uptimeMillis()+"";
+//            bean.fpath="/mnt/sdcard";
+//            box.put(bean);
+//            list.add(bean);
+//        }
+//        box.put(list);
+
+//        VideoUploadTable videoUploadTable = box.query().equal(VideoUploadTable_.timesflag,"205843552").build().findUnique();
+//
+//        if (videoUploadTable != null) {
+//            videoUploadTable.fpath = "ASDF";
+//            box.put(videoUploadTable);
+//        }
+
+//        List<VideoUploadTable> slist = box.query().equal(VideoUploadTable_.iscomplete,false).order(VideoUploadTable_._id).build().find();
+
         // 避免从桌面启动程序后，会重新实例化入口类的activity
         // 判断当前activity是不是所在任务栈的根
         if (!this.isTaskRoot()) {
