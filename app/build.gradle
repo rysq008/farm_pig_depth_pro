@@ -13,8 +13,8 @@ android {
         minSdkVersion 21
         targetSdkVersion 26
         //release versionCode 1100
-        versionCode 1103
-        versionName "1.103"
+        versionCode 1105
+        versionName "1.105"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
@@ -105,4 +105,9 @@ dependencies {
     //noinspection GradleCompatible
     implementation 'com.android.support:support-v13:27.0.2'
     implementation files('libs/classes.jar')
+    implementation 'com.zhy:okhttputils:2.6.2'
+    debugImplementation "io.objectbox:objectbox-android-objectbrowser:$objectboxVersion"
+    releaseImplementation "io.objectbox:objectbox-android:$objectboxVersion"
+    compile project(path: ':uplibrary')
 }
+apply plugin: 'io.objectbox'

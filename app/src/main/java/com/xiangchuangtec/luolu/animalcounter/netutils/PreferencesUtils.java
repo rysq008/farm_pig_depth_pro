@@ -60,6 +60,11 @@ public class PreferencesUtils {
         return sp.getInt(key, 0);
     }
 
+    public static int getIntValue(String key, int def, Context context){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        return sp.getInt(key, def);
+    }
+
     public static boolean getBooleanValue(String key, Context context){
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         return sp.getBoolean(key, false);

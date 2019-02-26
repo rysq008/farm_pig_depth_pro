@@ -154,7 +154,7 @@ public interface Classifier {
   }
 
   RecognitionAndPostureItem pigRecognitionAndPostureItem(Bitmap bitmap);
-  RecognitionAndPostureItem pigRecognitionAndPostureItemTFlite(Bitmap bitmap);
+  RecognitionAndPostureItem pigRecognitionAndPostureItemTFlite(Bitmap bitmap, Bitmap originalBitmap);
   PredictRotationIterm pigRotationPredictionItemTFlite(Bitmap bitmap);
 
   List<PointFloat> recognizePointImage(Bitmap bitmap);

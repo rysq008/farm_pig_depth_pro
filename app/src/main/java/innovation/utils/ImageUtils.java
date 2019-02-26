@@ -17,6 +17,7 @@ import org.opencv.imgproc.Imgproc;
 import org.tensorflow.demo.Global;
 import org.tensorflow.demo.Logger;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -390,6 +391,46 @@ public class ImageUtils {
                 multiY1 - multiY);
 
         return clipBitmap;
+    }
+
+    /**
+     * 将图片转换成720*960格式并压缩至80%品质
+     *
+     * @param bitmap 待处理图片
+     * @return
+     */
+    public static Bitmap compressBitmap(Bitmap bitmap) {
+
+        // 图片按比例压缩，以长边=1080为准
+        // 图片质量提升为60.
+        // 获得图片的宽高
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+
+        float scale = 1f;
+
+        int max = Math.max(width, height);
+        scale = 960f / max;
+        // 取得想要缩放的matrix参数
+        Matrix matrix = new Matrix();
+        matrix.postScale(scale, scale);
+        // 得到新的图片
+        Bitmap newbm = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
+        ByteArrayOutputStream baos = null;
+        try {
+            baos = new ByteArrayOutputStream();
+            newbm.compress(Bitmap.CompressFormat.JPEG, 30, baos);
+            baos.flush();
+            baos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        //options.inPreferredConfig = Bitmap.Config.;
+        newbm = BitmapFactory.decodeByteArray(baos.toByteArray(), 0, baos.toByteArray().length, options);
+
+        return newbm;
     }
 
 }

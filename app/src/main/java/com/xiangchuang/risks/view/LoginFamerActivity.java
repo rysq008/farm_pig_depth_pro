@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.StrictMode;
+import android.os.SystemClock;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
@@ -15,38 +16,43 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
+import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.utils.AppManager;
 import com.xiangchuang.risks.utils.ShareUtils;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
-import com.xiangchuang.risks.base.BaseActivity;
+import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
 import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
+import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import innovation.database.VideoUploadTable;
+import innovation.database.VideoUploadTable_;
 import innovation.entry.InnApplication;
 import innovation.network_status.NetworkUtil;
+import innovation.upload.UploadService;
 import innovation.utils.HttpUtils;
+import io.objectbox.Box;
+import io.objectbox.android.AndroidScheduler;
+import io.objectbox.reactive.DataObserver;
+import io.objectbox.reactive.DataSubscriptionList;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
-
-import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * @author 56861
@@ -74,6 +80,31 @@ public class LoginFamerActivity extends BaseActivity {
 
     @Override
     protected void initData() {
+
+        startService(new Intent(this, UploadService.class));
+
+
+//        Box<VideoUploadTable> box = MyApplication.getBoxStore().boxFor(VideoUploadTable.class);
+//        box.removeAll();
+//        List<VideoUploadTable> list = new ArrayList<>();
+//        for (int i = 0; i <5 ; i++) {
+//            VideoUploadTable bean = new VideoUploadTable();
+//            bean.iscomplete = false;
+//            bean.timesflag = SystemClock.uptimeMillis()+"";
+//            bean.fpath="/mnt/sdcard";
+//            box.put(bean);
+//            list.add(bean);
+//        }
+//        box.put(list);
+
+//        VideoUploadTable videoUploadTable = box.query().equal(VideoUploadTable_.timesflag,"205843552").build().findUnique();
+//
+//        if (videoUploadTable != null) {
+//            videoUploadTable.fpath = "ASDF";
+//            box.put(videoUploadTable);
+//        }
+
+//        List<VideoUploadTable> slist = box.query().equal(VideoUploadTable_.iscomplete,false).order(VideoUploadTable_._id).build().find();
 
         // 避免从桌面启动程序后，会重新实例化入口类的activity
         // 判断当前activity是不是所在任务栈的根
@@ -124,27 +155,28 @@ public class LoginFamerActivity extends BaseActivity {
                             });
 
                 }
+
                 @Override
                 public void onNegative() {
                     finish();
                 }
             });
-        }else{
+        } else {
             //根据保存的标记判断是否登录
-            if(PreferencesUtils.getBooleanValue(Constants.ISLOGIN, MyApplication.getAppContext())){
+            if (PreferencesUtils.getBooleanValue(Constants.ISLOGIN, MyApplication.getAppContext())) {
                 String type = PreferencesUtils.getStringValue(Constants.companyfleg, MyApplication.getAppContext());
-                if(type.equals("1")){
+                if (type.equals("1")) {
                     goToActivity(CompanyActivity.class, null);
                     finish();
-                }else if(type.equals("2")){
+                } else if (type.equals("2")) {
                     goToActivity(SelectFunctionActivity_new.class, null);
                     finish();
                 }
             }
         }
-        if(!HttpUtils.isOfficialHost())
+        if (!HttpUtils.isOfficialHost())
             Toast.makeText(LoginFamerActivity.this, ShareUtils.getHost("host"), Toast.LENGTH_LONG).show();
-        ShareUtils.setUpGlobalHost(LoginFamerActivity.this,passTv);
+        ShareUtils.setUpGlobalHost(LoginFamerActivity.this, passTv);
     }
 
     @OnClick({R.id.loginfamer_login, R.id.pass_hide, R.id.pass_show})
@@ -157,7 +189,7 @@ public class LoginFamerActivity extends BaseActivity {
                 }
                 String musername = mloginfameruserid.getText().toString();
                 String muserpass = mloginfamerpass.getText().toString();
-                if(musername.length() < 6 || musername.length() > 20){
+                if (musername.length() < 6 || musername.length() > 20) {
                     toastUtils.showLong(this, "账号长度不正确，应为6-20位字符");
                     return;
                 }
@@ -185,6 +217,7 @@ public class LoginFamerActivity extends BaseActivity {
 
     /**
      * 登录
+     *
      * @param musername
      * @param muserpass
      */
@@ -201,7 +234,7 @@ public class LoginFamerActivity extends BaseActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(LoginFamerActivity.this,"登录失败，请检查网络后重试。",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginFamerActivity.this, "登录失败，请检查网络后重试。", Toast.LENGTH_SHORT).show();
                     }
                 });
             }

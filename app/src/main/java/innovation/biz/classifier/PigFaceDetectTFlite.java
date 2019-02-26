@@ -56,9 +56,9 @@ public class PigFaceDetectTFlite implements Classifier {
 
     // 2018/12/18 hedazhi edit start
     //private static final float MIN_CONFIDENCE = (float) 0.7;
-
+    public static float MIN_CONFIDENCE;
     // 检测模型阈值：理赔时 0.3 投保时 0.5
-    private static final float MIN_CONFIDENCE = (Global.model == Model.VERIFY.value()) ? 0.3f : 0.5f;
+    //private static final float MIN_CONFIDENCE = (Global.model == Model.VERIFY.value()) ? 0.3f : 0.5f;
 
     // 2018/12/18 hedazhi edit end
 
@@ -211,7 +211,7 @@ public class PigFaceDetectTFlite implements Classifier {
     }
 
     @Override
-    public RecognitionAndPostureItem pigRecognitionAndPostureItemTFlite(Bitmap bitmap) {
+    public RecognitionAndPostureItem pigRecognitionAndPostureItemTFlite(Bitmap bitmap, Bitmap oriBitmap) {
         PostureItem posture = null;
         if (bitmap == null) {
             pigTFliteRecognitionAndPostureItem = null;
@@ -381,7 +381,7 @@ public class PigFaceDetectTFlite implements Classifier {
                 (float) predictRotationIterm.rot_z,
                 modelX0, modelY0, modelX1, modelY1, outputScores[0][0],
                 modelY0 * padSize, modelX0 * padSize,
-                modelY1 * padSize, modelX1 * padSize, resizeClipBitmap, bitmap);
+                modelY1 * padSize, modelX1 * padSize, resizeClipBitmap, bitmap, oriBitmap);
         pigTFliteRecognitionAndPostureItem.setPostureItem(posture);
         AnimalClassifierResultIterm.pigAngleCalculateTFlite(pigTFliteRecognitionAndPostureItem.getPostureItem());
 

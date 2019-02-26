@@ -28,8 +28,10 @@ public class PostureItem {
 
     public Bitmap srcBitmap; //保存的放大到指定倍数的图片
 
+    public Bitmap oriBitmap; //保存的原图
+
     public PostureItem(float x, float y, float z, float x0, float y0, float x1, float y1, float score,
-                       float sX0, float sY0, float sX1, float sY1, Bitmap bitmapClip, Bitmap bitmapSrc) {
+                       float sX0, float sY0, float sX1, float sY1, Bitmap bitmapClip, Bitmap bitmapSrc,  Bitmap bitmapOri) {
         rot_x = x;
         rot_y = y;
         rot_z = z;
@@ -48,6 +50,7 @@ public class PostureItem {
 
         clipBitmap = bitmapClip;
         srcBitmap = bitmapSrc;
+        oriBitmap = bitmapOri;
     }
 
     public PostureItem(float x, float y, float z){

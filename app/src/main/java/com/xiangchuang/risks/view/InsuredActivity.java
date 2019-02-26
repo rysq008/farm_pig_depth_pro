@@ -206,22 +206,39 @@ public class InsuredActivity extends BaseActivity {
             }
             if (ratio.contains(".")) {
                 Log.i("+++++++++", ratio);
-                String befor = ratio.substring(0, ratio.indexOf("."));
-                int a = Integer.valueOf(befor).intValue();
-                if (a > 20) {
-                    Toast.makeText(this, "请输入20以内的投保系数", Toast.LENGTH_SHORT).show();
+//                String befor = ratio.substring(0, ratio.indexOf("."));
+                float f = Float.parseFloat(ratio);
+//                int a = Integer.valueOf(befor).intValue();
+                if (f > 2.8f) {
+                    Toast.makeText(this, "请输入1~2.8之间的投保系数", Toast.LENGTH_SHORT).show();
                     coefficient.setFocusable(true);
                     coefficient.setFocusableInTouchMode(true);
                     return;
                 }
+
+                if(f < 1.0f){
+                    Toast.makeText(this, "请输入1~2.8之间的投保系数", Toast.LENGTH_SHORT).show();
+                    coefficient.setFocusable(true);
+                    coefficient.setFocusableInTouchMode(true);
+                    return;
+                }
+
             } else {
-                int a = Integer.valueOf(ratio).intValue();
-                if (a > 20) {
-                    Toast.makeText(this, "请输入20以内的投保系数", Toast.LENGTH_SHORT).show();
+                int a = Integer.valueOf(ratio);
+                if (a > 3) {
+                    Toast.makeText(this, "请输入1~2.8之间的投保系数", Toast.LENGTH_SHORT).show();
                     coefficient.setFocusable(true);
                     coefficient.setFocusableInTouchMode(true);
                     return;
                 }
+
+                if (a < 1) {
+                    Toast.makeText(this, "请输入1~2.8之间的投保系数", Toast.LENGTH_SHORT).show();
+                    coefficient.setFocusable(true);
+                    coefficient.setFocusableInTouchMode(true);
+                    return;
+                }
+
             }
         }
 

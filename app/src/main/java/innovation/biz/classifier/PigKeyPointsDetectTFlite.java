@@ -134,7 +134,7 @@ public class PigKeyPointsDetectTFlite implements Classifier {
 
 
     @Override
-    public RecognitionAndPostureItem pigRecognitionAndPostureItemTFlite(Bitmap bitmap) {
+    public RecognitionAndPostureItem pigRecognitionAndPostureItemTFlite(Bitmap bitmap, Bitmap oriBitmap) {
         return null;
     }
 

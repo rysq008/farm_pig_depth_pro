@@ -31,6 +31,19 @@ public class Constants {
     public static final String inspectNo = "inspectNo";
     public static final String file = "file";
 
+    /**
+     * 阈值集合
+     */
+    public static final String THRESHOLD_LIST = "thresholdlist";
+    public static String lipeia = "lipeia";//30 ;
+    public static String lipeib = "lipeib";//30 ;
+    public static String lipein = "lipein";//120 ;
+    public static String lipeim = "lipeim";//240 ;
+    public static String phone = "kefuphone";
+    public static String customServ = "kefucustomServ";
+
+
+
     //    60.205.209.245:8081;   47.92.167.61:8081
 //    public static final String BASENEW =  "http://47.92.167.61:8081/nongxian2/app/";
     public static String BASENEW = HttpUtils.baseUrl + "app/";
@@ -101,6 +114,7 @@ public class Constants {
     public static final String cutoCount = "autoCount";
     public static final String inspectId = "inspectId";
     public static final String compensateVideoId = "compensateVideoId";
+    public static final String timesFlag = "timesFlag";
 
     public static String ENLIST = BASENEW + "ftnEnList";
     public static final String companyfleg = "companyfleg";
@@ -154,6 +168,16 @@ public class Constants {
     public static String GETEN = BASENEW + "getEn";
     //获取保单列表
     public static String INSURELIST = BASENEW + "ftnInsure/insureList";
+    //获取强制提交时间参数
+    public static String QUERY_VIDEOFLAG_NEW = HttpUtils.baseUrl + "appCoreV2/queryVideoFlag";
+    //断点续传检查接口
+    public static String UPLOAD_CHECK = BASENEW + "upload/check";
+    //视频续传接口
+    public static String UPLOAD_VIDEO = BASENEW + "upload/lipeiVideo";
+    //预理赔强制提交
+    public static String PREPAY_FORCE_COMMIT = BASENEW + "payment/prePayForceCommit";
+    //理赔强制提交
+    public static String PAY_FORCE_COMMIT = BASENEW + "payment/payForceCommit";
 
     public static void resetBaseIp(String host) {
         HttpUtils.baseUrl = host;
@@ -224,6 +248,19 @@ public class Constants {
         GETEN = BASENEW + "getEn";
 //获取保单列表
         INSURELIST = BASENEW + "ftnInsure/insureList";
+
+        //获取强制提交时间参数
+        QUERY_VIDEOFLAG_NEW = HttpUtils.baseUrl + "appCoreV2/queryVideoFlag";
+
+        //断点续传检查接口
+        UPLOAD_CHECK = BASENEW + "upload/check";
+        //视频续传接口
+        UPLOAD_VIDEO = BASENEW + "upload/lipeiVideo";
+        //预理赔强制提交
+        PREPAY_FORCE_COMMIT = BASENEW + "payment/prePayForceCommit";
+        //理赔强制提交
+        PAY_FORCE_COMMIT = BASENEW + "payment/payForceCommit";
+
 
     }
 }

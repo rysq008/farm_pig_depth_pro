@@ -33,6 +33,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 
+import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
 
 import org.tensorflow.demo.env.Logger;
@@ -72,11 +73,16 @@ public abstract class CameraActivity extends Activity implements OnImageAvailabl
             requestPermission();
         }
 
-        DetectorActivity.type1Count=0;
-        DetectorActivity.type2Count=0;
-        DetectorActivity.type3Count=0;
+        MyApplication.debugNub = 0;
+        MyApplication.during = 0;
+
+        Global.VIDEO_PROCESS = false;
+
+        DetectorActivity.type1Count = 0;
+        DetectorActivity.type2Count = 0;
+        DetectorActivity.type3Count = 0;
         DetectorActivity.tracker = new MultiBoxTracker(this);
-        DetectorActivity.tracker.reInitCounter(0,0,0);
+        DetectorActivity.tracker.reInitCounter(0, 0, 0);
     }
 
     @Override
@@ -86,12 +92,12 @@ public abstract class CameraActivity extends Activity implements OnImageAvailabl
     }
 
     @Override
-        public synchronized void onResume() {
-            LOGGER.d("onResume " + this);
-            super.onResume();
+    public synchronized void onResume() {
+        LOGGER.d("onResume " + this);
+        super.onResume();
 
-            handlerThread = new HandlerThread("inference");
-            handlerThread.start();
+        handlerThread = new HandlerThread("inference");
+        handlerThread.start();
         handler = new Handler(handlerThread.getLooper());
     }
 
@@ -205,6 +211,7 @@ public abstract class CameraActivity extends Activity implements OnImageAvailabl
             buffer.get(yuvBytes[i]);
         }
     }
+
     protected int getScreenOrientation() {
         switch (getWindowManager().getDefaultDisplay().getRotation()) {
             case Surface.ROTATION_270:
@@ -217,6 +224,7 @@ public abstract class CameraActivity extends Activity implements OnImageAvailabl
                 return 0;
         }
     }
+
     public boolean isDebug() {
         return debug;
     }

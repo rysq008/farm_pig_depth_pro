@@ -18,6 +18,7 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
@@ -38,6 +39,7 @@ import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
 import innovation.utils.FileUtils;
 import innovation.utils.MyWatcher;
 import innovation.utils.PathUtils;
+import innovation.view.dialog.DialogHelper;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -54,10 +56,14 @@ import java.util.Map;
 
 public class AddPigPicActivity extends BaseActivity {
 
+    @BindView(R.id.iv_cancel)
+    ImageView iv_cancel;
     @BindView(R.id.tv_title)
     TextView tvTitle;
-    @BindView(R.id.etAnimalAge)
-    EditText etAnimalAge;
+    @BindView(R.id.etPigAge)
+    EditText etPigAge;
+    @BindView(R.id.etAnimalWeight)
+    EditText etAnimalWeight;
     @BindView(R.id.btnPersonAndAnimal)
     ImageView btnPersonAndAnimal;
     @BindView(R.id.tvPersonAndAnimalpath)
@@ -99,6 +105,8 @@ public class AddPigPicActivity extends BaseActivity {
     //0最小值1返回称重值2最大值 3差值
     private float[] mWeightRange = new float[4];
 
+    private static int failureTime = 0;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_add_pig_pic;
@@ -108,8 +116,9 @@ public class AddPigPicActivity extends BaseActivity {
     protected void initData() {
         lipeiId = getIntent().getStringExtra("lipeiid");
         tvTitle.setText("资料采集");
+        iv_cancel.setVisibility(View.GONE);
         parentView = getWindow().getDecorView();
-        etAnimalAge.addTextChangedListener(new MyWatcher(3, 1));
+        etAnimalWeight.addTextChangedListener(new MyWatcher(3, 1));
 
         //选择图片
         pop = new PopupWindow(getApplicationContext());
@@ -188,7 +197,7 @@ public class AddPigPicActivity extends BaseActivity {
                 float currentValues = mWeightRange[1] + (seekBar.getProgress() - 10.0f) / 10.0f * mWeightRange[3];
                 if (currentValues < mWeightRange[0]) currentValues = mWeightRange[0];
                 if (currentValues > mWeightRange[2]) currentValues = mWeightRange[2];
-                etAnimalAge.setText(String.valueOf(currentValues));
+                etAnimalWeight.setText(String.valueOf(currentValues));
             }
         });
     }
@@ -410,7 +419,7 @@ public class AddPigPicActivity extends BaseActivity {
                             mProgressDialog.dismiss();
                             autoWeight = weight + "";
 
-                            etAnimalAge.setText(weight + "");
+                            etAnimalWeight.setText(weight + "");
                             seekbar.setVisibility(View.VISIBLE);
                             tv_adjust.setVisibility(View.VISIBLE);
                             mWeightRange[1] = weight;
@@ -420,18 +429,24 @@ public class AddPigPicActivity extends BaseActivity {
 
                             seekbar.setProgress(10);
                         } else {
-                            etAnimalAge.setText("");
+                            etAnimalWeight.setText("");
                             seekbar.setVisibility(View.GONE);
                             tv_adjust.setVisibility(View.GONE);
                             mProgressDialog.dismiss();
-                            autoWeight = "";
-                            Toast.makeText(AddPigPicActivity.this, "识别失败！", Toast.LENGTH_SHORT).show();
+                            if(failureTime > 1){
+                                autoWeight = "0";
+                                etAnimalWeight.setEnabled(true);
+                                DialogHelper.weightCheckFailureDialog(AddPigPicActivity.this);
+                            }else{
+                                autoWeight = "";
+                                DialogHelper.weightCheckDialog1(AddPigPicActivity.this);
+                                failureTime += 1;
+                            }
+//                            Toast.makeText(AddPigPicActivity.this, "识别失败！", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
             }
-
-
         });
     }
 
@@ -494,11 +509,10 @@ public class AddPigPicActivity extends BaseActivity {
                     return;
                 }
                 lastClickTime = SystemClock.elapsedRealtime();
-                String stringPersonAndAnimalpath = tvPersonAndAnimalpath.getText().toString();
 //                String buchongLeftstr = tvbuchongleft.getText().toString();
 //                String buchongRightstr = tvbuchongright.getText().toString();
 
-                if (stringPersonAndAnimalpath.equals("")) {
+                if (TextUtils.isEmpty(tvPersonAndAnimalpath.getText())) {
                     Toast.makeText(getApplicationContext(), "请先拍摄死猪照片。", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -513,34 +527,51 @@ public class AddPigPicActivity extends BaseActivity {
     }
 
     private void addPayInfo() {
-        if (etAnimalAge.getText().toString().trim().isEmpty()) {
+        if (TextUtils.isEmpty(etPigAge.getText())) {
+            mProgressDialog.dismiss();
+            Toast.makeText(getApplicationContext(), "畜龄不能为空", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        int age = Integer.parseInt(etPigAge.getText().toString());
+        if(age <= 0 || age > 10000 ){
+            mProgressDialog.dismiss();
+            Toast.makeText(getApplicationContext(), "畜龄超出范围", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (TextUtils.isEmpty(etAnimalWeight.getText())) {
             mProgressDialog.dismiss();
             Toast.makeText(getApplicationContext(), "未填写死猪重量", Toast.LENGTH_SHORT).show();
             return;
         }
-        String buchongLeftstr = tvbuchongleft.getText().toString();
-        String buchongRightstr = tvbuchongright.getText().toString();
-        StringBuilder sb = new StringBuilder();
 
-        if (!buchongLeftstr.equals("")) {
-            sb.append(buchongLeftstr);
-            sb.append(",");
-        }
 
-        if (!buchongRightstr.equals("")) {
-            sb.append(buchongRightstr);
-            sb.append(",");
-        }
 
-        if (sb.length() > 0) {
-            sb.deleteCharAt(sb.length() - 1);
-        }
+//        String buchongLeftstr = tvbuchongleft.getText().toString();
+//        String buchongRightstr = tvbuchongright.getText().toString();
+//        StringBuilder sb = new StringBuilder();
+//
+//        if (!buchongLeftstr.equals("")) {
+//            sb.append(buchongLeftstr);
+//            sb.append(",");
+//        }
+//
+//        if (!buchongRightstr.equals("")) {
+//            sb.append(buchongRightstr);
+//            sb.append(",");
+//        }
+//
+//        if (sb.length() > 0) {
+//            sb.deleteCharAt(sb.length() - 1);
+//        }
         showProgressDialog();
         Map<String, String> mapbody = new HashMap<>();
         mapbody.put(Constants.lipeiId, lipeiId);
-        mapbody.put("weight", etAnimalAge.getText().toString().trim());
+        mapbody.put("age", etPigAge.getText().toString().trim());
+        mapbody.put("weight", etAnimalWeight.getText().toString().trim());
         mapbody.put("weightPic", tvPersonAndAnimalpath.getText().toString().trim());
-        mapbody.put("deadPics", sb.toString());
+        mapbody.put("deadPics", "");
         mapbody.put("provePic", "");//无害化证明照片
         mapbody.put("autoWeight", autoWeight);//自动识别返回重量
 
@@ -636,5 +667,16 @@ public class AddPigPicActivity extends BaseActivity {
         if (negative != null) {
             negative.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        DialogHelper.exitCheckDialog(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        failureTime = 0;
     }
 }

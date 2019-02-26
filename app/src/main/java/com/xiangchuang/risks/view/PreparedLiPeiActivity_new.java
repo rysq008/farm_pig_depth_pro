@@ -150,12 +150,12 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
             }
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+                mProgressDialog.dismiss();
                 String string = response.body().string();
                 Log.i("PreparedLiPeiActivity", string);
                 try{
                     final SheListBean bean = GsonUtils.getBean(string, SheListBean.class);
                     if (null != bean && null != bean.getData()) {
-                        mProgressDialog.dismiss();
                         if (1 == bean.getStatus()) {
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -184,12 +184,8 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
                         }
                     }
                 }catch (Exception e){
-                    mProgressDialog.dismiss();
                     Toast.makeText(PreparedLiPeiActivity_new.this, "暂无猪舍记录", Toast.LENGTH_LONG).show();
                 }
-
-
-
             }
         });
 
@@ -329,11 +325,13 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
         OkHttp3Util.doPost(Constants.PRESTART, mapbody, map, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                mProgressDialog.dismiss();
                 Log.i(TAG, e.toString());
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+                mProgressDialog.dismiss();
                 String string = response.body().string();
                 Log.i(TAG, string);
                 final StartBean_new bean = GsonUtils.getBean(string, StartBean_new.class);
@@ -341,7 +339,6 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            mProgressDialog.dismiss();
                            StringBuffer  stringBuffer= new StringBuffer();
                            String str = null;
                             if (bean.getStatus() == 1) {
@@ -373,34 +370,26 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
                                 intent.putExtra(Constants.inspectNo, mchuxiannum.getText().toString());
                                 intent.putExtra(Constants.reason, outreson);
                                 startActivity(intent);
-
                             }else{
                                 AlertDialogManager.showMessageDialog(PreparedLiPeiActivity_new.this, "提示", bean.getMsg(), new AlertDialogManager.DialogInterface() {
                                     @Override
-                                    public void onPositive() {
-
-                                    }
+                                    public void onPositive() { }
 
                                     @Override
-                                    public void onNegative() {
-
-                                    }
+                                    public void onNegative() { }
                                 });
                                     Toast.makeText(MyApplication.getAppContext(), bean.getMsg(), Toast.LENGTH_LONG).show();
                             }
                         }
                     });
-
                 } else {
-
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(PreparedLiPeiActivity_new.this, "开始采集失败", Toast.LENGTH_LONG).show();
+                            Toast.makeText(PreparedLiPeiActivity_new.this, "开始采集失败,请重试。", Toast.LENGTH_LONG).show();
                         }
                     });
                 }
-
             }
         });
     }

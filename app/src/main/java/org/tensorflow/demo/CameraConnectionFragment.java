@@ -97,6 +97,7 @@ import java.util.concurrent.TimeUnit;
 
 import static android.content.ContentValues.TAG;
 import static com.xiangchuangtec.luolu.animalcounter.MyApplication.timeVideoStart;
+import static org.tensorflow.demo.DetectorActivity.tracker;
 import static org.tensorflow.demo.DetectorActivity.trackingOverlay;
 
 @SuppressLint("ValidFragment")
@@ -531,8 +532,8 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
         mSendView.selectLayout.setOnClickListener(mSaveClickListener);
         mSendView.stopAnim();
 
-//        myTest = (TextView) view.findViewById(R.id.myTest);
-//        myTest.setOnClickListener(this);
+        myTest = (TextView) view.findViewById(R.id.myTest);
+        myTest.setOnClickListener(this);
 
         tvNotice = view.findViewById(R.id.tv_notice);
 
@@ -704,7 +705,13 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                                         try {
                                             mMediaRecorder.stop();
                                         } catch (IllegalStateException e) {
-                                            Log.e(TAG, " mMediaRecorder.stop:Exception "+e);
+                                            Log.e(TAG, " mMediaRecorder.stop:Exception " + e);
+                                            // TODO 如果当前java状态和jni里面的状态不一致，
+                                            //e.printStackTrace();
+                                            mMediaRecorder = null;
+                                            mMediaRecorder = new MediaRecorder();
+                                        } catch (RuntimeException e){
+                                            Log.e(TAG, " mMediaRecorder.stop:Exception " + e);
                                             // TODO 如果当前java状态和jni里面的状态不一致，
                                             //e.printStackTrace();
                                             mMediaRecorder = null;
@@ -748,16 +755,16 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                     mRecordSwitchTxt.setTextColor(Color.DKGRAY);
                 }
                 break;
-//            case R.id.myTest:
-//                try {
-//                    Global.VIDEO_PROCESS = true;
-//                    timeVideoStart = System.currentTimeMillis();
-//                    startRecordingVideo();
-//                } catch (Exception e) {
-//                    Log.e(TAG, "record_control_IOException: " + e.toString());
-//                    e.printStackTrace();
-//                }
-//                break;
+            case R.id.myTest:
+                try {
+                    Global.VIDEO_PROCESS = true;
+                    timeVideoStart = System.currentTimeMillis();
+                    startRecordingVideo();
+                } catch (Exception e) {
+                    Log.e(TAG, "record_control_IOException: " + e.toString());
+                    e.printStackTrace();
+                }
+                break;
             default:
         }
     }
@@ -1360,10 +1367,23 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                                     collectNumberHandler.post(new Runnable() {
                                         @Override
                                         public void run() {
+//                                            if (mMediaRecorder != null) {
+//                                                // clear recorder configuration
+//                                                mMediaRecorder.reset();
+//                                                // release the recorder object
+//                                                mMediaRecorder.release();
+//                                                mMediaRecorder = null;
+//                                            }
                                             try {
                                                 mMediaRecorder.stop();
                                             } catch (IllegalStateException e) {
-                                                Log.e(TAG, " mMediaRecorder.stop:Exception "+e);
+                                                Log.e(TAG, " mMediaRecorder.stop:Exception " + e);
+                                                // TODO 如果当前java状态和jni里面的状态不一致，
+                                                //e.printStackTrace();
+                                                mMediaRecorder = null;
+                                                mMediaRecorder = new MediaRecorder();
+                                            } catch (RuntimeException e){
+                                                Log.e(TAG, " mMediaRecorder.stop:Exception " + e);
                                                 // TODO 如果当前java状态和jni里面的状态不一致，
                                                 //e.printStackTrace();
                                                 mMediaRecorder = null;
@@ -1429,7 +1449,12 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
 //                    }
                     if (activity instanceof DetectorActivity) {
                         ((DetectorActivity) activity).reInitCurrentCounter(0, 0, 0);
-                        DetectorActivity.tracker.reInitCounter(0, 0, 0);
+
+                        if (tracker != null) {
+                            tracker.reInitCounter(0, 0, 0);
+                        } else {
+                            new MultiBoxTracker(activity).reInitCounter(0, 0, 0);
+                        }
                     }
                     if (trackingOverlay != null) {
                         trackingOverlay.refreshDrawableState();
@@ -1438,7 +1463,7 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                     if (textureView != null) {
                         textureView.refreshDrawableState();
                     }
-//                    MyApplication.debugNub = 0;
+                    MyApplication.debugNub = 0;
                     MyApplication.during = 0;
                     LOGGER.i("collectNumberHandler Message 2！");
                     break;
@@ -1454,7 +1479,7 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                     tvBtnRight.setVisibility(View.GONE);
                     ivRight.setVisibility(View.GONE);
                     break;
-                /*//继续录制
+                //继续录制
                 case 5:
                     myTest.performClick();
                     break;
@@ -1487,29 +1512,51 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                             e.printStackTrace();
                         }
 
-                        try{
+                        try {
                             TimerTask timerTask = new TimerTask() {
                                 @Override
                                 public void run() {
                                     collectNumberHandler.post(new Runnable() {
                                         @Override
                                         public void run() {
-                                            mMediaRecorder.stop();
+//                                            if (mMediaRecorder != null) {
+//                                                // clear recorder configuration
+//                                                mMediaRecorder.reset();
+//                                                // release the recorder object
+//                                                mMediaRecorder.release();
+//                                                mMediaRecorder = null;
+//                                            }
+                                            try {
+                                                mMediaRecorder.stop();
+                                            } catch (IllegalStateException e) {
+                                                Log.e(TAG, " mMediaRecorder.stop:Exception " + e);
+                                                // TODO 如果当前java状态和jni里面的状态不一致，
+                                                //e.printStackTrace();
+                                                mMediaRecorder = null;
+                                                mMediaRecorder = new MediaRecorder();
+                                            } catch (RuntimeException e) {
+                                                Log.e(TAG, " mMediaRecorder.stop:Exception " + e);
+                                                // TODO 如果当前java状态和jni里面的状态不一致，
+                                                //e.printStackTrace();
+                                                mMediaRecorder = null;
+                                                mMediaRecorder = new MediaRecorder();
+                                            }
                                             mMediaRecorder.reset();
                                         }
                                     });
                                 }
                             };
-                            new Timer().schedule(timerTask,30);
-                        }catch(RuntimeException e){
-                            Log.e("-----停止视频录制-----------","---->>>>>>>>>"+e);
+                            new Timer().schedule(timerTask, 30);
+                        } catch (RuntimeException e) {
+                            Log.e("-----停止视频录制-----------", "---->>>>>>>>>" + e);
                             e.printStackTrace();
                         }
                     } catch (Exception e) {
                         Log.i("tv_ 停止视频录制", e.toString());
                     }
                     MediaProcessor.getInstance(activity).handleMediaResource_build(activity);
-                    break;*/
+                    MediaProcessor.getInstance(activity).showInsureDialog();
+                    break;
                 default:
                     break;
             }

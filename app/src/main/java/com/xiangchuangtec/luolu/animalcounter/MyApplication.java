@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.widget.Toast;
 
 import com.tencent.bugly.crashreport.CrashReport;
 import com.xiangchuang.risks.utils.ShareUtils;
@@ -20,10 +19,13 @@ import net.gotev.uploadservice.okhttp.OkHttpStack;
 import java.lang.ref.WeakReference;
 
 import innovation.crash.CrashHandler;
+import innovation.database.MyObjectBox;
 import innovation.location.LocationManager_new;
 import innovation.network_status.NetworkChangedReceiver;
 import innovation.utils.HttpUtils;
 import innovation.utils.ImageLoaderUtils;
+import io.objectbox.BoxStore;
+import io.objectbox.android.AndroidObjectBrowser;
 import okhttp3.OkHttpClient;
 
 
@@ -53,7 +55,6 @@ public class MyApplication extends Application {
     //记录每次抓图最小的Xmin值
     public static float lastXmin = 0f;
 
-
     public static int currentPadSize;
 
     public static boolean isNoCamera = false;
@@ -64,7 +65,15 @@ public class MyApplication extends Application {
     /* 计时器录制开始时间 */
     public static long timeVideoStart;
 
-    private static WeakReference<Activity> acontext;
+    /* 存储当前保存图片的时间戳 */
+    public static long lastCurrentTime = 0;
+
+    //记录失败次数
+    public static int debugNub = 0;
+
+    private static Activity acontext;
+
+    private static BoxStore boxStore;
 
     @Override
     public void onCreate() {
@@ -100,7 +109,7 @@ public class MyApplication extends Application {
 //                    HttpUtils.resetIp(HttpUtils.baseUrl);
 //                    Toast.makeText(activity, "------->>"+HttpUtils.baseUrl, Toast.LENGTH_LONG).show();
 //                }
-                acontext = new WeakReference<>(activity);
+                acontext = activity;
             }
 
             @Override
@@ -134,6 +143,9 @@ public class MyApplication extends Application {
             }
         });
 
+        boxStore = MyObjectBox.builder().androidContext(this).build();
+        if (BuildConfig.DEBUG)
+            new AndroidObjectBrowser(boxStore).start(this);
     }
 
     @Override
@@ -165,7 +177,11 @@ public class MyApplication extends Application {
         }
     }
 
+    public static BoxStore getBoxStore() {
+        return boxStore;
+    }
+
     public static Context getContext() {
-        return MyApplication.acontext.get();
+        return MyApplication.acontext;
     }
 }

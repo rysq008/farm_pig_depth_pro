@@ -2,17 +2,17 @@
 
 buildscript {
     ext.kotlin_version = '1.2.41'
-
+    ext.objectboxVersion = '2.2.0'
     repositories {
         google()
         jcenter()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.1'
-        
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
+        classpath "io.objectbox:objectbox-gradle-plugin:$objectboxVersion"
     }
 }
 
@@ -34,7 +34,7 @@ task clean(type: Delete) {
 
 ext {
     supportLibVersion = '25.3.1'  // variable that can be referenced to keep support libs consistent
-    commonLibVersion= '1.5.20'
+    commonLibVersion = '1.5.20'
     versionBuildTool = '25.0.2'
     versionCompiler = 25
     versionTarget = 23

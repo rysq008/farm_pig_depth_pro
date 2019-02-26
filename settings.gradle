@@ -1,2 +1,2 @@
-include ':app',':libuvccamera',':usbCameraCommon'
+include ':app', ':libuvccamera', ':usbCameraCommon', ':uplibrary'
 include ':openCVLibrary331'

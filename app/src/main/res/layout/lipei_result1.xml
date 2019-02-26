@@ -35,6 +35,6 @@
             android:layout_marginRight="20dp"
             android:background="@drawable/begin_btn_bg"
             android:gravity="center"
-            android:text="继续申请" />
+            android:text="结束采集" />
     </LinearLayout>
 </LinearLayout>
