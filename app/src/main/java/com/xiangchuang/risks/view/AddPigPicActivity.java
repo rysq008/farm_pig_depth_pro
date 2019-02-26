@@ -509,11 +509,10 @@ public class AddPigPicActivity extends BaseActivity {
                     return;
                 }
                 lastClickTime = SystemClock.elapsedRealtime();
-                String stringPersonAndAnimalpath = tvPersonAndAnimalpath.getText().toString();
 //                String buchongLeftstr = tvbuchongleft.getText().toString();
 //                String buchongRightstr = tvbuchongright.getText().toString();
 
-                if (stringPersonAndAnimalpath.equals("")) {
+                if (TextUtils.isEmpty(tvPersonAndAnimalpath.getText())) {
                     Toast.makeText(getApplicationContext(), "请先拍摄死猪照片。", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -528,7 +527,7 @@ public class AddPigPicActivity extends BaseActivity {
     }
 
     private void addPayInfo() {
-        if (TextUtils.isEmpty(etPigAge.getText().toString())) {
+        if (TextUtils.isEmpty(etPigAge.getText())) {
             mProgressDialog.dismiss();
             Toast.makeText(getApplicationContext(), "畜龄不能为空", Toast.LENGTH_SHORT).show();
             return;
@@ -541,35 +540,38 @@ public class AddPigPicActivity extends BaseActivity {
             return;
         }
 
-        if (TextUtils.isEmpty(etAnimalWeight.getText().toString())) {
+        if (TextUtils.isEmpty(etAnimalWeight.getText())) {
             mProgressDialog.dismiss();
             Toast.makeText(getApplicationContext(), "未填写死猪重量", Toast.LENGTH_SHORT).show();
             return;
         }
-        String buchongLeftstr = tvbuchongleft.getText().toString();
-        String buchongRightstr = tvbuchongright.getText().toString();
-        StringBuilder sb = new StringBuilder();
 
-        if (!buchongLeftstr.equals("")) {
-            sb.append(buchongLeftstr);
-            sb.append(",");
-        }
 
-        if (!buchongRightstr.equals("")) {
-            sb.append(buchongRightstr);
-            sb.append(",");
-        }
 
-        if (sb.length() > 0) {
-            sb.deleteCharAt(sb.length() - 1);
-        }
+//        String buchongLeftstr = tvbuchongleft.getText().toString();
+//        String buchongRightstr = tvbuchongright.getText().toString();
+//        StringBuilder sb = new StringBuilder();
+//
+//        if (!buchongLeftstr.equals("")) {
+//            sb.append(buchongLeftstr);
+//            sb.append(",");
+//        }
+//
+//        if (!buchongRightstr.equals("")) {
+//            sb.append(buchongRightstr);
+//            sb.append(",");
+//        }
+//
+//        if (sb.length() > 0) {
+//            sb.deleteCharAt(sb.length() - 1);
+//        }
         showProgressDialog();
         Map<String, String> mapbody = new HashMap<>();
         mapbody.put(Constants.lipeiId, lipeiId);
         mapbody.put("age", etPigAge.getText().toString().trim());
         mapbody.put("weight", etAnimalWeight.getText().toString().trim());
         mapbody.put("weightPic", tvPersonAndAnimalpath.getText().toString().trim());
-        mapbody.put("deadPics", sb.toString());
+        mapbody.put("deadPics", "");
         mapbody.put("provePic", "");//无害化证明照片
         mapbody.put("autoWeight", autoWeight);//自动识别返回重量
 
