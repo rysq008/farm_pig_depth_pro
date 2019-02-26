@@ -622,9 +622,9 @@ public class MediaProcessor {
                             appContext.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if(status == 1){
+                                    if (status == 1) {
                                         showPayForce();
-                                    }else{
+                                    } else {
                                         showErrorDialog(mymsg);
                                     }
                                 }
@@ -633,7 +633,7 @@ public class MediaProcessor {
                             e.printStackTrace();
                             showRetryDialog("网络异常，请检查网络后重试。");
                         }
-                    }else{
+                    } else {
                         showRetryDialog("网络异常，请检查网络后重试。");
                     }
                 }
@@ -746,9 +746,10 @@ public class MediaProcessor {
 
     /**
      * 上传失败重试
+     *
      * @param msg
      */
-    private void showRetryDialog(String msg){
+    private void showRetryDialog(String msg) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
         View inflate = View.inflate(mActivity, R.layout.pre_timeout, null);
         TextView timeout_resert = inflate.findViewById(R.id.timeout_resert);
@@ -1116,17 +1117,16 @@ public class MediaProcessor {
     private void showDialogLiNone() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
         View inflate = View.inflate(mActivity, R.layout.lipei_result1, null);
-        TextView no_lipei = inflate.findViewById(R.id.tv_no_lipei);
-        TextView liresult1_edit = inflate.findViewById(R.id.liresult1_edit);
-        TextView liresult1_goon = inflate.findViewById(R.id.liresult1_goon);
-        liresult1_goon.setVisibility(View.GONE);
-        no_lipei.setText(showmsg);
+        TextView noLipei = inflate.findViewById(R.id.tv_no_lipei);
+        TextView liresult1Edit = inflate.findViewById(R.id.liresult1_edit);
+        TextView liresult1Goon = inflate.findViewById(R.id.liresult1_goon);
+        noLipei.setText("采集数据已提交，" + showmsg + "，请选择重新拍摄或结束采集并交由后台识别。");
         dialog.setView(inflate);
         AlertDialog dialogcreate = dialog.create();
         dialogcreate.setCanceledOnTouchOutside(false);
         dialogcreate.setCancelable(false);
         dialogcreate.show();
-        liresult1_edit.setOnClickListener(new View.OnClickListener() {
+        liresult1Edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialogcreate.dismiss();
@@ -1135,7 +1135,7 @@ public class MediaProcessor {
 
             }
         });
-        /*liresult1_goon.setOnClickListener(new View.OnClickListener() {
+        liresult1Goon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialogcreate.dismiss();
@@ -1143,7 +1143,7 @@ public class MediaProcessor {
                 mActivity.finish();
 
             }
-        });*/
+        });
     }
 
 
@@ -1252,13 +1252,13 @@ public class MediaProcessor {
     private void showTimeOutDialog() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
         View inflate = View.inflate(mActivity, R.layout.pre_timeout, null);
-        TextView timeout_resert = inflate.findViewById(R.id.timeout_resert);
-        TextView timeout_cancel = inflate.findViewById(R.id.timeout_cancel);
+        TextView timeoutResert = inflate.findViewById(R.id.timeout_resert);
+        TextView timeoutCancel = inflate.findViewById(R.id.timeout_cancel);
         dialog.setView(inflate);
         AlertDialog dialogcreate = dialog.create();
         dialogcreate.setCanceledOnTouchOutside(false);
         dialogcreate.show();
-        timeout_resert.setOnClickListener(new View.OnClickListener() {
+        timeoutResert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!NetworkUtil.isNetworkConnect(mContext)) {
@@ -1270,7 +1270,7 @@ public class MediaProcessor {
                 processUploadOne_Pay();
             }
         });
-        timeout_cancel.setOnClickListener(new View.OnClickListener() {
+        timeoutCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialogcreate.dismiss();
@@ -1318,14 +1318,14 @@ public class MediaProcessor {
     private void showErrorDialogLi(String msg) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
         View inflate = View.inflate(mActivity, R.layout.lipei_result4, null);
-        TextView result4_msg = inflate.findViewById(R.id.result4_msg);
-        TextView result4_edit = inflate.findViewById(R.id.result4_edit);
-        result4_msg.setText(msg);
+        TextView result4Msg = inflate.findViewById(R.id.result4_msg);
+        TextView result4Edit = inflate.findViewById(R.id.result4_edit);
+        result4Msg.setText(msg);
         dialog.setView(inflate);
         AlertDialog dialogcreate = dialog.create();
         dialogcreate.setCanceledOnTouchOutside(false);
         dialogcreate.show();
-        result4_edit.setOnClickListener(new View.OnClickListener() {
+        result4Edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialogcreate.dismiss();
@@ -1335,7 +1335,7 @@ public class MediaProcessor {
     }
 
 
-    public void getCurrentLocationLatLng() {
+    private void getCurrentLocationLatLng() {
         //初始化定位
         mLocationClient = new AMapLocationClient(mContext);
         //设置定位回调监听
@@ -2156,8 +2156,8 @@ public class MediaProcessor {
 
             @Override
             public void onUploadSuccess(UploadTask uploadTask, File file) {
-                if(BuildConfig.DEBUG){
-                    Toast.makeText(MyApplication.getContext(),"提交成功", Toast.LENGTH_LONG).show();
+                if (BuildConfig.DEBUG) {
+                    Toast.makeText(MyApplication.getContext(), "提交成功", Toast.LENGTH_LONG).show();
                 }
                 VideoUploadTable videoUpLoadBean = (VideoUploadTable) uploadTask.getT();
                 videoUpLoadBean.iscomplete = true;

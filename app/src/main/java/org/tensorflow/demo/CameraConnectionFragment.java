@@ -710,6 +710,12 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                                             //e.printStackTrace();
                                             mMediaRecorder = null;
                                             mMediaRecorder = new MediaRecorder();
+                                        } catch (RuntimeException e){
+                                            Log.e(TAG, " mMediaRecorder.stop:Exception " + e);
+                                            // TODO 如果当前java状态和jni里面的状态不一致，
+                                            //e.printStackTrace();
+                                            mMediaRecorder = null;
+                                            mMediaRecorder = new MediaRecorder();
                                         }
                                         mMediaRecorder.reset();
                                     }

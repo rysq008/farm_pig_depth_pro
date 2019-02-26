@@ -60,6 +60,7 @@ import innovation.biz.classifier.PigRotationPrediction;
 import innovation.utils.FileUtils;
 
 import static com.xiangchuangtec.luolu.animalcounter.MyApplication.lastCurrentTime;
+import static com.xiangchuangtec.luolu.animalcounter.Utils.getThreshold;
 import static com.xiangchuangtec.luolu.animalcounter.Utils.setLowThreshold;
 import static innovation.utils.ImageUtils.compressBitmap;
 import static org.tensorflow.demo.CameraConnectionFragment.collectNumberHandler;
@@ -188,6 +189,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                             "",
                             TFLITE_INPUT_SIZE,
                             TFLITE_IS_QUANTIZED);
+            getThreshold();
         } catch (final Exception e) {
             throw new RuntimeException("Error initializing pig TensorFlowLite!", e);
         }
