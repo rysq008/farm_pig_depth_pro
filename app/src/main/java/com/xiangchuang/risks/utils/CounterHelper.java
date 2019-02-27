@@ -46,8 +46,8 @@ import okhttp3.Response;
 public final class CounterHelper {
 
     private static final Map<String, String> mHeaderMap = new HashMap<>();
-    private static final String URL_TEST = "http://58.132.169.38:1011/test";
-    private static final String URL_WEIGHT_TEST = "http://58.132.169.38:1012/supervise";
+    private static final String URL_TEST = "http://ai.innovationai.cn:1011/test";
+    private static final String URL_WEIGHT_TEST = "http://ai.innovationai.cn:1012/supervise";
 
     static {
         mHeaderMap.put("Authorization", "Bearer da3efcbf-0845-4fe3-8aba-ee040be542c0");

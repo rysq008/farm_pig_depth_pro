@@ -31,6 +31,7 @@ import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.bean.StartBean;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.utils.CounterHelper;
+import com.xiangchuangtec.luolu.animalcounter.BuildConfig;
 import com.xiangchuangtec.luolu.animalcounter.R;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
 import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
@@ -88,6 +89,7 @@ public class AddPigPicActivity extends BaseActivity {
     private static final int REQUESTCODE_CUTTING = 2;    // 图片裁切标记
 
     private String lipeiId = "";
+    private String timesFlag = "";
 
     private PopupWindow pop = null;
     private LinearLayout llPopup;
@@ -115,10 +117,16 @@ public class AddPigPicActivity extends BaseActivity {
     @Override
     protected void initData() {
         lipeiId = getIntent().getStringExtra("lipeiid");
+        timesFlag = getIntent().getStringExtra("timesFlag");
         tvTitle.setText("资料采集");
         iv_cancel.setVisibility(View.GONE);
         parentView = getWindow().getDecorView();
         etAnimalWeight.addTextChangedListener(new MyWatcher(3, 1));
+
+        if (BuildConfig.DEBUG){
+            Toast.makeText(this, "lipeiId="+lipeiId+"---timesFlag="+timesFlag, Toast.LENGTH_SHORT).show();
+        }
+
 
         //选择图片
         pop = new PopupWindow(getApplicationContext());
@@ -574,6 +582,7 @@ public class AddPigPicActivity extends BaseActivity {
         mapbody.put("deadPics", "");
         mapbody.put("provePic", "");//无害化证明照片
         mapbody.put("autoWeight", autoWeight);//自动识别返回重量
+        mapbody.put("timesFlag", timesFlag);//强制提交信息
 
         Log.e("mapbody", "mapbody: " + mapbody.toString());
 

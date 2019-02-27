@@ -258,7 +258,7 @@ public class SelectFunctionActivity_new extends BaseActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            toastUtils.showLong(SelectFunctionActivity_new.this, bean.getMsg());
+                            toastUtils.showLong(SelectFunctionActivity_new.this, "验证保单失败，请重试。");
                         }
                     });
                 }
@@ -298,8 +298,8 @@ public class SelectFunctionActivity_new extends BaseActivity {
                 if (!isOPen(SelectFunctionActivity_new.this)) {
                     openGPS1(SelectFunctionActivity_new.this);
                 } else {
-                    checkBaoDan();
-//                    startActivity(new Intent(SelectFunctionActivity_new.this, SmallVideoActivity.class));
+//                    checkBaoDan();
+                    startActivity(new Intent(SelectFunctionActivity_new.this, AddPigPicActivity.class));
                 }
                 break;
             case R.id.select_webview:
