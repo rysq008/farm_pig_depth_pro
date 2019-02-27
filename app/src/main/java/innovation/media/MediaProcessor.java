@@ -623,7 +623,7 @@ public class MediaProcessor {
                                 @Override
                                 public void run() {
                                     if (status == 1) {
-                                        showPayForce();
+                                        showPayForce(timesFlag);
                                     } else {
                                         showErrorDialog(mymsg);
                                     }
@@ -1160,7 +1160,13 @@ public class MediaProcessor {
             public void onFailure(Call call, IOException e) {
                 Log.e("end1", e.getLocalizedMessage());
                 dialogcreate.dismiss();
-                showErrorDialogLi(bean.getMsg());
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showErrorDialogLi(bean.getMsg());
+                    }
+                });
+
             }
 
             @Override
@@ -1209,7 +1215,12 @@ public class MediaProcessor {
             public void onFailure(Call call, IOException e) {
                 Log.e("pregoon", e.getLocalizedMessage());
                 dialogcreate.dismiss();
-                showErrorDialog(bean.getMsg());
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showErrorDialog(bean.getMsg());
+                    }
+                });
             }
 
             @Override
@@ -1282,36 +1293,44 @@ public class MediaProcessor {
         });
     }
 
-    private void showPayForce() {
+    private void showPayForce(String timesFlag) {
         String customServ = PreferencesUtils.getStringValue(Constants.customServ, MyApplication.getContext());
         String phone = PreferencesUtils.getStringValue(Constants.phone, MyApplication.getContext());
 
-        new AlertDialog.Builder(mActivity)
+        AlertDialog.Builder pwdBuilder = new AlertDialog.Builder(mActivity)
                 .setIcon(R.drawable.cowface)
                 .setTitle("提示")
                 .setMessage("提交成功，系统无法找到对应牲畜。\n" +
                         "请用手机直接对着牲畜的左、中、右脸拍摄一段不少于2分钟视频，留存作为档案提交到" + customServ + "处。\n" +
                         "后台将进行人工复核，复核结果会通过短信方式通知。如有疑问请致电人工坐席服务电话：" + phone + "。")
-                .setPositiveButton("拨打客服电话", new DialogInterface.OnClickListener() {
+                .setPositiveButton("拨打客服电话", null)
+                .setNegativeButton("完成", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        Intent intent = new Intent(Intent.ACTION_DIAL);
-                        Uri data = Uri.parse("tel:" + phone);
-                        intent.setData(data);
-                        mActivity.startActivity(intent);
+                        if ("lipei".equals(PreferencesUtils.getStringValue(Constants.fleg, MyApplication.getAppContext()))) {
+                            mActivity.startActivity(new Intent(mActivity, AddPigPicActivity.class)
+                                    .putExtra("lipeiid", "")
+                                    .putExtra("timesFlag",timesFlag)
+                            );
+                        }
                         mActivity.finish();
                     }
-                })
-                .setNegativeButton("退出", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        mActivity.finish();
-                    }
-                })
-                .setCancelable(false)
-                .show();
+                });
+
+        AlertDialog pwdDialog = pwdBuilder.create();
+        pwdDialog.setCancelable(false);
+        pwdDialog.show();
+
+        pwdDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                Uri data = Uri.parse("tel:" + phone);
+                intent.setData(data);
+                mActivity.startActivity(intent);
+            }
+        });
     }
 
 

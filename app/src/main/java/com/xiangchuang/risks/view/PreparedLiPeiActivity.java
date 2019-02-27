@@ -279,7 +279,12 @@ public class PreparedLiPeiActivity extends BaseActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.e("end2", e.getLocalizedMessage());
-                showErrorDialogLiTimeOut();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showErrorDialogLiTimeOut();
+                    }
+                });
             }
 
             @Override
@@ -400,7 +405,12 @@ public class PreparedLiPeiActivity extends BaseActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.e("end2", e.getLocalizedMessage());
-                showErrorDialogLiTimeOut();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showErrorDialogLiTimeOut();
+                    }
+                });
             }
 
             @Override
