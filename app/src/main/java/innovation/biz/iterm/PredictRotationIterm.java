@@ -18,4 +18,9 @@ public class PredictRotationIterm {
     }
 
 
+    public PredictRotationIterm(double y){
+        rot_y = y;
+    }
+
+
 }

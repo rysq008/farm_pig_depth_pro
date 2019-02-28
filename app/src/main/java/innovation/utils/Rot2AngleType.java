@@ -97,4 +97,23 @@ public class Rot2AngleType {
 
         return angleType;
     }
+
+    public static int getPigAngleType(float rotY) {
+        int angleType = 10;
+        float  angleY;
+        //弧度转角度
+        angleY = (float) (rotY * 180 / 3.14);
+
+        if (angleY >= -90 && angleY <= -20) {
+            angleType = 1;
+        } else if (angleY >= -15 && angleY <= 15) {
+            angleType = 2;
+        } else if (angleY >= 20 && angleY <= 90) {
+            angleType = 3;
+        } else {
+            angleType = 10;
+        }
+
+        return angleType;
+    }
 }
