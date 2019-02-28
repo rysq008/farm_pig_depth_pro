@@ -460,13 +460,20 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
         OkHttp3Util.doPost(Constants.adduser, mapbody, map, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-
+                mProgressDialog.dismiss();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showDialogError("提交失败，请重试。");
+                    }
+                });
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String string = response.body().string();
                 Log.i(TAG, string);
+                mProgressDialog.dismiss();
                 try {
                     JSONObject jsonObject = new JSONObject(string);
                     int status = jsonObject.getInt("status");
@@ -475,7 +482,6 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                mProgressDialog.dismiss();
                                 showDialogError(msg);
                             }
                         });
@@ -485,6 +491,12 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
 
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showDialogError("提交失败，请重试。");
+                        }
+                    });
                 }
             }
         });

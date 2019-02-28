@@ -265,6 +265,7 @@ public class USBMenageActivity extends BaseActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 String string = response.body().string();
                 Log.i(TAG, string);
+                mProgressDialog.dismiss();
                 try {
                     JSONObject jsonObject = new JSONObject(string);
                     int status = jsonObject.getInt("status");

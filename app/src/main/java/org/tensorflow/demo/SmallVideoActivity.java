@@ -27,7 +27,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.xiangchuang.risks.model.bean.CommitBean;
+import com.xiangchuang.risks.utils.NavBarUtils;
 import com.xiangchuang.risks.view.PreparedLiPeiActivity;
+import com.xiangchuangtec.luolu.animalcounter.BuildConfig;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
@@ -109,6 +111,17 @@ public class SmallVideoActivity extends AppCompatActivity implements SurfaceHold
     }
 
     private void initView() {
+//        int width = getWindowManager().getDefaultDisplay().getWidth();
+////        float height = (getWindowManager().getDefaultDisplay().getHeight())/4*3;
+////        if(BuildConfig.DEBUG){
+////            Toast.makeText(this, "width = "+width+"---height = "+height, Toast.LENGTH_SHORT).show();
+////        }
+
+        if(NavBarUtils.hasNavBar(this)){
+            NavBarUtils.hideBottomUIMenu(this);
+        }
+
+
         videoWidth = 640;
         videoHeight = 480;
         mSurfaceView = (SurfaceView) findViewById(R.id.main_surface_view);

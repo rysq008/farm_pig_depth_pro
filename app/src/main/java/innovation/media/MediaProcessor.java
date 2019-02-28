@@ -693,7 +693,7 @@ public class MediaProcessor {
                                                     showmsg = bean.getMsg();
                                                     //无相似
                                                     mProgressDialog.dismiss();
-                                                    showDialogLiNone();
+                                                    showDialogLiNone(timesFlag);
                                                 } else if (1 == bean.getStatus() && 2 == bean.getData().getSimilarFlg()) {
                                                     userLibId = bean.getData().getUserLibId();
                                                     similarList = bean.getData().getSimilarList();
@@ -1114,7 +1114,7 @@ public class MediaProcessor {
     }
 
     //未找到相似对象的处理
-    private void showDialogLiNone() {
+    private void showDialogLiNone(String timesFlag) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
         View inflate = View.inflate(mActivity, R.layout.lipei_result1, null);
         TextView noLipei = inflate.findViewById(R.id.tv_no_lipei);
@@ -1140,8 +1140,11 @@ public class MediaProcessor {
             public void onClick(View v) {
                 dialogcreate.dismiss();
                 //mActivity.startActivity(new Intent(mActivity, PreparedLiPeiActivity.class));
-                mActivity.finish();
-
+                mActivity.startActivity(new Intent(mActivity, AddPigPicActivity.class)
+                        .putExtra("lipeiid", "")
+                        .putExtra("timesFlag",timesFlag)
+                );
+                mActivity.finish();  
             }
         });
     }

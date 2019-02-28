@@ -220,7 +220,8 @@ public class PigRotationPrediction implements Classifier {
         // Copy the input data into TensorFlow.
         Trace.beginSection("feed");
 
-        detectRotation = new byte[1][3];
+//        detectRotation = new byte[1][3];
+        detectRotation = new byte[1][1];
 
         sLogger.i("inputSize:" + inputSize);
 
@@ -242,24 +243,29 @@ public class PigRotationPrediction implements Classifier {
         float predictRotZ;
         float rotScale = (float) 57.6;
         char charsOutRotation0 = convertByte2Uint8(detectRotation[0][0]);
-        char charsOutRotation1 = convertByte2Uint8(detectRotation[0][1]);
-        char charsOutRotation2 = convertByte2Uint8(detectRotation[0][2]);
+//        char charsOutRotation1 = convertByte2Uint8(detectRotation[0][1]);
+//        char charsOutRotation2 = convertByte2Uint8(detectRotation[0][2]);
 
-        predictRotX = (float)((charsOutRotation0 - quantization) * quantizationScale);
-        predictRotY = (float)((charsOutRotation1 - quantization) * quantizationScale);
-        predictRotZ = (float)((charsOutRotation2 - quantization) * quantizationScale);
+//        predictRotX = (float)((charsOutRotation0 - quantization) * quantizationScale);
+//        predictRotY = (float)((charsOutRotation1 - quantization) * quantizationScale);
+//        predictRotZ = (float)((charsOutRotation2 - quantization) * quantizationScale);
 //        sLogger.i("predictRotX %f:" + predictRotX );
 //        sLogger.i("predictRotY %f:" + predictRotY );
 //        sLogger.i("predictRotZ %f:" + predictRotZ );
 
+        predictRotY = (float)((charsOutRotation0 - quantization) * quantizationScale);
+
+//        predictRotationIterm = new PredictRotationIterm(
+//                predictRotX,
+//                predictRotY,
+//                predictRotZ);
         predictRotationIterm = new PredictRotationIterm(
-                predictRotX,
-                predictRotY,
-                predictRotZ);
+                predictRotY);
 
         // TODO: 2018/11/1 By:LuoLu
-        pigPredictAngleType = Rot2AngleType.getPigAngleType(predictRotX,
-                predictRotY);
+//        pigPredictAngleType = Rot2AngleType.getPigAngleType(predictRotX,
+//                predictRotY);
+        pigPredictAngleType = Rot2AngleType.getPigAngleType(predictRotY);
         if (pigPredictAngleType == 1){
             // draw rotation
 //            Canvas canvasDrawRecognition = new Canvas(padBitmap);

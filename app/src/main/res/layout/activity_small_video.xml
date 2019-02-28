@@ -12,7 +12,7 @@
         android:elevation="1dp"
         android:textColor="#FFFFFF" />
     <!--android:text="双击放大"-->
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -20,26 +20,20 @@
         <SurfaceView
             android:id="@+id/main_surface_view"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="3" />
+            android:layout_height="match_parent" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="#000"
-            android:orientation="vertical">
-
-            <org.tensorflow.demo.BothWayProgressBar
-                android:id="@+id/main_progress_bar"
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="#000" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/TRANSPARENT"
+            android:layout_alignParentBottom="true">
 
             <RelativeLayout
                 android:id="@+id/main_press_control"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_margin="20dp">
 
                 <TextView
                     android:layout_width="65dp"
@@ -52,6 +46,13 @@
                     android:textColor="@android:color/black"
                     android:textSize="16sp" />
             </RelativeLayout>
+
+            <org.tensorflow.demo.BothWayProgressBar
+                android:id="@+id/main_progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#000" />
+
         </LinearLayout>
-    </LinearLayout>
+    </RelativeLayout>
 </FrameLayout>

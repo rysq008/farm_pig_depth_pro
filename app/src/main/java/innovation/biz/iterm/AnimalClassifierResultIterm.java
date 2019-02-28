@@ -47,6 +47,11 @@ public class AnimalClassifierResultIterm {
         String txtfilename = "";
         String oriImageName = "";
 
+        // 角度分类模型无效标志
+        final boolean ANGLE_JUDGE_SKIP_FLG = false;
+        // 关键点模型无效标志
+        final boolean KEYPOINT_JUDGE_SKIP_FLG = true;
+
         // 理赔标志
         boolean isLiPei = (Global.model == Model.VERIFY.value());
 
@@ -54,8 +59,8 @@ public class AnimalClassifierResultIterm {
         boolean addImgFlag = false;
 
         // 判断图片角度
-        if((PigRotationPrediction.pigPredictAngleType == 1  || isLiPei)
-                && PigKeyPointsDetectTFlite.pigKeypointsK1 == true) {
+        if((PigRotationPrediction.pigPredictAngleType == 1 || ANGLE_JUDGE_SKIP_FLG)
+                && (PigKeyPointsDetectTFlite.pigKeypointsK1 == true || KEYPOINT_JUDGE_SKIP_FLG)) {
             DetectorActivity.AngleTrackType = 1;
             type = 1;
             // 未达到上限时增加图片
@@ -66,8 +71,8 @@ public class AnimalClassifierResultIterm {
                 //左脸达到上限发消息 关闭左脸提示
                 CameraConnectionFragment.collectNumberHandler.sendEmptyMessage(3);
             }
-        } else if((PigRotationPrediction.pigPredictAngleType == 2  || isLiPei)
-                && PigKeyPointsDetectTFlite.pigKeypointsK2 == true){
+        } else if((PigRotationPrediction.pigPredictAngleType == 2|| ANGLE_JUDGE_SKIP_FLG)
+                && (PigKeyPointsDetectTFlite.pigKeypointsK2 == true || KEYPOINT_JUDGE_SKIP_FLG)){
             DetectorActivity.AngleTrackType = 2;
             type = 2;
             // 未达到上限时增加图片
@@ -75,8 +80,8 @@ public class AnimalClassifierResultIterm {
                 DetectorActivity.type2Count++;
                 addImgFlag = true;
             }
-        } else if((PigRotationPrediction.pigPredictAngleType == 3  || isLiPei)
-                && PigKeyPointsDetectTFlite.pigKeypointsK3 == true) {
+        } else if((PigRotationPrediction.pigPredictAngleType == 3|| ANGLE_JUDGE_SKIP_FLG)
+                && (PigKeyPointsDetectTFlite.pigKeypointsK3 == true || KEYPOINT_JUDGE_SKIP_FLG)) {
             DetectorActivity.AngleTrackType = 3;
             type = 3;
             // 未达到上限时增加图片

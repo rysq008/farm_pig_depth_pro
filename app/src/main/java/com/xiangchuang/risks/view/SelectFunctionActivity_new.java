@@ -299,7 +299,7 @@ public class SelectFunctionActivity_new extends BaseActivity {
                     openGPS1(SelectFunctionActivity_new.this);
                 } else {
                     checkBaoDan();
-//                    startActivity(new Intent(SelectFunctionActivity_new.this, AddPigPicActivity.class));
+//                    startActivity(new Intent(SelectFunctionActivity_new.this, SmallVideoActivity.class));
                 }
                 break;
             case R.id.select_webview:
