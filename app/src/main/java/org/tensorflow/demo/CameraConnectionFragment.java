@@ -663,10 +663,14 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
 
     @Override
     public void onPause() {
-        // 停止按钮点击时
-        MyApplication.during += System.currentTimeMillis() - timeVideoStart;
-        //Toast.makeText(activity, InnApplication.during+"", Toast.LENGTH_SHORT).show();
-        stopRecordingVideo(false);
+
+        if (mIsRecordingVideo){
+            // 停止按钮点击时
+            MyApplication.during += System.currentTimeMillis() - timeVideoStart;
+            //Toast.makeText(activity, InnApplication.during+"", Toast.LENGTH_SHORT).show();
+            stopRecordingVideo(false);
+        }
+
         Global.VIDEO_PROCESS = false;
 
         closeCamera();
