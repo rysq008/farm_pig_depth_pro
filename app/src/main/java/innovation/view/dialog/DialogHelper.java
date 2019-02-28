@@ -79,7 +79,7 @@ public class DialogHelper {
     public static void exitCheckDialog(final Activity activity) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity)
                 .setIcon(R.mipmap.ic_launcher).setTitle("提示")
-                .setMessage("理赔需要拍照估重提交称重信息，您确定要退出称重吗")
+                .setMessage("理赔审核需要填写畜龄及拍摄称重照片否则可能审核失败，您确定要退出吗？")
                 .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

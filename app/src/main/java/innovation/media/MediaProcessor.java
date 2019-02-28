@@ -1144,7 +1144,7 @@ public class MediaProcessor {
                         .putExtra("lipeiid", "")
                         .putExtra("timesFlag",timesFlag)
                 );
-                mActivity.finish();  
+                mActivity.finish();
             }
         });
     }
