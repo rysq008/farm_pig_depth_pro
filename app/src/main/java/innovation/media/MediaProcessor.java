@@ -851,7 +851,9 @@ public class MediaProcessor {
             public void onPositive() {
                 destroyDialogs();
                 if ("lipei".equals(PreferencesUtils.getStringValue(Constants.fleg, MyApplication.getAppContext()))) {
-                    mActivity.startActivity(new Intent(mActivity, AddPigPicActivity.class).putExtra("lipeiid", lipeiId));
+                    mActivity.startActivity(new Intent(mActivity, AddPigPicActivity.class)
+                            .putExtra("lipeiid", lipeiId)
+                            .putExtra("timesFlag", ""));
                 } else {
                     if (isNoCamera) {
                         mActivity.startActivity(new Intent(mActivity, SmallVideoActivity.class).putExtra("lipeiid", lipeiId));

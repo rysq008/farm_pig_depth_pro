@@ -41,7 +41,7 @@
                     android:layout_centerInParent="true"
                     android:background="@drawable/video_btn_bg"
                     android:gravity="center"
-                    android:text="@string/record"
+                    android:text="录制"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     android:textColor="@android:color/black"
                     android:textSize="16sp" />
