@@ -6,7 +6,7 @@
     <string name="description_info">Info</string>
     <string name="request_permission">This sample needs camera permission.</string>
     <string name="camera_error">This device doesn\'t support Camera2 API.</string>
-    <string name="record">录制</string>
+    <string name="record">采集</string>
     <string name="stop">取消</string>
     <string name="pause">暂停</string>
     <string name="dialog_title">提示</string>
