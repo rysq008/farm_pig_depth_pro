@@ -70,6 +70,9 @@ public class PigFaceDetectTFlite implements Classifier {
     private static final float IMAGE_STD = 128.0f;
     // Number of threads in the java app
     private static final int NUM_THREADS = 4;
+    //保存图片的尺寸
+    private static final  int ZOOM = 480;
+
     private static final String PIG_TFLITE_PREDICTION_MODEL_FILE = "0226mobilenet_v2_192_quantized_50000_201902271759.tflite";//"pig_tflite_pose1022.tflite";//
     private static final String PIG_TFLITE_KEYPOINTS_MODEL_FILE = "pig_1026_keypoint_tflite_xincai2.tflite";
 
@@ -357,8 +360,8 @@ public class PigFaceDetectTFlite implements Classifier {
         }
 
         Bitmap padBitmap2SpRatio = padBitmap2SpRatio(clipBitmap, 1.0f);
-        int widthZoom = 320, heightZoom = 320;
-        Bitmap resizeClipBitmap = zoomImage(padBitmap2SpRatio, widthZoom, heightZoom);
+//        int widthZoom = ZOOM, heightZoom = ZOOM;
+        Bitmap resizeClipBitmap = zoomImage(padBitmap2SpRatio, ZOOM, ZOOM);
 
         PredictRotationIterm predictRotationIterm = pigFaceRotationDetector.pigRotationPredictionItemTFlite(clipBitmap);
 
