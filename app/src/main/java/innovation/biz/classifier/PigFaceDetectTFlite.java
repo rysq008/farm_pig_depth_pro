@@ -74,7 +74,7 @@ public class PigFaceDetectTFlite implements Classifier {
     private static final  int ZOOM = 480;
 
     private static final String PIG_TFLITE_PREDICTION_MODEL_FILE = "0228mobilenet_v2_192_quantized_18730_201902281922.tflite";//"pig_tflite_pose1022.tflite";//
-    private static final String PIG_TFLITE_KEYPOINTS_MODEL_FILE = "pig_1026_keypoint_tflite_xincai2.tflite";
+    private static final String PIG_TFLITE_KEYPOINTS_MODEL_FILE = "0226mobilenet_v2_192_quantized_50000_201902271804.tflite";//"pig_1026_keypoint_tflite_xincai2.tflite";
 
     //    private final Classifier donkeyFaceKeyPointsTFDetector;
     private boolean isModelQuantized;
