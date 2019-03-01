@@ -50,7 +50,7 @@ public class AnimalClassifierResultIterm {
         // 角度分类模型无效标志
         final boolean ANGLE_JUDGE_SKIP_FLG = false;
         // 关键点模型无效标志
-        final boolean KEYPOINT_JUDGE_SKIP_FLG = true;
+        final boolean KEYPOINT_JUDGE_SKIP_FLG = false;
 
         // 理赔标志
         boolean isLiPei = (Global.model == Model.VERIFY.value());

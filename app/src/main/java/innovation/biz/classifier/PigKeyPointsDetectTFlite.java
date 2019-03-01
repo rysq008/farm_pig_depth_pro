@@ -289,16 +289,16 @@ public class PigKeyPointsDetectTFlite implements Classifier {
         char charsOutkeyPoints20 = convertByte2Uint8(keyPoints[0][20]);
         char charsOutkeyPoints21 = convertByte2Uint8(keyPoints[0][21]);
 
-        char charsOutExists0 = convertByte2Uint8(exists[0][0]);
+        char charsOutExists0 = convertByte2Uint8(exists[0][2]);
         char charsOutExists1 = convertByte2Uint8(exists[0][1]);
-        char charsOutExists2 = convertByte2Uint8(exists[0][2]);
-        char charsOutExists3 = convertByte2Uint8(exists[0][3]);
-        char charsOutExists4 = convertByte2Uint8(exists[0][4]);
-        char charsOutExists5 = convertByte2Uint8(exists[0][5]);
-        char charsOutExists6 = convertByte2Uint8(exists[0][6]);
-        char charsOutExists7 = convertByte2Uint8(exists[0][7]);
-        char charsOutExists8 = convertByte2Uint8(exists[0][8]);
-        char charsOutExists9 = convertByte2Uint8(exists[0][9]);
+        char charsOutExists2 = convertByte2Uint8(exists[0][3]);
+        char charsOutExists3 = convertByte2Uint8(exists[0][4]);
+        char charsOutExists4 = convertByte2Uint8(exists[0][5]);
+        char charsOutExists5 = convertByte2Uint8(exists[0][0]);
+        char charsOutExists6 = convertByte2Uint8(exists[0][9]);
+        char charsOutExists7 = convertByte2Uint8(exists[0][8]);
+        char charsOutExists8 = convertByte2Uint8(exists[0][7]);
+        char charsOutExists9 = convertByte2Uint8(exists[0][6]);
         char charsOutExists10 = convertByte2Uint8(exists[0][10]);
 
 
