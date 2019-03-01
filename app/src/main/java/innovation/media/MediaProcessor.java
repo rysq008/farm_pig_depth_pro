@@ -42,7 +42,7 @@ import com.xiangchuang.risks.model.bean.CommitLiBean;
 import com.xiangchuang.risks.model.bean.StartBean;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.view.AddPigPicActivity;
-import com.xiangchuang.risks.view.PreparedLiPeiActivity;
+import com.xiangchuang.risks.view.PreparedLiPeiActivity_new;
 import com.xiangchuangtec.luolu.animalcounter.BuildConfig;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
@@ -777,7 +777,7 @@ public class MediaProcessor {
             public void onClick(View v) {
                 dialogcreate.dismiss();
                 if ("pre".equals(PreferencesUtils.getStringValue(Constants.fleg, MyApplication.getAppContext()))) {
-                    mActivity.startActivity(new Intent(MyApplication.getContext(), PreparedLiPeiActivity.class));
+                    mActivity.startActivity(new Intent(MyApplication.getContext(), PreparedLiPeiActivity_new.class));
                 }
                 ((Activity) MyApplication.getContext()).finish();
             }
@@ -1291,7 +1291,7 @@ public class MediaProcessor {
             public void onClick(View v) {
                 dialogcreate.dismiss();
                 if ("pre".equals(PreferencesUtils.getStringValue(Constants.fleg, MyApplication.getAppContext()))) {
-                    mActivity.startActivity(new Intent(MyApplication.getContext(), PreparedLiPeiActivity.class));
+                    mActivity.startActivity(new Intent(MyApplication.getContext(), PreparedLiPeiActivity_new.class));
                 }
                 ((Activity) MyApplication.getContext()).finish();
             }
