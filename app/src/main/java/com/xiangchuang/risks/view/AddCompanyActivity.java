@@ -2,6 +2,8 @@ package com.xiangchuang.risks.view;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -65,6 +67,7 @@ import java.util.List;
 import java.util.Map;
 
 import innovation.login.IDCardValidate;
+import innovation.network_status.NetworkUtil;
 import innovation.utils.FileUtils;
 import innovation.utils.ImageUtils;
 import okhttp3.Call;
@@ -75,6 +78,7 @@ import static com.xiangchuang.risks.utils.MyTextUtil.isEmojiCharacter;
 import static com.xiangchuang.risks.utils.ValidatorUtils.isLicense;
 import static com.xiangchuang.risks.utils.ValidatorUtils.isMobileNO;
 import static com.xiangchuang.risks.utils.ValidatorUtils.isPhone;
+import static innovation.utils.ImageUtils.fileToBitmap;
 
 public class AddCompanyActivity extends BaseBarActivity implements View.OnClickListener {
     //证件类型
@@ -91,6 +95,7 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
     private String str_idcard_fan = "";
     private String str_bank = "";
     private RadioGroup certificateTypeRadioGroup;
+
     ConstraintLayout idCardNegativePhotoConstraintLayout;
     TextView tvIdPositive;
     ImageView btnIdcardZhengUpload;
@@ -447,9 +452,10 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
         mapbody.put("address", tvBaodanAddress.getText().toString());
         mapbody.put("account", qiyezhanghu.getText().toString());
         mapbody.put("password", qiyepassword.getText().toString());
-
         mapbody.put("cardFront", str_idcard_zheng);
-        mapbody.put("cardBack", str_idcard_fan);
+        if (certificateType == 1){
+            mapbody.put("cardBack", str_idcard_fan);
+        }
         mapbody.put("bankFront", str_bank);
         mapbody.put("bankBack", "");
 
@@ -622,7 +628,8 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
     private void setPicToView(File file) throws Exception {
         // 取得SDCard图片路径做显示
 //        Bitmap photo = BitmapFactory.decodeStream(getContentResolver().openInputStream(uritempFile));
-        Bitmap photo = BitmapFactory.decodeFile(file.getAbsolutePath());
+
+        Bitmap photo = fileToBitmap(file.getAbsolutePath(), 4);
         photo = ImageUtils.compressBitmap(photo);
         String urlpath = FileUtils.saveFile(AddCompanyActivity.this, stampToDate(System.currentTimeMillis()) + "temphead.jpg", photo);
         FileUtils.deleteFile(file);
@@ -632,6 +639,7 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
     }
 
     private void uploadImage(File fileURLPath) {
+        mProgressDialog.show();
         Map<String, String> map = new HashMap<>();
         map.put(Constants.AppKeyAuthorization, "hopen");
         map.put(Constants.id, PreferencesUtils.getStringValue(Constants.id, MyApplication.getAppContext(), "0"));
@@ -639,10 +647,18 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.e("uploadImage:", e.toString());
+                mProgressDialog.dismiss();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showTimeOutDialog(fileURLPath);
+                    }
+                });
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+                mProgressDialog.dismiss();
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -699,6 +715,39 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
             }
         });
     }
+
+
+    private void showTimeOutDialog(File file) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        View inflate = View.inflate(this, R.layout.pre_timeout, null);
+        TextView timeoutResert = inflate.findViewById(R.id.timeout_resert);
+        TextView timeoutCancel = inflate.findViewById(R.id.timeout_cancel);
+        TextView msg = inflate.findViewById(R.id.tv_msg);
+        msg.setText("上传超时，请检查网络后重试。");
+        dialog.setView(inflate);
+        AlertDialog dialogcreate = dialog.create();
+        dialogcreate.setCanceledOnTouchOutside(false);
+        dialogcreate.show();
+        timeoutResert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!NetworkUtil.isNetworkConnect(AddCompanyActivity.this)) {
+                    Toast.makeText(AddCompanyActivity.this, "断网了，请联网后重试。", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                dialogcreate.dismiss();
+                uploadImage(file);
+            }
+        });
+        timeoutCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogcreate.dismiss();
+            }
+        });
+    }
+
+
 
     private void getCurrentLocationLatLng() {
         //初始化定位

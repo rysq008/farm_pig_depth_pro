@@ -1,23 +1,19 @@
 package org.tensorflow.demo;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.hardware.Camera;
 import android.media.MediaRecorder;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -26,16 +22,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.xiangchuang.risks.model.bean.CommitBean;
 import com.xiangchuang.risks.utils.NavBarUtils;
-import com.xiangchuang.risks.view.PreparedLiPeiActivity;
-import com.xiangchuangtec.luolu.animalcounter.BuildConfig;
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
-import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
 import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,12 +33,10 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import innovation.media.MediaInsureItem;
 import innovation.media.MediaSmalVideoItem;
 import innovation.network_status.NetworkUtil;
 import innovation.utils.FileUtils;
@@ -559,16 +547,6 @@ public class SmallVideoActivity extends AppCompatActivity implements SurfaceHold
                 upVideo();
             }
         });
-        /*timeout_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialogcreate.dismiss();
-                if ("pre".equals(PreferencesUtils.getStringValue(Constants.fleg, MyApplication.getAppContext()))){
-                    startActivity(new Intent(SmallVideoActivity.this, PreparedLiPeiActivity.class));
-                }
-                finish();
-            }
-        });*/
     }
 
     /**

@@ -433,4 +433,23 @@ public class ImageUtils {
         return newbm;
     }
 
+    /**
+     * file转bitmap 并压缩
+     *
+     * @param fileAbsolutePath 文件绝对路径
+     * @param sampleSize       缩放的倍率 例如：2就是 1/2；4就是1/4；
+     * @return
+     */
+    public static Bitmap fileToBitmap(String fileAbsolutePath, int sampleSize) {
+        /*解码图像大小,对图片进行缩放...防止图片过大导致内存溢出...*/
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        //读取图片，此方法只有读取功能，没有缓存
+        o.inJustDecodeBounds = true;
+        //缩放的倍率
+        o.inSampleSize = sampleSize;
+        o.inPreferredConfig = Bitmap.Config.RGB_565;
+        o.inJustDecodeBounds = false;
+        return BitmapFactory.decodeFile(fileAbsolutePath, o);
+    }
+
 }
