@@ -178,6 +178,8 @@ public class Constants {
     public static String PREPAY_FORCE_COMMIT = BASENEW + "payment/prePayForceCommit";
     //理赔强制提交
     public static String PAY_FORCE_COMMIT = BASENEW + "payment/payForceCommit";
+    //强制补充信息
+    public static String PAY_FORCE_END = BASENEW + "payment/payForceEnd";
 
     public static void resetBaseIp(String host) {
         HttpUtils.baseUrl = host;
@@ -260,7 +262,7 @@ public class Constants {
         PREPAY_FORCE_COMMIT = BASENEW + "payment/prePayForceCommit";
         //理赔强制提交
         PAY_FORCE_COMMIT = BASENEW + "payment/payForceCommit";
-
-
+        //强制补充信息
+        PAY_FORCE_END = BASENEW + "payment/payForceEnd";
     }
 }

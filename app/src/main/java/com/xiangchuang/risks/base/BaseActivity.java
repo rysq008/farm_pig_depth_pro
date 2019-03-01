@@ -132,7 +132,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    private void showProgressDialog(Activity activity) {
+    public void showProgressDialog(Activity activity) {
         mProgressDialog = new ProgressDialog(activity);
         mProgressDialog.setTitle(R.string.dialog_title);
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);

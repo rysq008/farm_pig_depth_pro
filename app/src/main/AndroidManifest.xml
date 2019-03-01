@@ -106,8 +106,6 @@
         <activity android:name="com.xiangchuang.risks.view.PigHouseInformationActivity" />
         <activity android:name="com.xiangchuang.risks.view.PigHogInformationActivity" />
         <activity android:name="com.xiangchuang.risks.view.OutHurdleActivity" />
-        <activity android:name="com.xiangchuang.risks.view.LiPeiActivity" />
-        <activity android:name="com.xiangchuang.risks.view.PreparedLiPeiActivity" />
         <activity
             android:name="com.xiangchuang.risks.view.PreparedLiPeiActivity_new"
             android:screenOrientation="portrait" />

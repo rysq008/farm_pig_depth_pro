@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.xiangchuang.risks.view.PreparedLiPeiActivity">
+    tools:context="com.xiangchuang.risks.view.PreparedLiPeiActivity_new">
     <include
         android:id="@+id/add_lipei_title"
         layout="@layout/activity_title" />
