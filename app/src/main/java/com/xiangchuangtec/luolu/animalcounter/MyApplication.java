@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 
+import com.avos.avoscloud.AVOSCloud;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.xiangchuang.risks.utils.ShareUtils;
 
@@ -80,6 +81,9 @@ public class MyApplication extends Application {
         super.onCreate();
         mCrashHandler = CrashHandler.getInstance();
         mCrashHandler.init(getApplicationContext());
+
+        //        // 初始化参数依次为 this, AppId, AppKey
+        AVOSCloud.initialize(this, "sraDTfcMG5cUdE454yDX5Dv1-gzGzoHsz", "qQwz83LLwnWW6LyH8qkWU6J7");
         ShareUtils.init(this);
         HttpUtils.baseUrl = ShareUtils.getHost("host");
         HttpUtils.resetIp(HttpUtils.baseUrl);

@@ -16,6 +16,7 @@ import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.bean.PinZhongBean;
 import com.xiangchuang.risks.model.bean.UpdateBean;
 import com.xiangchuang.risks.model.bean.ZhuJuanBean;
+import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
@@ -143,6 +144,7 @@ public class ZhuJuanXinXI_item_Adapter extends BaseAdapter {
             public void onFailure(Call call, IOException e) {
                 activity.mProgressDialog.dismiss();
                 Log.i("---", e.toString());
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override
@@ -196,6 +198,7 @@ public class ZhuJuanXinXI_item_Adapter extends BaseAdapter {
             public void onFailure(Call call, IOException e) {
                 activity.mProgressDialog.dismiss();
                 Log.i("ZhuJuanXinXI_item", e.toString());
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override
@@ -244,8 +247,9 @@ public class ZhuJuanXinXI_item_Adapter extends BaseAdapter {
                         }
                     }
 
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
+                    AVOSCloudUtils.saveErrorMessage(e);
                 }
 
 

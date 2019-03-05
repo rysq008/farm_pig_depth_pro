@@ -31,6 +31,7 @@ import butterknife.OnClick;
 
 import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.bean.StartBean;
+import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.utils.CounterHelper;
 import com.xiangchuangtec.luolu.animalcounter.BuildConfig;
@@ -375,6 +376,7 @@ public class AddPigPicActivity extends BaseActivity {
                                 Toast.makeText(AddPigPicActivity.this, "图片上传失败，请检查您的网络。", Toast.LENGTH_SHORT).show();
                             }
                         });
+                        AVOSCloudUtils.saveErrorMessage(e);
                     }
 
                     @Override
@@ -422,9 +424,10 @@ public class AddPigPicActivity extends BaseActivity {
                                     }
                                 });
                                 FileUtils.deleteFile(PathUtils.weightcollect);
-                            } catch (JSONException e) {
+                            } catch (Exception e) {
                                 e.printStackTrace();
                                 Toast.makeText(AddPigPicActivity.this, "图片上传失败，请检查您的网络。", Toast.LENGTH_SHORT).show();
+                                AVOSCloudUtils.saveErrorMessage(e);
                             }
                         }
                     }
@@ -619,6 +622,7 @@ public class AddPigPicActivity extends BaseActivity {
                         Toast.makeText(AddPigPicActivity.this, "信息提交失败，请检查您的网络。", Toast.LENGTH_SHORT).show();
                     }
                 });
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override
@@ -649,6 +653,7 @@ public class AddPigPicActivity extends BaseActivity {
                                 mProgressDialog.dismiss();
                                 Toast.makeText(AddPigPicActivity.this, "信息提交失败，请检查您的网络。", Toast.LENGTH_SHORT).show();
                                 e.printStackTrace();
+                                AVOSCloudUtils.saveErrorMessage(e);
                             }
                         }
                     });

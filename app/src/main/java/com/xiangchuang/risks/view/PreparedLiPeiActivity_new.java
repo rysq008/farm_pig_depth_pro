@@ -23,6 +23,7 @@ import com.xiangchuang.risks.model.bean.StartBean;
 import com.xiangchuang.risks.model.bean.StartBean_new;
 import com.xiangchuang.risks.model.bean.ZhuJuanBean;
 import com.xiangchuang.risks.model.bean.ZhuSheBean;
+import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.utils.CounterHelper;
 import com.xiangchuangtec.luolu.animalcounter.CounterActivity_new;
@@ -147,6 +148,7 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
             public void onFailure(Call call, IOException e) {
                 mProgressDialog.dismiss();
                 Log.i("PreparedLiPeiActivity", e.toString());
+                AVOSCloudUtils.saveErrorMessage(e);
             }
             @Override
             public void onResponse(Call call, Response response) throws IOException {
@@ -185,6 +187,7 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
                     }
                 }catch (Exception e){
                     Toast.makeText(PreparedLiPeiActivity_new.this, "暂无猪舍记录", Toast.LENGTH_LONG).show();
+                    AVOSCloudUtils.saveErrorMessage(e);
                 }
             }
         });
@@ -206,6 +209,7 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
                         showErrorDialogLiTimeOut();
                     }
                 });
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override
@@ -232,6 +236,7 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
 
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                AVOSCloudUtils.saveErrorMessage(e);
                             }
                         }
                     });
@@ -332,6 +337,7 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
             public void onFailure(Call call, IOException e) {
                 mProgressDialog.dismiss();
                 Log.i(TAG, e.toString());
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override

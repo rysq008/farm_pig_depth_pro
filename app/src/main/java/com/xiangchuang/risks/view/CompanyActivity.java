@@ -26,6 +26,7 @@ import com.xiangchuang.risks.model.adapter.CompanyAdapter;
 import com.xiangchuang.risks.model.bean.CompanyBean;
 import com.xiangchuang.risks.model.bean.InSureCompanyBean;
 import com.xiangchuang.risks.model.bean.ZhuJuanBean;
+import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
@@ -151,6 +152,7 @@ public class CompanyActivity extends BaseActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i(TAG, e.toString());
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override
@@ -202,8 +204,9 @@ public class CompanyActivity extends BaseActivity {
 
                     }
 
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
+                    AVOSCloudUtils.saveErrorMessage(e);
                 }
 
 

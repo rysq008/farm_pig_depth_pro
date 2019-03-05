@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.adapter.HogDetailAdapter;
 import com.xiangchuang.risks.model.bean.HogDetailBean;
+import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuangtec.luolu.animalcounter.R;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
 import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
@@ -87,6 +88,7 @@ public class HogDetailActivity_new extends BaseActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i("HogDetail", e.toString());
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override
@@ -142,8 +144,9 @@ public class HogDetailActivity_new extends BaseActivity {
                             }
                         });
                     }
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
+                    AVOSCloudUtils.saveErrorMessage(e);
                 }
             }
         });

@@ -6,6 +6,7 @@ import android.util.Log;
 import com.mainaer.wjoklib.okhttp.upload.UploadManager;
 import com.mainaer.wjoklib.okhttp.upload.UploadTask;
 import com.mainaer.wjoklib.okhttp.upload.UploadTaskListener;
+import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
 import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
@@ -167,8 +168,9 @@ public class UploadUtils {
                         UploadTask task = new UploadTask.Builder().setT(bean).setParams(params).setId(bean.timesflag).setUrl(Constants.UPLOAD_VIDEO)
                                 .setChunck(chunk).setFileName(bean.fpath).setListener(uploadTaskListener).build();
                         UploadManager.getInstance().addUploadTask(task);
-                    } catch (JSONException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
+                        AVOSCloudUtils.saveErrorMessage(e);
                     }
                 }
             });

@@ -20,6 +20,7 @@ import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
 import com.xiangchuang.risks.base.BaseActivity;
+import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.utils.AppManager;
 import com.xiangchuang.risks.utils.ShareUtils;
@@ -40,8 +41,6 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import innovation.database.VideoUploadTable;
-import innovation.database.VideoUploadTable_;
 import innovation.entry.InnApplication;
 import innovation.network_status.NetworkUtil;
 import innovation.upload.UploadService;
@@ -237,6 +236,7 @@ public class LoginFamerActivity extends BaseActivity {
                         Toast.makeText(LoginFamerActivity.this, "登录失败，请检查网络后重试。", Toast.LENGTH_SHORT).show();
                     }
                 });
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override
@@ -317,6 +317,7 @@ public class LoginFamerActivity extends BaseActivity {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    AVOSCloudUtils.saveErrorMessage(e);
                 }
 
 

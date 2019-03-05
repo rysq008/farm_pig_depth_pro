@@ -40,6 +40,7 @@ import com.mainaer.wjoklib.okhttp.upload.UploadTaskListener;
 import com.xiangchuang.risks.model.bean.CommitBean;
 import com.xiangchuang.risks.model.bean.CommitLiBean;
 import com.xiangchuang.risks.model.bean.StartBean;
+import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.view.AddPigPicActivity;
 import com.xiangchuang.risks.view.PreparedLiPeiActivity_new;
@@ -85,7 +86,6 @@ import innovation.network_status.NetworkUtil;
 import innovation.upload.UploadHelper;
 import innovation.upload.UploadThread;
 import innovation.upload.UploadUtils;
-import innovation.utils.ConstUtils;
 import innovation.utils.FileUtils;
 import innovation.utils.HttpRespObject;
 import innovation.utils.HttpUtils;
@@ -102,7 +102,6 @@ import okhttp3.Response;
 
 import static android.content.ContentValues.TAG;
 import static com.xiangchuangtec.luolu.animalcounter.MyApplication.isNoCamera;
-import static innovation.entry.InnApplication.ANIMAL_TYPE;
 import static innovation.entry.InnApplication.getCowEarNumber;
 import static innovation.entry.InnApplication.getCowType;
 import static innovation.entry.InnApplication.getStringTouboaExtra;
@@ -483,6 +482,7 @@ public class MediaProcessor {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     Log.e("editRecoed", e.getLocalizedMessage());
+                    AVOSCloudUtils.saveErrorMessage(e);
                 }
 
                 @Override
@@ -525,6 +525,7 @@ public class MediaProcessor {
                             showTimeOutDialog();
                         }
                     });
+                    AVOSCloudUtils.saveErrorMessage(e);
                 }
 
                 @Override
@@ -572,9 +573,10 @@ public class MediaProcessor {
                                     }
                                 });
                             }
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                             Log.e("uploadZipImage", "uploadZipImage1: " + e.toString());
+                            AVOSCloudUtils.saveErrorMessage(e);
                         }
 
                     }
@@ -606,6 +608,7 @@ public class MediaProcessor {
                             showTimeOutDialog();
                         }
                     });
+                    AVOSCloudUtils.saveErrorMessage(e);
                 }
 
                 @Override
@@ -629,9 +632,10 @@ public class MediaProcessor {
                                     }
                                 }
                             });
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                             showRetryDialog("网络异常，请检查网络后重试。");
+                            AVOSCloudUtils.saveErrorMessage(e);
                         }
                     } else {
                         showRetryDialog("网络异常，请检查网络后重试。");
@@ -650,6 +654,7 @@ public class MediaProcessor {
                                     showTimeOutDialog();
                                 }
                             });
+                            AVOSCloudUtils.saveErrorMessage(e);
                         }
 
                         @Override
@@ -730,9 +735,10 @@ public class MediaProcessor {
                                         }
                                     });
 
-                                } catch (JSONException e) {
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                     showRetryDialog("网络异常，请检查网络后重试。");
+                                    AVOSCloudUtils.saveErrorMessage(e);
                                 }
 
                             } else {
@@ -1254,7 +1260,7 @@ public class MediaProcessor {
                         showErrorDialogLi(bean.getMsg(), dialogcreate);
                     }
                 });
-
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override
@@ -1285,6 +1291,7 @@ public class MediaProcessor {
 
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                AVOSCloudUtils.saveErrorMessage(e);
                             }
 
                         }
@@ -1309,6 +1316,7 @@ public class MediaProcessor {
                         showErrorDialog(bean.getMsg());
                     }
                 });
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override
@@ -1339,6 +1347,7 @@ public class MediaProcessor {
 
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                AVOSCloudUtils.saveErrorMessage(e);
                             }
 
                         }

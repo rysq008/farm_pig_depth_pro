@@ -23,6 +23,7 @@ import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.bean.QueryVideoFlagDataBean;
 import com.xiangchuang.risks.model.bean.StartBean;
 import com.xiangchuang.risks.update.UpdateReceiver;
+import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuangtec.luolu.animalcounter.BuildConfig;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
@@ -36,7 +37,6 @@ import com.xiangchuangtec.luolu.animalcounter.view.ShowPollingActivity_new;
 import org.json.JSONObject;
 import org.tensorflow.demo.DetectorActivity;
 import org.tensorflow.demo.Global;
-import org.tensorflow.demo.SmallVideoActivity;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -44,7 +44,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import innovation.entry.UpdateBean;
 import innovation.media.Model;
@@ -177,6 +176,7 @@ public class SelectFunctionActivity_new extends BaseActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 mProgressDialog.dismiss();
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override
@@ -250,6 +250,7 @@ public class SelectFunctionActivity_new extends BaseActivity {
             public void onFailure(Call call, IOException e) {
                 Log.i(TAG, e.toString());
                 mProgressDialog.dismiss();
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override
@@ -383,6 +384,7 @@ public class SelectFunctionActivity_new extends BaseActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i(TAG, e.toString());
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override
@@ -482,6 +484,7 @@ public class SelectFunctionActivity_new extends BaseActivity {
             public void onFailure(Call call, IOException e) {
                 mProgressDialog.dismiss();
                 Log.i("ShowPollingActivity_new", e.toString());
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override
@@ -525,6 +528,7 @@ public class SelectFunctionActivity_new extends BaseActivity {
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
+                        AVOSCloudUtils.saveErrorMessage(e);
                     }
 
                 }
