@@ -36,6 +36,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import innovation.upload.UploadHelper;
+import innovation.upload.UploadUtils;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -175,7 +177,7 @@ public class USBManageAdapter extends BaseAdapter {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i(TAG, e.toString());
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,USBManageAdapter.class.getSimpleName());
             }
 
             @Override
@@ -200,7 +202,7 @@ public class USBManageAdapter extends BaseAdapter {
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
-                            AVOSCloudUtils.saveErrorMessage(e);
+                            AVOSCloudUtils.saveErrorMessage(e,USBManageAdapter.class.getSimpleName());
                         }
                     }
                 });
@@ -221,7 +223,7 @@ public class USBManageAdapter extends BaseAdapter {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i(TAG, e.toString());
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,USBManageAdapter.class.getSimpleName());
             }
 
             @Override
@@ -385,7 +387,7 @@ public class USBManageAdapter extends BaseAdapter {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i(TAG, e.toString());
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,USBManageAdapter.class.getSimpleName());
             }
 
             @Override
@@ -413,7 +415,7 @@ public class USBManageAdapter extends BaseAdapter {
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
-                            AVOSCloudUtils.saveErrorMessage(e);
+                            AVOSCloudUtils.saveErrorMessage(e,USBManageAdapter.class.getSimpleName());
                         }
                     }
                 });

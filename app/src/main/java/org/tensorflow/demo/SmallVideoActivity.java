@@ -26,6 +26,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.xiangchuang.risks.model.adapter.OutHurdleAdapter;
 import com.xiangchuang.risks.model.bean.CommitBean;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.NavBarUtils;
@@ -489,7 +490,7 @@ public class SmallVideoActivity extends AppCompatActivity implements SurfaceHold
                             showTimeOutDialog();
                         }
                     });
-                    AVOSCloudUtils.saveErrorMessage(e);
+                    AVOSCloudUtils.saveErrorMessage(e,SmallVideoActivity.class.getSimpleName());
                 }
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
@@ -527,7 +528,7 @@ public class SmallVideoActivity extends AppCompatActivity implements SurfaceHold
                         } catch (Exception e) {
                             e.printStackTrace();
                             Log.e("uploadZipVideo", "uploadZipVideo1: " + e.toString());
-                            AVOSCloudUtils.saveErrorMessage(e);
+                            AVOSCloudUtils.saveErrorMessage(e,SmallVideoActivity.class.getSimpleName());
                         }
 
                     }

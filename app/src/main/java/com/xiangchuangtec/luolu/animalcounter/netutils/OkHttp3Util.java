@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.model.Commit;
+import com.xiangchuangtec.luolu.animalcounter.view.ShowPollingActivity_new;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -314,7 +315,7 @@ public class OkHttp3Util {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.e("upload", e.getLocalizedMessage());
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,OkHttp3Util.class.getSimpleName());
             }
 
             @Override
@@ -402,7 +403,7 @@ public class OkHttp3Util {
             @Override
             public void onFailure(Call call, IOException e) {
                 //com.orhanobut.logger.Logger.e(e.getLocalizedMessage());
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,OkHttp3Util.class.getSimpleName());
             }
 
             @Override
@@ -441,7 +442,7 @@ public class OkHttp3Util {
 
                 } catch (IOException e) {
                     e.printStackTrace();
-                    AVOSCloudUtils.saveErrorMessage(e);
+                    AVOSCloudUtils.saveErrorMessage(e,OkHttp3Util.class.getSimpleName());
                 } finally {
                     if (is != null) {
                         is.close();

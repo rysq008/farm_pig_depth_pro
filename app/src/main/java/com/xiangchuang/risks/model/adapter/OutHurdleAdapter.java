@@ -135,7 +135,7 @@ public class OutHurdleAdapter extends BaseAdapter {
                 activity.mProgressDialog.dismiss();
                 dialogcreate.dismiss();
                 Log.i("outAdapter", e.toString());
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,OutHurdleAdapter.class.getSimpleName());
             }
 
             @Override

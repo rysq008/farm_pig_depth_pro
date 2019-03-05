@@ -110,7 +110,7 @@ public class PigHouseInformationActivity extends BaseActivity {
             public void onFailure(Call call, IOException e) {
                 mProgressDialog.dismiss();
                 Log.i("ShowPollingActivity", e.toString());
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,PigHouseInformationActivity.class.getSimpleName());
             }
 
             @Override
@@ -177,7 +177,7 @@ public class PigHouseInformationActivity extends BaseActivity {
             public void onFailure(Call call, IOException e) {
                 mProgressDialog.dismiss();
                 Log.i(TAG, e.toString());
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,PigHouseInformationActivity.class.getSimpleName());
             }
 
             @Override
@@ -224,7 +224,7 @@ public class PigHouseInformationActivity extends BaseActivity {
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    AVOSCloudUtils.saveErrorMessage(e);
+                    AVOSCloudUtils.saveErrorMessage(e,PigHouseInformationActivity.class.getSimpleName());
                 }
             }
         });
@@ -245,7 +245,7 @@ public class PigHouseInformationActivity extends BaseActivity {
             public void onFailure(Call call, IOException e) {
                 mProgressDialog.dismiss();
                 Log.i(TAG, e.toString());
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,PigHouseInformationActivity.class.getSimpleName());
             }
 
             @Override

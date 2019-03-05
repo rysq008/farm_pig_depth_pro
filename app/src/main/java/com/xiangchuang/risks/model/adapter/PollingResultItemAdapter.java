@@ -14,6 +14,7 @@ import com.xiangchuang.risks.model.myinterface.MyInterface;
 import com.xiangchuang.risks.model.bean.PollingListBean;
 import com.xiangchuang.risks.model.bean.UpdateBean;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
+import com.xiangchuang.risks.view.SelectFunctionActivity_new;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
@@ -144,7 +145,7 @@ public class PollingResultItemAdapter extends BaseAdapter {
                 activity.mProgressDialog.dismiss();
                 dialogcreate.dismiss();
                 Log.i("outAdapter", e.toString());
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,PollingResultItemAdapter.class.getSimpleName());
             }
 
             @Override

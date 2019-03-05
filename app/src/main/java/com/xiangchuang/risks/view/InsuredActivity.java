@@ -141,7 +141,7 @@ public class InsuredActivity extends BaseActivity {
         OkHttp3Util.doPost(Constants.PIGTYPE, null, null, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,InsuredActivity.class.getSimpleName());
                 mProgressDialog.dismiss();
                 Log.i("InsuredActivity", e.toString());
             }
@@ -276,7 +276,7 @@ public class InsuredActivity extends BaseActivity {
         OkHttp3Util.doPost(Constants.INSURED, mapbody, null, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,InsuredActivity.class.getSimpleName());
                 mProgressDialog.dismiss();
                 Log.i("InsuredActivity", e.toString());
 
@@ -322,7 +322,7 @@ public class InsuredActivity extends BaseActivity {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    AVOSCloudUtils.saveErrorMessage(e);
+                    AVOSCloudUtils.saveErrorMessage(e,InsuredActivity.class.getSimpleName());
                 }
 
             }
@@ -336,7 +336,7 @@ public class InsuredActivity extends BaseActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i("InsuredActivity", e.toString());
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,InsuredActivity.class.getSimpleName());
             }
 
             @Override
