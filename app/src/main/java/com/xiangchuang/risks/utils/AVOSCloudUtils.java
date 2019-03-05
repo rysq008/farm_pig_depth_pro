@@ -9,6 +9,7 @@ import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
 import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
 
+import java.io.BufferedWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -20,7 +21,7 @@ import java.io.Writer;
  */
 public class AVOSCloudUtils {
 
-    public static void saveErrorMessage(Exception e) {
+    public static void saveErrorMessage(Exception e, String className) {
 //         测试 SDK 是否正常工作的代码
         AVObject avObject = new AVObject("Android_phone");
 //        avObject.put("Cookie", SharedPreUtil.getSessionId());
@@ -36,6 +37,7 @@ public class AVOSCloudUtils {
         avObject.put("systemversion", SystemUtil.getSystemVersion());
         avObject.put("sdkVersion", SystemUtil.getSDKVersion());
         avObject.put("versionName", SystemUtil.getLocalVersionName());
+        avObject.put("errorPosition", getPosition(className));
 //        avObject.put("registrationid", JPushInterface.getRegistrationID(App.getInstance()));
         avObject.put("plam", System.getProperty("os.name"));
 
@@ -44,12 +46,6 @@ public class AVOSCloudUtils {
         Writer writer = new StringWriter();
         PrintWriter pw = new PrintWriter(writer);
         e.printStackTrace(pw);
-        Throwable cause = e.getCause();
-        // 循环取出Cause
-        while (cause != null) {
-            cause.printStackTrace(pw);
-            cause = e.getCause();
-        }
         pw.close();
         String result = writer.toString();
         sb.append(result);
@@ -64,5 +60,45 @@ public class AVOSCloudUtils {
             }
         });
 
+    }
+
+    /**
+     * 定位错误位置
+     *
+     * @param tag
+     * @return
+     */
+    private static String getPosition(String tag) {
+        StringBuilder sb = new StringBuilder();
+        StackTraceElement element = getTargetStack(tag);
+
+        if (null == element) {
+            return "";
+        }
+
+        sb.append("(")
+                .append(element.getFileName())
+                .append(":")
+                .append(element.getLineNumber())
+                .append(")");
+        return sb.toString();
+    }
+
+    /**
+     * 获取最后调用我们log的StackTraceElement
+     *
+     * @param tag 目标类的SimpleName
+     * @return
+     */
+
+    private static StackTraceElement getTargetStack(String tag) {
+
+        for (StackTraceElement element : Thread.currentThread().getStackTrace()) {
+            if (element.getClassName().contains(tag)) {
+                //返回调用位置的 element
+                return element;
+            }
+        }
+        return null;
     }
 }

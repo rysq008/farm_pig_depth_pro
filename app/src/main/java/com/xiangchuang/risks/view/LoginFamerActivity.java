@@ -236,7 +236,7 @@ public class LoginFamerActivity extends BaseActivity {
                         Toast.makeText(LoginFamerActivity.this, "登录失败，请检查网络后重试。", Toast.LENGTH_SHORT).show();
                     }
                 });
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,LoginFamerActivity.class.getSimpleName());
             }
 
             @Override
@@ -317,7 +317,7 @@ public class LoginFamerActivity extends BaseActivity {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    AVOSCloudUtils.saveErrorMessage(e);
+                    AVOSCloudUtils.saveErrorMessage(e,LoginFamerActivity.class.getSimpleName());
                 }
 
 

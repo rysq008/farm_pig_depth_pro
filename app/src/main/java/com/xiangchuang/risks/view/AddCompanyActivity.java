@@ -217,7 +217,7 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i("AddCompanyActivity", e.toString());
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,AddCompanyActivity.class.getSimpleName());
             }
 
             @Override
@@ -247,7 +247,7 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
 
                                     }
                                 } catch (Exception e) {
-                                    AVOSCloudUtils.saveErrorMessage(e);
+                                    AVOSCloudUtils.saveErrorMessage(e,AddCompanyActivity.class.getSimpleName());
                                     e.printStackTrace();
                                 }
                                 if (!bean.getData().getCardFront().isEmpty()) {
@@ -468,7 +468,7 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
         OkHttp3Util.doPost(Constants.adduser, mapbody, map, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,AddCompanyActivity.class.getSimpleName());
                 mProgressDialog.dismiss();
                 runOnUiThread(new Runnable() {
                     @Override
@@ -500,7 +500,7 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    AVOSCloudUtils.saveErrorMessage(e);
+                    AVOSCloudUtils.saveErrorMessage(e,AddCompanyActivity.class.getSimpleName());
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -650,7 +650,7 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
         OkHttp3Util.uploadPreFile(Constants.upload, fileURLPath, "a.jpg", null, map, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,AddCompanyActivity.class.getSimpleName());
                 Log.e("uploadImage:", e.toString());
                 mProgressDialog.dismiss();
                 runOnUiThread(new Runnable() {
@@ -712,7 +712,7 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
                                     });
                                 }
                             } catch (Exception e) {
-                                AVOSCloudUtils.saveErrorMessage(e);
+                                AVOSCloudUtils.saveErrorMessage(e,AddCompanyActivity.class.getSimpleName());
                                 e.printStackTrace();
                             }
                         }

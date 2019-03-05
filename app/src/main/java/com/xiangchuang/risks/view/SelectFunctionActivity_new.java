@@ -176,7 +176,7 @@ public class SelectFunctionActivity_new extends BaseActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 mProgressDialog.dismiss();
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,SelectFunctionActivity_new.class.getSimpleName());
             }
 
             @Override
@@ -250,7 +250,7 @@ public class SelectFunctionActivity_new extends BaseActivity {
             public void onFailure(Call call, IOException e) {
                 Log.i(TAG, e.toString());
                 mProgressDialog.dismiss();
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,SelectFunctionActivity_new.class.getSimpleName());
             }
 
             @Override
@@ -384,7 +384,7 @@ public class SelectFunctionActivity_new extends BaseActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i(TAG, e.toString());
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,SelectFunctionActivity_new.class.getSimpleName());
             }
 
             @Override
@@ -484,7 +484,7 @@ public class SelectFunctionActivity_new extends BaseActivity {
             public void onFailure(Call call, IOException e) {
                 mProgressDialog.dismiss();
                 Log.i("ShowPollingActivity_new", e.toString());
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,SelectFunctionActivity_new.class.getSimpleName());
             }
 
             @Override
@@ -528,7 +528,7 @@ public class SelectFunctionActivity_new extends BaseActivity {
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        AVOSCloudUtils.saveErrorMessage(e);
+                        AVOSCloudUtils.saveErrorMessage(e,SelectFunctionActivity_new.class.getSimpleName());
                     }
 
                 }

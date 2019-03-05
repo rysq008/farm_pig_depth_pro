@@ -141,7 +141,7 @@ public class InsuredActivity extends BaseActivity {
         OkHttp3Util.doPost(Constants.PIGTYPE, null, null, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,InsuredActivity.class.getSimpleName());
                 mProgressDialog.dismiss();
                 Log.i("InsuredActivity", e.toString());
             }
@@ -227,7 +227,7 @@ public class InsuredActivity extends BaseActivity {
 
             } else {
                 int a = Integer.valueOf(ratio);
-                if (a > 3) {
+                if (a >= 3) {
                     Toast.makeText(this, "请输入1~2.8之间的投保系数", Toast.LENGTH_SHORT).show();
                     coefficient.setFocusable(true);
                     coefficient.setFocusableInTouchMode(true);
@@ -276,7 +276,7 @@ public class InsuredActivity extends BaseActivity {
         OkHttp3Util.doPost(Constants.INSURED, mapbody, null, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,InsuredActivity.class.getSimpleName());
                 mProgressDialog.dismiss();
                 Log.i("InsuredActivity", e.toString());
 
@@ -322,7 +322,7 @@ public class InsuredActivity extends BaseActivity {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    AVOSCloudUtils.saveErrorMessage(e);
+                    AVOSCloudUtils.saveErrorMessage(e,InsuredActivity.class.getSimpleName());
                 }
 
             }
@@ -336,7 +336,7 @@ public class InsuredActivity extends BaseActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i("InsuredActivity", e.toString());
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,InsuredActivity.class.getSimpleName());
             }
 
             @Override

@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
+import com.xiangchuang.risks.view.SettingActivity;
 
 import org.json.JSONObject;
 import java.io.File;
@@ -71,7 +72,7 @@ public class UploadHelper {
             uploadResp = (UploadResp) ResponseProcessor.processResp(response, Utils.UPLOAD_URL);
         } catch (Exception e) {
             e.printStackTrace();
-            AVOSCloudUtils.saveErrorMessage(e);
+            AVOSCloudUtils.saveErrorMessage(e,UploadHelper.class.getSimpleName());
         }
         return uploadResp;
     }

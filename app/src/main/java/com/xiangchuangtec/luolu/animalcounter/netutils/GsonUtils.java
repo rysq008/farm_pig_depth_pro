@@ -7,6 +7,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
+import com.xiangchuang.risks.view.CompanyActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ public class GsonUtils {
             t = gson.fromJson(jsonString, cls);
         } catch (Exception e) {
             // TODO: handle exception
-            AVOSCloudUtils.saveErrorMessage(e);
+            AVOSCloudUtils.saveErrorMessage(e,GsonUtils.class.getSimpleName());
             e.printStackTrace();
             Log.d("GsonUtils", e.getMessage());
         }

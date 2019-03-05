@@ -13,6 +13,7 @@ import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.bean.UpdateBean;
 import com.xiangchuang.risks.model.bean.ZhuSheBean;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
+import com.xiangchuang.risks.view.SelectFunctionActivity_new;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
@@ -123,7 +124,7 @@ public class ZhuSheXinXI_item_Adapter extends BaseAdapter {
             public void onFailure(Call call, IOException e) {
                 activity.mProgressDialog.dismiss();
                 Log.i("--", e.toString());
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,ZhuSheXinXI_item_Adapter.class.getSimpleName());
             }
 
             @Override
@@ -176,7 +177,7 @@ public class ZhuSheXinXI_item_Adapter extends BaseAdapter {
             public void onFailure(Call call, IOException e) {
                 activity.mProgressDialog.dismiss();
                 Log.i("--", e.toString());
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,ZhuSheXinXI_item_Adapter.class.getSimpleName());
             }
 
             @Override

@@ -20,6 +20,7 @@ import com.xiangchuang.risks.model.bean.ZhuJuanBean;
 import com.xiangchuang.risks.model.myinterface.MyInterface;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.view.JuanSettingActivity;
+import com.xiangchuang.risks.view.LoginFamerActivity;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
@@ -130,7 +131,7 @@ public class JuanSetting_item_Adapter extends BaseAdapter {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i("BindingCamera", e.toString());
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,JuanSetting_item_Adapter.class.getSimpleName());
             }
 
             @Override
@@ -152,7 +153,7 @@ public class JuanSetting_item_Adapter extends BaseAdapter {
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
-                            AVOSCloudUtils.saveErrorMessage(e);
+                            AVOSCloudUtils.saveErrorMessage(e,JuanSetting_item_Adapter.class.getSimpleName());
                         }
                     }
                 });

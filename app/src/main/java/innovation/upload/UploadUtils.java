@@ -7,6 +7,7 @@ import com.mainaer.wjoklib.okhttp.upload.UploadManager;
 import com.mainaer.wjoklib.okhttp.upload.UploadTask;
 import com.mainaer.wjoklib.okhttp.upload.UploadTaskListener;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
+import com.xiangchuang.risks.view.HogDetailActivity_new;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
 import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
@@ -170,7 +171,7 @@ public class UploadUtils {
                         UploadManager.getInstance().addUploadTask(task);
                     } catch (Exception e) {
                         e.printStackTrace();
-                        AVOSCloudUtils.saveErrorMessage(e);
+                        AVOSCloudUtils.saveErrorMessage(e,UploadUtils.class.getSimpleName());
                     }
                 }
             });

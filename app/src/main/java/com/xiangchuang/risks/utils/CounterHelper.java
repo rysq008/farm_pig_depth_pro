@@ -14,6 +14,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.xiangchuang.risks.model.bean.RecognitionResult;
+import com.xiangchuang.risks.view.OutHurdleActivity;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
 import com.xiangchuangtec.luolu.animalcounter.Utils;
@@ -129,7 +130,7 @@ public final class CounterHelper {
                     public void onFailure(Call call, IOException e) {
                         Log.e("uploadRecognitionResult", "IOException: " + e.toString());
                         listener.onCompleted(false, "");
-                        AVOSCloudUtils.saveErrorMessage(e);
+                        AVOSCloudUtils.saveErrorMessage(e,CounterHelper.class.getSimpleName());
                     }
 
                     @Override
@@ -158,7 +159,7 @@ public final class CounterHelper {
                     @Override
                     public void onFailure(Call call, IOException e) {
                         listener.onCompleted(-1, null);
-                        AVOSCloudUtils.saveErrorMessage(e);
+                        AVOSCloudUtils.saveErrorMessage(e,CounterHelper.class.getSimpleName());
                     }
 
                     @Override
@@ -182,7 +183,7 @@ public final class CounterHelper {
                                     resultBitmap = drawNewBitmap(bitmap, array, String.valueOf(count));
                                 } catch (Exception e) {
                                     e.printStackTrace();
-                                    AVOSCloudUtils.saveErrorMessage(e);
+                                    AVOSCloudUtils.saveErrorMessage(e,CounterHelper.class.getSimpleName());
                                 }
                             }
                         } finally {
@@ -214,7 +215,7 @@ public final class CounterHelper {
                     @Override
                     public void onFailure(Call call, IOException e) {
                         listener.onCompleted(-1, 0);
-                        AVOSCloudUtils.saveErrorMessage(e);
+                        AVOSCloudUtils.saveErrorMessage(e,CounterHelper.class.getSimpleName());
                     }
 
                     @Override
@@ -234,7 +235,7 @@ public final class CounterHelper {
 
                                 } catch (Exception e) {
                                     e.printStackTrace();
-                                    AVOSCloudUtils.saveErrorMessage(e);
+                                    AVOSCloudUtils.saveErrorMessage(e,CounterHelper.class.getSimpleName());
                                 }
                             }
                         } finally {

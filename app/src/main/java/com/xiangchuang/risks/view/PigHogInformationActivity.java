@@ -105,7 +105,7 @@ public class PigHogInformationActivity extends BaseActivity {
             public void onFailure(Call call, IOException e) {
                 mProgressDialog.dismiss();
                 Log.i(TAG, e.toString());
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,PigHogInformationActivity.class.getSimpleName());
             }
 
             @Override
@@ -156,7 +156,7 @@ public class PigHogInformationActivity extends BaseActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i(TAG, e.toString());
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,PigHogInformationActivity.class.getSimpleName());
             }
 
             @Override
@@ -213,7 +213,7 @@ public class PigHogInformationActivity extends BaseActivity {
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    AVOSCloudUtils.saveErrorMessage(e);
+                    AVOSCloudUtils.saveErrorMessage(e,PigHogInformationActivity.class.getSimpleName());
                 }
             }
         });
@@ -276,7 +276,7 @@ public class PigHogInformationActivity extends BaseActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i(TAG, e.toString());
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,PigHogInformationActivity.class.getSimpleName());
             }
 
             @Override
@@ -318,7 +318,7 @@ public class PigHogInformationActivity extends BaseActivity {
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    AVOSCloudUtils.saveErrorMessage(e);
+                    AVOSCloudUtils.saveErrorMessage(e,PigHogInformationActivity.class.getSimpleName());
                 }
 
 
@@ -374,7 +374,7 @@ public class PigHogInformationActivity extends BaseActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i(TAG, e.toString());
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,PigHogInformationActivity.class.getSimpleName());
             }
 
             @Override
@@ -422,7 +422,7 @@ public class PigHogInformationActivity extends BaseActivity {
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    AVOSCloudUtils.saveErrorMessage(e);
+                    AVOSCloudUtils.saveErrorMessage(e,PigHogInformationActivity.class.getSimpleName());
                 }
             }
         });

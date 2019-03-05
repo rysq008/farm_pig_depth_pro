@@ -59,23 +59,10 @@
         android:background="@drawable/bg_transparent">
 
 
-        <innovation.view.SendView
-            android:id="@+id/view_send"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
         <RelativeLayout
             android:id="@+id/record_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
-            <innovation.view.VideoProgressBar
-                android:id="@+id/progress_bar"
-                android:layout_width="85dp"
-                android:layout_height="85dp"
-                android:visibility="gone"
-                android:layout_centerInParent="true" />
 
             <TextView
                 android:id="@+id/tv_notice"
@@ -129,195 +116,20 @@
                 android:textSize="16sp"
                 android:text="录制"/>
 
-            <RelativeLayout
-                android:id="@+id/record_switch"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="50dp">
-
-                <android.support.v7.widget.AppCompatTextView
-                    android:id="@+id/record_switch_txt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="@string/toubao"
-                    android:visibility="gone"
-                    android:textColor="#ffffff"
-                    android:textSize="14sp" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/record_verify"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="50dp">
-
-                <android.support.v7.widget.AppCompatTextView
-                    android:id="@+id/record_verify_txt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="@string/lipei"
-                    android:textColor="#ffffff"
-                    android:textSize="14sp" />
-
-            </RelativeLayout>
+            <TextView
+                android:id="@+id/record_pause"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:layout_toEndOf="@+id/record_control"
+                android:layout_marginStart="45dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/video_btn_bg"
+                android:gravity="center"
+                android:visibility="gone"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                android:text="暂停"/>
         </RelativeLayout>
-
-
     </RelativeLayout>
-
-    <TextView
-        android:id="@+id/textAngel_1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignTop="@+id/textAngel_5"
-        android:layout_marginStart="19dp"
-        android:background="@android:color/transparent"
-        android:text=""
-        android:textColor="#42dcf4"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/textAngel_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/textAngel_3"
-        android:layout_alignStart="@+id/textAngel_1"
-        android:background="@android:color/transparent"
-        android:text=""
-        android:textColor="#42dcf4"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/textAngel_3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/textAngel_1"
-        android:layout_alignTop="@+id/textAngel_9"
-        android:background="@android:color/transparent"
-        android:text=""
-        android:textColor="#42dcf4"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/textAngel_6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/textAngel_1"
-        android:layout_below="@+id/textAngel_3"
-        android:background="@android:color/transparent"
-        android:text=""
-        android:textColor="#42dcf4"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/textAngel_7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/textAngel_1"
-        android:layout_below="@+id/textAngel_6"
-        android:background="@android:color/transparent"
-        android:text=""
-        android:textColor="#42dcf4"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/textAngel_8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/textAngel_1"
-        android:layout_below="@+id/textAngel_7"
-        android:background="@android:color/transparent"
-        android:text=""
-        android:textColor="#42dcf4"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/textAngel_4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginEnd="140dp"
-        android:background="@android:color/transparent"
-        android:text=""
-        android:textColor="#42dcf4"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/textAngel_5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/textAngel_4"
-        android:layout_marginTop="54dp"
-        android:background="@android:color/transparent"
-        android:text=""
-        android:textColor="#42dcf4"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/textAngel_9"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/textAngel_4"
-        android:layout_marginTop="110dp"
-        android:background="@android:color/transparent"
-        android:text=""
-        android:textColor="#42dcf4"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/textAngel_10"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/textAngel_4"
-        android:layout_centerVertical="true"
-        android:background="@android:color/transparent"
-        android:text=""
-        android:textColor="#42dcf4"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/textAngel_0"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/textAngel_1"
-        android:layout_below="@+id/textAngel_4"
-        android:background="@android:color/transparent"
-        android:text=""
-        android:textColor="#42dcf4"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/textExist"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/textAngel_1"
-        android:layout_centerHorizontal="true"
-        android:background="@android:color/transparent"
-        android:text=""
-        android:textColor="#42dcf4"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/textSensorExposureTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/textAngel_1"
-        android:layout_marginBottom="84dp"
-        android:background="@android:color/transparent"
-        android:text=""
-        android:textColor="#f4424e"
-        android:textSize="18sp" />
-
 </RelativeLayout>

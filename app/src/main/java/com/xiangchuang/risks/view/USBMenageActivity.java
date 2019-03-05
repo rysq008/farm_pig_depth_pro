@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.adapter.USBManageAdapter;
+import com.xiangchuang.risks.model.adapter.ZhuJuanXinXI_item_Adapter;
 import com.xiangchuang.risks.model.adapter.ZhuSheXinXI_item_Adapter;
 import com.xiangchuang.risks.model.bean.InSureCompanyBean;
 import com.xiangchuang.risks.model.bean.SheXTBean;
@@ -91,7 +92,7 @@ public class USBMenageActivity extends BaseActivity {
         OkHttp3Util.doPost(Constants.ZHUSHESHOW, mapbody, map, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,USBMenageActivity.class.getSimpleName());
                 mProgressDialog.dismiss();
                 Log.i(TAG, e.toString());
             }
@@ -172,7 +173,7 @@ public class USBMenageActivity extends BaseActivity {
         OkHttp3Util.doPost(Constants.SHESHOW, null, map, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,USBMenageActivity.class.getSimpleName());
                 Log.i(TAG, e.toString());
             }
 
@@ -216,7 +217,7 @@ public class USBMenageActivity extends BaseActivity {
                                 });
                             }
                         } catch (Exception e) {
-                            AVOSCloudUtils.saveErrorMessage(e);
+                            AVOSCloudUtils.saveErrorMessage(e,USBMenageActivity.class.getSimpleName());
                             e.printStackTrace();
                         }
 
@@ -261,7 +262,7 @@ public class USBMenageActivity extends BaseActivity {
         OkHttp3Util.doPost(Constants.SXADD, mapbody, map, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,USBMenageActivity.class.getSimpleName());
                 mProgressDialog.dismiss();
                 Log.i(TAG, e.toString());
             }
@@ -296,7 +297,7 @@ public class USBMenageActivity extends BaseActivity {
                     }
 
                 } catch (Exception e) {
-                    AVOSCloudUtils.saveErrorMessage(e);
+                    AVOSCloudUtils.saveErrorMessage(e,USBMenageActivity.class.getSimpleName());
                     e.printStackTrace();
                 }
             }
