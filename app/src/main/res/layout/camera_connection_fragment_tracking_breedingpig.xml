@@ -40,6 +40,16 @@
             android:visibility="gone"/>
     </RelativeLayout>
 
+    <ImageView
+        android:id="@+id/iv_indicate"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="150dp"
+        android:background="@drawable/indicate"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"/>
+
 
     <RelativeLayout
         android:id="@+id/tool_layout"

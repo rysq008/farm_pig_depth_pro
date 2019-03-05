@@ -150,6 +150,7 @@ public class Constants {
     public static final String juanname = "juanname";
     public static final String cameraId = "cameraId";
     public static final String startVideoId = "startVideoId";
+    public static final String token = "token";
 
     public static String STARTRECODE = BASENEW + "payment/startVideo";
     public static String JUANEXIT = BASENEW + "ftnJuan/checkJuan";

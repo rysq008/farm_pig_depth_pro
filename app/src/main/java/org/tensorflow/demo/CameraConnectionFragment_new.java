@@ -73,6 +73,7 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -221,6 +222,9 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
     public static AutoFitTextureView textureView;
 
     private RelativeLayout mReCordLayout;
+
+    private ImageView ivIndicate;
+
     /**
      * Button to record video
      */
@@ -516,6 +520,12 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
         view.findViewById(R.id.TV_left).setVisibility(View.GONE);
         view.findViewById(R.id.TV_right).setVisibility(View.GONE);
 
+        ivIndicate = view.findViewById(R.id.iv_indicate);
+
+        TranslateAnimation translate = new TranslateAnimation(100, 0, 0, 0);
+        translate.setDuration(1500);
+        translate.setRepeatCount(-1);
+        ivIndicate.startAnimation(translate);
 
         mRecordSwitch = view.findViewById(R.id.record_switch);
         mRecordSwitchTxt = (TextView) view.findViewById(R.id.record_switch_txt);
@@ -534,7 +544,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
         Intent intent = activity.getIntent();
         mSheId = intent.getStringExtra("sheid");
         mSheName = intent.getStringExtra("shename");
-        ;
+
         mOldAutoCount = intent.getStringExtra("autocount");
         mOldDuration = intent.getStringExtra("duration");
 

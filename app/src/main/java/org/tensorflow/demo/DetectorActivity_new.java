@@ -120,7 +120,7 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
     private int imageCount = 10;// add for test
     private static final int TFLITE_INPUT_SIZE = 300;
     private static final boolean TFLITE_IS_QUANTIZED = true;
-    private static final String PIG_TFLITE_DETECT_MODEL_FILE = "detect.tflite";
+    private static final String PIG_TFLITE_DETECT_MODEL_FILE = "detect_02.tflite";
 //    private static final String PIG_TFLITE_DETECT_MODEL_FILE = "ssd_mobilenet_v2_focal_quantized_coco.tflite";
 
     public static int offsetX;

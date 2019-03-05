@@ -275,6 +275,8 @@ public class LoginFamerActivity extends BaseActivity {
                                 try {
                                     data = jsonObject.getJSONObject("data");
                                     int type = data.getInt("type");
+//                                    int myToken = data.getInt("token");
+//                                    PreferencesUtils.saveKeyValue(Constants.token, myToken + "", MyApplication.getAppContext());
                                     PreferencesUtils.saveKeyValue(Constants.companyfleg, type + "", MyApplication.getAppContext());
                                     PreferencesUtils.saveKeyValue(Constants.username, musername + "", MyApplication.getAppContext());
                                     PreferencesUtils.saveKeyValue(Constants.password, muserpass + "", MyApplication.getAppContext());
@@ -291,6 +293,7 @@ public class LoginFamerActivity extends BaseActivity {
                                         PreferencesUtils.saveKeyValue(Constants.insurecompany, deptName, MyApplication.getAppContext());
                                         PreferencesUtils.saveKeyValue(Constants.deptId, deptId + "", MyApplication.getAppContext());
                                         PreferencesUtils.saveKeyValue(Constants.id, id + "", MyApplication.getAppContext());
+
                                         goToActivity(CompanyActivity.class, null);
                                         finish();
                                     } else {
@@ -311,38 +314,6 @@ public class LoginFamerActivity extends BaseActivity {
                             }
 
                         });
-                       /* final LoginBean bean = GsonUtils.getBean(string, LoginBean.class);
-                        if (null != bean) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    mProgressDialog.dismiss();
-                                    int type = bean.getData().getType();
-                                    PreferencesUtils.saveKeyValue(Constants.companyfleg, type + "", MyApplication.getAppContext());
-                                    //1 保险公司  2 企业
-                                    if (type == 1) {
-                                        PreferencesUtils.saveKeyValue(Constants.companyuser, bean.getData().getAdminUser().getName(), MyApplication.getAppContext());
-                                        PreferencesUtils.saveKeyValue(Constants.insurecompany, bean.getData().getAdminUser().getDeptName(), MyApplication.getAppContext());
-                                        goToActivity(CompanyActivity.class, null);
-                                    } else {
-                                        PreferencesUtils.saveKeyValue(Constants.en_id, bean.getData().getEnUser().getEnId() + "", MyApplication.getAppContext());
-                                        PreferencesUtils.saveKeyValue(Constants.companyname, bean.getData().getEnUser().getEnName() + "", MyApplication.getAppContext());
-                                        PreferencesUtils.saveIntValue(Constants.en_user_id, bean.getData().getEnUser().getEnUserId(), MyApplication.getAppContext());
-                                        goToActivity(SelectFunctionActivity.class, null);
-                                    }
-                                }
-
-                            });
-
-                        } else {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    mProgressDialog.dismiss();
-                                    toastUtils.showLong(LoginFamerActivity.this, bean.getMsg());
-                                }
-                            });
-                        }*/
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
