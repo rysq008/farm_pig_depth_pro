@@ -227,7 +227,7 @@ public class InsuredActivity extends BaseActivity {
 
             } else {
                 int a = Integer.valueOf(ratio);
-                if (a > 3) {
+                if (a >= 3) {
                     Toast.makeText(this, "请输入1~2.8之间的投保系数", Toast.LENGTH_SHORT).show();
                     coefficient.setFocusable(true);
                     coefficient.setFocusableInTouchMode(true);
