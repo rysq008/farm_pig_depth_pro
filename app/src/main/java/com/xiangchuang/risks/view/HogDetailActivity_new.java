@@ -28,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +59,8 @@ public class HogDetailActivity_new extends BaseActivity {
     private String mSheId;
     private String pigType;
 
+    private List<String> paths = new ArrayList<>();
+    private int cIndex = 0;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_hog_detail_new;
@@ -75,6 +78,8 @@ public class HogDetailActivity_new extends BaseActivity {
         mSheId = getIntent().getExtras().getString("sheid");
         pigType = getIntent().getStringExtra("pigtype");
         getHogMessage();
+
+
     }
 
     private void getHogMessage() {
@@ -127,7 +132,11 @@ public class HogDetailActivity_new extends BaseActivity {
                                         if(picpaths != null && picpaths.size() > 0){
                                             vvSow.setVisibility(View.VISIBLE);
                                             gridview_pic.setVisibility(View.GONE);
-                                            playeVideo(picpaths.get(0));
+                                            for (int i = 0; i <  picpaths.size(); i++){
+                                                paths.add(picpaths.get(i));
+                                            }
+                                            cIndex = paths.size()-1;
+                                            playeVideo(paths.get(cIndex));
                                         }else{
                                             handler.postDelayed(runnable,0);
                                             mProgressBar.setVisibility(View.GONE);
@@ -188,7 +197,12 @@ public class HogDetailActivity_new extends BaseActivity {
     class MyPlayerOnCompletionListener implements MediaPlayer.OnCompletionListener {
         @Override
         public void onCompletion(MediaPlayer mp) {
-            Toast.makeText(HogDetailActivity_new.this, "播放完毕", Toast.LENGTH_SHORT).show();
+            cIndex--;
+            if(cIndex >= 0){
+                playeVideo(paths.get(cIndex));
+            }else{
+                Toast.makeText(HogDetailActivity_new.this, "播放完毕", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

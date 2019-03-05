@@ -129,7 +129,7 @@ public final class CounterHelper {
                     public void onFailure(Call call, IOException e) {
                         Log.e("uploadRecognitionResult", "IOException: " + e.toString());
                         listener.onCompleted(false, "");
-                        AVOSCloudUtils.saveErrorMessage(e);
+//                        AVOSCloudUtils.saveErrorMessage(e);
                     }
 
                     @Override
@@ -158,7 +158,7 @@ public final class CounterHelper {
                     @Override
                     public void onFailure(Call call, IOException e) {
                         listener.onCompleted(-1, null);
-                        AVOSCloudUtils.saveErrorMessage(e);
+//                        AVOSCloudUtils.saveErrorMessage(e);
                     }
 
                     @Override
@@ -214,7 +214,7 @@ public final class CounterHelper {
                     @Override
                     public void onFailure(Call call, IOException e) {
                         listener.onCompleted(-1, 0);
-                        AVOSCloudUtils.saveErrorMessage(e);
+//                        AVOSCloudUtils.saveErrorMessage(e);
                     }
 
                     @Override

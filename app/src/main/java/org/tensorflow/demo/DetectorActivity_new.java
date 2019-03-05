@@ -215,11 +215,6 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
     @Override
     public void onImageAvailable(final ImageReader reader) {
 
-        if (System.currentTimeMillis() - endTime < 200) {
-            return;
-        }
-        endTime = System.currentTimeMillis();
-
         Image image = null;
         ++timestamp;
         final long currTimestamp = timestamp;
@@ -269,6 +264,12 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
             Trace.endSection();
             return;
         }
+
+        if (System.currentTimeMillis() - endTime < 200) {
+            Log.e(TAG, "onImageAvailable: 时间=="+ (System.currentTimeMillis() - endTime));
+            return;
+        }
+        endTime = System.currentTimeMillis();
 
         rgbFrameBitmap.setPixels(rgbBytes, 0, previewWidth, 0, 0, previewWidth, previewHeight);
         final Canvas canvas = new Canvas(croppedBitmap);
