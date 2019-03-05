@@ -9,6 +9,7 @@ import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
 import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
 
+import java.io.BufferedWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -45,12 +46,6 @@ public class AVOSCloudUtils {
         Writer writer = new StringWriter();
         PrintWriter pw = new PrintWriter(writer);
         e.printStackTrace(pw);
-        Throwable cause = e.getCause();
-        // 循环取出Cause
-        while (cause != null) {
-            cause.printStackTrace(pw);
-            cause = e.getCause();
-        }
         pw.close();
         String result = writer.toString();
         sb.append(result);
