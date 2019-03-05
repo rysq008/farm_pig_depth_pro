@@ -10,6 +10,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 
+import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.model.Commit;
 
@@ -309,6 +310,7 @@ public class OkHttp3Util {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.e("upload", e.getLocalizedMessage());
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override
@@ -396,6 +398,7 @@ public class OkHttp3Util {
             @Override
             public void onFailure(Call call, IOException e) {
                 //com.orhanobut.logger.Logger.e(e.getLocalizedMessage());
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override
@@ -434,6 +437,7 @@ public class OkHttp3Util {
 
                 } catch (IOException e) {
                     e.printStackTrace();
+                    AVOSCloudUtils.saveErrorMessage(e);
                 } finally {
                     if (is != null) {
                         is.close();

@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.xiangchuang.risks.model.bean.ZhuJuanBean;
 import com.xiangchuang.risks.model.bean.ZhuSheBean;
+import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.LocationManager;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
@@ -143,6 +144,7 @@ public class DormNextInfoDialog extends Dialog implements View.OnClickListener {
             public void onFailure(Call call, IOException e) {
                 //mProgressDialog.dismiss();
                 Log.i("", e.toString());
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override
@@ -200,6 +202,7 @@ public class DormNextInfoDialog extends Dialog implements View.OnClickListener {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i("DormNextInfoDialog", e.toString());
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override
@@ -366,7 +369,7 @@ public class DormNextInfoDialog extends Dialog implements View.OnClickListener {
         OkHttp3Util.uploadPreFile(Constants.XUNJIANTIJIAONEW, rcgImageFile, "aa.jpeg", mapbody, map, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override
@@ -406,6 +409,7 @@ public class DormNextInfoDialog extends Dialog implements View.OnClickListener {
             public void onFailure(Call call, IOException e) {
                 Log.e("editRecoed", e.getLocalizedMessage());
                 editRecoed();
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override

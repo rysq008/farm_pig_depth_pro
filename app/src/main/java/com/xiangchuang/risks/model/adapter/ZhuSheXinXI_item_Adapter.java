@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.bean.UpdateBean;
 import com.xiangchuang.risks.model.bean.ZhuSheBean;
+import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
@@ -122,6 +123,7 @@ public class ZhuSheXinXI_item_Adapter extends BaseAdapter {
             public void onFailure(Call call, IOException e) {
                 activity.mProgressDialog.dismiss();
                 Log.i("--", e.toString());
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override
@@ -174,6 +176,7 @@ public class ZhuSheXinXI_item_Adapter extends BaseAdapter {
             public void onFailure(Call call, IOException e) {
                 activity.mProgressDialog.dismiss();
                 Log.i("--", e.toString());
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override

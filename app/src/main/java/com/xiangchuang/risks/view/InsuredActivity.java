@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.bean.InsureListBean;
 import com.xiangchuang.risks.model.bean.PigTypeBean;
+import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.utils.LocationManager;
 import com.xiangchuangtec.luolu.animalcounter.R;
@@ -140,6 +141,7 @@ public class InsuredActivity extends BaseActivity {
         OkHttp3Util.doPost(Constants.PIGTYPE, null, null, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                AVOSCloudUtils.saveErrorMessage(e);
                 mProgressDialog.dismiss();
                 Log.i("InsuredActivity", e.toString());
             }
@@ -274,6 +276,7 @@ public class InsuredActivity extends BaseActivity {
         OkHttp3Util.doPost(Constants.INSURED, mapbody, null, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                AVOSCloudUtils.saveErrorMessage(e);
                 mProgressDialog.dismiss();
                 Log.i("InsuredActivity", e.toString());
 
@@ -317,8 +320,9 @@ public class InsuredActivity extends BaseActivity {
                             }
                         });
                     }
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
+                    AVOSCloudUtils.saveErrorMessage(e);
                 }
 
             }
@@ -332,6 +336,7 @@ public class InsuredActivity extends BaseActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i("InsuredActivity", e.toString());
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override

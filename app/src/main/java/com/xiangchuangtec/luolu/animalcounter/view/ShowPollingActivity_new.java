@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.bean.SheListBean;
+import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.utils.CounterHelper;
 import com.xiangchuang.risks.utils.PermissionsDelegate;
@@ -92,6 +93,7 @@ public class ShowPollingActivity_new extends BaseActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i("ShowPollingActivity", e.toString());
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override

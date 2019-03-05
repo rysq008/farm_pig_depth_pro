@@ -79,6 +79,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.xiangchuang.risks.model.bean.RecognitionResult;
+import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.CounterHelper;
 import com.xiangchuang.risks.view.LoginFamerActivity;
 import com.xiangchuang.risks.view.SelectFunctionActivity_new;
@@ -1908,6 +1909,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
                     public void onFailure(Call call, IOException e) {
                         Log.e(TAG, "onFailure: " + e.toString());
                         listener.onCompleted(false, "");
+                        AVOSCloudUtils.saveErrorMessage(e);
                     }
 
                     @Override

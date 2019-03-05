@@ -20,6 +20,7 @@ import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.bean.StartBean;
 import com.xiangchuang.risks.model.bean.ZhuJuanBean;
 import com.xiangchuang.risks.model.bean.ZhuSheBean;
+import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
@@ -145,6 +146,7 @@ public class PreparedLiPeiActivity extends BaseActivity {
             public void onFailure(Call call, IOException e) {
                 mProgressDialog.dismiss();
                 Log.i(TAG, e.toString());
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override
@@ -205,6 +207,7 @@ public class PreparedLiPeiActivity extends BaseActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i(TAG, e.toString());
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override
@@ -285,6 +288,7 @@ public class PreparedLiPeiActivity extends BaseActivity {
                         showErrorDialogLiTimeOut();
                     }
                 });
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override
@@ -309,6 +313,7 @@ public class PreparedLiPeiActivity extends BaseActivity {
 
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                AVOSCloudUtils.saveErrorMessage(e);
                             }
 
                         }
@@ -411,6 +416,7 @@ public class PreparedLiPeiActivity extends BaseActivity {
                         showErrorDialogLiTimeOut();
                     }
                 });
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override
@@ -438,6 +444,7 @@ public class PreparedLiPeiActivity extends BaseActivity {
 
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                AVOSCloudUtils.saveErrorMessage(e);
                             }
 
                         }
@@ -465,6 +472,7 @@ public class PreparedLiPeiActivity extends BaseActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i(TAG, e.toString());
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override
