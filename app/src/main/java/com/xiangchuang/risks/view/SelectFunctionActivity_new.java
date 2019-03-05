@@ -4,8 +4,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -20,6 +22,8 @@ import android.widget.Toast;
 import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.bean.QueryVideoFlagDataBean;
 import com.xiangchuang.risks.model.bean.StartBean;
+import com.xiangchuang.risks.update.UpdateReceiver;
+import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuangtec.luolu.animalcounter.BuildConfig;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
@@ -33,7 +37,6 @@ import com.xiangchuangtec.luolu.animalcounter.view.ShowPollingActivity_new;
 import org.json.JSONObject;
 import org.tensorflow.demo.DetectorActivity;
 import org.tensorflow.demo.Global;
-import org.tensorflow.demo.SmallVideoActivity;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -41,9 +44,11 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
+import innovation.entry.UpdateBean;
 import innovation.media.Model;
+import innovation.utils.HttpRespObject;
+import innovation.utils.HttpUtils;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -85,6 +90,12 @@ public class SelectFunctionActivity_new extends BaseActivity {
 
     private PopupWindow pop;
     private TextView loginExit;
+
+    private UpdateReceiver mUpdateReceiver;
+    private IntentFilter mIntentFilter;
+    private GETUPDATETASK mUpdateTask;
+    private UpdateBean insurresp_company;
+    private String errStr_company;
 
     @Override
     protected int getLayoutId() {
@@ -129,6 +140,30 @@ public class SelectFunctionActivity_new extends BaseActivity {
         pop.setOutsideTouchable(true);
         pop.setContentView(popview);
 
+        registerBroadcast();
+
+        if (getIntent().getFlags() != Intent.FLAG_ACTIVITY_SINGLE_TOP) {
+            if (BuildConfig.DEBUG) {
+                Toast.makeText(this, "getFlags==" + getIntent().getFlags(), Toast.LENGTH_SHORT).show();
+            }
+//            mUpdateTask = new GETUPDATETASK(HttpUtils.GET_UPDATE_URL, null);
+//            mUpdateTask.execute((Void) null);
+        }
+
+    }
+
+    private void registerBroadcast() {
+        mUpdateReceiver = new UpdateReceiver(false);
+        mIntentFilter = new IntentFilter(UpdateReceiver.UPDATE_ACTION);
+        this.registerReceiver(mUpdateReceiver, mIntentFilter);
+    }
+
+    private void unRegisterBroadcast() {
+        try {
+            this.unregisterReceiver(mUpdateReceiver);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -141,6 +176,7 @@ public class SelectFunctionActivity_new extends BaseActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 mProgressDialog.dismiss();
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override
@@ -170,7 +206,7 @@ public class SelectFunctionActivity_new extends BaseActivity {
                         String left = (queryVideoFlagData.getData().getLeftNum() == null) ? "8" : queryVideoFlagData.getData().getLeftNum();
                         String middleNum = (queryVideoFlagData.getData().getLeftNum() == null) ? "8" : queryVideoFlagData.getData().getMiddleNum();
                         String rightNum = (queryVideoFlagData.getData().getLeftNum() == null) ? "8" : queryVideoFlagData.getData().getRightNum();
-                        if(BuildConfig.DEBUG){
+                        if (BuildConfig.DEBUG) {
                             Log.e(TAG, "\nleft:\n" + left);
                             Log.e(TAG, "\nmiddleNum:\n" + middleNum);
                             Log.e(TAG, "\nrightNum:\n" + rightNum);
@@ -214,6 +250,7 @@ public class SelectFunctionActivity_new extends BaseActivity {
             public void onFailure(Call call, IOException e) {
                 Log.i(TAG, e.toString());
                 mProgressDialog.dismiss();
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override
@@ -347,6 +384,7 @@ public class SelectFunctionActivity_new extends BaseActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i(TAG, e.toString());
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override
@@ -446,6 +484,7 @@ public class SelectFunctionActivity_new extends BaseActivity {
             public void onFailure(Call call, IOException e) {
                 mProgressDialog.dismiss();
                 Log.i("ShowPollingActivity_new", e.toString());
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override
@@ -489,11 +528,83 @@ public class SelectFunctionActivity_new extends BaseActivity {
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
+                        AVOSCloudUtils.saveErrorMessage(e);
                     }
 
                 }
             }
         });
+    }
+
+
+    public class GETUPDATETASK extends AsyncTask<Void, Void, Boolean> {
+
+        private final String mUrl;
+        private final TreeMap<String, String> mQueryMap;
+
+        GETUPDATETASK(String url, TreeMap map) {
+            mUrl = url;
+            mQueryMap = map;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            try {
+                FormBody.Builder builder = new FormBody.Builder();
+                RequestBody formBody = builder.build();
+
+                String response = HttpUtils.post(mUrl, formBody);
+                if (response == null) {
+                    return false;
+                }
+                Log.d(TAG, mUrl + "\nresponse:\n" + response);
+
+                if (HttpUtils.GET_UPDATE_URL.equalsIgnoreCase(mUrl)) {
+                    insurresp_company = (UpdateBean) HttpUtils.processResp_update(response);
+
+                    Log.e(TAG, "insurresp_company: " + insurresp_company.toString());
+
+                    if (insurresp_company == null) {
+                        errStr_company = "请求错误！";
+                        return false;
+                    }
+                    if (insurresp_company.status != HttpRespObject.STATUS_OK) {
+                        errStr_company = insurresp_company.msg;
+                        return false;
+                    }
+                }
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                errStr_company = "服务器错误！";
+                return false;
+            }
+            //  register the new account here.
+
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            mUpdateTask = null;
+
+            if (success & HttpUtils.GET_UPDATE_URL.equalsIgnoreCase(mUrl)) {
+                Intent intent = new Intent();
+                intent.setAction(UpdateReceiver.UPDATE_ACTION);
+                intent.putExtra("result_json", String.valueOf(insurresp_company.data));
+
+                //发送广播
+                sendBroadcast(intent);
+
+
+            } else if (!success) {
+                Toast.makeText(SelectFunctionActivity_new.this, "网络接口请求异常！", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            mUpdateTask = null;
+        }
     }
 
 
@@ -518,4 +629,9 @@ public class SelectFunctionActivity_new extends BaseActivity {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unRegisterBroadcast();
+    }
 }

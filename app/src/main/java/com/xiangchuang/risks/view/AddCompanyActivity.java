@@ -43,6 +43,7 @@ import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
 import com.xiangchuang.risks.base.BaseBarActivity;
 import com.xiangchuang.risks.model.bean.CompanyInfoBean;
+import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.IDCard;
 import com.xiangchuangtec.luolu.animalcounter.BuildConfig;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
@@ -216,7 +217,7 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i("AddCompanyActivity", e.toString());
-
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override
@@ -245,7 +246,8 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
                                         certificateTypeRadioGroup.check(R.id.id_business_licens);
 
                                     }
-                                } catch (ParseException e) {
+                                } catch (Exception e) {
+                                    AVOSCloudUtils.saveErrorMessage(e);
                                     e.printStackTrace();
                                 }
                                 if (!bean.getData().getCardFront().isEmpty()) {
@@ -466,6 +468,7 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
         OkHttp3Util.doPost(Constants.adduser, mapbody, map, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                AVOSCloudUtils.saveErrorMessage(e);
                 mProgressDialog.dismiss();
                 runOnUiThread(new Runnable() {
                     @Override
@@ -495,8 +498,9 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
                         finish();
                     }
 
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
+                    AVOSCloudUtils.saveErrorMessage(e);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -646,6 +650,7 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
         OkHttp3Util.uploadPreFile(Constants.upload, fileURLPath, "a.jpg", null, map, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                AVOSCloudUtils.saveErrorMessage(e);
                 Log.e("uploadImage:", e.toString());
                 mProgressDialog.dismiss();
                 runOnUiThread(new Runnable() {
@@ -706,7 +711,8 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
                                         }
                                     });
                                 }
-                            } catch (JSONException e) {
+                            } catch (Exception e) {
+                                AVOSCloudUtils.saveErrorMessage(e);
                                 e.printStackTrace();
                             }
                         }

@@ -18,6 +18,7 @@ import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.bean.SheXTBean;
 import com.xiangchuang.risks.model.bean.ZhuSheBean;
 import com.xiangchuang.risks.model.myinterface.MyInterface;
+import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.view.JuanSettingActivity;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
@@ -174,6 +175,7 @@ public class USBManageAdapter extends BaseAdapter {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i(TAG, e.toString());
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override
@@ -196,8 +198,9 @@ public class USBManageAdapter extends BaseAdapter {
                                 sheXTBeans.get(po).setSheId(sheid);
                                 //myInterface.isOut(true);
                             }
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
+                            AVOSCloudUtils.saveErrorMessage(e);
                         }
                     }
                 });
@@ -218,6 +221,7 @@ public class USBManageAdapter extends BaseAdapter {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i(TAG, e.toString());
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override
@@ -381,6 +385,7 @@ public class USBManageAdapter extends BaseAdapter {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i(TAG, e.toString());
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override
@@ -406,8 +411,9 @@ public class USBManageAdapter extends BaseAdapter {
                                     myInterface.isOut(true);
                                 }
                             }
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
+                            AVOSCloudUtils.saveErrorMessage(e);
                         }
                     }
                 });

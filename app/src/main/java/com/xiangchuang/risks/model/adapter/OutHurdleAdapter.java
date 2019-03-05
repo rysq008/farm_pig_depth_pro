@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.bean.UpdateBean;
 import com.xiangchuang.risks.model.bean.ZhuJuanBean;
+import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
@@ -134,6 +135,7 @@ public class OutHurdleAdapter extends BaseAdapter {
                 activity.mProgressDialog.dismiss();
                 dialogcreate.dismiss();
                 Log.i("outAdapter", e.toString());
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override

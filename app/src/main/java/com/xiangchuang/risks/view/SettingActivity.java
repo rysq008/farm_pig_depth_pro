@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.bean.ZhuSheBean;
+import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
@@ -91,6 +92,7 @@ public class SettingActivity extends BaseActivity {
             public void onFailure(Call call, IOException e) {
                 mProgressDialog.dismiss();
                 Log.i("ShowPollingActivity", e.toString());
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override

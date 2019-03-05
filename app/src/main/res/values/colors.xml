@@ -8,6 +8,7 @@
     <color name="colorRect">#d66f1b</color>
     <color name="colorText">#e4515f</color>
     <color name="control_background">#cc4285f4</color>
+    <color name="gray_bg">#f5f5f5</color>
 
     <color name="black">#191919</color>
     <color name="video_bg">#ba1d1d1d</color>

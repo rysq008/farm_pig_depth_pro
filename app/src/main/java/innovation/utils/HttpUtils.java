@@ -86,6 +86,9 @@ public class HttpUtils {
     //注册接口
     public static String GET_REGISTER_URL = baseUrl + "app/register";
 
+    //更新接口
+    public static String GET_UPDATE_URL = baseUrl + "";
+
     public static void resetIp(String baseUrl) {
         HttpUtils.baseUrl = baseUrl;
         Constants.resetBaseIp(baseUrl);

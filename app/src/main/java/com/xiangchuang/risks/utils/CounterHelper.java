@@ -129,6 +129,7 @@ public final class CounterHelper {
                     public void onFailure(Call call, IOException e) {
                         Log.e("uploadRecognitionResult", "IOException: " + e.toString());
                         listener.onCompleted(false, "");
+                        AVOSCloudUtils.saveErrorMessage(e);
                     }
 
                     @Override
@@ -157,6 +158,7 @@ public final class CounterHelper {
                     @Override
                     public void onFailure(Call call, IOException e) {
                         listener.onCompleted(-1, null);
+                        AVOSCloudUtils.saveErrorMessage(e);
                     }
 
                     @Override
@@ -178,8 +180,9 @@ public final class CounterHelper {
 
                                     // 给result.jpeg画框
                                     resultBitmap = drawNewBitmap(bitmap, array, String.valueOf(count));
-                                } catch (JsonParseException e) {
+                                } catch (Exception e) {
                                     e.printStackTrace();
+                                    AVOSCloudUtils.saveErrorMessage(e);
                                 }
                             }
                         } finally {
@@ -211,6 +214,7 @@ public final class CounterHelper {
                     @Override
                     public void onFailure(Call call, IOException e) {
                         listener.onCompleted(-1, 0);
+                        AVOSCloudUtils.saveErrorMessage(e);
                     }
 
                     @Override
@@ -228,8 +232,9 @@ public final class CounterHelper {
                                     // 识别重量结果
                                     weight = object.get("weight").getAsFloat();
 
-                                } catch (JsonParseException e) {
+                                } catch (Exception e) {
                                     e.printStackTrace();
+                                    AVOSCloudUtils.saveErrorMessage(e);
                                 }
                             }
                         } finally {

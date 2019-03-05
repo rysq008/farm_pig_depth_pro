@@ -10,6 +10,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 
+import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.model.Commit;
 
@@ -36,6 +37,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okio.Buffer;
 
 public class OkHttp3Util {
     private static OkHttpClient okHttpClient = null;
@@ -160,6 +162,8 @@ public class OkHttp3Util {
 
         request.addHeader("longitude", PreferencesUtils.getStringValue(Constants.longitude, MyApplication.getAppContext()));
         request.addHeader("latitude", PreferencesUtils.getStringValue(Constants.latitude, MyApplication.getAppContext()));
+//        request.addHeader("token", PreferencesUtils.getIntValue(Constants.token, MyApplication.getAppContext())+"");
+
         Request build = request.build();
         Call call = okHttpClient.newCall(build);
         call.enqueue(callback);
@@ -172,9 +176,9 @@ public class OkHttp3Util {
         FormBody.Builder builder = new FormBody.Builder();
         //遍历集合
         if (null != params && params.size() > 0) {
-            for (String key : params.keySet()) {
-                builder.add(key, params.get(key));
-            }
+                for (String key : params.keySet()) {
+                    builder.add(key, params.get(key));
+                }
         }
         //创建Request
         Request.Builder request = new Request.Builder()
@@ -198,6 +202,7 @@ public class OkHttp3Util {
         request.addHeader("en_id", PreferencesUtils.getStringValue(Constants.en_id, MyApplication.getAppContext()));
         request.addHeader("longitude", PreferencesUtils.getStringValue(Constants.longitude, MyApplication.getAppContext()));
         request.addHeader("latitude", PreferencesUtils.getStringValue(Constants.latitude, MyApplication.getAppContext()));
+//        request.addHeader("token", PreferencesUtils.getIntValue(Constants.token, MyApplication.getAppContext())+"");
 
         Request build = request.build();
         Call call = okHttpClient.newCall(build);
@@ -309,6 +314,7 @@ public class OkHttp3Util {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.e("upload", e.getLocalizedMessage());
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override
@@ -396,6 +402,7 @@ public class OkHttp3Util {
             @Override
             public void onFailure(Call call, IOException e) {
                 //com.orhanobut.logger.Logger.e(e.getLocalizedMessage());
+                AVOSCloudUtils.saveErrorMessage(e);
             }
 
             @Override
@@ -434,6 +441,7 @@ public class OkHttp3Util {
 
                 } catch (IOException e) {
                     e.printStackTrace();
+                    AVOSCloudUtils.saveErrorMessage(e);
                 } finally {
                     if (is != null) {
                         is.close();
@@ -495,7 +503,7 @@ public class OkHttp3Util {
             //获取请求的路径
             String oldUrl = request.url().toString();
 
-            Log.e("---拦截器", request.url() + "---" + request.method() + "--" + request.header("User-agent"));
+            Log.e("---拦截器", request.url() + "---" + request.method() + "--" + request.header("User-agent") + "--" + bodyToString(request));
 
             //要添加的公共参数...map
             Map<String, String> map = new HashMap<>();
@@ -581,6 +589,18 @@ public class OkHttp3Util {
             Response response = chain.proceed(request);
 
             return response;
+        }
+    }
+
+
+    private static String bodyToString(final Request request) {
+        try {
+            final Request copy = request.newBuilder().build();
+            final Buffer buffer = new Buffer();
+            copy.body().writeTo(buffer);
+            return buffer.readUtf8();
+        } catch (final IOException e) {
+            return "something error when show requestBody.";
         }
     }
 
