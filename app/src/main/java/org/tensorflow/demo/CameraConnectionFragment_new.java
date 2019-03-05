@@ -128,6 +128,7 @@ import okhttp3.Response;
 import static android.content.ContentValues.TAG;
 import static com.xiangchuangtec.luolu.animalcounter.MyApplication.lastXmin;
 import static com.xiangchuangtec.luolu.animalcounter.MyApplication.sowCount;
+import static com.xiangchuangtec.luolu.animalcounter.MyApplication.timeVideoStart;
 import static innovation.entry.InnApplication.getStringTouboaExtra;
 import static innovation.entry.InnApplication.getlipeiTempNumber;
 import static org.tensorflow.demo.CameraConnectionFragment.collectNumberHandler;
@@ -200,7 +201,6 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
     private boolean mManualFocusEngaged;
     private Activity activity;
     private CameraCharacteristics characteristics;
-    public static TextView textSensorExposureTime;
     private File mfile;
     private String videoFileName;
 
@@ -231,12 +231,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
      * Button to record video
      */
     private TextView mRecordControl;
-    private View mRecordSwitch;
-    private TextView mRecordSwitchTxt;
-    private View mRecordVerify;
-    private TextView mRecordVerifyTxt;
-
-    private SendView mSendView;
+    private TextView mRecordPause;
 
     //haojie add
     private RelativeLayout mToolLayout;
@@ -511,10 +506,10 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
         mRecordControl = (TextView) view.findViewById(R.id.record_control);
         mRecordControl.setText("开始\n点数");
         mRecordControl.setOnClickListener(this);
-        mSendView = (SendView) view.findViewById(R.id.view_send);
-        mSendView.backLayout.setOnClickListener(mCancelClickListener);
-        mSendView.selectLayout.setOnClickListener(mSaveClickListener);
-        mSendView.stopAnim();
+
+        mRecordPause = (TextView) view.findViewById(R.id.record_pause);
+        mRecordPause.setOnClickListener(this);
+        mRecordPause.setVisibility(View.GONE);
 
         view.findViewById(R.id.tv_notice).setVisibility(View.GONE);
         view.findViewById(R.id.IV_left).setVisibility(View.GONE);
@@ -528,17 +523,6 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
         translate.setDuration(1500);
         translate.setRepeatCount(-1);
         ivIndicate.startAnimation(translate);
-
-        mRecordSwitch = view.findViewById(R.id.record_switch);
-        mRecordSwitchTxt = (TextView) view.findViewById(R.id.record_switch_txt);
-        mRecordSwitchTxt.setTextColor(Color.WHITE);
-        mRecordSwitch.setOnClickListener(this);
-        mRecordVerify = view.findViewById(R.id.record_verify);
-        mRecordVerifyTxt = (TextView) view.findViewById(R.id.record_verify_txt);
-        mRecordVerifyTxt.setVisibility(View.GONE);
-        mRecordVerifyTxt.setTextColor(Color.DKGRAY);
-        mRecordSwitch.setEnabled(true);
-        mRecordVerify.setEnabled(false);
 
         LOGGER.i("luolu Global.model2: " + Model.BUILD.value());
         activity = getActivity();
@@ -596,8 +580,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
             mReCordLayout.setVisibility(View.GONE);
             mIsRecordingVideo = false;
             mRecordControl.setText("开始\n点数");
-
-            mRecordSwitch.setEnabled(true);
+            mRecordPause.setVisibility(View.GONE);
             // 停止视频录制
             Log.i("停止视频录制", "start ");
 
@@ -616,7 +599,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
                                     //e.printStackTrace();
                                     mMediaRecorder = null;
                                     mMediaRecorder = new MediaRecorder();
-                                } catch (RuntimeException e){
+                                } catch (RuntimeException e) {
                                     Log.e(TAG, " mMediaRecorder.stop:Exception " + e);
                                     // TODO 如果当前java状态和jni里面的状态不一致，
                                     //e.printStackTrace();
@@ -736,24 +719,47 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
 //                        Log.e(TAG, "record_control_IOException: " + e.toString());
 //                        e.printStackTrace();
 //                    }
+                }
+                break;
+            case R.id.record_pause:
+                stopRecordingVideo(false);
+                Global.VIDEO_PROCESS = false;
 
-                }
-                break;
-            case R.id.record_switch:
-                if (Global.model != Model.BUILD.value()) {
-                    Global.model = Model.BUILD.value();
-                    mRecordSwitchTxt.setTextColor(Color.WHITE);
-                    mRecordVerifyTxt.setTextColor(Color.DKGRAY);
-                }
-                break;
-            case R.id.record_verify:
-                if (Global.model != Model.VERIFY.value()) {
-                    Global.model = Model.VERIFY.value();
-                    mRecordVerifyTxt.setTextColor(Color.WHITE);
-                    mRecordSwitchTxt.setTextColor(Color.DKGRAY);
-                }
-                break;
+                mRecordPause.setVisibility(View.GONE);
 
+                try {
+                    TimerTask timerTask = new TimerTask() {
+                        @Override
+                        public void run() {
+                            collectNumberHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        mMediaRecorder.stop();
+                                    } catch (IllegalStateException e) {
+                                        Log.e(TAG, " mMediaRecorder.stop:Exception " + e);
+                                        // TODO 如果当前java状态和jni里面的状态不一致，
+                                        //e.printStackTrace();
+                                        mMediaRecorder = null;
+                                        mMediaRecorder = new MediaRecorder();
+                                    } catch (RuntimeException e){
+                                        Log.e(TAG, " mMediaRecorder.stop:Exception " + e);
+                                        // TODO 如果当前java状态和jni里面的状态不一致，
+                                        //e.printStackTrace();
+                                        mMediaRecorder = null;
+                                        mMediaRecorder = new MediaRecorder();
+                                    }
+                                    mMediaRecorder.reset();
+                                }
+                            });
+                        }
+                    };
+                    new Timer().schedule(timerTask, 30);
+                } catch (Exception e) {
+                    Log.e("-----停止视频录制-----------", "---->>>>>>>>>" + e);
+                    e.printStackTrace();
+                }
+                break;
             default:
                 break;
         }
@@ -870,25 +876,6 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
             mManualFocusEngaged = true;
 
             return true;
-
-        }
-    };
-
-    private View.OnClickListener mCancelClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            mReCordLayout.setVisibility(View.VISIBLE);
-            if (!TextUtils.isEmpty(Global.VideoFileName)) {
-                FileUtils.deleteFile(new File(Global.VideoFileName));
-            }
-        }
-    };
-
-    private View.OnClickListener mSaveClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            mReCordLayout.setVisibility(View.VISIBLE);
-            Activity activity = getActivity();
 
         }
     };
@@ -1237,15 +1224,6 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
             // Finally, we start displaying the camera preview.
             previewRequest = previewRequestBuilder.build();
             captureSession.stopRepeating();
-//            // TODO: 2018/10/16 By:LuoLu
-//            Range<Long> range = characteristics.get(CameraCharacteristics.SENSOR_INFO_EXPOSURE_TIME_RANGE);
-//            long max = range.getUpper();
-//            long min = range.getLower();
-//            long ae = (((max - min)) / 100 + min);
-//            previewRequestBuilder.set(CaptureRequest.SENSOR_EXPOSURE_TIME, ae);
-//            textSensorExposureTime.setText("曝光时间：" + ae);
-//            valueAETime = ae;
-
 
             captureSession.setRepeatingRequest(previewRequest, captureCallback, backgroundHandler);
 
@@ -1382,13 +1360,12 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
                                 }
                                 // UI
                                 mRecordControl.setText("完成");
+                                //隐藏暂停按钮
+                                mRecordPause.setVisibility(View.VISIBLE);
 
                                 mIsRecordingVideo = true;
                                 // Start recording
                                 mMediaRecorder.start();
-                                // disable switch action
-                                mRecordSwitch.setEnabled(false);
-                                mRecordVerify.setEnabled(false);
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 Log.e(TAG, "run: Exception" + e.toString());
@@ -1420,14 +1397,15 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
         // UI
         //mMediaRecorder = new MediaRecorder();
         mIsRecordingVideo = false;
-        mRecordSwitch.setEnabled(true);
-
 //        mMediaRecorder.reset();
         Global.VIDEO_PROCESS = false;
         startPreview();
 
         mRecordControl.setText("开始\n点数");
         mRecordControl.setClickable(true);
+        //隐藏暂停按钮
+        mRecordPause.setVisibility(View.GONE);
+
     }
 
     private void closePreviewSession() {
@@ -1499,7 +1477,6 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
                         mIsRecordingVideo = false;
                         mRecordControl.setText("开始\n点数");
 
-                        mRecordSwitch.setEnabled(true);
                         // 停止视频录制
                         Log.i("停止视频录制", "start ");
 //                        try {
@@ -1524,7 +1501,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
                                                 //e.printStackTrace();
                                                 mMediaRecorder = null;
                                                 mMediaRecorder = new MediaRecorder();
-                                            } catch (RuntimeException e){
+                                            } catch (RuntimeException e) {
                                                 Log.e(TAG, " mMediaRecorder.stop:Exception " + e);
                                                 // TODO 如果当前java状态和jni里面的状态不一致，
                                                 //e.printStackTrace();
@@ -1744,7 +1721,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(callback != null){
+                if (callback != null) {
                     Message m = Message.obtain();
                     callback.handleMessage(m);
                 }
@@ -1920,6 +1897,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
                     public void onFailure(Call call, IOException e) {
                         Log.e(TAG, "onFailure: " + e.toString());
                         listener.onCompleted(false, "");
+
                         AVOSCloudUtils.saveErrorMessage(e,CameraConnectionFragment_new.class.getSimpleName());
                     }
 
