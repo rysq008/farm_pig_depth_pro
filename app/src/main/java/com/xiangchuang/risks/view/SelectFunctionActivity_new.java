@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.LocationManager;
-import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
@@ -34,21 +33,16 @@ import com.xiangchuangtec.luolu.animalcounter.view.ShowPollingActivity_new;
 import org.json.JSONObject;
 import org.tensorflow.demo.DetectorActivity;
 import org.tensorflow.demo.Global;
-import org.tensorflow.demo.SmallVideoActivity;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import innovation.media.Model;
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.FormBody;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class SelectFunctionActivity_new extends BaseActivity {

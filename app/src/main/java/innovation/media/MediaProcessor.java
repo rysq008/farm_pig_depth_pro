@@ -43,7 +43,7 @@ import com.xiangchuang.risks.model.bean.StartBean;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.view.AddPigPicActivity;
-import com.xiangchuang.risks.view.PreparedLiPeiActivity;
+import com.xiangchuang.risks.view.PreparedLiPeiActivity_new;
 import com.xiangchuangtec.luolu.animalcounter.BuildConfig;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
@@ -86,7 +86,6 @@ import innovation.network_status.NetworkUtil;
 import innovation.upload.UploadHelper;
 import innovation.upload.UploadThread;
 import innovation.upload.UploadUtils;
-import innovation.utils.ConstUtils;
 import innovation.utils.FileUtils;
 import innovation.utils.HttpRespObject;
 import innovation.utils.HttpUtils;
@@ -103,13 +102,11 @@ import okhttp3.Response;
 
 import static android.content.ContentValues.TAG;
 import static com.xiangchuangtec.luolu.animalcounter.MyApplication.isNoCamera;
-import static innovation.entry.InnApplication.ANIMAL_TYPE;
 import static innovation.entry.InnApplication.getCowEarNumber;
 import static innovation.entry.InnApplication.getCowType;
 import static innovation.entry.InnApplication.getStringTouboaExtra;
 import static innovation.entry.InnApplication.getlipeiTempNumber;
 import static org.tensorflow.demo.CameraConnectionFragment.collectNumberHandler;
-import static innovation.login.AddLipeiActivity.lipeiNumber;
 
 /**
  * Author by luolu, Date on 2018/8/16.
@@ -596,6 +593,7 @@ public class MediaProcessor {
 
         Map<String, String> mapbody = new HashMap<>();
         mapbody.put(Constants.timesFlag, timesFlag);
+        mapbody.put(Constants.address, str_address);
 
         Activity appContext = (Activity) mActivity;
 
@@ -785,7 +783,7 @@ public class MediaProcessor {
             public void onClick(View v) {
                 dialogcreate.dismiss();
                 if ("pre".equals(PreferencesUtils.getStringValue(Constants.fleg, MyApplication.getAppContext()))) {
-                    mActivity.startActivity(new Intent(MyApplication.getContext(), PreparedLiPeiActivity.class));
+                    mActivity.startActivity(new Intent(MyApplication.getContext(), PreparedLiPeiActivity_new.class));
                 }
                 ((Activity) MyApplication.getContext()).finish();
             }
@@ -859,7 +857,9 @@ public class MediaProcessor {
             public void onPositive() {
                 destroyDialogs();
                 if ("lipei".equals(PreferencesUtils.getStringValue(Constants.fleg, MyApplication.getAppContext()))) {
-                    mActivity.startActivity(new Intent(mActivity, AddPigPicActivity.class).putExtra("lipeiid", lipeiId));
+                    mActivity.startActivity(new Intent(mActivity, AddPigPicActivity.class)
+                            .putExtra("lipeiid", lipeiId)
+                            .putExtra("timesFlag", ""));
                 } else {
                     if (isNoCamera) {
                         mActivity.startActivity(new Intent(mActivity, SmallVideoActivity.class).putExtra("lipeiid", lipeiId));
@@ -1148,14 +1148,97 @@ public class MediaProcessor {
             public void onClick(View v) {
                 dialogcreate.dismiss();
                 //mActivity.startActivity(new Intent(mActivity, PreparedLiPeiActivity.class));
+                payForceEnd(timesFlag);
+            }
+        });
+    }
+
+    private void payForceEnd(String timesFlag){
+        Map<String, String> mapbody = new HashMap<>();
+        mapbody.put(Constants.timesFlag, timesFlag);
+        mapbody.put(Constants.address, str_address);
+        mapbody.put(Constants.userLibId,userLibId+"");
+
+        OkHttp3Util.doPost(Constants.PAY_FORCE_END, mapbody, null, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+//                        showTryAgainDialog(timesFlag);
+                        mActivity.startActivity(new Intent(mActivity, AddPigPicActivity.class)
+                                .putExtra("lipeiid", "")
+                                .putExtra("timesFlag",timesFlag)
+                        );
+                        mActivity.finish();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
                 mActivity.startActivity(new Intent(mActivity, AddPigPicActivity.class)
                         .putExtra("lipeiid", "")
                         .putExtra("timesFlag",timesFlag)
                 );
                 mActivity.finish();
+
+//                if (response.isSuccessful()) {
+//                    mActivity.runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            mProgressDialog.dismiss();
+//                            JSONObject jsonObject = null;
+//                            try {
+//                                String s = response.body().string();
+//                                Log.e("end1", "--" + s);
+//                                jsonObject = new JSONObject(s);
+//                                int status = jsonObject.getInt("status");
+//                                String msg = jsonObject.getString("msg");
+//                                if (1 == status) {
+//                                    mActivity.startActivity(new Intent(mActivity, AddPigPicActivity.class)
+//                                            .putExtra("lipeiid", "")
+//                                            .putExtra("timesFlag",timesFlag)
+//                                    );
+//                                    mActivity.finish();
+//                                } else {
+//                                    showTryAgainDialog(timesFlag);
+//                                }
+//                            } catch (Exception e) {
+//                                e.printStackTrace();
+//                            }
+//
+//                        }
+//                    });
+//                }
             }
         });
     }
+
+    private void showTryAgainDialog(String timesFlag){
+        AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
+        View inflate = View.inflate(mActivity, R.layout.pre_timeout, null);
+        TextView timeoutResert = inflate.findViewById(R.id.timeout_resert);
+        TextView timeoutCancel = inflate.findViewById(R.id.timeout_cancel);
+        timeoutCancel.setVisibility(View.GONE);
+        dialog.setView(inflate);
+        AlertDialog dialogcreate = dialog.create();
+        dialogcreate.setCanceledOnTouchOutside(false);
+        dialogcreate.show();
+        timeoutResert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!NetworkUtil.isNetworkConnect(mContext)) {
+                    Toast.makeText(mActivity, "断网了，请联网后重试。", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                dialogcreate.dismiss();
+                payForceEnd(timesFlag);
+            }
+        });
+    }
+
 
 
     private void goonLiEnd1(AlertDialog dialogcreate) {
@@ -1174,7 +1257,7 @@ public class MediaProcessor {
                 mActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        showErrorDialogLi(bean.getMsg());
+                        showErrorDialogLi(bean.getMsg(), dialogcreate);
                     }
                 });
                 AVOSCloudUtils.saveErrorMessage(e);
@@ -1197,7 +1280,7 @@ public class MediaProcessor {
                                 String msg = jsonObject.getString("msg");
                                 if (status == -1 || 0 == status) {
                                     dialogcreate.dismiss();
-                                    showErrorDialogLi(msg);
+                                    showErrorDialogLi(msg, dialogcreate);
                                 } else {
                                     StartBean bean = GsonUtils.getBean(s, StartBean.class);
                                     if (1 == bean.getStatus()) {
@@ -1300,7 +1383,7 @@ public class MediaProcessor {
             public void onClick(View v) {
                 dialogcreate.dismiss();
                 if ("pre".equals(PreferencesUtils.getStringValue(Constants.fleg, MyApplication.getAppContext()))) {
-                    mActivity.startActivity(new Intent(MyApplication.getContext(), PreparedLiPeiActivity.class));
+                    mActivity.startActivity(new Intent(MyApplication.getContext(), PreparedLiPeiActivity_new.class));
                 }
                 ((Activity) MyApplication.getContext()).finish();
             }
@@ -1348,7 +1431,7 @@ public class MediaProcessor {
     }
 
 
-    private void showErrorDialogLi(String msg) {
+    private void showErrorDialogLi(String msg,AlertDialog diaLog) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
         View inflate = View.inflate(mActivity, R.layout.lipei_result4, null);
         TextView result4Msg = inflate.findViewById(R.id.result4_msg);
@@ -1362,7 +1445,8 @@ public class MediaProcessor {
             @Override
             public void onClick(View v) {
                 dialogcreate.dismiss();
-                mActivity.finish();
+                goonLiEnd1(diaLog);
+//                mActivity.finish();
             }
         });
     }
@@ -3066,7 +3150,7 @@ public class MediaProcessor {
                                 query.put("pigType", getCowType);
                                 query.put("libId", cow_libid);
                                 query.put("seqNo", "");
-                                query.put("lipeiNo", lipeiNumber);
+                                query.put("lipeiNo", new SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault()).format(new Date(System.currentTimeMillis())));
                                 query.put("pigInfo", obj_cow_verify);
                                 query.put("pid", pigBuildResp2.build_result_pid);
                                 query.put("yiji", getPayYiji);

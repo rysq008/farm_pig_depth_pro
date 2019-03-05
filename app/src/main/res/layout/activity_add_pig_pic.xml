@@ -51,7 +51,7 @@
                     android:background="@android:color/transparent"
                     android:hint="请输入养殖天数"
                     android:inputType="number"
-                    android:maxLength="50"
+                    android:maxLength="4"
                     android:maxLines="1"
                     android:textColor="#333"
                     android:textColorHint="#999"

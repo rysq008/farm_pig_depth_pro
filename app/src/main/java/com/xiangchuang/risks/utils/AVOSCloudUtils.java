@@ -5,6 +5,9 @@ import android.util.Log;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.SaveCallback;
+import com.xiangchuangtec.luolu.animalcounter.MyApplication;
+import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
+import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -21,6 +24,13 @@ public class AVOSCloudUtils {
 //         测试 SDK 是否正常工作的代码
         AVObject avObject = new AVObject("Android_phone");
 //        avObject.put("Cookie", SharedPreUtil.getSessionId());
+        String type = PreferencesUtils.getStringValue(Constants.companyfleg, MyApplication.getAppContext());
+        if (("1").equals(type)) {
+            avObject.put("userId", PreferencesUtils.getStringValue(Constants.id, MyApplication.getAppContext()));
+        } else {
+            avObject.put("userId", PreferencesUtils.getIntValue(Constants.en_user_id, MyApplication.getAppContext()) + "");
+        }
+
         avObject.put("brand", SystemUtil.getDeviceBrand());
         avObject.put("model", SystemUtil.getSystemModel());
         avObject.put("systemversion", SystemUtil.getSystemVersion());

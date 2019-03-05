@@ -41,8 +41,6 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import innovation.database.VideoUploadTable;
-import innovation.database.VideoUploadTable_;
 import innovation.entry.InnApplication;
 import innovation.network_status.NetworkUtil;
 import innovation.upload.UploadService;

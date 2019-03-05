@@ -108,7 +108,7 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
      * The camera preview size will be chosen to be the smallest frame by pixel size capable of
      * containing a DESIRED_SIZE x DESIRED_SIZE square.
      */
-    private static final int MINIMUM_PREVIEW_SIZE = 320;
+    private static final int MINIMUM_PREVIEW_SIZE = 480;
 
     /**
      * Conversion from screen rotation to JPEG orientation.
@@ -663,10 +663,14 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
 
     @Override
     public void onPause() {
-        // 停止按钮点击时
-        MyApplication.during += System.currentTimeMillis() - timeVideoStart;
-        //Toast.makeText(activity, InnApplication.during+"", Toast.LENGTH_SHORT).show();
-        stopRecordingVideo(false);
+
+        if (mIsRecordingVideo){
+            // 停止按钮点击时
+            MyApplication.during += System.currentTimeMillis() - timeVideoStart;
+            //Toast.makeText(activity, InnApplication.during+"", Toast.LENGTH_SHORT).show();
+            stopRecordingVideo(false);
+        }
+
         Global.VIDEO_PROCESS = false;
 
         closeCamera();

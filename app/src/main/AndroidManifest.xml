@@ -106,8 +106,6 @@
         <activity android:name="com.xiangchuang.risks.view.PigHouseInformationActivity" />
         <activity android:name="com.xiangchuang.risks.view.PigHogInformationActivity" />
         <activity android:name="com.xiangchuang.risks.view.OutHurdleActivity" />
-        <activity android:name="com.xiangchuang.risks.view.LiPeiActivity" />
-        <activity android:name="com.xiangchuang.risks.view.PreparedLiPeiActivity" />
         <activity
             android:name="com.xiangchuang.risks.view.PreparedLiPeiActivity_new"
             android:screenOrientation="portrait" />
@@ -173,11 +171,6 @@
             android:label="@string/title_activity_monitoring"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity
-            android:name="org.tensorflow.demo.SmallVideoActivity"
-            android:exported="true"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
 
     </application>
 

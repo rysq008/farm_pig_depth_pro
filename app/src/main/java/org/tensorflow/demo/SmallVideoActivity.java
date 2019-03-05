@@ -29,7 +29,6 @@ import android.widget.Toast;
 import com.xiangchuang.risks.model.bean.CommitBean;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.NavBarUtils;
-import com.xiangchuang.risks.view.PreparedLiPeiActivity;
 import com.xiangchuangtec.luolu.animalcounter.BuildConfig;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
