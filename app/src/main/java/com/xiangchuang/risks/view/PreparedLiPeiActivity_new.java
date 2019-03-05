@@ -18,6 +18,7 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.xiangchuang.risks.base.BaseActivity;
+import com.xiangchuang.risks.model.adapter.USBManageAdapter;
 import com.xiangchuang.risks.model.bean.SheListBean;
 import com.xiangchuang.risks.model.bean.StartBean;
 import com.xiangchuang.risks.model.bean.StartBean_new;
@@ -148,7 +149,7 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
             public void onFailure(Call call, IOException e) {
                 mProgressDialog.dismiss();
                 Log.i("PreparedLiPeiActivity", e.toString());
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,PreparedLiPeiActivity_new.class.getSimpleName());
             }
             @Override
             public void onResponse(Call call, Response response) throws IOException {
@@ -187,7 +188,7 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
                     }
                 }catch (Exception e){
                     Toast.makeText(PreparedLiPeiActivity_new.this, "暂无猪舍记录", Toast.LENGTH_LONG).show();
-                    AVOSCloudUtils.saveErrorMessage(e);
+                    AVOSCloudUtils.saveErrorMessage(e,PreparedLiPeiActivity_new.class.getSimpleName());
                 }
             }
         });
@@ -209,7 +210,7 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
                         showErrorDialogLiTimeOut();
                     }
                 });
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,PreparedLiPeiActivity_new.class.getSimpleName());
             }
 
             @Override
@@ -236,7 +237,7 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
 
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                AVOSCloudUtils.saveErrorMessage(e);
+                                AVOSCloudUtils.saveErrorMessage(e,PreparedLiPeiActivity_new.class.getSimpleName());
                             }
                         }
                     });
@@ -337,7 +338,7 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
             public void onFailure(Call call, IOException e) {
                 mProgressDialog.dismiss();
                 Log.i(TAG, e.toString());
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,PreparedLiPeiActivity_new.class.getSimpleName());
             }
 
             @Override

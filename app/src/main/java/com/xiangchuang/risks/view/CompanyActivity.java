@@ -210,7 +210,7 @@ public class CompanyActivity extends BaseActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i(TAG, e.toString());
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,CompanyActivity.class.getSimpleName());
             }
 
             @Override
@@ -279,7 +279,7 @@ public class CompanyActivity extends BaseActivity {
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    AVOSCloudUtils.saveErrorMessage(e);
+                    AVOSCloudUtils.saveErrorMessage(e,CompanyActivity.class.getSimpleName());
                 }
 
 

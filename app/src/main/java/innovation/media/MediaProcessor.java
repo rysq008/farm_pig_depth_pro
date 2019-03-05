@@ -482,7 +482,7 @@ public class MediaProcessor {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     Log.e("editRecoed", e.getLocalizedMessage());
-                    AVOSCloudUtils.saveErrorMessage(e);
+                    AVOSCloudUtils.saveErrorMessage(e,MediaProcessor.class.getSimpleName());
                 }
 
                 @Override
@@ -525,7 +525,7 @@ public class MediaProcessor {
                             showTimeOutDialog();
                         }
                     });
-                    AVOSCloudUtils.saveErrorMessage(e);
+                    AVOSCloudUtils.saveErrorMessage(e,MediaProcessor.class.getSimpleName());
                 }
 
                 @Override
@@ -576,7 +576,7 @@ public class MediaProcessor {
                         } catch (Exception e) {
                             e.printStackTrace();
                             Log.e("uploadZipImage", "uploadZipImage1: " + e.toString());
-                            AVOSCloudUtils.saveErrorMessage(e);
+                            AVOSCloudUtils.saveErrorMessage(e,MediaProcessor.class.getSimpleName());
                         }
 
                     }
@@ -608,7 +608,7 @@ public class MediaProcessor {
                             showTimeOutDialog();
                         }
                     });
-                    AVOSCloudUtils.saveErrorMessage(e);
+                    AVOSCloudUtils.saveErrorMessage(e,MediaProcessor.class.getSimpleName());
                 }
 
                 @Override
@@ -635,7 +635,7 @@ public class MediaProcessor {
                         } catch (Exception e) {
                             e.printStackTrace();
                             showRetryDialog("网络异常，请检查网络后重试。");
-                            AVOSCloudUtils.saveErrorMessage(e);
+                            AVOSCloudUtils.saveErrorMessage(e,MediaProcessor.class.getSimpleName());
                         }
                     } else {
                         showRetryDialog("网络异常，请检查网络后重试。");
@@ -654,7 +654,7 @@ public class MediaProcessor {
                                     showTimeOutDialog();
                                 }
                             });
-                            AVOSCloudUtils.saveErrorMessage(e);
+                            AVOSCloudUtils.saveErrorMessage(e,MediaProcessor.class.getSimpleName());
                         }
 
                         @Override
@@ -738,7 +738,7 @@ public class MediaProcessor {
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                     showRetryDialog("网络异常，请检查网络后重试。");
-                                    AVOSCloudUtils.saveErrorMessage(e);
+                                    AVOSCloudUtils.saveErrorMessage(e,MediaProcessor.class.getSimpleName());
                                 }
 
                             } else {
@@ -1260,7 +1260,7 @@ public class MediaProcessor {
                         showErrorDialogLi(bean.getMsg(), dialogcreate);
                     }
                 });
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,MediaProcessor.class.getSimpleName());
             }
 
             @Override
@@ -1291,7 +1291,7 @@ public class MediaProcessor {
 
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                AVOSCloudUtils.saveErrorMessage(e);
+                                AVOSCloudUtils.saveErrorMessage(e,MediaProcessor.class.getSimpleName());
                             }
 
                         }
@@ -1316,7 +1316,7 @@ public class MediaProcessor {
                         showErrorDialog(bean.getMsg());
                     }
                 });
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,MediaProcessor.class.getSimpleName());
             }
 
             @Override
@@ -1347,7 +1347,7 @@ public class MediaProcessor {
 
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                AVOSCloudUtils.saveErrorMessage(e);
+                                AVOSCloudUtils.saveErrorMessage(e,MediaProcessor.class.getSimpleName());
                             }
 
                         }

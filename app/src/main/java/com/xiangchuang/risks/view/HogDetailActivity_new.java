@@ -93,7 +93,7 @@ public class HogDetailActivity_new extends BaseActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i("HogDetail", e.toString());
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,HogDetailActivity_new.class.getSimpleName());
             }
 
             @Override
@@ -155,7 +155,7 @@ public class HogDetailActivity_new extends BaseActivity {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    AVOSCloudUtils.saveErrorMessage(e);
+                    AVOSCloudUtils.saveErrorMessage(e,HogDetailActivity_new.class.getSimpleName());
                 }
             }
         });

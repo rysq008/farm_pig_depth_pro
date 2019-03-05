@@ -21,6 +21,7 @@ import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.utils.CounterHelper;
 import com.xiangchuang.risks.utils.PermissionsDelegate;
+import com.xiangchuang.risks.view.AddPigPicActivity;
 import com.xiangchuang.risks.view.HogDetailActivity_new;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
@@ -93,7 +94,7 @@ public class ShowPollingActivity_new extends BaseActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i("ShowPollingActivity", e.toString());
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,ShowPollingActivity_new.class.getSimpleName());
             }
 
             @Override

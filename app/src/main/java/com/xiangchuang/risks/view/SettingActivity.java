@@ -25,6 +25,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import innovation.media.MediaProcessor;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -92,7 +93,7 @@ public class SettingActivity extends BaseActivity {
             public void onFailure(Call call, IOException e) {
                 mProgressDialog.dismiss();
                 Log.i("ShowPollingActivity", e.toString());
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,SettingActivity.class.getSimpleName());
             }
 
             @Override

@@ -7,6 +7,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
+import com.xiangchuang.risks.utils.CounterHelper;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 import com.zhy.http.okhttp.callback.FileCallBack;
@@ -63,7 +64,7 @@ public class OkHttpRequestUtils {
         public void onError(Call call, Exception e, int id) {
             e.printStackTrace();
             Log.e("TAG", e.getMessage());
-            AVOSCloudUtils.saveErrorMessage(e);
+            AVOSCloudUtils.saveErrorMessage(e,OkHttpRequestUtils.class.getSimpleName());
 
         }
 
@@ -102,7 +103,7 @@ public class OkHttpRequestUtils {
                         //Toast.makeText(m_context, "errorinfo:" + errorinfo + "ex:" + ex.getMessage(), Toast.LENGTH_SHORT).show();
                         Toast.makeText(m_context, "网络出错！", Toast.LENGTH_SHORT).show();
                         callback.onError(call, e, id);
-                        AVOSCloudUtils.saveErrorMessage(e);
+                        AVOSCloudUtils.saveErrorMessage(e,OkHttpRequestUtils.class.getSimpleName());
                     }
 
                     @Override
@@ -148,7 +149,7 @@ public class OkHttpRequestUtils {
                     public void onError(Call call, Exception e, int id) {
                         Log.d("OkHttpUploadFileRequest", "onError: " + e.getMessage());
                         callback.onError(call, e, id);
-                        AVOSCloudUtils.saveErrorMessage(e);
+                        AVOSCloudUtils.saveErrorMessage(e,OkHttpRequestUtils.class.getSimpleName());
                     }
 
                     @Override
@@ -194,7 +195,7 @@ public class OkHttpRequestUtils {
                     @Override
                     public void onError(Call call, Exception e, int id) {
                         Log.e("DownLoadFile", "onError :" + e.getMessage());
-                        AVOSCloudUtils.saveErrorMessage(e);
+                        AVOSCloudUtils.saveErrorMessage(e,OkHttpRequestUtils.class.getSimpleName());
                     }
 
                     @Override

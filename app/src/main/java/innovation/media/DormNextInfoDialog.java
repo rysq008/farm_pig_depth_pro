@@ -19,6 +19,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.xiangchuang.risks.model.adapter.JuanSetting_item_Adapter;
 import com.xiangchuang.risks.model.bean.ZhuJuanBean;
 import com.xiangchuang.risks.model.bean.ZhuSheBean;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
@@ -144,7 +145,7 @@ public class DormNextInfoDialog extends Dialog implements View.OnClickListener {
             public void onFailure(Call call, IOException e) {
                 //mProgressDialog.dismiss();
                 Log.i("", e.toString());
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,DormNextInfoDialog.class.getSimpleName());
             }
 
             @Override
@@ -202,7 +203,7 @@ public class DormNextInfoDialog extends Dialog implements View.OnClickListener {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i("DormNextInfoDialog", e.toString());
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,DormNextInfoDialog.class.getSimpleName());
             }
 
             @Override
@@ -369,7 +370,7 @@ public class DormNextInfoDialog extends Dialog implements View.OnClickListener {
         OkHttp3Util.uploadPreFile(Constants.XUNJIANTIJIAONEW, rcgImageFile, "aa.jpeg", mapbody, map, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,DormNextInfoDialog.class.getSimpleName());
             }
 
             @Override
@@ -409,7 +410,7 @@ public class DormNextInfoDialog extends Dialog implements View.OnClickListener {
             public void onFailure(Call call, IOException e) {
                 Log.e("editRecoed", e.getLocalizedMessage());
                 editRecoed();
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,DormNextInfoDialog.class.getSimpleName());
             }
 
             @Override

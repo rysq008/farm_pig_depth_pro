@@ -376,7 +376,7 @@ public class AddPigPicActivity extends BaseActivity {
                                 Toast.makeText(AddPigPicActivity.this, "图片上传失败，请检查您的网络。", Toast.LENGTH_SHORT).show();
                             }
                         });
-                        AVOSCloudUtils.saveErrorMessage(e);
+                        AVOSCloudUtils.saveErrorMessage(e,AddPigPicActivity.class.getSimpleName());
                     }
 
                     @Override
@@ -427,7 +427,7 @@ public class AddPigPicActivity extends BaseActivity {
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 Toast.makeText(AddPigPicActivity.this, "图片上传失败，请检查您的网络。", Toast.LENGTH_SHORT).show();
-                                AVOSCloudUtils.saveErrorMessage(e);
+                                AVOSCloudUtils.saveErrorMessage(e,AddPigPicActivity.class.getSimpleName());
                             }
                         }
                     }
@@ -622,7 +622,7 @@ public class AddPigPicActivity extends BaseActivity {
                         Toast.makeText(AddPigPicActivity.this, "信息提交失败，请检查您的网络。", Toast.LENGTH_SHORT).show();
                     }
                 });
-                AVOSCloudUtils.saveErrorMessage(e);
+                AVOSCloudUtils.saveErrorMessage(e,AddPigPicActivity.class.getSimpleName());
             }
 
             @Override
@@ -653,7 +653,7 @@ public class AddPigPicActivity extends BaseActivity {
                                 mProgressDialog.dismiss();
                                 Toast.makeText(AddPigPicActivity.this, "信息提交失败，请检查您的网络。", Toast.LENGTH_SHORT).show();
                                 e.printStackTrace();
-                                AVOSCloudUtils.saveErrorMessage(e);
+                                AVOSCloudUtils.saveErrorMessage(e,AddPigPicActivity.class.getSimpleName());
                             }
                         }
                     });

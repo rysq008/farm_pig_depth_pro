@@ -88,6 +88,7 @@ import com.xiangchuangtec.luolu.animalcounter.CounterActivity_new;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
+import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
 import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
 import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
 import com.xiangchuangtec.luolu.animalcounter.view.ShowPollingActivity_new;
@@ -1896,7 +1897,8 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
                     public void onFailure(Call call, IOException e) {
                         Log.e(TAG, "onFailure: " + e.toString());
                         listener.onCompleted(false, "");
-//                        AVOSCloudUtils.saveErrorMessage(e);
+
+                        AVOSCloudUtils.saveErrorMessage(e,CameraConnectionFragment_new.class.getSimpleName());
                     }
 
                     @Override
