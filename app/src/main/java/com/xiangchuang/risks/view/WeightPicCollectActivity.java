@@ -45,6 +45,7 @@ import java.io.IOException;
 import butterknife.BindView;
 import butterknife.OnClick;
 import innovation.utils.PathUtils;
+import innovation.utils.UIUtils;
 import innovation.view.dialog.DialogHelper;
 
 /**
@@ -103,6 +104,8 @@ public class WeightPicCollectActivity extends BaseActivity implements SensorEven
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
         mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
         camera_surfaceview.getViewTreeObserver().addOnGlobalLayoutListener(this);
+        CameraUtils.setPreviewHeight(UIUtils.getHeightPixels(this));
+        CameraUtils.setPreviewWidth(UIUtils.getWidthPixels(this));
         DialogHelper.weightCheckDialog(this);
     }
 
