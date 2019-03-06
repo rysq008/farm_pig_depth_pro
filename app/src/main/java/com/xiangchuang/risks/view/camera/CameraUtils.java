@@ -65,8 +65,8 @@ public class CameraUtils {
         parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
         parameters.setRecordingHint(true);
         mCamera.setParameters(parameters);
-        setPreviewSize(mCamera, mPreviewWidth, mPreviewHeight);
-        setPictureSize(mCamera, mPreviewWidth, mPreviewHeight);
+        setPreviewSize(mCamera, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        setPictureSize(mCamera, DEFAULT_WIDTH, DEFAULT_HEIGHT);
         mCamera.setDisplayOrientation(mOrientation);
     }
 
@@ -90,8 +90,8 @@ public class CameraUtils {
         parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
         parameters.setRecordingHint(true);
         mCamera.setParameters(parameters);
-        setPreviewSize(mCamera, mPreviewWidth, mPreviewHeight);
-        setPictureSize(mCamera, mPreviewWidth, mPreviewHeight);
+        setPreviewSize(mCamera, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        setPictureSize(mCamera, DEFAULT_WIDTH, DEFAULT_HEIGHT);
         mCamera.setDisplayOrientation(mOrientation);
     }
 
@@ -210,7 +210,7 @@ public class CameraUtils {
      */
     public static void setPreviewSize(Camera camera, int expectWidth, int expectHeight) {
         Camera.Parameters parameters = camera.getParameters();
-        Camera.Size size = getBestSize(expectWidth, expectHeight, parameters.getSupportedPreviewSizes());
+        Camera.Size size = calculatePerfectSize(parameters.getSupportedPreviewSizes(), expectWidth, expectHeight);
         parameters.setPreviewSize(size.width, size.height);
         camera.setParameters(parameters);
     }
@@ -236,7 +236,7 @@ public class CameraUtils {
      */
     public static void setPictureSize(Camera camera, int expectWidth, int expectHeight) {
         Camera.Parameters parameters = camera.getParameters();
-        Camera.Size size = getBestSize(expectWidth, expectHeight, parameters.getSupportedPictureSizes());
+        Camera.Size size = calculatePerfectSize(parameters.getSupportedPictureSizes(), expectWidth, expectHeight);
         parameters.setPictureSize(size.width, size.height);
         camera.setParameters(parameters);
     }
