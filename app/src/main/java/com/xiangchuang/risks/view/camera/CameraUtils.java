@@ -62,7 +62,7 @@ public class CameraUtils {
 
         Camera.Parameters parameters = mCamera.getParameters();
         mCameraPreviewFps = CameraUtils.chooseFixedPreviewFps(parameters, expectFps * 1000);
-        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
+        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
         parameters.setRecordingHint(true);
         mCamera.setParameters(parameters);
         setPreviewSize(mCamera, mPreviewWidth, mPreviewHeight);
@@ -87,6 +87,7 @@ public class CameraUtils {
         mCameraID = cameraID;
         Camera.Parameters parameters = mCamera.getParameters();
         mCameraPreviewFps = CameraUtils.chooseFixedPreviewFps(parameters, expectFps * 1000);
+        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
         parameters.setRecordingHint(true);
         mCamera.setParameters(parameters);
         setPreviewSize(mCamera, mPreviewWidth, mPreviewHeight);
@@ -137,14 +138,7 @@ public class CameraUtils {
         parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
         mCamera.setParameters(parameters);
         try {
-            mCamera.autoFocus(new Camera.AutoFocusCallback() {
-                @Override
-                public void onAutoFocus(boolean success, Camera camera) {
-                    if (success) {
-                        camera.cancelAutoFocus();// 只有加上了这一句，才会自动对焦。
-                    }
-                }
-            });
+            mCamera.autoFocus(autoFocusCallback);
         } catch (Exception e) {
             e.printStackTrace();
             AVOSCloudUtils.saveErrorMessage(e, CameraUtils.class.getSimpleName());
@@ -180,7 +174,10 @@ public class CameraUtils {
     private static Camera.AutoFocusCallback autoFocusCallback = new Camera.AutoFocusCallback() {
         @Override
         public void onAutoFocus(boolean b, Camera camera) {
-
+            camera.cancelAutoFocus();// 只有加上了这一句，才会自动对焦。
+            Camera.Parameters parameters = mCamera.getParameters();
+            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+            mCamera.setParameters(parameters);
         }
     };
 
