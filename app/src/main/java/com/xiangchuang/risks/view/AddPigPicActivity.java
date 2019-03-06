@@ -34,6 +34,7 @@ import com.xiangchuang.risks.model.bean.StartBean;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.utils.CounterHelper;
+import com.xiangchuang.risks.utils.PigWeightUtils;
 import com.xiangchuangtec.luolu.animalcounter.BuildConfig;
 import com.xiangchuangtec.luolu.animalcounter.R;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
@@ -105,11 +106,13 @@ public class AddPigPicActivity extends BaseActivity {
     private static long lastClickTime;
 
     private String autoWeight;
+    private int pigAge;
 
     File tempFile;
     //0最小值1返回称重值2最大值 3差值
     private float[] mWeightRange = new float[4];
 
+    //记录称重接口不能识别的次数
     private static int failureTime = 0;
 
     @Override
@@ -129,7 +132,6 @@ public class AddPigPicActivity extends BaseActivity {
         if (BuildConfig.DEBUG){
             Toast.makeText(this, "lipeiId="+lipeiId+"---timesFlag="+timesFlag, Toast.LENGTH_SHORT).show();
         }
-
 
         //选择图片
         pop = new PopupWindow(getApplicationContext());
@@ -162,13 +164,19 @@ public class AddPigPicActivity extends BaseActivity {
         bt1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WeightPicCollectActivity.start(AddPigPicActivity.this);
+                if (TextUtils.isEmpty(etPigAge.getText())) {
+                    Toast.makeText(getApplicationContext(), "请先填写畜龄。", Toast.LENGTH_SHORT).show();
+                }else {
+                    pigAge = Integer.parseInt(etPigAge.getText().toString().trim());
+                    WeightPicCollectActivity.start(AddPigPicActivity.this);
 //                Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 //                //下面这句指定调用相机拍照后的照片存储的路径
 //                takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getApplicationContext(), BuildConfig.APPLICATION_ID + ".provider", tempFile));
 //                startActivityForResult(takeIntent, REQUESTCODE_TAKE);
+                }
                 pop.dismiss();
                 llPopup.clearAnimation();
+
             }
         });
         //相册
@@ -450,14 +458,17 @@ public class AddPigPicActivity extends BaseActivity {
                     public void run() {
                         if (status == 1) {
                             mProgressDialog.dismiss();
+
                             autoWeight = weight + "";
 
-                            etAnimalWeight.setText(weight + "");
+                            float currentWeight = PigWeightUtils.correctWeight(pigAge, weight);
+
+                            etAnimalWeight.setText(currentWeight + "");
                             seekbar.setVisibility(View.VISIBLE);
                             tv_adjust.setVisibility(View.VISIBLE);
-                            mWeightRange[1] = weight;
-                            mWeightRange[0] = (float) Math.floor(weight * 0.9);
-                            mWeightRange[2] = (float) Math.floor(weight * 1.1);
+                            mWeightRange[1] = currentWeight;
+                            mWeightRange[0] = (float) Math.floor(currentWeight * 0.9);
+                            mWeightRange[2] = (float) Math.floor(currentWeight * 1.1);
                             mWeightRange[3] = mWeightRange[1] - mWeightRange[0];
 
                             seekbar.setProgress(10);
@@ -466,12 +477,23 @@ public class AddPigPicActivity extends BaseActivity {
                             seekbar.setVisibility(View.GONE);
                             tv_adjust.setVisibility(View.GONE);
                             mProgressDialog.dismiss();
+
                             if(failureTime > 1){
-                                autoWeight = "0";
-                                etAnimalWeight.setEnabled(true);
+                                autoWeight = weight+"";
+
+                                float currentWeight = PigWeightUtils.correctWeight(pigAge, 0);
+                                etAnimalWeight.setText(currentWeight + "");
+                                seekbar.setVisibility(View.VISIBLE);
+                                tv_adjust.setVisibility(View.VISIBLE);
+                                mWeightRange[1] = currentWeight;
+                                mWeightRange[0] = (float) Math.floor(currentWeight * 0.9);
+                                mWeightRange[2] = (float) Math.floor(currentWeight * 1.1);
+                                mWeightRange[3] = mWeightRange[1] - mWeightRange[0];
+
+                                seekbar.setProgress(10);
                                 DialogHelper.weightCheckFailureDialog(AddPigPicActivity.this);
                             }else{
-                                autoWeight = "";
+
                                 DialogHelper.weightCheckDialog1(AddPigPicActivity.this);
                                 failureTime += 1;
                             }
@@ -524,7 +546,17 @@ public class AddPigPicActivity extends BaseActivity {
                 picType = 0;
 //                llPopup.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.activity_translate_in));
 //                pop.showAtLocation(parentView, Gravity.BOTTOM, 0, 0);
-                WeightPicCollectActivity.start(AddPigPicActivity.this);
+
+                if (TextUtils.isEmpty(etPigAge.getText())) {
+                    Toast.makeText(getApplicationContext(), "请先填写畜龄。", Toast.LENGTH_SHORT).show();
+                }else {
+                    pigAge = Integer.parseInt(etPigAge.getText().toString().trim());
+                    WeightPicCollectActivity.start(AddPigPicActivity.this);
+//                Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                //下面这句指定调用相机拍照后的照片存储的路径
+//                takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getApplicationContext(), BuildConfig.APPLICATION_ID + ".provider", tempFile));
+//                startActivityForResult(takeIntent, REQUESTCODE_TAKE);
+                }
                 break;
 //            case R.id.btnbuchongleft:
 //                picType = 1;
@@ -713,6 +745,6 @@ public class AddPigPicActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        failureTime = 0;
+//        failureTime = 0;
     }
 }

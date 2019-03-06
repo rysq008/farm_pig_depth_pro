@@ -207,7 +207,7 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
         tv_baodan_tel.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                qiyezhanghu.setText(tv_baodan_tel.getText().toString());
+                qiyezhanghu.setText(tv_baodan_tel.getText().toString().trim());
             }
         });
     }

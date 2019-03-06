@@ -31,7 +31,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
 import android.graphics.RectF;
@@ -82,22 +81,16 @@ import android.widget.Toast;
 import com.xiangchuang.risks.model.bean.RecognitionResult;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.CounterHelper;
-import com.xiangchuang.risks.view.LoginFamerActivity;
-import com.xiangchuang.risks.view.SelectFunctionActivity_new;
-import com.xiangchuangtec.luolu.animalcounter.CounterActivity_new;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
-import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
 import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
 import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
-import com.xiangchuangtec.luolu.animalcounter.view.ShowPollingActivity_new;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.tensorflow.demo.env.Logger;
-import org.tensorflow.demo.tracking.MultiBoxTracker_new;
 
 import java.io.File;
 import java.io.IOException;
@@ -120,18 +113,12 @@ import innovation.media.Model;
 import innovation.utils.FileUtils;
 import innovation.utils.ThreadPoolProxyFactory;
 import innovation.utils.ZipUtil;
-import innovation.view.SendView;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
 import static android.content.ContentValues.TAG;
-import static com.xiangchuangtec.luolu.animalcounter.MyApplication.lastXmin;
 import static com.xiangchuangtec.luolu.animalcounter.MyApplication.sowCount;
-import static com.xiangchuangtec.luolu.animalcounter.MyApplication.timeVideoStart;
-import static innovation.entry.InnApplication.getStringTouboaExtra;
-import static innovation.entry.InnApplication.getlipeiTempNumber;
-import static org.tensorflow.demo.CameraConnectionFragment.collectNumberHandler;
 import static org.tensorflow.demo.DetectorActivity_new.trackingOverlay;
 import static org.tensorflow.demo.Global.dilogIsShowing;
 import static org.tensorflow.demo.Global.mediaPayItem;
@@ -1808,6 +1795,10 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
      * 显示错误提示框
      */
     private void showErrorDialog() {
+
+        if(activity == null || activity.isFinishing()){
+            return;
+        }
         AlertDialog.Builder builder = new AlertDialog.Builder(MyApplication.getContext())
                 .setIcon(R.drawable.cowface)
                 .setTitle("提示")
