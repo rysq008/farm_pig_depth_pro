@@ -412,7 +412,7 @@
                 style="@style/form_style.edit"
                 android:layout_marginRight="15dp"
                 android:hint="请输入手机号或座机号"
-                android:inputType="phone" />
+                android:inputType="number" />
         </LinearLayout>
 
         <LinearLayout style="@style/form_style.layout">
