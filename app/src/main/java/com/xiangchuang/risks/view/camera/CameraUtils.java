@@ -3,8 +3,11 @@ package com.xiangchuang.risks.view.camera;
 import android.app.Activity;
 import android.hardware.Camera;
 import android.os.Build;
+import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
+
+import com.xiangchuang.risks.utils.AVOSCloudUtils;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -27,7 +30,7 @@ public class CameraUtils {
     private static Camera mCamera;
     private static int mCameraPreviewFps;
     private static int mOrientation = 0;
-
+    private static int mPreviewWidth = DEFAULT_WIDTH, mPreviewHeight = DEFAULT_HEIGHT;
     /**
      * 打开相机，默认打开前置相机
      *
@@ -62,8 +65,8 @@ public class CameraUtils {
         parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
         parameters.setRecordingHint(true);
         mCamera.setParameters(parameters);
-        setPreviewSize(mCamera, CameraUtils.DEFAULT_WIDTH, CameraUtils.DEFAULT_HEIGHT);
-        setPictureSize(mCamera, CameraUtils.DEFAULT_WIDTH, CameraUtils.DEFAULT_HEIGHT);
+        setPreviewSize(mCamera, mPreviewWidth, mPreviewHeight);
+        setPictureSize(mCamera, mPreviewWidth, mPreviewHeight);
         mCamera.setDisplayOrientation(mOrientation);
     }
 
@@ -86,8 +89,8 @@ public class CameraUtils {
         mCameraPreviewFps = CameraUtils.chooseFixedPreviewFps(parameters, expectFps * 1000);
         parameters.setRecordingHint(true);
         mCamera.setParameters(parameters);
-        setPreviewSize(mCamera, CameraUtils.DEFAULT_WIDTH, CameraUtils.DEFAULT_HEIGHT);
-        setPictureSize(mCamera, CameraUtils.DEFAULT_WIDTH, CameraUtils.DEFAULT_HEIGHT);
+        setPreviewSize(mCamera, mPreviewWidth, mPreviewHeight);
+        setPictureSize(mCamera, mPreviewWidth, mPreviewHeight);
         mCamera.setDisplayOrientation(mOrientation);
     }
 
@@ -133,14 +136,19 @@ public class CameraUtils {
         Camera.Parameters parameters = mCamera.getParameters();
         parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
         mCamera.setParameters(parameters);
-        mCamera.autoFocus(new Camera.AutoFocusCallback() {
-            @Override
-            public void onAutoFocus(boolean success, Camera camera) {
-                if (success) {
-                    camera.cancelAutoFocus();// 只有加上了这一句，才会自动对焦。
+        try {
+            mCamera.autoFocus(new Camera.AutoFocusCallback() {
+                @Override
+                public void onAutoFocus(boolean success, Camera camera) {
+                    if (success) {
+                        camera.cancelAutoFocus();// 只有加上了这一句，才会自动对焦。
+                    }
                 }
-            }
-        });
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            AVOSCloudUtils.saveErrorMessage(e, CameraUtils.class.getSimpleName());
+        }
     }
 
     /**
@@ -160,7 +168,12 @@ public class CameraUtils {
     public static void startPreview() {
         if (mCamera != null) {
             mCamera.startPreview();
-            mCamera.autoFocus(autoFocusCallback);
+            try {
+                mCamera.autoFocus(autoFocusCallback);
+            } catch (Exception e) {
+                e.printStackTrace();
+                AVOSCloudUtils.saveErrorMessage(e, CameraUtils.class.getSimpleName());
+            }
         }
     }
 
@@ -200,8 +213,7 @@ public class CameraUtils {
      */
     public static void setPreviewSize(Camera camera, int expectWidth, int expectHeight) {
         Camera.Parameters parameters = camera.getParameters();
-        Camera.Size size = calculatePerfectSize(parameters.getSupportedPreviewSizes(),
-                expectWidth, expectHeight);
+        Camera.Size size = getBestSize(expectWidth, expectHeight, parameters.getSupportedPreviewSizes());
         parameters.setPreviewSize(size.width, size.height);
         camera.setParameters(parameters);
     }
@@ -227,8 +239,7 @@ public class CameraUtils {
      */
     public static void setPictureSize(Camera camera, int expectWidth, int expectHeight) {
         Camera.Parameters parameters = camera.getParameters();
-        Camera.Size size = calculatePerfectSize(parameters.getSupportedPictureSizes(),
-                expectWidth, expectHeight);
+        Camera.Size size = getBestSize(expectWidth, expectHeight, parameters.getSupportedPictureSizes());
         parameters.setPictureSize(size.width, size.height);
         camera.setParameters(parameters);
     }
@@ -243,6 +254,33 @@ public class CameraUtils {
             return mCamera.getParameters().getPictureSize();
         }
         return null;
+    }
+
+    //获取与指定宽高相等或最接近的尺寸
+    private static Camera.Size getBestSize(int width, int height, List<Camera.Size> sizeList) {
+        Camera.Size bestSize = null;
+        int targetRatio = (height / width);  //目标大小的宽高比
+        int minDiff = targetRatio;
+
+        for (Camera.Size size : sizeList) {
+            int supportedRatio = (size.width / size.height);
+            Log.d("", "系统支持的尺寸 : ${size.width} * ${size.height} ,    比例$supportedRatio");
+        }
+
+        for (Camera.Size size : sizeList) {
+            if (size.width == height && size.height == width) {
+                bestSize = size;
+                break;
+            }
+            int supportedRatio = (size.width / size.height);
+            if (Math.abs(supportedRatio - targetRatio) < minDiff) {
+                minDiff = Math.abs(supportedRatio - targetRatio);
+                bestSize = size;
+            }
+        }
+        Log.d("", "目标尺寸 ：$targetWidth * $targetHeight ，   比例  $targetRatio");
+        Log.d("", "最优尺寸 ：${bestSize?.height} * ${bestSize?.width}");
+        return bestSize;
     }
 
     /**
@@ -407,4 +445,11 @@ public class CameraUtils {
         return mCameraPreviewFps;
     }
 
+    public static void setPreviewWidth(int mPreviewWidth) {
+        CameraUtils.mPreviewWidth = mPreviewWidth;
+    }
+
+    public static void setPreviewHeight(int mPreviewHeight) {
+        CameraUtils.mPreviewHeight = mPreviewHeight;
+    }
 }
