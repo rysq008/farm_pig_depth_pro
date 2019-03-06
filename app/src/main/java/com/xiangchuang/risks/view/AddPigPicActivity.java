@@ -113,7 +113,7 @@ public class AddPigPicActivity extends BaseActivity {
     private float[] mWeightRange = new float[4];
 
     //记录称重接口不能识别的次数
-//    private static int failureTime = 0;
+    private static int failureTime = 0;
 
     @Override
     protected int getLayoutId() {
@@ -478,28 +478,25 @@ public class AddPigPicActivity extends BaseActivity {
                             tv_adjust.setVisibility(View.GONE);
                             mProgressDialog.dismiss();
 
-                            autoWeight = weight+"";
+                            if(failureTime > 1){
+                                autoWeight = weight+"";
 
-                            float currentWeight = PigWeightUtils.correctWeight(pigAge, 0);
-                            etAnimalWeight.setText(currentWeight + "");
-                            seekbar.setVisibility(View.VISIBLE);
-                            tv_adjust.setVisibility(View.VISIBLE);
-                            mWeightRange[1] = currentWeight;
-                            mWeightRange[0] = (float) Math.floor(currentWeight * 0.9);
-                            mWeightRange[2] = (float) Math.floor(currentWeight * 1.1);
-                            mWeightRange[3] = mWeightRange[1] - mWeightRange[0];
+                                float currentWeight = PigWeightUtils.correctWeight(pigAge, 0);
+                                etAnimalWeight.setText(currentWeight + "");
+                                seekbar.setVisibility(View.VISIBLE);
+                                tv_adjust.setVisibility(View.VISIBLE);
+                                mWeightRange[1] = currentWeight;
+                                mWeightRange[0] = (float) Math.floor(currentWeight * 0.9);
+                                mWeightRange[2] = (float) Math.floor(currentWeight * 1.1);
+                                mWeightRange[3] = mWeightRange[1] - mWeightRange[0];
 
-                            seekbar.setProgress(10);
+                                seekbar.setProgress(10);
+                                DialogHelper.weightCheckFailureDialog(AddPigPicActivity.this);
+                            }else{
 
-//                            if(failureTime > 1){
-//                                autoWeight = "0";
-//                                etAnimalWeight.setEnabled(true);
-//                                DialogHelper.weightCheckFailureDialog(AddPigPicActivity.this);
-//                            }else{
-//                                autoWeight = "";
-//                                DialogHelper.weightCheckDialog1(AddPigPicActivity.this);
-//                                failureTime += 1;
-//                            }
+                                DialogHelper.weightCheckDialog1(AddPigPicActivity.this);
+                                failureTime += 1;
+                            }
 //                            Toast.makeText(AddPigPicActivity.this, "识别失败！", Toast.LENGTH_SHORT).show();
                         }
                     }

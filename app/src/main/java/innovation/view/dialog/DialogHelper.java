@@ -61,7 +61,7 @@ public class DialogHelper {
     public static void weightCheckFailureDialog(final Activity activity) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity)
                 .setIcon(R.mipmap.ic_launcher).setTitle("提示")
-                .setMessage("您多次估重失败，请手动填写死猪重量。")
+                .setMessage("您多次照片拍摄不合格，系统将根据填写的畜龄计算出重量。")
                 .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
