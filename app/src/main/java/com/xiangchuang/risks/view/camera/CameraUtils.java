@@ -31,6 +31,7 @@ public class CameraUtils {
     private static int mCameraPreviewFps;
     private static int mOrientation = 0;
     private static int mPreviewWidth = DEFAULT_WIDTH, mPreviewHeight = DEFAULT_HEIGHT;
+
     /**
      * 打开相机，默认打开前置相机
      *
@@ -65,8 +66,8 @@ public class CameraUtils {
         parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
         parameters.setRecordingHint(true);
         mCamera.setParameters(parameters);
-        setPreviewSize(mCamera, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-        setPictureSize(mCamera, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        setPreviewSize(mCamera, mPreviewWidth, mPreviewHeight);
+        setPictureSize(mCamera, mPreviewWidth, mPreviewHeight);
         mCamera.setDisplayOrientation(mOrientation);
     }
 
@@ -90,8 +91,8 @@ public class CameraUtils {
         parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
         parameters.setRecordingHint(true);
         mCamera.setParameters(parameters);
-        setPreviewSize(mCamera, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-        setPictureSize(mCamera, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        setPreviewSize(mCamera, mPreviewWidth, mPreviewHeight);
+        setPictureSize(mCamera, mPreviewWidth, mPreviewHeight);
         mCamera.setDisplayOrientation(mOrientation);
     }
 
@@ -133,7 +134,7 @@ public class CameraUtils {
 
     // handle button auto focus
     public static void doAutoFocus() {
-        if(mCamera == null)return;
+        if (mCamera == null) return;
         Camera.Parameters parameters = mCamera.getParameters();
         parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
         mCamera.setParameters(parameters);
@@ -210,7 +211,7 @@ public class CameraUtils {
      */
     public static void setPreviewSize(Camera camera, int expectWidth, int expectHeight) {
         Camera.Parameters parameters = camera.getParameters();
-        Camera.Size size = calculatePerfectSize(parameters.getSupportedPreviewSizes(), expectWidth, expectHeight);
+        Camera.Size size = getBestSize(expectWidth, expectHeight, parameters.getSupportedPreviewSizes(), false);
         parameters.setPreviewSize(size.width, size.height);
         camera.setParameters(parameters);
     }
@@ -236,7 +237,7 @@ public class CameraUtils {
      */
     public static void setPictureSize(Camera camera, int expectWidth, int expectHeight) {
         Camera.Parameters parameters = camera.getParameters();
-        Camera.Size size = calculatePerfectSize(parameters.getSupportedPictureSizes(), expectWidth, expectHeight);
+        Camera.Size size = getBestSize(expectWidth, expectHeight, parameters.getSupportedPictureSizes(), true);
         parameters.setPictureSize(size.width, size.height);
         camera.setParameters(parameters);
     }
@@ -254,10 +255,10 @@ public class CameraUtils {
     }
 
     //获取与指定宽高相等或最接近的尺寸
-    private static Camera.Size getBestSize(int width, int height, List<Camera.Size> sizeList) {
+    private static Camera.Size getBestSize(float width, float height, List<Camera.Size> sizeList, boolean isPicture) {
         Camera.Size bestSize = null;
-        int targetRatio = (height / width);  //目标大小的宽高比
-        int minDiff = targetRatio;
+        float targetRatio = (height / width);  //目标大小的宽高比
+        float minDiff = targetRatio;
 
         for (Camera.Size size : sizeList) {
             int supportedRatio = (size.width / size.height);
@@ -269,8 +270,9 @@ public class CameraUtils {
                 bestSize = size;
                 break;
             }
-            int supportedRatio = (size.width / size.height);
+            float supportedRatio = ((float)size.width / size.height);
             if (Math.abs(supportedRatio - targetRatio) < minDiff) {
+                if (isPicture && size.height < 1080) break;
                 minDiff = Math.abs(supportedRatio - targetRatio);
                 bestSize = size;
             }
