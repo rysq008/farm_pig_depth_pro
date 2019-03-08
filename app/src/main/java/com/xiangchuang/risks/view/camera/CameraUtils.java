@@ -260,19 +260,20 @@ public class CameraUtils {
         float targetRatio = (height / width);  //目标大小的宽高比
         float minDiff = targetRatio;
 
-        for (Camera.Size size : sizeList) {
-            int supportedRatio = (size.width / size.height);
-            Log.d("", "系统支持的尺寸 : ${size.width} * ${size.height} ,    比例$supportedRatio");
-        }
+//        for (Camera.Size size : sizeList) {
+//            int supportedRatio = (size.width / size.height);
+//            Log.d("", "系统支持的尺寸 : ${size.width} * ${size.height} ,    比例$supportedRatio");
+//        }
 
         for (Camera.Size size : sizeList) {
             if (size.width == height && size.height == width) {
                 bestSize = size;
                 break;
             }
-            float supportedRatio = ((float)size.width / size.height);
+            float supportedRatio = ((float) size.width / size.height);
             if (Math.abs(supportedRatio - targetRatio) < minDiff) {
-                if (isPicture && size.height < 1080) break;
+                //摄像头size的宽高和屏幕宽高相反，所以，size,height 相当于屏幕宽
+                if (isPicture && size.height < width) break;
                 minDiff = Math.abs(supportedRatio - targetRatio);
                 bestSize = size;
             }
