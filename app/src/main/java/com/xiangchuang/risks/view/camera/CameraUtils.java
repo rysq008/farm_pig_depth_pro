@@ -65,6 +65,9 @@ public class CameraUtils {
         mCameraPreviewFps = CameraUtils.chooseFixedPreviewFps(parameters, expectFps * 1000);
         parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
         parameters.setRecordingHint(true);
+        if (isSupportedFocusMode(parameters.getSupportedFocusModes(), Camera.Parameters.FOCUS_MODE_AUTO)) {
+            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+        }
         mCamera.setParameters(parameters);
         setPreviewSize(mCamera, mPreviewWidth, mPreviewHeight);
         setPictureSize(mCamera, mPreviewWidth, mPreviewHeight);
@@ -88,7 +91,9 @@ public class CameraUtils {
         mCameraID = cameraID;
         Camera.Parameters parameters = mCamera.getParameters();
         mCameraPreviewFps = CameraUtils.chooseFixedPreviewFps(parameters, expectFps * 1000);
-        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+        if (isSupportedFocusMode(parameters.getSupportedFocusModes(), Camera.Parameters.FOCUS_MODE_AUTO)) {
+            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+        }
         parameters.setRecordingHint(true);
         mCamera.setParameters(parameters);
         setPreviewSize(mCamera, mPreviewWidth, mPreviewHeight);
@@ -135,9 +140,6 @@ public class CameraUtils {
     // handle button auto focus
     public static void doAutoFocus() {
         if (mCamera == null) return;
-        Camera.Parameters parameters = mCamera.getParameters();
-        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
-        mCamera.setParameters(parameters);
         try {
             mCamera.autoFocus(autoFocusCallback);
         } catch (Exception e) {
@@ -176,9 +178,6 @@ public class CameraUtils {
         @Override
         public void onAutoFocus(boolean b, Camera camera) {
             camera.cancelAutoFocus();// 只有加上了这一句，才会自动对焦。
-            Camera.Parameters parameters = mCamera.getParameters();
-            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
-            mCamera.setParameters(parameters);
         }
     };
 
@@ -443,6 +442,16 @@ public class CameraUtils {
      */
     public static int getCameraPreviewThousandFps() {
         return mCameraPreviewFps;
+    }
+
+    public static boolean isSupportedFocusMode(List<String> focusList, String focusMode) {
+
+        for (int i = 0; i < focusList.size(); i++) {
+            if (focusMode.equals(focusList.get(i))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static void setPreviewWidth(int mPreviewWidth) {
