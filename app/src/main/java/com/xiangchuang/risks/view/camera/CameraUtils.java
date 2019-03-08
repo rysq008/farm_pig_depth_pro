@@ -176,8 +176,10 @@ public class CameraUtils {
 
     private static Camera.AutoFocusCallback autoFocusCallback = new Camera.AutoFocusCallback() {
         @Override
-        public void onAutoFocus(boolean b, Camera camera) {
-            camera.cancelAutoFocus();// 只有加上了这一句，才会自动对焦。
+        public void onAutoFocus(boolean success, Camera camera) {
+            if(success){
+                camera.cancelAutoFocus();// 只有加上了这一句，才会自动对焦。
+            }
         }
     };
 
