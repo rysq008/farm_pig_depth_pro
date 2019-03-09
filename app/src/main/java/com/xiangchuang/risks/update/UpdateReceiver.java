@@ -170,7 +170,7 @@ public class UpdateReceiver extends BroadcastReceiver {
         mDialog.setTitle("版本更新");
         mDialog.setMessage(UpdateInformation.upgradeinfo);
 
-        mDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+        mDialog.setPositiveButton("马上升级", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
@@ -183,7 +183,7 @@ public class UpdateReceiver extends BroadcastReceiver {
                 context.startService(mIntent);
 
             }
-        }).setNegativeButton("退出", new DialogInterface.OnClickListener() {
+        }).setNegativeButton("稍后再说", new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {

@@ -379,7 +379,7 @@ public class SelectFunctionActivity_new extends BaseActivity {
                             mDialog.setTitle("版本更新");
                             mDialog.setMessage(UpdateInformation.upgradeinfo);
                             mDialog.setCancelable(false);
-                            mDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            mDialog.setPositiveButton("马上升级", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     ivPopUpdateSign.setVisibility(View.GONE);
