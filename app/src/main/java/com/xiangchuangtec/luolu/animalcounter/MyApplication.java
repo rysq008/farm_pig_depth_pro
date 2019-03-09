@@ -185,8 +185,8 @@ public class MyApplication extends Application {
                 if (BuildConfig.DEBUG) {
                     Toast.makeText(acontext, "getFlags==" + acontext.getIntent().getFlags(), Toast.LENGTH_SHORT).show();
                 }
-                mUpdateTask = new GetUpDateTask(HttpUtils.GET_UPDATE_URL, null);
-                mUpdateTask.execute((Void) null);
+//                mUpdateTask = new GetUpDateTask(HttpUtils.GET_UPDATE_URL, null);
+//                mUpdateTask.execute((Void) null);
             }
         }
     }

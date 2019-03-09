@@ -411,7 +411,7 @@
                 android:id="@+id/tv_baodan_tel"
                 style="@style/form_style.edit"
                 android:layout_marginRight="15dp"
-                android:hint="请输入手机号或座机号"
+                android:hint="请输入手机号"
                 android:inputType="number" />
         </LinearLayout>
 
