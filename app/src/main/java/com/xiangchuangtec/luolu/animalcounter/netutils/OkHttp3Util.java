@@ -1,10 +1,16 @@
 package com.xiangchuangtec.luolu.animalcounter.netutils;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.SystemClock;
+import android.support.v4.app.ActivityCompat;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -157,12 +163,36 @@ public class OkHttp3Util {
         if (type.equals("1")) {
             request.addHeader("uid", PreferencesUtils.getStringValue(Constants.id, MyApplication.getAppContext()));
         } else {
-            request.addHeader("uid", PreferencesUtils.getIntValue(Constants.en_user_id, MyApplication.getAppContext())+"");
+            request.addHeader("uid", PreferencesUtils.getIntValue(Constants.en_user_id, MyApplication.getAppContext()) + "");
         }
         request.addHeader("en_id", PreferencesUtils.getStringValue(Constants.en_id, MyApplication.getAppContext()));
 
         request.addHeader("longitude", PreferencesUtils.getStringValue(Constants.longitude, MyApplication.getAppContext()));
         request.addHeader("latitude", PreferencesUtils.getStringValue(Constants.latitude, MyApplication.getAppContext()));
+        //机型
+        request.addHeader("phone_model", android.os.Build.MODEL);
+        //时间
+        request.addHeader("timestamp", SystemClock.currentThreadTimeMillis() + "");
+
+        TelephonyManager phone = (TelephonyManager) MyApplication.getContext().getSystemService(Context.TELEPHONY_SERVICE);
+
+        //IMEI
+        if (ActivityCompat.checkSelfPermission(MyApplication.getContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            request.addHeader("phone_imei",  "");
+        }else {
+            request.addHeader("phone_imei", phone.getDeviceId() + "");
+        }
+
+        //版本
+        request.addHeader("version",MyApplication.version);
+
 //        request.addHeader("token", PreferencesUtils.getIntValue(Constants.token, MyApplication.getAppContext())+"");
 
         Request build = request.build();

@@ -87,7 +87,7 @@ public class HttpUtils {
     public static String GET_REGISTER_URL = baseUrl + "app/register";
 
     //更新接口
-    public static String GET_UPDATE_URL = baseUrl + "";
+    public static String GET_UPDATE_URL = baseUrl + "app/appVersion/zxupdate";
 
     public static void resetIp(String baseUrl) {
         HttpUtils.baseUrl = baseUrl;
@@ -120,6 +120,8 @@ public class HttpUtils {
         GET_SMSCODE_URL = baseUrl + "app/sendcode";
         //注册接口
         GET_REGISTER_URL = baseUrl + "app/register";
+        //更新接口
+        GET_UPDATE_URL = baseUrl + "app/appVersion/zxupdate";
     }
 
     public static boolean isOfficialHost() {

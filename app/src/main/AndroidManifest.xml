@@ -45,6 +45,7 @@
         android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
 
     <!-- android:hardwareAccelerated="false" -->
     <!-- android:name="com.xiangchuangtec.luolu.animalcounter.MyApplication" -->
@@ -176,6 +177,9 @@
             android:exported="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
+
+        <service android:name="com.xiangchuang.risks.update.AppUpgradeService"/>
+        <service android:name="innovation.upload.UploadService"/>
 
     </application>
 

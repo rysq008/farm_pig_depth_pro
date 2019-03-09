@@ -1,18 +1,14 @@
 package com.xiangchuang.risks.view;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -20,16 +16,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.adapter.CompanyAdapter;
-import com.xiangchuang.risks.model.bean.CompanyBean;
 import com.xiangchuang.risks.model.bean.InSureCompanyBean;
-import com.xiangchuang.risks.model.bean.ZhuJuanBean;
+import com.xiangchuang.risks.update.AppUpgradeService;
+import com.xiangchuang.risks.update.UpdateInformation;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
@@ -39,13 +34,11 @@ import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
 
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -54,6 +47,8 @@ import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
+
+import static com.xiangchuangtec.luolu.animalcounter.MyApplication.needUpDate;
 
 public class CompanyActivity extends BaseActivity {
     @BindView(R.id.company_name)
@@ -66,6 +61,8 @@ public class CompanyActivity extends BaseActivity {
     ImageView iv_cancel;
     @BindView(R.id.tv_exit)
     TextView tvExit;
+    @BindView(R.id.iv_sign)
+    ImageView ivSign;
     @BindView(R.id.rl_edit)
     RelativeLayout rl_edit;
     @BindView(R.id.search_tag_input_edit)
@@ -79,7 +76,9 @@ public class CompanyActivity extends BaseActivity {
     private List<InSureCompanyBean> inSureCompanyBeanlists = new ArrayList<>();
     private List<InSureCompanyBean> current = new ArrayList<>();
     private PopupWindow pop;
-    private TextView loginExit;
+    private TextView tvPopExit;
+    private TextView tvPopUpdate;
+    private ImageView ivPopUpdateSign;
 
     @Override
     protected int getLayoutId() {
@@ -93,7 +92,18 @@ public class CompanyActivity extends BaseActivity {
 
         pop = new PopupWindow(CompanyActivity.this);
         View popview = getLayoutInflater().inflate(R.layout.item_setting, null);
-        loginExit = popview.findViewById(R.id.login_exit);
+        tvPopExit = popview.findViewById(R.id.tv_pop_exit);
+        tvPopUpdate = popview.findViewById(R.id.tv_pop_update);
+        ivPopUpdateSign = popview.findViewById(R.id.iv_pop_update_sign);
+
+        if(needUpDate){
+            ivPopUpdateSign.setVisibility(View.VISIBLE);
+            ivSign.setVisibility(View.VISIBLE);
+        }else{
+            ivPopUpdateSign.setVisibility(View.GONE);
+            ivSign.setVisibility(View.GONE);
+        }
+
         pop.setWidth(300);
         pop.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
         pop.setBackgroundDrawable(new BitmapDrawable());
@@ -164,37 +174,85 @@ public class CompanyActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.tv_exit:
-                AlertDialog.Builder builder = new AlertDialog.Builder(CompanyActivity.this)
-                        .setIcon(R.drawable.cowface).setTitle("提示")
-                        .setMessage("退出登录")
-                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //如果退出，清空保存的相关状态， 跳转到登录页
-                                PreferencesUtils.removeAllKey(CompanyActivity.this);
-                                Intent addIntent = new Intent(CompanyActivity.this, LoginFamerActivity.class);
-                                startActivity(addIntent);
-                                finish();
-                            }
-                        })
-                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                ivSign.setVisibility(View.GONE);
+                pop.showAsDropDown(rl_edit);
+                tvPopExit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        pop.dismiss();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(CompanyActivity.this)
+                                .setIcon(R.drawable.cowface).setTitle("提示")
+                                .setMessage("退出登录")
+                                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //如果退出，清空保存的相关状态， 跳转到登录页
+                                        PreferencesUtils.removeAllKey(CompanyActivity.this);
+                                        Intent addIntent = new Intent(CompanyActivity.this, LoginFamerActivity.class);
+                                        startActivity(addIntent);
+                                        finish();
+                                    }
+                                })
+                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
 
+                                    }
+                                });
+                        builder.setCancelable(false);
+                        builder.show();
+                    }
+                });
+
+                tvPopUpdate.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        pop.dismiss();
+                        if(needUpDate){
+                            if(ivSign.getVisibility() == View.VISIBLE){
+                                ivSign.setVisibility(View.GONE);
                             }
-                        });
-                builder.setCancelable(false);
-                builder.show();
-//                pop.showAsDropDown(rl_edit);
-//                loginExit.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        pop.dismiss();
-//
-//                    }
-//                });
+
+                            AlertDialog.Builder mDialog = new AlertDialog.Builder(CompanyActivity.this);
+                            mDialog.setIcon(R.drawable.cowface);
+                            mDialog.setTitle("版本更新");
+                            mDialog.setMessage(UpdateInformation.upgradeinfo);
+                            mDialog.setCancelable(false);
+                            mDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    ivPopUpdateSign.setVisibility(View.GONE);
+                                    Intent mIntent = new Intent(CompanyActivity.this, AppUpgradeService.class);
+                                    mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    //传递数据
+                                    //mIntent.putExtra("appname", UpdateInformation.appname);
+                                    mIntent.putExtra("mDownloadUrl", UpdateInformation.updateurl);
+                                    mIntent.putExtra("appname", UpdateInformation.appname);
+                                    CompanyActivity.this.startService(mIntent);
+                                }
+                            }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+
+                                }
+                            }).create().show();
+                        }else{
+                            AlertDialog.Builder mDialog = new AlertDialog.Builder(CompanyActivity.this);
+                            mDialog.setIcon(R.drawable.cowface);
+                            mDialog.setTitle("提示");
+                            mDialog.setMessage("当前已是最新版本");
+                            mDialog.setCancelable(false);
+                            mDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            }).create().show();
+                        }
+                    }
+                });
                 break;
-
             default:
                 break;
         }
