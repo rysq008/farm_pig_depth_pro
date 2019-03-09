@@ -230,7 +230,7 @@ public class CompanyActivity extends BaseActivity {
                                     mIntent.putExtra("appname", UpdateInformation.appname);
                                     CompanyActivity.this.startService(mIntent);
                                 }
-                            }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            }).setNegativeButton("稍后再说", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();

@@ -357,7 +357,7 @@ public class SelectFunctionActivity_new extends BaseActivity {
                                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-
+                                        dialog.dismiss();
                                     }
                                 });
                         builder.setCancelable(false);
@@ -391,7 +391,7 @@ public class SelectFunctionActivity_new extends BaseActivity {
                                     mIntent.putExtra("appname", UpdateInformation.appname);
                                     SelectFunctionActivity_new.this.startService(mIntent);
                                 }
-                            }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            }).setNegativeButton("稍后再说", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
