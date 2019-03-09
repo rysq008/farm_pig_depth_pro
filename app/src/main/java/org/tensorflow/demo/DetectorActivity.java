@@ -138,8 +138,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     private int imageCount = 10;// add for test
     private static final int TFLITE_INPUT_SIZE = 192;
     private static final boolean TFLITE_IS_QUANTIZED = true;
-    private static final String PIG_TFLITE_DETECT_MODEL_FILE ="2019_0227ssd_detect.tflite";
-                                                // "pig_1026_detect_xincai_addbg.tflite";
+    private static final String PIG_TFLITE_DETECT_MODEL_FILE ="0307ssd_mobilenet_v2_detect.tflite";
+                                                // "pig_1026_detect_xincai_addbg.tflite";2019_0227ssd_detect.tflite
 //    private static final String PIG_TFLITE_DETECT_MODEL_FILE = "ssd_mobilenet_v2_focal_quantized_coco.tflite";
 
     public static int type1Count = 0;
