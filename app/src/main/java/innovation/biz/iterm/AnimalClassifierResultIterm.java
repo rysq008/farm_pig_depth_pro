@@ -47,9 +47,9 @@ public class AnimalClassifierResultIterm {
         String txtfilename = "";
         String oriImageName = "";
 
-        // 角度分类模型无效标志
+        // 角度分类模型无效标志 true为无效 反之有效
         final boolean ANGLE_JUDGE_SKIP_FLG = false;
-        // 关键点模型无效标志
+        // 关键点模型无效标志  true为无效  反之有效
         final boolean KEYPOINT_JUDGE_SKIP_FLG = false;
 
         // 理赔标志

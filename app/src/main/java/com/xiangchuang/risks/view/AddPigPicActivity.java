@@ -87,6 +87,8 @@ public class AddPigPicActivity extends BaseActivity {
     SeekBar seekbar;
     @BindView(R.id.tv_adjust)
     TextView tv_adjust;
+    @BindView(R.id.tv_prompt)
+    TextView tvPrompt;
 
     private static final int REQUESTCODE_PICK = 0;        // 相册选图标记
     private static final int REQUESTCODE_TAKE = 1;        // 相机拍照标记
@@ -457,6 +459,7 @@ public class AddPigPicActivity extends BaseActivity {
                     @Override
                     public void run() {
                         if (status == 1) {
+                            tvPrompt.setVisibility(View.VISIBLE);
                             mProgressDialog.dismiss();
 
                             autoWeight = weight + "";
@@ -473,6 +476,8 @@ public class AddPigPicActivity extends BaseActivity {
 
                             seekbar.setProgress(10);
                         } else {
+                            tvPrompt.setVisibility(View.GONE);
+
                             etAnimalWeight.setText("");
                             seekbar.setVisibility(View.GONE);
                             tv_adjust.setVisibility(View.GONE);

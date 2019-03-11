@@ -95,6 +95,17 @@
                     android:textSize="16dp"
                     android:visibility="gone" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_prompt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="14sp"
+                android:text="点击图片可重新拍摄"
+                android:textColor="#ff0000"
+                android:visibility="gone"/>
+
             <!--称重值-->
             <LinearLayout
                 android:layout_width="match_parent"

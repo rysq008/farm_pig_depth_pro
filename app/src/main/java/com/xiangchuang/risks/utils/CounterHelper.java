@@ -48,10 +48,10 @@ public final class CounterHelper {
 
     private static final Map<String, String> mHeaderMap = new HashMap<>();
 //    private static final String URL_TEST = "http://ai.innovationai.cn:1011/test";
-    private static final String URL_TEST = "http://119.253.84.115:9018/test";
+    private static final String URL_TEST = "http://119.253.84.115:9018/count";
 
 //    private static final String URL_WEIGHT_TEST = "http://ai.innovationai.cn:1012/supervise";
-    private static final String URL_WEIGHT_TEST = "http://119.253.84.115:9019/supervise";
+    private static final String URL_WEIGHT_TEST = "http://119.253.84.115:9019/weight";
 
 
     static {
