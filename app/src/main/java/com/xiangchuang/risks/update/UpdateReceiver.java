@@ -17,10 +17,12 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.HashMap;
 
+import static com.xiangchuangtec.luolu.animalcounter.MyApplication.needUpDate;
+
 
 public class UpdateReceiver extends BroadcastReceiver {
     private AlertDialog.Builder mDialog;
-    public static final String UPDATE_ACTION = "cowface_app";
+    public static final String UPDATE_ACTION = "pigInsurance_app";
     //    private SharedPreferencesHelper mSharedPreferencesHelper;
     private boolean isShowDialog;
     private String result_json = "";
@@ -112,6 +114,7 @@ public class UpdateReceiver extends BroadcastReceiver {
                 noNewVersion(context);
             }
             clearUpateFile(context);
+            needUpDate = false;
         }
     }
 
@@ -167,7 +170,7 @@ public class UpdateReceiver extends BroadcastReceiver {
         mDialog.setTitle("版本更新");
         mDialog.setMessage(UpdateInformation.upgradeinfo);
 
-        mDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+        mDialog.setPositiveButton("马上升级", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
@@ -180,7 +183,7 @@ public class UpdateReceiver extends BroadcastReceiver {
                 context.startService(mIntent);
 
             }
-        }).setNegativeButton("退出", new DialogInterface.OnClickListener() {
+        }).setNegativeButton("稍后再说", new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -197,30 +200,30 @@ public class UpdateReceiver extends BroadcastReceiver {
      * @param context
      */
     private void normalUpdate(final Context context) {
-        mDialog = new AlertDialog.Builder(context);
-        mDialog.setIcon(R.drawable.cowface);
-        mDialog.setTitle("版本更新");
-        mDialog.setMessage(UpdateInformation.upgradeinfo);
-        mDialog.setCancelable(false);
-        mDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+        needUpDate = true;
 
-
-                Intent mIntent = new Intent(context, AppUpgradeService.class);
-                mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                //传递数据
+//        mDialog = new AlertDialog.Builder(context);
+//        mDialog.setIcon(R.drawable.cowface);
+//        mDialog.setTitle("版本更新");
+//        mDialog.setMessage(UpdateInformation.upgradeinfo);
+//        mDialog.setCancelable(false);
+//        mDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                Intent mIntent = new Intent(context, AppUpgradeService.class);
+//                mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                //传递数据
+////                mIntent.putExtra("appname", UpdateInformation.appname);
+//                mIntent.putExtra("mDownloadUrl", UpdateInformation.updateurl);
 //                mIntent.putExtra("appname", UpdateInformation.appname);
-                mIntent.putExtra("mDownloadUrl", UpdateInformation.updateurl);
-                mIntent.putExtra("appname", UpdateInformation.appname);
-                context.startService(mIntent);
-            }
-        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        }).create().show();
+//                context.startService(mIntent);
+//            }
+//        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.dismiss();
+//            }
+//        }).create().show();
     }
 
     /**

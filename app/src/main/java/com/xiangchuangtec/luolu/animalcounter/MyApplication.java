@@ -4,30 +4,40 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.avos.avoscloud.AVOSCloud;
 import com.tencent.bugly.crashreport.CrashReport;
+import com.xiangchuang.risks.update.UpdateReceiver;
 import com.xiangchuang.risks.utils.ShareUtils;
 
 import net.gotev.uploadservice.UploadService;
 import net.gotev.uploadservice.okhttp.OkHttpStack;
 
-import java.lang.ref.WeakReference;
+import java.util.TreeMap;
 
 import innovation.crash.CrashHandler;
 import innovation.database.MyObjectBox;
+import innovation.entry.UpdateBean;
 import innovation.location.LocationManager_new;
 import innovation.network_status.NetworkChangedReceiver;
+import innovation.utils.HttpRespObject;
 import innovation.utils.HttpUtils;
 import innovation.utils.ImageLoaderUtils;
 import io.objectbox.BoxStore;
 import io.objectbox.android.AndroidObjectBrowser;
+import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 
 
 /**
@@ -76,6 +86,17 @@ public class MyApplication extends Application {
 
     private static BoxStore boxStore;
 
+    public static String version;
+
+    public static boolean needUpDate = false;
+
+    public UpdateReceiver mUpdateReceiver;
+    private IntentFilter mIntentFilter;
+    private GetUpDateTask mUpdateTask;
+    private UpdateBean insurresp_company;
+    private String errStr_company;
+
+    private int isFirst = 0;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -104,6 +125,10 @@ public class MyApplication extends Application {
         locationThread = new LocationThread();
         locationThread.start();
 
+        version = getVersionName();
+
+        registerBroadcast();
+
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
@@ -114,6 +139,8 @@ public class MyApplication extends Application {
 //                    Toast.makeText(activity, "------->>"+HttpUtils.baseUrl, Toast.LENGTH_LONG).show();
 //                }
                 acontext = activity;
+                isFirst++;
+                doUpDateTask();
             }
 
             @Override
@@ -152,6 +179,96 @@ public class MyApplication extends Application {
             new AndroidObjectBrowser(boxStore).start(this);
     }
 
+    private void doUpDateTask(){
+        if(isFirst == 1){
+            if (acontext.getIntent().getFlags() != Intent.FLAG_ACTIVITY_SINGLE_TOP) {
+                if (BuildConfig.DEBUG) {
+                    Toast.makeText(acontext, "getFlags==" + acontext.getIntent().getFlags(), Toast.LENGTH_SHORT).show();
+                }
+                mUpdateTask = new GetUpDateTask(HttpUtils.GET_UPDATE_URL, null);
+                mUpdateTask.execute((Void) null);
+            }
+        }
+    }
+
+    private void registerBroadcast() {
+        mUpdateReceiver = new UpdateReceiver(false);
+        mIntentFilter = new IntentFilter(UpdateReceiver.UPDATE_ACTION);
+        this.registerReceiver(mUpdateReceiver, mIntentFilter);
+    }
+
+
+    private class GetUpDateTask extends AsyncTask<Void, Void, Boolean> {
+
+        private final String mUrl;
+        private final TreeMap<String, String> mQueryMap;
+
+        GetUpDateTask(String url, TreeMap map) {
+            mUrl = url;
+            mQueryMap = map;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            try {
+                FormBody.Builder builder = new FormBody.Builder();
+                RequestBody formBody = builder.build();
+
+                String response = HttpUtils.post(mUrl, formBody);
+                if (response == null) {
+                    return false;
+                }
+                Log.d("MyApplication", mUrl + "\nresponse:\n" + response);
+
+                if (HttpUtils.GET_UPDATE_URL.equalsIgnoreCase(mUrl)) {
+                    insurresp_company = (UpdateBean) HttpUtils.processResp_update(response);
+
+                    Log.e("MyApplication", "insurresp_company: " + insurresp_company.toString());
+
+                    if (insurresp_company == null) {
+                        errStr_company = "请求错误！";
+                        return false;
+                    }
+                    if (insurresp_company.status != HttpRespObject.STATUS_OK) {
+                        errStr_company = insurresp_company.msg;
+                        return false;
+                    }
+                }
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                errStr_company = "服务器错误！";
+                return false;
+            }
+            //  register the new account here.
+
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            mUpdateTask = null;
+
+            if (success & HttpUtils.GET_UPDATE_URL.equalsIgnoreCase(mUrl)) {
+                Intent intent = new Intent();
+                intent.setAction(UpdateReceiver.UPDATE_ACTION);
+                intent.putExtra("result_json", String.valueOf(insurresp_company.data));
+
+                //发送广播
+                sendBroadcast(intent);
+
+
+            } else if (!success) {
+                Toast.makeText(acontext, "网络接口请求异常！", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            mUpdateTask = null;
+        }
+    }
+
+
     @Override
     public void onTerminate() {
         unregisterReceiver(networkChangedReceiver);
@@ -188,4 +305,23 @@ public class MyApplication extends Application {
     public static Context getContext() {
         return MyApplication.acontext;
     }
+
+    /**
+     * get App versionName
+     *
+     * @return versionName
+     */
+    private String getVersionName() {
+        PackageManager packageManager = this.getPackageManager();
+        PackageInfo packageInfo;
+        String versionName = "";
+        try {
+            packageInfo = packageManager.getPackageInfo(this.getPackageName(), 0);
+            versionName = packageInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return versionName;
+    }
+
 }

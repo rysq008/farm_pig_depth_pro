@@ -26,6 +26,9 @@ import com.xiangchuangtec.luolu.animalcounter.R;
 
 import java.io.File;
 
+import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
+import static android.support.v4.content.FileProvider.getUriForFile;
+
 
 public class AppUpgradeService extends Service {
     private NotificationManager mNotificationManager = null;
@@ -37,7 +40,7 @@ public class AppUpgradeService extends Service {
     private File destDir = null;
     private File destFile = null;
 
-    public static final String downloadPath = "/cowface";
+    public static final String downloadPath = "/pigDownload";
     public static final int mNotificationId = 111;
     private static final int DOWNLOAD_FAIL = -1;
     private static final int DOWNLOAD_SUCCESS = 0;
@@ -191,12 +194,13 @@ public class AppUpgradeService extends Service {
     public void install(File apkFile) {
 //        Uri uri = Uri.fromFile(apkFile);
         if(Build.VERSION.SDK_INT>=24) {
-            Uri uri = FileProvider.getUriForFile(getApplicationContext(), getPackageName() + ".provider", apkFile);
+            Uri uri = getUriForFile(getApplicationContext(), getPackageName() + ".provider", apkFile);
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
             intent.setDataAndType(uri, "application/vnd.android.package-archive");
             startActivity(intent);
+
         } else {
             Uri uri = Uri.fromFile(apkFile);
             Intent intent = new Intent(Intent.ACTION_VIEW);

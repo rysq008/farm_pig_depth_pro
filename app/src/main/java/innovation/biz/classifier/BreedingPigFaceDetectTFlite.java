@@ -621,6 +621,7 @@ public class BreedingPigFaceDetectTFlite {
                 //判断闪跳集合中的对象中心点是否超出范围 超出则删除当前对象
                 if (tempCenter > maxBase) {
                     shanTiaoBeanList.remove(k);
+                    k--;
                 }
             }
         }
@@ -668,6 +669,7 @@ public class BreedingPigFaceDetectTFlite {
                         if (tempCenter > maxBase) {
                             isInXOffset = true;
                             shanTiaoBeanList.remove(k);
+                            k--;
                         } else {
                             //判断单独对象是否在震荡范围内， 如果在不增加数量 否则增加数量
                             if (c > shanTiaoBeanList.get(k).getxMin() && c < shanTiaoBeanList.get(k).getxMax()) {

@@ -31,6 +31,7 @@ public class CameraUtils {
     private static int mCameraPreviewFps;
     private static int mOrientation = 0;
     private static int mPreviewWidth = DEFAULT_WIDTH, mPreviewHeight = DEFAULT_HEIGHT;
+
     /**
      * 打开相机，默认打开前置相机
      *
@@ -64,9 +65,12 @@ public class CameraUtils {
         mCameraPreviewFps = CameraUtils.chooseFixedPreviewFps(parameters, expectFps * 1000);
         parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
         parameters.setRecordingHint(true);
+        if (isSupportedFocusMode(parameters.getSupportedFocusModes(), Camera.Parameters.FOCUS_MODE_AUTO)) {
+            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+        }
         mCamera.setParameters(parameters);
-        setPreviewSize(mCamera, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-        setPictureSize(mCamera, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        setPreviewSize(mCamera, mPreviewWidth, mPreviewHeight);
+        setPictureSize(mCamera, mPreviewWidth, mPreviewHeight);
         mCamera.setDisplayOrientation(mOrientation);
     }
 
@@ -87,11 +91,13 @@ public class CameraUtils {
         mCameraID = cameraID;
         Camera.Parameters parameters = mCamera.getParameters();
         mCameraPreviewFps = CameraUtils.chooseFixedPreviewFps(parameters, expectFps * 1000);
-        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+        if (isSupportedFocusMode(parameters.getSupportedFocusModes(), Camera.Parameters.FOCUS_MODE_AUTO)) {
+            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+        }
         parameters.setRecordingHint(true);
         mCamera.setParameters(parameters);
-        setPreviewSize(mCamera, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-        setPictureSize(mCamera, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        setPreviewSize(mCamera, mPreviewWidth, mPreviewHeight);
+        setPictureSize(mCamera, mPreviewWidth, mPreviewHeight);
         mCamera.setDisplayOrientation(mOrientation);
     }
 
@@ -133,10 +139,7 @@ public class CameraUtils {
 
     // handle button auto focus
     public static void doAutoFocus() {
-        if(mCamera == null)return;
-        Camera.Parameters parameters = mCamera.getParameters();
-        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
-        mCamera.setParameters(parameters);
+        if (mCamera == null) return;
         try {
             mCamera.autoFocus(autoFocusCallback);
         } catch (Exception e) {
@@ -173,11 +176,10 @@ public class CameraUtils {
 
     private static Camera.AutoFocusCallback autoFocusCallback = new Camera.AutoFocusCallback() {
         @Override
-        public void onAutoFocus(boolean b, Camera camera) {
-            camera.cancelAutoFocus();// 只有加上了这一句，才会自动对焦。
-            Camera.Parameters parameters = mCamera.getParameters();
-            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
-            mCamera.setParameters(parameters);
+        public void onAutoFocus(boolean success, Camera camera) {
+            if(success){
+                camera.cancelAutoFocus();// 只有加上了这一句，才会自动对焦。
+            }
         }
     };
 
@@ -210,7 +212,7 @@ public class CameraUtils {
      */
     public static void setPreviewSize(Camera camera, int expectWidth, int expectHeight) {
         Camera.Parameters parameters = camera.getParameters();
-        Camera.Size size = calculatePerfectSize(parameters.getSupportedPreviewSizes(), expectWidth, expectHeight);
+        Camera.Size size = getBestSize(expectWidth, expectHeight, parameters.getSupportedPreviewSizes(), false);
         parameters.setPreviewSize(size.width, size.height);
         camera.setParameters(parameters);
     }
@@ -236,7 +238,7 @@ public class CameraUtils {
      */
     public static void setPictureSize(Camera camera, int expectWidth, int expectHeight) {
         Camera.Parameters parameters = camera.getParameters();
-        Camera.Size size = calculatePerfectSize(parameters.getSupportedPictureSizes(), expectWidth, expectHeight);
+        Camera.Size size = getBestSize(expectWidth, expectHeight, parameters.getSupportedPictureSizes(), true);
         parameters.setPictureSize(size.width, size.height);
         camera.setParameters(parameters);
     }
@@ -254,23 +256,25 @@ public class CameraUtils {
     }
 
     //获取与指定宽高相等或最接近的尺寸
-    private static Camera.Size getBestSize(int width, int height, List<Camera.Size> sizeList) {
+    private static Camera.Size getBestSize(float width, float height, List<Camera.Size> sizeList, boolean isPicture) {
         Camera.Size bestSize = null;
-        int targetRatio = (height / width);  //目标大小的宽高比
-        int minDiff = targetRatio;
+        float targetRatio = (height / width);  //目标大小的宽高比
+        float minDiff = targetRatio;
 
-        for (Camera.Size size : sizeList) {
-            int supportedRatio = (size.width / size.height);
-            Log.d("", "系统支持的尺寸 : ${size.width} * ${size.height} ,    比例$supportedRatio");
-        }
+//        for (Camera.Size size : sizeList) {
+//            int supportedRatio = (size.width / size.height);
+//            Log.d("", "系统支持的尺寸 : ${size.width} * ${size.height} ,    比例$supportedRatio");
+//        }
 
         for (Camera.Size size : sizeList) {
             if (size.width == height && size.height == width) {
                 bestSize = size;
                 break;
             }
-            int supportedRatio = (size.width / size.height);
+            float supportedRatio = ((float) size.width / size.height);
             if (Math.abs(supportedRatio - targetRatio) < minDiff) {
+                //摄像头size的宽高和屏幕宽高相反，所以，size,height 相当于屏幕宽
+                if (isPicture && size.height < width) break;
                 minDiff = Math.abs(supportedRatio - targetRatio);
                 bestSize = size;
             }
@@ -440,6 +444,16 @@ public class CameraUtils {
      */
     public static int getCameraPreviewThousandFps() {
         return mCameraPreviewFps;
+    }
+
+    public static boolean isSupportedFocusMode(List<String> focusList, String focusMode) {
+
+        for (int i = 0; i < focusList.size(); i++) {
+            if (focusMode.equals(focusList.get(i))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static void setPreviewWidth(int mPreviewWidth) {

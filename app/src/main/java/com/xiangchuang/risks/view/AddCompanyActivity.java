@@ -308,8 +308,8 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
                 photograph("bank");
                 break;
             case R.id.btn_wancheng:
-
-                if (!isMobileNO(tv_baodan_tel.getText().toString().trim()) && !isPhone(tv_baodan_tel.getText().toString().trim())) {
+                //&& !isPhone(tv_baodan_tel.getText().toString().trim())
+                if (!isMobileNO(tv_baodan_tel.getText().toString().trim())) {
                     Toast.makeText(getApplicationContext(), "联系方式填写有误", Toast.LENGTH_SHORT).show();
                     return;
                 }

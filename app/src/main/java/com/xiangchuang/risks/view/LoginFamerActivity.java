@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.StrictMode;
 import android.os.SystemClock;
+import android.support.v4.app.ActivityCompat;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
@@ -126,6 +127,7 @@ public class LoginFamerActivity extends BaseActivity {
                     XXPermissions.with(LoginFamerActivity.this)
                             //.constantRequest() //可设置被拒绝后继续申请，直到用户授权或者永久拒绝
                             .permission(Permission.Group.LOCATION) //不指定权限则自动获取清单中的危险权限
+                            .permission(Permission.READ_PHONE_STATE)
                             .request(new OnPermission() {
                                 @Override
                                 public void hasPermission(List<String> granted, boolean isAll) {
@@ -186,6 +188,46 @@ public class LoginFamerActivity extends BaseActivity {
                     Toast.makeText(this, "断网了，请联网后重试。", Toast.LENGTH_SHORT).show();
                     return;
                 }
+
+                if (ActivityCompat.checkSelfPermission(MyApplication.getContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    XXPermissions.with(LoginFamerActivity.this)
+                            //.constantRequest() //可设置被拒绝后继续申请，直到用户授权或者永久拒绝
+                            .permission(Permission.READ_PHONE_STATE)
+                            .request(new OnPermission() {
+                                @Override
+                                public void hasPermission(List<String> granted, boolean isAll) {
+                                    if (isAll) {
+                                        // PreferencesUtils.saveBooleanValue("isallow", true, WelcomeActivity.this);
+                                        // toastUtils.showLong(MyApplication.getAppContext(), "获取权限成功");
+                                        if (android.os.Build.VERSION.SDK_INT > 9) {
+                                            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                                            StrictMode.setThreadPolicy(policy);
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void noPermission(List<String> denied, boolean quick) {
+                                    if (quick) {
+                                        Toast.makeText(InnApplication.getAppContext(), "被永久拒绝授权，请手动授予权限", Toast.LENGTH_SHORT).show();
+                                        //如果是被永久拒绝就跳转到应用权限系统设置页面
+                                        XXPermissions.gotoPermissionSettings(InnApplication.getAppContext());
+                                        finish();
+                                    } else {
+                                        Toast.makeText(InnApplication.getAppContext(), "获取权限失败", Toast.LENGTH_SHORT).show();
+                                        AppManager.getAppManager().AppExit(LoginFamerActivity.this);
+                                    }
+                                }
+                            });
+                    return;
+                }
                 String musername = mloginfameruserid.getText().toString();
                 String muserpass = mloginfamerpass.getText().toString();
                 if (musername.length() < 6 || musername.length() > 20) {
@@ -236,7 +278,7 @@ public class LoginFamerActivity extends BaseActivity {
                         Toast.makeText(LoginFamerActivity.this, "登录失败，请检查网络后重试。", Toast.LENGTH_SHORT).show();
                     }
                 });
-                AVOSCloudUtils.saveErrorMessage(e,LoginFamerActivity.class.getSimpleName());
+                AVOSCloudUtils.saveErrorMessage(e, LoginFamerActivity.class.getSimpleName());
             }
 
             @Override
@@ -317,7 +359,7 @@ public class LoginFamerActivity extends BaseActivity {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    AVOSCloudUtils.saveErrorMessage(e,LoginFamerActivity.class.getSimpleName());
+                    AVOSCloudUtils.saveErrorMessage(e, LoginFamerActivity.class.getSimpleName());
                 }
 
 

@@ -22,6 +22,8 @@ import android.widget.Toast;
 import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.bean.QueryVideoFlagDataBean;
 import com.xiangchuang.risks.model.bean.StartBean;
+import com.xiangchuang.risks.update.AppUpgradeService;
+import com.xiangchuang.risks.update.UpdateInformation;
 import com.xiangchuang.risks.update.UpdateReceiver;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
@@ -55,6 +57,8 @@ import okhttp3.FormBody;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import static com.xiangchuangtec.luolu.animalcounter.MyApplication.needUpDate;
+
 public class SelectFunctionActivity_new extends BaseActivity {
     public static String TAG = "SelectFunctionActivity";
     @BindView(R.id.iv_cancel)
@@ -81,6 +85,8 @@ public class SelectFunctionActivity_new extends BaseActivity {
     RelativeLayout rlBack;
     @BindView(R.id.rl_edit)
     RelativeLayout rlEdit;
+    @BindView(R.id.iv_sign)
+    ImageView ivSign;
 
     private String companyname;
     private String en_id;
@@ -89,13 +95,10 @@ public class SelectFunctionActivity_new extends BaseActivity {
     private boolean isLiPei = true;
 
     private PopupWindow pop;
-    private TextView loginExit;
 
-    private UpdateReceiver mUpdateReceiver;
-    private IntentFilter mIntentFilter;
-    private GETUPDATETASK mUpdateTask;
-    private UpdateBean insurresp_company;
-    private String errStr_company;
+    private TextView tvPopExit;
+    private TextView tvPopUpdate;
+    private ImageView ivPopUpdateSign;
 
     @Override
     protected int getLayoutId() {
@@ -115,10 +118,10 @@ public class SelectFunctionActivity_new extends BaseActivity {
             rel_toubao.setVisibility(View.VISIBLE);
             relLipei.setVisibility(View.VISIBLE);
             iv_cancel.setVisibility(View.VISIBLE);
-            tvExit.setVisibility(View.GONE);
+            rlEdit.setVisibility(View.GONE);
         } else if ("2".equals(companyfleg)) {
             iv_cancel.setVisibility(View.GONE);
-            tvExit.setVisibility(View.VISIBLE);
+            rlEdit.setVisibility(View.VISIBLE);
             //企业（养殖场）
             rel_toubao.setVisibility(View.GONE);
             if (MyApplication.isOpenLiPei) {
@@ -132,7 +135,18 @@ public class SelectFunctionActivity_new extends BaseActivity {
 
         pop = new PopupWindow(SelectFunctionActivity_new.this);
         View popview = getLayoutInflater().inflate(R.layout.item_setting, null);
-        loginExit = popview.findViewById(R.id.login_exit);
+        tvPopExit = popview.findViewById(R.id.tv_pop_exit);
+        tvPopUpdate = popview.findViewById(R.id.tv_pop_update);
+        ivPopUpdateSign = popview.findViewById(R.id.iv_pop_update_sign);
+
+        if(needUpDate){
+            ivPopUpdateSign.setVisibility(View.VISIBLE);
+            ivSign.setVisibility(View.VISIBLE);
+        }else{
+            ivPopUpdateSign.setVisibility(View.GONE);
+            ivSign.setVisibility(View.GONE);
+        }
+
         pop.setWidth(300);
         pop.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
         pop.setBackgroundDrawable(new BitmapDrawable());
@@ -140,31 +154,9 @@ public class SelectFunctionActivity_new extends BaseActivity {
         pop.setOutsideTouchable(true);
         pop.setContentView(popview);
 
-        registerBroadcast();
-
-        if (getIntent().getFlags() != Intent.FLAG_ACTIVITY_SINGLE_TOP) {
-            if (BuildConfig.DEBUG) {
-                Toast.makeText(this, "getFlags==" + getIntent().getFlags(), Toast.LENGTH_SHORT).show();
-            }
-//            mUpdateTask = new GETUPDATETASK(HttpUtils.GET_UPDATE_URL, null);
-//            mUpdateTask.execute((Void) null);
-        }
-
     }
 
-    private void registerBroadcast() {
-        mUpdateReceiver = new UpdateReceiver(false);
-        mIntentFilter = new IntentFilter(UpdateReceiver.UPDATE_ACTION);
-        this.registerReceiver(mUpdateReceiver, mIntentFilter);
-    }
 
-    private void unRegisterBroadcast() {
-        try {
-            this.unregisterReceiver(mUpdateReceiver);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
 
     private void queryVideoFlag() {
@@ -343,8 +335,9 @@ public class SelectFunctionActivity_new extends BaseActivity {
                 startActivity(new Intent(SelectFunctionActivity_new.this, MonitoringActivity.class));
                 break;
             case R.id.tv_exit:
+                ivSign.setVisibility(View.GONE);
                 pop.showAsDropDown(rlEdit);
-                loginExit.setOnClickListener(new View.OnClickListener() {
+                tvPopExit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         pop.dismiss();
@@ -364,13 +357,62 @@ public class SelectFunctionActivity_new extends BaseActivity {
                                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-
+                                        dialog.dismiss();
                                     }
                                 });
                         builder.setCancelable(false);
                         builder.show();
                     }
                 });
+
+                tvPopUpdate.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        pop.dismiss();
+                        if(needUpDate){
+                            if(ivSign.getVisibility() == View.VISIBLE){
+                                ivSign.setVisibility(View.GONE);
+                            }
+
+                            AlertDialog.Builder mDialog = new AlertDialog.Builder(SelectFunctionActivity_new.this);
+                            mDialog.setIcon(R.drawable.cowface);
+                            mDialog.setTitle("版本更新");
+                            mDialog.setMessage(UpdateInformation.upgradeinfo);
+                            mDialog.setCancelable(false);
+                            mDialog.setPositiveButton("马上升级", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    ivPopUpdateSign.setVisibility(View.GONE);
+                                    Intent mIntent = new Intent(SelectFunctionActivity_new.this, AppUpgradeService.class);
+                                    mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    //传递数据
+                                    //mIntent.putExtra("appname", UpdateInformation.appname);
+                                    mIntent.putExtra("mDownloadUrl", UpdateInformation.updateurl);
+                                    mIntent.putExtra("appname", UpdateInformation.appname);
+                                    SelectFunctionActivity_new.this.startService(mIntent);
+                                }
+                            }).setNegativeButton("稍后再说", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            }).create().show();
+                        }else{
+                            AlertDialog.Builder mDialog = new AlertDialog.Builder(SelectFunctionActivity_new.this);
+                            mDialog.setIcon(R.drawable.cowface);
+                            mDialog.setTitle("提示");
+                            mDialog.setMessage("当前已是最新版本");
+                            mDialog.setCancelable(false);
+                            mDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            }).create().show();
+                        }
+                    }
+                });
+
                 break;
             default:
                 break;
@@ -536,78 +578,6 @@ public class SelectFunctionActivity_new extends BaseActivity {
         });
     }
 
-
-    public class GETUPDATETASK extends AsyncTask<Void, Void, Boolean> {
-
-        private final String mUrl;
-        private final TreeMap<String, String> mQueryMap;
-
-        GETUPDATETASK(String url, TreeMap map) {
-            mUrl = url;
-            mQueryMap = map;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            try {
-                FormBody.Builder builder = new FormBody.Builder();
-                RequestBody formBody = builder.build();
-
-                String response = HttpUtils.post(mUrl, formBody);
-                if (response == null) {
-                    return false;
-                }
-                Log.d(TAG, mUrl + "\nresponse:\n" + response);
-
-                if (HttpUtils.GET_UPDATE_URL.equalsIgnoreCase(mUrl)) {
-                    insurresp_company = (UpdateBean) HttpUtils.processResp_update(response);
-
-                    Log.e(TAG, "insurresp_company: " + insurresp_company.toString());
-
-                    if (insurresp_company == null) {
-                        errStr_company = "请求错误！";
-                        return false;
-                    }
-                    if (insurresp_company.status != HttpRespObject.STATUS_OK) {
-                        errStr_company = insurresp_company.msg;
-                        return false;
-                    }
-                }
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
-                errStr_company = "服务器错误！";
-                return false;
-            }
-            //  register the new account here.
-
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mUpdateTask = null;
-
-            if (success & HttpUtils.GET_UPDATE_URL.equalsIgnoreCase(mUrl)) {
-                Intent intent = new Intent();
-                intent.setAction(UpdateReceiver.UPDATE_ACTION);
-                intent.putExtra("result_json", String.valueOf(insurresp_company.data));
-
-                //发送广播
-                sendBroadcast(intent);
-
-
-            } else if (!success) {
-                Toast.makeText(SelectFunctionActivity_new.this, "网络接口请求异常！", Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mUpdateTask = null;
-        }
-    }
-
-
     private long firstTime = 0;
 
     @Override
@@ -632,6 +602,5 @@ public class SelectFunctionActivity_new extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unRegisterBroadcast();
     }
 }
