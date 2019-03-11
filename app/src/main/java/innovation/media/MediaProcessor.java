@@ -482,7 +482,7 @@ public class MediaProcessor {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     Log.e("editRecoed", e.getLocalizedMessage());
-                    AVOSCloudUtils.saveErrorMessage(e,MediaProcessor.class.getSimpleName());
+                    AVOSCloudUtils.saveErrorMessage(e, MediaProcessor.class.getSimpleName());
                 }
 
                 @Override
@@ -525,7 +525,7 @@ public class MediaProcessor {
                             showTimeOutDialog();
                         }
                     });
-                    AVOSCloudUtils.saveErrorMessage(e,MediaProcessor.class.getSimpleName());
+                    AVOSCloudUtils.saveErrorMessage(e, MediaProcessor.class.getSimpleName());
                 }
 
                 @Override
@@ -540,12 +540,20 @@ public class MediaProcessor {
                             jsonObject = new JSONObject(s);
                             int status = jsonObject.getInt("status");
                             String msg = jsonObject.getString("msg");
-                            if (-1 == status || 0 == status) {
+                            if (-1 == status) {
                                 appContext.runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
                                         mProgressDialog.dismiss();
                                         showErrorDialog(msg);
+                                    }
+                                });
+                            } else if (0 == status) {
+                                mActivity.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mProgressDialog.dismiss();
+                                        showTimeOutDialog();
                                     }
                                 });
                             } else {
@@ -576,7 +584,7 @@ public class MediaProcessor {
                         } catch (Exception e) {
                             e.printStackTrace();
                             Log.e("uploadZipImage", "uploadZipImage1: " + e.toString());
-                            AVOSCloudUtils.saveErrorMessage(e,MediaProcessor.class.getSimpleName());
+                            AVOSCloudUtils.saveErrorMessage(e, MediaProcessor.class.getSimpleName());
                         }
 
                     }
@@ -608,7 +616,7 @@ public class MediaProcessor {
                             showTimeOutDialog();
                         }
                     });
-                    AVOSCloudUtils.saveErrorMessage(e,MediaProcessor.class.getSimpleName());
+                    AVOSCloudUtils.saveErrorMessage(e, MediaProcessor.class.getSimpleName());
                 }
 
                 @Override
@@ -635,7 +643,7 @@ public class MediaProcessor {
                         } catch (Exception e) {
                             e.printStackTrace();
                             showRetryDialog("网络异常，请检查网络后重试。");
-                            AVOSCloudUtils.saveErrorMessage(e,MediaProcessor.class.getSimpleName());
+                            AVOSCloudUtils.saveErrorMessage(e, MediaProcessor.class.getSimpleName());
                         }
                     } else {
                         showRetryDialog("网络异常，请检查网络后重试。");
@@ -654,11 +662,12 @@ public class MediaProcessor {
                                     showTimeOutDialog();
                                 }
                             });
-                            AVOSCloudUtils.saveErrorMessage(e,MediaProcessor.class.getSimpleName());
+                            AVOSCloudUtils.saveErrorMessage(e, MediaProcessor.class.getSimpleName());
                         }
 
                         @Override
                         public void onResponse(Call call, Response response) throws IOException {
+                            mProgressDialog.dismiss();
                             if (response.isSuccessful()) {
                                 String s = response.body().string();
                                 Log.e("lipeicommit", "上传--" + s);
@@ -670,9 +679,10 @@ public class MediaProcessor {
                                     appContext.runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            if (status == -1 || 0 == status) {
-                                                mProgressDialog.dismiss();
+                                            if (status == -1) {
                                                 showErrorDialog(mymsg);
+                                            } else if (0 == status) {
+                                                showTimeOutDialog();
                                             } else {
                                                 CommitLiBean bean = GsonUtils.getBean(s, CommitLiBean.class);
                                                 Log.e("lipeicommit", "SimilarFlg--" + bean.getData().getSimilarFlg() + "");
@@ -738,7 +748,7 @@ public class MediaProcessor {
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                     showRetryDialog("网络异常，请检查网络后重试。");
-                                    AVOSCloudUtils.saveErrorMessage(e,MediaProcessor.class.getSimpleName());
+                                    AVOSCloudUtils.saveErrorMessage(e, MediaProcessor.class.getSimpleName());
                                 }
 
                             } else {
@@ -1153,11 +1163,11 @@ public class MediaProcessor {
         });
     }
 
-    private void payForceEnd(String timesFlag){
+    private void payForceEnd(String timesFlag) {
         Map<String, String> mapbody = new HashMap<>();
         mapbody.put(Constants.timesFlag, timesFlag);
         mapbody.put(Constants.address, str_address);
-        mapbody.put(Constants.userLibId,userLibId+"");
+        mapbody.put(Constants.userLibId, userLibId + "");
 
         OkHttp3Util.doPost(Constants.PAY_FORCE_END, mapbody, null, new Callback() {
             @Override
@@ -1168,7 +1178,7 @@ public class MediaProcessor {
 //                        showTryAgainDialog(timesFlag);
                         mActivity.startActivity(new Intent(mActivity, AddPigPicActivity.class)
                                 .putExtra("lipeiid", "")
-                                .putExtra("timesFlag",timesFlag)
+                                .putExtra("timesFlag", timesFlag)
                         );
                         mActivity.finish();
                     }
@@ -1180,7 +1190,7 @@ public class MediaProcessor {
 
                 mActivity.startActivity(new Intent(mActivity, AddPigPicActivity.class)
                         .putExtra("lipeiid", "")
-                        .putExtra("timesFlag",timesFlag)
+                        .putExtra("timesFlag", timesFlag)
                 );
                 mActivity.finish();
 
@@ -1216,7 +1226,7 @@ public class MediaProcessor {
         });
     }
 
-    private void showTryAgainDialog(String timesFlag){
+    private void showTryAgainDialog(String timesFlag) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
         View inflate = View.inflate(mActivity, R.layout.pre_timeout, null);
         TextView timeoutResert = inflate.findViewById(R.id.timeout_resert);
@@ -1240,7 +1250,6 @@ public class MediaProcessor {
     }
 
 
-
     private void goonLiEnd1(AlertDialog dialogcreate) {
         Map<String, String> mapbody = new HashMap<>();
         mapbody.put(Constants.userLibId, String.valueOf(userLibId));
@@ -1260,7 +1269,7 @@ public class MediaProcessor {
                         showErrorDialogLi(bean.getMsg(), dialogcreate);
                     }
                 });
-                AVOSCloudUtils.saveErrorMessage(e,MediaProcessor.class.getSimpleName());
+                AVOSCloudUtils.saveErrorMessage(e, MediaProcessor.class.getSimpleName());
             }
 
             @Override
@@ -1291,7 +1300,7 @@ public class MediaProcessor {
 
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                AVOSCloudUtils.saveErrorMessage(e,MediaProcessor.class.getSimpleName());
+                                AVOSCloudUtils.saveErrorMessage(e, MediaProcessor.class.getSimpleName());
                             }
 
                         }
@@ -1316,7 +1325,7 @@ public class MediaProcessor {
                         showErrorDialog(bean.getMsg());
                     }
                 });
-                AVOSCloudUtils.saveErrorMessage(e,MediaProcessor.class.getSimpleName());
+                AVOSCloudUtils.saveErrorMessage(e, MediaProcessor.class.getSimpleName());
             }
 
             @Override
@@ -1347,7 +1356,7 @@ public class MediaProcessor {
 
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                AVOSCloudUtils.saveErrorMessage(e,MediaProcessor.class.getSimpleName());
+                                AVOSCloudUtils.saveErrorMessage(e, MediaProcessor.class.getSimpleName());
                             }
 
                         }
@@ -1408,7 +1417,7 @@ public class MediaProcessor {
                         if ("lipei".equals(PreferencesUtils.getStringValue(Constants.fleg, MyApplication.getAppContext()))) {
                             mActivity.startActivity(new Intent(mActivity, AddPigPicActivity.class)
                                     .putExtra("lipeiid", "")
-                                    .putExtra("timesFlag",timesFlag)
+                                    .putExtra("timesFlag", timesFlag)
                             );
                         }
                         mActivity.finish();
@@ -1431,7 +1440,7 @@ public class MediaProcessor {
     }
 
 
-    private void showErrorDialogLi(String msg,AlertDialog diaLog) {
+    private void showErrorDialogLi(String msg, AlertDialog diaLog) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
         View inflate = View.inflate(mActivity, R.layout.lipei_result4, null);
         TextView result4Msg = inflate.findViewById(R.id.result4_msg);
