@@ -19,6 +19,7 @@ import com.avos.avoscloud.AVOSCloud;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.xiangchuang.risks.update.UpdateReceiver;
 import com.xiangchuang.risks.utils.ShareUtils;
+import com.xiangchuang.risks.view.LoginFamerActivity;
 
 import net.gotev.uploadservice.UploadService;
 import net.gotev.uploadservice.okhttp.OkHttpStack;
@@ -139,8 +140,10 @@ public class MyApplication extends Application {
 //                    Toast.makeText(activity, "------->>"+HttpUtils.baseUrl, Toast.LENGTH_LONG).show();
 //                }
                 acontext = activity;
-                isFirst++;
-                doUpDateTask();
+                if(! (activity instanceof LoginFamerActivity)){
+                    isFirst++;
+                    doUpDateTask();
+                }
             }
 
             @Override

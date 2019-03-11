@@ -161,6 +161,15 @@ public class CompanyActivity extends BaseActivity {
         });
     }
 
+    public void setSign() {
+        if(needUpDate){
+            ivPopUpdateSign.setVisibility(View.VISIBLE);
+            ivSign.setVisibility(View.VISIBLE);
+        }else{
+            ivPopUpdateSign.setVisibility(View.GONE);
+            ivSign.setVisibility(View.GONE);
+        }
+    }
 
     @OnClick({R.id.addcompany, R.id.iv_cancel, R.id.tv_exit})
     public void onClick(View view) {
