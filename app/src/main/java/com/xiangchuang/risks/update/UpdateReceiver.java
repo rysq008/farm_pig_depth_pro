@@ -1,5 +1,6 @@
 package com.xiangchuang.risks.update;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,6 +9,9 @@ import android.content.Intent;
 import android.os.Environment;
 import android.util.Log;
 
+import com.xiangchuang.risks.view.CompanyActivity;
+import com.xiangchuang.risks.view.LoginFamerActivity;
+import com.xiangchuang.risks.view.SelectFunctionActivity_new;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
 
@@ -87,7 +91,7 @@ public class UpdateReceiver extends BroadcastReceiver {
             UpdateInformation.upgradeinfo = model.getUpgradeinfo();
 
             //检查版本
-            checkVersion(MyApplication.getContext());
+            checkVersion();
         }
 
     }
@@ -95,25 +99,24 @@ public class UpdateReceiver extends BroadcastReceiver {
     /**
      * 检查版本更新
      *
-     * @param context
      */
-    public void checkVersion(Context context) {
+    public void checkVersion() {
         if (UpdateInformation.localVersion < UpdateInformation.serverVersion) {
             // 需要进行更新
 //            mSharedPreferencesHelper.putIntValue(
 //                    //有新版本
 //                    SharedPreferencesTag.IS_HAVE_NEW_VERSION, 1);
             //更新
-            update(context);
+            update();
             Log.e("checkVersion", "checkVersion: " + UpdateInformation.serverVersion);
         } else {
 //            mSharedPreferencesHelper.putIntValue(
 //                    SharedPreferencesTag.IS_HAVE_NEW_VERSION, 0);
             if (isShowDialog) {
                 //没有最新版本，不用升级
-                noNewVersion(context);
+                noNewVersion();
             }
-            clearUpateFile(context);
+            clearUpateFile();
             needUpDate = false;
         }
     }
@@ -121,32 +124,30 @@ public class UpdateReceiver extends BroadcastReceiver {
     /**
      * 进行升级
      *
-     * @param context
      */
-    private void update(Context context) {
+    private void update() {
         if (UpdateInformation.serverFlag == 1) {
             // 官方推荐升级
             if (UpdateInformation.localVersion < UpdateInformation.lastForce) {
                 //强制升级
-                forceUpdate(context);
+                forceUpdate();
             } else {
                 //正常升级
-                normalUpdate(context);
+                normalUpdate();
             }
 
         } else if (UpdateInformation.serverFlag == 2) {
             // 官方强制升级
-            forceUpdate(context);
+            forceUpdate();
         }
     }
 
     /**
      * 没有新版本
      *
-     * @param context
      */
-    private void noNewVersion(final Context context) {
-        mDialog = new AlertDialog.Builder(context);
+    private void noNewVersion() {
+        mDialog = new AlertDialog.Builder(MyApplication.getContext());
         mDialog.setIcon(R.drawable.cowface);
         mDialog.setTitle("版本更新");
         mDialog.setMessage("当前为最新版本");
@@ -162,10 +163,9 @@ public class UpdateReceiver extends BroadcastReceiver {
     /**
      * 强制升级 ，如果不点击确定升级，直接退出应用
      *
-     * @param context
      */
-    private void forceUpdate(final Context context) {
-        mDialog = new AlertDialog.Builder(context);
+    private void forceUpdate() {
+        mDialog = new AlertDialog.Builder(MyApplication.getContext());
         mDialog.setIcon(R.drawable.cowface);
         mDialog.setTitle("版本更新");
         mDialog.setMessage(UpdateInformation.upgradeinfo);
@@ -174,13 +174,13 @@ public class UpdateReceiver extends BroadcastReceiver {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                Intent mIntent = new Intent(context, AppUpgradeService.class);
+                Intent mIntent = new Intent(MyApplication.getContext(), AppUpgradeService.class);
                 mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 //传递数据
 //                mIntent.putExtra("appname", UpdateInformation.appname);
                 mIntent.putExtra("mDownloadUrl", UpdateInformation.updateurl);
                 mIntent.putExtra("appname", UpdateInformation.appname);
-                context.startService(mIntent);
+                MyApplication.getContext().startService(mIntent);
 
             }
         }).setNegativeButton("稍后再说", new DialogInterface.OnClickListener() {
@@ -189,6 +189,7 @@ public class UpdateReceiver extends BroadcastReceiver {
             public void onClick(DialogInterface dialog, int which) {
                 // 直接退出应用
                 //ManagerActivity.getInstance().finishActivity();
+                android.os.Process.killProcess(android.os.Process.myPid());
                 System.exit(0);
             }
         }).setCancelable(false).create().show();
@@ -197,12 +198,17 @@ public class UpdateReceiver extends BroadcastReceiver {
     /**
      * 正常升级，用户可以选择是否取消升级
      *
-     * @param context
      */
-    private void normalUpdate(final Context context) {
+    private void normalUpdate() {
         needUpDate = true;
 
-//        mDialog = new AlertDialog.Builder(context);
+        if(MyApplication.getContext() instanceof SelectFunctionActivity_new){
+            ((SelectFunctionActivity_new)MyApplication.getContext()).setSign();
+        }else{
+            ((CompanyActivity)MyApplication.getContext()).setSign();
+        }
+
+//        mDialog = new AlertDialog.Builder(MyApplication.getContext());
 //        mDialog.setIcon(R.drawable.cowface);
 //        mDialog.setTitle("版本更新");
 //        mDialog.setMessage(UpdateInformation.upgradeinfo);
@@ -229,9 +235,8 @@ public class UpdateReceiver extends BroadcastReceiver {
     /**
      * 清理升级文件
      *
-     * @param context
      */
-    private void clearUpateFile(final Context context) {
+    private void clearUpateFile() {
         File updateDir;
         File updateFile;
         if (Environment.MEDIA_MOUNTED.equals(Environment
@@ -239,9 +244,9 @@ public class UpdateReceiver extends BroadcastReceiver {
             updateDir = new File(Environment.getExternalStorageDirectory(),
                     UpdateInformation.downloadDir);
         } else {
-            updateDir = context.getFilesDir();
+            updateDir = MyApplication.getContext().getFilesDir();
         }
-        updateFile = new File(updateDir.getPath(), context.getResources()
+        updateFile = new File(updateDir.getPath(), MyApplication.getContext().getResources()
                 .getString(R.string.app_name) + ".apk");
         if (updateFile.exists()) {
             Log.d("update", "升级包存在，删除升级包");

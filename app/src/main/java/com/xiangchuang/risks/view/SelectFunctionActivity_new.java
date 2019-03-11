@@ -157,7 +157,15 @@ public class SelectFunctionActivity_new extends BaseActivity {
     }
 
 
-
+    public void setSign() {
+        if(needUpDate){
+            ivPopUpdateSign.setVisibility(View.VISIBLE);
+            ivSign.setVisibility(View.VISIBLE);
+        }else{
+            ivPopUpdateSign.setVisibility(View.GONE);
+            ivSign.setVisibility(View.GONE);
+        }
+    }
 
     private void queryVideoFlag() {
         Map<String, String> map = new HashMap<>();

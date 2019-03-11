@@ -48,10 +48,10 @@ public final class CounterHelper {
 
     private static final Map<String, String> mHeaderMap = new HashMap<>();
 //    private static final String URL_TEST = "http://ai.innovationai.cn:1011/test";
-    private static final String URL_TEST = "http://119.253.84.115:9019/test";
+    private static final String URL_TEST = "http://119.253.84.115:9018/test";
 
 //    private static final String URL_WEIGHT_TEST = "http://ai.innovationai.cn:1012/supervise";
-    private static final String URL_WEIGHT_TEST = "http://119.253.84.115:9018/supervise";
+    private static final String URL_WEIGHT_TEST = "http://119.253.84.115:9019/supervise";
 
 
     static {
@@ -384,7 +384,7 @@ public final class CounterHelper {
         // 得到新的图片
         Bitmap newbm = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
 
-        newbm.compress(Bitmap.CompressFormat.JPEG, 80, baos);
+        newbm.compress(Bitmap.CompressFormat.JPEG, 90, baos);
         //将图片文件转化为字节数组字符串，并对其进行Base64编码处理
         InputStream in = new ByteArrayInputStream(baos.toByteArray());
         byte[] data = null;
