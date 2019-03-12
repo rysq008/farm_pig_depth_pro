@@ -281,6 +281,9 @@ public class CameraUtils {
         }
         Log.d("", "目标尺寸 ：$targetWidth * $targetHeight ，   比例  $targetRatio");
         Log.d("", "最优尺寸 ：${bestSize?.height} * ${bestSize?.width}");
+        if (bestSize == null) {
+            bestSize = calculatePerfectSize(sizeList, (int) width, (int) height);
+        }
         return bestSize;
     }
 
