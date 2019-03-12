@@ -262,13 +262,13 @@ public class BaseFragment extends Fragment
 		// パーミッションがないときにはメッセージを表示する
 		if (!result && (permission != null)) {
 			if (Manifest.permission.RECORD_AUDIO.equals(permission)) {
-				showToast(R.string.permission_audio);
+				showToast(com.serenegiant.common.R.string.permission_audio);
 			}
 			if (Manifest.permission.WRITE_EXTERNAL_STORAGE.equals(permission)) {
-				showToast(R.string.permission_ext_storage);
+				showToast(com.serenegiant.common.R.string.permission_ext_storage);
 			}
 			if (Manifest.permission.INTERNET.equals(permission)) {
-				showToast(R.string.permission_network);
+				showToast(com.serenegiant.common.R.string.permission_network);
 			}
 		}
 	}
@@ -287,7 +287,7 @@ public class BaseFragment extends Fragment
 	protected boolean checkPermissionWriteExternalStorage() {
 		if (!PermissionCheck.hasWriteExternalStorage(getActivity())) {
 			MessageDialogFragment.showDialog(this, REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE,
-				R.string.permission_title, R.string.permission_ext_storage_request,
+				com.serenegiant.common.R.string.permission_title, com.serenegiant.common.R.string.permission_ext_storage_request,
 				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE});
 			return false;
 		}
@@ -302,7 +302,7 @@ public class BaseFragment extends Fragment
 	protected boolean checkPermissionAudio() {
 		if (!PermissionCheck.hasAudio(getActivity())) {
 			MessageDialogFragment.showDialog(this, REQUEST_PERMISSION_AUDIO_RECORDING,
-				R.string.permission_title, R.string.permission_audio_recording_request,
+				com.serenegiant.common.R.string.permission_title, com.serenegiant.common.R.string.permission_audio_recording_request,
 				new String[]{Manifest.permission.RECORD_AUDIO});
 			return false;
 		}
@@ -317,7 +317,7 @@ public class BaseFragment extends Fragment
 	protected boolean checkPermissionNetwork() {
 		if (!PermissionCheck.hasNetwork(getActivity())) {
 			MessageDialogFragment.showDialog(this, REQUEST_PERMISSION_NETWORK,
-				R.string.permission_title, R.string.permission_network_request,
+				com.serenegiant.common.R.string.permission_title, com.serenegiant.common.R.string.permission_network_request,
 				new String[]{Manifest.permission.INTERNET});
 			return false;
 		}
@@ -332,7 +332,7 @@ public class BaseFragment extends Fragment
 	protected boolean checkPermissionCamera() {
 		if (!PermissionCheck.hasCamera(getActivity())) {
 			MessageDialogFragment.showDialog(this, REQUEST_PERMISSION_CAMERA,
-				R.string.permission_title, R.string.permission_camera_request,
+				com.serenegiant.common.R.string.permission_title, com.serenegiant.common.R.string.permission_camera_request,
 				new String[]{Manifest.permission.CAMERA});
 			return false;
 		}
