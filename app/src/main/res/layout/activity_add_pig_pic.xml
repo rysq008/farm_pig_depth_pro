@@ -86,6 +86,7 @@
                     android:id="@+id/btnPersonAndAnimal"
                     android:layout_width="200dp"
                     android:layout_height="200dp"
+                    android:scaleType="fitCenter"
                     android:src="@mipmap/add_photo" />
 
                 <TextView
