@@ -1,6 +1,7 @@
 package com.xiangchuang.risks.view;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -245,20 +246,11 @@ public class AddPigPicActivity extends BaseActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode != Activity.RESULT_OK)return;
         switch (requestCode) {
-            // 直接从相册获取
-//            case REQUESTCODE_PICK:
-//                try {
-////                    startPhotoZoom(data.getData());
-//                } catch (NullPointerException e) {
-//                    // 用户点击取消操作
-//                    e.printStackTrace();
-//                }
-//                break;
-            // 调用相机拍照
             case REQUESTCODE_TAKE:
-                if (TextUtils.isEmpty(data.getStringExtra("path"))) {
+                if (data == null || TextUtils.isEmpty(data.getStringExtra("path"))) {
                     return;
                 }
                 tempFile = new File(data.getStringExtra("path"));
@@ -271,23 +263,10 @@ public class AddPigPicActivity extends BaseActivity {
                     }
                 }
                 break;
-            // 取得裁剪后的图片
-//            case REQUESTCODE_CUTTING:
-//                if (data != null) {
-//                    try {
-////                        setPicToView(temp);
-//                    } catch (Exception e) {
-//                        Toast.makeText(AddPigPicActivity.this, "图片处理异常，请重试。", Toast.LENGTH_SHORT).show();
-//                        e.printStackTrace();
-//                    }
-//                } else {
-//                    Toast.makeText(AddPigPicActivity.this, "图片处理异常，请重试。", Toast.LENGTH_SHORT).show();
-//                }
-//                break;
             default:
                 break;
         }
-        super.onActivityResult(requestCode, resultCode, data);
+
     }
 
     /**
