@@ -2,13 +2,16 @@ package com.xiangchuangtec.luolu.animalcounter.view;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
 import android.graphics.drawable.BitmapDrawable;
 import android.hardware.usb.UsbDevice;
+import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -347,7 +350,7 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
                 setCurrentBitmap(mCameraTextureView.getBitmap());
                 mResultImageView.setVisibility(View.GONE);
                 Bitmap tBitmap = getCurrentBitmap();
-                Log.e(TAG, "ByteCount: "+tBitmap.getByteCount() );
+                Log.e(TAG, "ByteCount: "+tBitmap.getByteCount());
                 if (tBitmap == null) {
                     return;
                 }
@@ -769,10 +772,15 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
         });
     }
 
+    boolean isCameraClose = false;
     private final USBMonitor.OnDeviceConnectListener mOnDeviceConnectListener = new USBMonitor.OnDeviceConnectListener() {
         @Override
         public void onAttach(final UsbDevice device) {
-            //Toast.makeText(USBCameraActivity.this, "USB_DEVICE_ATTACHED", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(USBCameraActivity_new.this, "USB_DEVICE_ATTACHED", Toast.LENGTH_SHORT).show();
+            if(isCameraClose) {
+                CameraDialog.openCamera(USBCameraActivity_new.this);
+                isCameraClose = false;
+            }
         }
 
         @Override
@@ -793,6 +801,7 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
                         if (mCameraHandler != null) {
                             try {
                                 mCameraHandler.close();
+                                isCameraClose = true;
                             } catch (Exception e) {
 
                             }
@@ -805,7 +814,7 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
 
         @Override
         public void onDettach(final UsbDevice device) {
-            //Toast.makeText(USBCameraActivity.this, "USB_DEVICE_DETACHED", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(USBCameraActivity_new.this, "USB_DEVICE_DETACHED", Toast.LENGTH_SHORT).show();
         }
 
         @Override

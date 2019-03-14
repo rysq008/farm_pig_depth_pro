@@ -361,6 +361,7 @@ public class UVCCameraTextureView extends AspectRatioTextureView    // API >= 14
         public final void onFrameAvailable(final SurfaceTexture surfaceTexture) {
             if (mIsActive) {
                 mFpsCounter.count();
+
                 sendEmptyMessage(MSG_REQUEST_RENDER);
             }
         }
