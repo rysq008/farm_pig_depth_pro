@@ -6,7 +6,7 @@ repositories {
     mavenCentral()
 }
 android {
-    compileSdkVersion 28
+    compileSdkVersion 26
     //    luolucode
     defaultConfig {
         applicationId "com.xiangchuangtec.luolu.animalcounter"
@@ -19,6 +19,7 @@ android {
         ndk {
             abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
         }
+        multiDexEnabled true
 
     }
     aaptOptions { noCompress 'tflite' }

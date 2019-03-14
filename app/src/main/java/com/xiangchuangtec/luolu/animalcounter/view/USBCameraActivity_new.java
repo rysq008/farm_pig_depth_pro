@@ -347,9 +347,17 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
                 setCurrentBitmap(mCameraTextureView.getBitmap());
                 mResultImageView.setVisibility(View.GONE);
                 Bitmap tBitmap = getCurrentBitmap();
+                Log.e(TAG, "ByteCount: "+tBitmap.getByteCount() );
                 if (tBitmap == null) {
                     return;
                 }
+                //检测图片质量
+                int bright = innovation.utils.ImageUtils.checkImageBright(tBitmap);
+                if(bright < 40){
+                    Toast.makeText(USBCameraActivity_new.this, "图片过暗", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 showPop();
                 CounterHelper.recognitionFromNet(tBitmap, new CounterHelper.OnImageRecognitionListener() {
                     @Override

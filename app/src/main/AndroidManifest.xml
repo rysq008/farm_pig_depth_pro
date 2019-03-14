@@ -50,7 +50,7 @@
     <!-- android:hardwareAccelerated="false" -->
     <!-- android:name="com.xiangchuangtec.luolu.animalcounter.MyApplication" -->
     <application
-        android:name=".MyApplication"
+        android:name="com.xiangchuangtec.luolu.animalcounter.MyApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
