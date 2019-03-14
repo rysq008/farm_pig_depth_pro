@@ -79,6 +79,7 @@ import innovation.media.MediaProcessor;
 import innovation.media.Model;
 import innovation.utils.FileUtils;
 import innovation.view.SendView;
+import innovation.view.VerticalSeekBar;
 
 import org.tensorflow.demo.env.Logger;
 import org.tensorflow.demo.tracking.MultiBoxTracker;
@@ -196,6 +197,9 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
     private View mRecordVerify;
     private TextView mRecordVerifyTxt;
     private static TextView tvNotice;
+    //曝光调节
+    private VerticalSeekBar seekBar;
+
     //左脸标识图
     private static ImageView ivLeft;
     //右脸标识图
@@ -598,32 +602,32 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
             Global.mediaPayItem.currentInit();
         }
 
-//        seekBar = view.findViewById(R.id.seekbar);
-//        seekBar.setMax(24);
-//        seekBar.setProgress(12);
-//        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-//            @Override
-//            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-//                if (i > 12) {
-//                    exposureCompensation = i - 12;
-//                    updatePreview();
-//                }
-//                if (i < 12) {
-//                    exposureCompensation = i - 12;
-//                    updatePreview();
-//                }
-//            }
-//
-//            @Override
-//            public void onStartTrackingTouch(SeekBar seekBar) {
-//
-//            }
-//
-//            @Override
-//            public void onStopTrackingTouch(SeekBar seekBar) {
-//
-//            }
-//        });
+        seekBar = view.findViewById(R.id.seekbar);
+        seekBar.setMax(24);
+        seekBar.setProgress(12);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                if (i > 12) {
+                    exposureCompensation = i - 12;
+                    updatePreview();
+                }
+                if (i < 12) {
+                    exposureCompensation = i - 12;
+                    updatePreview();
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
 
     }
 

@@ -29,6 +29,39 @@
         android:layout_alignParentTop="true"
         android:background="@drawable/shibiebox"
         android:layout_above="@+id/tool_layout">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"
+            android:layout_centerVertical="true"
+            android:gravity="center_horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+"
+                android:textColor="#ffffff"
+                android:textSize="20sp"/>
+            <innovation.view.VerticalSeekBar
+                android:id="@+id/seekbar"
+                android:layout_width="wrap_content"
+                android:layout_height="300dp"
+                android:progressDrawable="@drawable/seebar1"
+                android:thumb="@drawable/shape_point_circular"
+                android:splitTrack="false"
+                android:thumbOffset="0dip"
+                android:maxHeight="4dp"
+                android:minHeight="4dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-"
+                android:textColor="#ffffff"
+                android:textSize="20sp"/>
+        </LinearLayout>
+
+
         <ImageView
             android:id="@+id/IV_left"
             android:layout_width="match_parent"
