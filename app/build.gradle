@@ -10,7 +10,7 @@ android {
     //    luolucode
     defaultConfig {
         applicationId "com.xiangchuangtec.luolu.animalcounter"
-        minSdkVersion 18
+        minSdkVersion 21
         targetSdkVersion 26
         //release versionCode 1100
         versionCode 1107
