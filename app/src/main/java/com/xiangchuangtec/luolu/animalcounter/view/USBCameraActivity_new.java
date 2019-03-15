@@ -743,6 +743,7 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
 //    }
 
     private void startPreview() {
+
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
@@ -754,7 +755,7 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
                     startPreview();
                 }
             }
-        }, 500);
+        }, 0);
 //        final SurfaceTexture  st = mUVCCameraView.getSurfaceTexture();
 //        if (st != null) {
 //            if (DEBUG) Log.v(TAG, "SurfaceTexture!=Null"+st);
