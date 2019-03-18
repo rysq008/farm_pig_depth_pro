@@ -48,6 +48,7 @@ import android.widget.Toast;
 import com.serenegiant.usb.DeviceFilter;
 import com.serenegiant.usb.USBMonitor;
 
+import com.serenegiant.uvccamera.BuildConfig;
 import com.serenegiant.uvccamera.R;
 
 public class CameraDialog extends DialogFragment {
@@ -66,9 +67,11 @@ public class CameraDialog extends DialogFragment {
 		CameraDialog dialog = newInstance(/* add parameters here if you need */);
 		dialog.onAttach(parent);
 		final List<DeviceFilter> filter = DeviceFilter.getDeviceFilters(parent, R.xml.device_filter);
+		if(BuildConfig.DEBUG)
 		Log.e(TAG, "DeviceFilter===="+ filter.toString());
 		if(filter.size()>0){
 			List<UsbDevice> usbDeviceList = dialog.mUSBMonitor.getDeviceList(filter.get(0));
+			if(BuildConfig.DEBUG)
 			Log.e(TAG, "usbDeviceList:"+ usbDeviceList.toString());
 			if(usbDeviceList.size()>0){
 				dialog.mUSBMonitor.requestPermission(usbDeviceList.get(0));

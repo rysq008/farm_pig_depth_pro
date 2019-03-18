@@ -779,14 +779,9 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
         public void onAttach(final UsbDevice device) {
             //Toast.makeText(USBCameraActivity_new.this, "USB_DEVICE_ATTACHED", Toast.LENGTH_SHORT).show();
             if(isCameraClose) {
-
                 CameraDialog.openCamera(USBCameraActivity_new.this);
-
                 mCameraHandler = UVCCameraHandler.createHandler(USBCameraActivity_new.this, mUVCCameraView,
                         USE_SURFACE_ENCODER ? 0 : 1, PREVIEW_WIDTH, PREVIEW_HEIGHT, PREVIEW_MODE);
-                mUSBMonitor.register();
-//                startActivity(new Intent(USBCameraActivity_new.this, USBCameraActivity_new.class));
-//                USBCameraActivity_new.this.finish();
                 isCameraClose = false;
             }
         }
