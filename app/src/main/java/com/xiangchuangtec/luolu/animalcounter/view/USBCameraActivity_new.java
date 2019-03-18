@@ -310,7 +310,7 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
         mTakePictureButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-//                wakeUpCamera();
+                wakeUpCamera();
                 return false;
             }
         });
