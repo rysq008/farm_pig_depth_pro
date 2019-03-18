@@ -67,6 +67,14 @@
         android:layout_centerHorizontal="true"
         android:text="拍摄时使整个猪圈在摄像头范围，保证高度，遮挡少"
         android:textColor="#8D9195" />
+    <TextView
+        android:id="@+id/tv_tips_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_below="@+id/warning_msg"
+        android:layout_centerHorizontal="true"
+        android:text="点数过程中如预览画面变黑，请重插外接摄像头"
+        android:textColor="#8D9195" />
 
     <ImageView
         android:id="@+id/usb_recogn"
