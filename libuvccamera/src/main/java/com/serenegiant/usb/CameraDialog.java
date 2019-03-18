@@ -34,6 +34,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.hardware.usb.UsbDevice;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -65,8 +66,10 @@ public class CameraDialog extends DialogFragment {
 		CameraDialog dialog = newInstance(/* add parameters here if you need */);
 		dialog.onAttach(parent);
 		final List<DeviceFilter> filter = DeviceFilter.getDeviceFilters(parent, R.xml.device_filter);
+		Log.e(TAG, "DeviceFilter===="+ filter.toString());
 		if(filter.size()>0){
 			List<UsbDevice> usbDeviceList = dialog.mUSBMonitor.getDeviceList(filter.get(0));
+			Log.e(TAG, "usbDeviceList:"+ usbDeviceList.toString());
 			if(usbDeviceList.size()>0){
 				dialog.mUSBMonitor.requestPermission(usbDeviceList.get(0));
 			}else{
