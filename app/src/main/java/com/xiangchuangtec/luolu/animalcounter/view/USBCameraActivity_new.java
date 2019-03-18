@@ -101,7 +101,7 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
     /**
      * for accessing USB
      */
-    private USBMonitor mUSBMonitor;
+    private static USBMonitor mUSBMonitor;
     /**
      * Handler to execute camera related methods sequentially on private thread
      */
@@ -310,7 +310,7 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
         mTakePictureButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                wakeUpCamera();
+//                wakeUpCamera();
                 return false;
             }
         });
@@ -755,7 +755,7 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
                     startPreview();
                 }
             }
-        }, 0);
+        }, 500);
 //        final SurfaceTexture  st = mUVCCameraView.getSurfaceTexture();
 //        if (st != null) {
 //            if (DEBUG) Log.v(TAG, "SurfaceTexture!=Null"+st);
@@ -779,7 +779,14 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
         public void onAttach(final UsbDevice device) {
             //Toast.makeText(USBCameraActivity_new.this, "USB_DEVICE_ATTACHED", Toast.LENGTH_SHORT).show();
             if(isCameraClose) {
+
                 CameraDialog.openCamera(USBCameraActivity_new.this);
+
+                mCameraHandler = UVCCameraHandler.createHandler(USBCameraActivity_new.this, mUVCCameraView,
+                        USE_SURFACE_ENCODER ? 0 : 1, PREVIEW_WIDTH, PREVIEW_HEIGHT, PREVIEW_MODE);
+                mUSBMonitor.register();
+//                startActivity(new Intent(USBCameraActivity_new.this, USBCameraActivity_new.class));
+//                USBCameraActivity_new.this.finish();
                 isCameraClose = false;
             }
         }
