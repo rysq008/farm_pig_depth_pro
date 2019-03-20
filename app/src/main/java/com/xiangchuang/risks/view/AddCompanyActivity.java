@@ -241,10 +241,13 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
                                     tvBaodanIdcard.setText(bean.getData().getEnLicenseNo());
                                 }
                                 try {
-                                    if (!IDCard.IDCardValidate(bean.getData().getEnLicenseNo())) {
+//                                    if (!IDCard.IDCardValidate(bean.getData().getEnLicenseNo())) {
+//                                        certificateType = 2;
+//                                        certificateTypeRadioGroup.check(R.id.id_business_licens);
+//                                    }
+                                    if(bean.getData().getCardBack().isEmpty()){
                                         certificateType = 2;
                                         certificateTypeRadioGroup.check(R.id.id_business_licens);
-
                                     }
                                 } catch (Exception e) {
                                     AVOSCloudUtils.saveErrorMessage(e,AddCompanyActivity.class.getSimpleName());
