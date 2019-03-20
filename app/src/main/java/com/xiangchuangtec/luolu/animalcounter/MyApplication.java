@@ -11,8 +11,10 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.multidex.MultiDex;
 import android.support.v4.app.ActivityCompat;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -21,10 +23,18 @@ import com.tencent.bugly.crashreport.CrashReport;
 import com.xiangchuang.risks.update.UpdateReceiver;
 import com.xiangchuang.risks.utils.ShareUtils;
 import com.xiangchuang.risks.view.LoginFamerActivity;
+import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
+import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
 
 import net.gotev.uploadservice.UploadService;
 import net.gotev.uploadservice.okhttp.OkHttpStack;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import innovation.crash.CrashHandler;
@@ -40,6 +50,9 @@ import io.objectbox.android.AndroidObjectBrowser;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
+
+import static innovation.entry.InnApplication.getCowType;
+import static innovation.entry.InnApplication.getlipeiTempNumber;
 
 
 /**
@@ -189,7 +202,46 @@ public class MyApplication extends Application {
                 if (BuildConfig.DEBUG) {
                     Toast.makeText(acontext, "getFlags==" + acontext.getIntent().getFlags(), Toast.LENGTH_SHORT).show();
                 }
-                mUpdateTask = new GetUpDateTask(HttpUtils.GET_UPDATE_URL, null);
+
+                Map<String, String> query = new HashMap<>();
+
+                String type = PreferencesUtils.getStringValue(Constants.companyfleg, MyApplication.getAppContext());
+                if (("1").equals(type)) {
+                    query.put("uid", PreferencesUtils.getStringValue(Constants.id, MyApplication.getAppContext()));
+                } else {
+                    query.put("uid", PreferencesUtils.getIntValue(Constants.en_user_id, MyApplication.getAppContext()) + "");
+                }
+                query.put("enId", PreferencesUtils.getStringValue(Constants.en_id, MyApplication.getAppContext()));
+                query.put("longitude", PreferencesUtils.getStringValue(Constants.longitude, MyApplication.getAppContext()));
+                query.put("latitude", PreferencesUtils.getStringValue(Constants.latitude, MyApplication.getAppContext()));
+                query.put("phoneModel", android.os.Build.MODEL);
+                query.put("timestamp", System.currentTimeMillis() + "");
+
+                TelephonyManager phone = (TelephonyManager) MyApplication.getContext().getSystemService(Context.TELEPHONY_SERVICE);
+                //IMEI
+                if (ActivityCompat.checkSelfPermission(MyApplication.getContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    query.put("phoneImei",  "");
+                }else {
+                    query.put("phoneImei", phone.getDeviceId() + "");
+                }
+                query.put("version",MyApplication.version);
+
+                Set set = query.keySet();
+                for (Object aSet : set) {
+                    String key = (String) aSet;
+                    String value = query.get(key);
+                    Log.e("设备信息", "\nkey:" + key + "==========value:" + value);
+                }
+
+
+                mUpdateTask = new GetUpDateTask(HttpUtils.GET_UPDATE_URL, query);
                 mUpdateTask.execute((Void) null);
             }
         }
@@ -205,9 +257,9 @@ public class MyApplication extends Application {
     private class GetUpDateTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String mUrl;
-        private final TreeMap<String, String> mQueryMap;
+        private final Map<String, String> mQueryMap;
 
-        GetUpDateTask(String url, TreeMap map) {
+        GetUpDateTask(String url, Map map) {
             mUrl = url;
             mQueryMap = map;
         }
@@ -215,7 +267,13 @@ public class MyApplication extends Application {
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
+
                 FormBody.Builder builder = new FormBody.Builder();
+                // Add Params to Builder
+                for (Map.Entry<String, String> entry : mQueryMap.entrySet()) {
+                    builder.add(entry.getKey(), entry.getValue());
+                }
+                // Create RequestBody
                 RequestBody formBody = builder.build();
 
                 String response = HttpUtils.post(mUrl, formBody);
