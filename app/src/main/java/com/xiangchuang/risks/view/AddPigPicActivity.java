@@ -116,7 +116,7 @@ public class AddPigPicActivity extends BaseActivity {
     private float[] mWeightRange = new float[4];
 
     //记录称重接口不能识别的次数
-    private static int failureTime = 0;
+    private int failureTime = 0;
 
     @Override
     protected int getLayoutId() {
@@ -729,6 +729,6 @@ public class AddPigPicActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        failureTime = 0;
+        failureTime = 0;
     }
 }
