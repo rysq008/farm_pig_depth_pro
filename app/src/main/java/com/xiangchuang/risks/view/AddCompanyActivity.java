@@ -240,19 +240,15 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
                                 if (!bean.getData().getEnLicenseNo().isEmpty()) {
                                     tvBaodanIdcard.setText(bean.getData().getEnLicenseNo());
                                 }
-                                try {
-//                                    if (!IDCard.IDCardValidate(bean.getData().getEnLicenseNo())) {
-//                                        certificateType = 2;
-//                                        certificateTypeRadioGroup.check(R.id.id_business_licens);
-//                                    }
-                                    if(bean.getData().getCardBack().isEmpty()){
-                                        certificateType = 2;
-                                        certificateTypeRadioGroup.check(R.id.id_business_licens);
-                                    }
-                                } catch (Exception e) {
-                                    AVOSCloudUtils.saveErrorMessage(e,AddCompanyActivity.class.getSimpleName());
-                                    e.printStackTrace();
+
+                                if(bean.getData().getCardType() == 1){
+                                    certificateType = 1;
+                                    certificateTypeRadioGroup.check(R.id.id_card_radio_button);
+                                }else{
+                                    certificateType = 2;
+                                    certificateTypeRadioGroup.check(R.id.id_business_licens);
                                 }
+
                                 if (!bean.getData().getCardFront().isEmpty()) {
                                     str_idcard_zheng = bean.getData().getCardFront();
                                     Glide.with(AddCompanyActivity.this).load(bean.getData().getCardFront())
@@ -460,6 +456,9 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
         mapbody.put("cardFront", str_idcard_zheng);
         if (certificateType == 1){
             mapbody.put("cardBack", str_idcard_fan);
+            mapbody.put("cardType", 1+"");
+        }else{
+            mapbody.put("cardType", 2+"");
         }
         mapbody.put("bankFront", str_bank);
         mapbody.put("bankBack", "");
