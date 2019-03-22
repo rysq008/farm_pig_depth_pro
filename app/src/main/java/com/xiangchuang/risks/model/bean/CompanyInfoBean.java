@@ -85,6 +85,15 @@ public class CompanyInfoBean {
         private String remark;
         private String updatetime;
         private String updateuser;
+        private int cardType;
+
+        public int getCardType() {
+            return cardType;
+        }
+
+        public void setCardType(int cardType) {
+            this.cardType = cardType;
+        }
 
         public String getAddress() {
             return address;
