@@ -13,8 +13,8 @@ android {
         minSdkVersion 21
         targetSdkVersion 26
         //release versionCode 1100
-        versionCode 1110
-        versionName "1.110"
+        versionCode 1111
+        versionName "1.111"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
