@@ -274,7 +274,7 @@ public class CameraUtils {
             float supportedRatio = ((float) size.width / size.height);
             if (Math.abs(supportedRatio - targetRatio) < minDiff) {
                 //摄像头size的宽高和屏幕宽高相反，所以，size,height 相当于屏幕宽
-                if (isPicture && size.height < width) break;
+                if (isPicture && size.height < width)  continue;
                 minDiff = Math.abs(supportedRatio - targetRatio);
                 bestSize = size;
             }

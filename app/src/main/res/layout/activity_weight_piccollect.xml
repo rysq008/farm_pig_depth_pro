@@ -73,6 +73,6 @@
         android:layout_marginRight="30dp"
         android:layout_marginTop="30dp"
         android:text="提示\n1、请保持手机水平，将刻度尺放入蓝色双虚线内；\n2、当拍照按钮变为白色时可拍照；"
-        android:textColor="@color/WHITE"
-        android:textSize="14dp" />
+        android:textColor="@color/DODGERBLUE"
+        android:textSize="18dp" />
 </RelativeLayout>
