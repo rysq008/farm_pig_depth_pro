@@ -602,7 +602,7 @@ public class AddPigPicActivity extends BaseActivity {
             Toast.makeText(getApplicationContext(), "畜龄超出范围", Toast.LENGTH_SHORT).show();
             return;
         }
-        
+
         if (TextUtils.isEmpty(etPigDeathTime.getText())) {
             mProgressDialog.dismiss();
             Toast.makeText(getApplicationContext(), "未填写死猪死亡时间", Toast.LENGTH_SHORT).show();
@@ -768,6 +768,8 @@ public class AddPigPicActivity extends BaseActivity {
                 etPigDeathTime.setText(format.format(calendar.getTime()));
             }
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        DatePicker datePicker = datePickerDialog.getDatePicker();
+        datePicker.setMaxDate(Calendar.getInstance().getTime().getTime());// 最大日期
         datePickerDialog.show();
     }
 }

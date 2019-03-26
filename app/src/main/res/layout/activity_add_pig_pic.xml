@@ -88,7 +88,8 @@
                 <EditText
                     android:id="@+id/etPigDeathTime"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
                     android:background="@android:color/transparent"
                     android:hint="请点击选择死猪死亡时间"
                     android:focusable="false"
