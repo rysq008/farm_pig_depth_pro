@@ -2,6 +2,7 @@ package com.xiangchuang.risks.view;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -56,8 +57,10 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class AddPigPicActivity extends BaseActivity {
@@ -92,6 +95,8 @@ public class AddPigPicActivity extends BaseActivity {
     TextView tvPrompt;
     @BindView(R.id.ll_default)
     LinearLayout ll_default;
+    @BindView(R.id.etPigDeathTime)
+    EditText etPigDeathTime;
 
     private static final int REQUESTCODE_PICK = 0;        // 相册选图标记
     private static final int REQUESTCODE_TAKE = 1;        // 相机拍照标记
@@ -528,7 +533,7 @@ public class AddPigPicActivity extends BaseActivity {
 //    }
 
 
-    @OnClick({R.id.btnPersonAndAnimal, R.id.ll_default, R.id.btnbuchongleft, R.id.btnbuchongright, R.id.btnCommit, R.id.iv_cancel})
+    @OnClick({R.id.btnPersonAndAnimal, R.id.ll_default, R.id.btnbuchongleft, R.id.btnbuchongright, R.id.btnCommit, R.id.iv_cancel, R.id.etPigDeathTime})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btnPersonAndAnimal:
@@ -576,6 +581,9 @@ public class AddPigPicActivity extends BaseActivity {
             case R.id.iv_cancel:
                 finish();
                 break;
+            case R.id.etPigDeathTime:
+                showDatePickerDialog();
+                break;
             default:
                 break;
         }
@@ -592,6 +600,12 @@ public class AddPigPicActivity extends BaseActivity {
         if (age <= 0 || age > 2000) {
             mProgressDialog.dismiss();
             Toast.makeText(getApplicationContext(), "畜龄超出范围", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        
+        if (TextUtils.isEmpty(etPigDeathTime.getText())) {
+            mProgressDialog.dismiss();
+            Toast.makeText(getApplicationContext(), "未填写死猪死亡时间", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -625,6 +639,7 @@ public class AddPigPicActivity extends BaseActivity {
         mapbody.put("age", etPigAge.getText().toString().trim());
         mapbody.put("weight", etAnimalWeight.getText().toString().trim());
         mapbody.put("weightPic", tvPersonAndAnimalpath.getText().toString().trim());
+        mapbody.put("deathTime", etPigDeathTime.getText().toString().trim());
         mapbody.put("deadPics", "");
         mapbody.put("provePic", "");//无害化证明照片
         mapbody.put("autoWeight", autoWeight);//自动识别返回重量
@@ -735,5 +750,24 @@ public class AddPigPicActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         failureTime = 0;
+    }
+
+
+    public void showDatePickerDialog() {
+        SimpleDateFormat format =new SimpleDateFormat("yyyy-MM-dd");//获取日期格式器对象
+        Calendar calendar = Calendar.getInstance(Locale.CHINA);//获取日期格式器对象
+        //生成一个DatePickerDialog对象，并显示。显示的DatePickerDialog控件可以选择年月日，并设置
+        DatePickerDialog datePickerDialog = new DatePickerDialog(AddPigPicActivity.this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                //修改日历控件的年，月，日
+                //这里的year,monthOfYear,dayOfMonth的值与DatePickerDialog控件设置的最新值一致
+                calendar.set(Calendar.YEAR,year);
+                calendar.set(Calendar.MONTH,month);
+                calendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
+                etPigDeathTime.setText(format.format(calendar.getTime()));
+            }
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.show();
     }
 }
