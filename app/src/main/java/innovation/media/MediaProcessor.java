@@ -1782,24 +1782,25 @@ public class MediaProcessor {
                     processZip(false);
 
                     // 投保时处理
-                    if (Global.model == Model.BUILD.value()) {
-                        String zipImageDir = Global.mediaInsureItem.getZipImageDir();//storage/emulated/0/innovation/animal/ZipImage
-                        File file_current = new File(zipImageDir);
-
-                        if (InnApplication.isOfflineMode) {
-                            offLineUploadPic(file_current);
-                        } else {
-                            processUploadOne_Insure();
-                            File zipFile_image = new File(file_current.getParentFile(), Global.ZipFileName + ".zip");
-                            Log.d("MediaProcess.java", "processUpload_zipImage_one file name = " + zipFile_image.getAbsolutePath());
-                        }
-                    }
+//                    if (Global.model == Model.BUILD.value()) {
+//                        String zipImageDir = Global.mediaInsureItem.getZipImageDir();//storage/emulated/0/innovation/animal/ZipImage
+//                        File file_current = new File(zipImageDir);
+//
+//                        if (InnApplication.isOfflineMode) {
+//                            offLineUploadPic(file_current);
+//                        } else {
+//                            processUploadOne_Insure();
+//                            File zipFile_image = new File(file_current.getParentFile(), Global.ZipFileName + ".zip");
+//                            Log.d("MediaProcess.java", "processUpload_zipImage_one file name = " + zipFile_image.getAbsolutePath());
+//                        }
+//                    }
 
                     // 理赔时处理
-                    if (Global.model == Model.VERIFY.value()) {
-                        String zipimageDir = Global.mediaPayItem.getZipImageDir();//storage/emulated/0/innovation/animal/ZipImage
-                        processUploadOne_Pay();
-                    }
+//                    if (Global.model == Model.VERIFY.value()) {
+//                    }
+                    String zipimageDir = Global.mediaPayItem.getZipImageDir();//storage/emulated/0/innovation/animal/ZipImage
+                    processUploadOne_Pay();
+
                     break;
                 case MSG_PROCESSOR_TEST:
                     break;
