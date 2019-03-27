@@ -181,6 +181,8 @@ public class Constants {
     public static String PAY_FORCE_COMMIT = BASENEW + "payment/payForceCommit";
     //强制补充信息
     public static String PAY_FORCE_END = BASENEW + "payment/payForceEnd";
+    //全局动态弹框提示
+    public static String GET_TIPS_DIALOG = BASENEW + "/app/get";
 
     public static void resetBaseIp(String host) {
         HttpUtils.baseUrl = host;
@@ -265,5 +267,7 @@ public class Constants {
         PAY_FORCE_COMMIT = BASENEW + "payment/payForceCommit";
         //强制补充信息
         PAY_FORCE_END = BASENEW + "payment/payForceEnd";
+
+        GET_TIPS_DIALOG = BASENEW + "/app/get";
     }
 }

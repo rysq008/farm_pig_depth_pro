@@ -42,6 +42,7 @@ import innovation.database.MyObjectBox;
 import innovation.entry.UpdateBean;
 import innovation.location.LocationManager_new;
 import innovation.network_status.NetworkChangedReceiver;
+import innovation.utils.GlobalDialogUtils;
 import innovation.utils.HttpRespObject;
 import innovation.utils.HttpUtils;
 import innovation.utils.ImageLoaderUtils;
@@ -60,7 +61,7 @@ import static innovation.entry.InnApplication.getlipeiTempNumber;
  */
 
 public class MyApplication extends Application {
-
+    private static final String TAG = "MyApplication";
     private CrashHandler mCrashHandler;
     private static Context context;
     // Storage Permissions
@@ -154,6 +155,7 @@ public class MyApplication extends Application {
 //                    Toast.makeText(activity, "------->>"+HttpUtils.baseUrl, Toast.LENGTH_LONG).show();
 //                }
                 acontext = activity;
+                GlobalDialogUtils.getNotice(activity.getLocalClassName(), activity);
                 if(! (activity instanceof LoginFamerActivity)){
                     isFirst++;
                     doUpDateTask();

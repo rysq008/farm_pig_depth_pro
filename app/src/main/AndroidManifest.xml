@@ -68,7 +68,7 @@
         <!-- 2018-12-10高德KEY  adf3458ffa64cdeee292d3ed2a68b6cc -->
         <!-- 旧key eb91b7f4ba902477ac9c242f768152da -->
         <activity
-            android:name=".CounterActivity_new"
+            android:name="com.xiangchuangtec.luolu.animalcounter.CounterActivity_new"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait">
 
@@ -90,10 +90,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.ShowPollingActivity_new"
+            android:name="com.xiangchuangtec.luolu.animalcounter.view.ShowPollingActivity_new"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.USBCameraActivity_new"
+            android:name="com.xiangchuangtec.luolu.animalcounter.view.USBCameraActivity_new"
             android:screenOrientation="portrait" />
         <activity
             android:name="phpMySQL.MainActivity"
