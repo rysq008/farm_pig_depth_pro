@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Environment;
@@ -19,7 +18,6 @@ import android.widget.Toast;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.model.Commit;
-import com.xiangchuangtec.luolu.animalcounter.view.ShowPollingActivity_new;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -28,7 +26,6 @@ import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -628,11 +625,14 @@ public class OkHttp3Util {
         try {
             final Request copy = request.newBuilder().build();
             final Buffer buffer = new Buffer();
-            copy.body().writeTo(buffer);
-            return buffer.readUtf8();
+            if(copy != null && copy.body() != null){
+                copy.body().writeTo(buffer);
+                return buffer.readUtf8();
+            }
         } catch (final IOException e) {
             return "something error when show requestBody.";
         }
+        return "something error when show requestBody.";
     }
 
     /**

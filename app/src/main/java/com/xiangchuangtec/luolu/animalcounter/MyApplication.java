@@ -155,8 +155,11 @@ public class MyApplication extends Application {
 //                    Toast.makeText(activity, "------->>"+HttpUtils.baseUrl, Toast.LENGTH_LONG).show();
 //                }
                 acontext = activity;
-                GlobalDialogUtils.getNotice(activity.getLocalClassName(), activity);
-                if(! (activity instanceof LoginFamerActivity)){
+                if(activity != null && !activity.getClass().getCanonicalName().contains("LoginFamerActivity")){
+                    GlobalDialogUtils.getNotice(activity.getClass().getCanonicalName(), activity);
+                }
+
+                if(!(activity instanceof LoginFamerActivity)){
                     isFirst++;
                     doUpDateTask();
                 }

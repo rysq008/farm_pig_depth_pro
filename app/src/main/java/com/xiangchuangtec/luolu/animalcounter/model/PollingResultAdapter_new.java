@@ -2,7 +2,6 @@ package com.xiangchuangtec.luolu.animalcounter.model;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,7 @@ import android.widget.TextView;
 
 import com.xiangchuang.risks.model.bean.SheListBean;
 import com.xiangchuangtec.luolu.animalcounter.R;
-import com.xiangchuangtec.luolu.animalcounter.view.ShowPollingActivity_new;
+import com.xiangchuang.risks.view.ShowPollingActivity_new;
 
 import java.util.List;
 

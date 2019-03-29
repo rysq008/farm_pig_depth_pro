@@ -40,12 +40,11 @@ public class GlobalDialogUtils {
 //    private TipsDialog tipsDialog;
     public static void getNotice(String useCase, Activity activity) {
         Log.d(TAG, "========name======" + activity.getLocalClassName());
-        // TODO: 2019/3/27 确认一下接口，和字段
         TipsDialog tipsDialog = new TipsDialog(activity);
         Map<String, String> mapHeader = new HashMap<>();
         mapHeader.put("imei", SystemUtil.getIMEI(activity));
         Map<String, String> mapBody = new HashMap<>();
-        mapBody.put("type", "pigInsurance");
+        mapBody.put("appType", "2");
         mapBody.put("useCase", useCase);
         mapBody.put("userId", String.valueOf(PreferencesUtils.getIntValue(Constants.userid, MyApplication.getAppContext())));
         OkHttp3Util.doPost(Constants.GET_TIPS_DIALOG, mapBody, mapHeader, new Callback() {
@@ -67,27 +66,26 @@ public class GlobalDialogUtils {
                             Type type = new TypeToken<BaseBean<TipsBean>>() {
                             }.getType();
                             result = gson.fromJson(string, type);
-                            if (result != null && result.getStatus() == 1) {
-                                //如果获取的是1就弹出提示
-                                if (result.getData().getStatus() == 1) {
-                                    View.OnClickListener listenerReCollect = v -> {
-                                        tipsDialog.dismiss();
-                                    };
-                                    tipsDialog.setTitlemessage(result.getData().getTitle());
-                                    //tipsDialog.setContentmessage(tipsBean.getData().getContent());
-                                    if (result.getData().getType().equals("2")) {
-                                        tipsDialog.setContentmessage(result.getData().getContent(), new TipsDialog.handleDialogListener() {
-                                            @Override
-                                            public void handleWv(WebView wvContent, String s) {
-                                                wvContent.loadUrl(s);
-                                            }
-                                        });
-                                    } else {
-                                        tipsDialog.setContentmessage(result.getData().getContent(), null);
-                                    }
-                                    tipsDialog.setBtnReCollectListener(listenerReCollect);
-                                    tipsDialog.show();
+
+                            //如果获取的是1就弹出提示
+                            if (result.getData().getStatus() == 1) {
+                                View.OnClickListener listenerReCollect = v -> {
+                                    tipsDialog.dismiss();
+                                };
+                                tipsDialog.setTitlemessage(result.getData().getTitle());
+                                //tipsDialog.setContentmessage(tipsBean.getData().getContent());
+                                if (result.getData().getType().equals("2")) {
+                                    tipsDialog.setContentmessage(result.getData().getContent(), new TipsDialog.handleDialogListener() {
+                                        @Override
+                                        public void handleWv(WebView wvContent, String s) {
+                                            wvContent.loadUrl(s);
+                                        }
+                                    });
+                                } else {
+                                    tipsDialog.setContentmessage(result.getData().getContent(), null);
                                 }
+                                tipsDialog.setBtnReCollectListener(listenerReCollect);
+                                tipsDialog.show();
                             }
                         } catch (Exception e) {
                             e.printStackTrace();

@@ -1,4 +1,4 @@
-package com.xiangchuangtec.luolu.animalcounter.view;
+package com.xiangchuang.risks.view;
 
 import android.content.Context;
 import android.content.Intent;
@@ -21,8 +21,6 @@ import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.utils.CounterHelper;
 import com.xiangchuang.risks.utils.PermissionsDelegate;
-import com.xiangchuang.risks.view.AddPigPicActivity;
-import com.xiangchuang.risks.view.HogDetailActivity_new;
 import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 import com.xiangchuangtec.luolu.animalcounter.R;
 import com.xiangchuangtec.luolu.animalcounter.model.PollingResultAdapter_new;

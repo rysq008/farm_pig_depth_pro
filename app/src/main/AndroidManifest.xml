@@ -90,10 +90,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.xiangchuangtec.luolu.animalcounter.view.ShowPollingActivity_new"
+            android:name="com.xiangchuang.risks.view.ShowPollingActivity_new"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.xiangchuangtec.luolu.animalcounter.view.USBCameraActivity_new"
+            android:name="com.xiangchuang.risks.view.USBCameraActivity_new"
             android:screenOrientation="portrait" />
         <activity
             android:name="phpMySQL.MainActivity"

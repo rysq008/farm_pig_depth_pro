@@ -21,7 +21,6 @@ import com.xiangchuangtec.luolu.animalcounter.Utils;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
 import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
 import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
-import com.xiangchuangtec.luolu.animalcounter.view.ShowPollingActivity_new;
 
 import org.json.JSONArray;
 import org.json.JSONException;
