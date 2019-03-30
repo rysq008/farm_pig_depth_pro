@@ -3,8 +3,6 @@ package innovation.media;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,28 +14,18 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.xiangchuangtec.luolu.animalcounter.R;
+import com.innovation.pig.insurance.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.tensorflow.demo.DetectorActivity;
 import org.tensorflow.demo.env.Logger;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
-import innovation.entry.InnApplication;
 import innovation.location.LocationManager;
 import innovation.login.Utils;
-import innovation.utils.DeviceUtil;
-import innovation.utils.FileUtils;
 import innovation.utils.JsonHelper;
 import innovation.utils.ScreenUtil;
 import innovation.utils.StorageUtils;

@@ -8,9 +8,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.xiangchuang.risks.model.bean.InsureListBean;
-import com.xiangchuangtec.luolu.animalcounter.R;
+import com.innovation.pig.insurance.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class InsuredAdapter extends RecyclerView.Adapter<InsuredAdapter.MyViewHolder> {

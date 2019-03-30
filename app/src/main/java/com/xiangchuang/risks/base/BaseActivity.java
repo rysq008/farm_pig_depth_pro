@@ -1,37 +1,22 @@
 package com.xiangchuang.risks.base;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.hjq.permissions.OnPermission;
-import com.hjq.permissions.Permission;
-import com.hjq.permissions.XXPermissions;
 import com.xiangchuang.risks.utils.ToastUtils;
-import com.xiangchuang.risks.view.AddCompanyActivity;
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
-import com.xiangchuangtec.luolu.animalcounter.R;
-
-import java.util.List;
-import java.util.Map;
+import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.R;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -75,7 +60,7 @@ public abstract class BaseActivity extends AppCompatActivity {
        // setContentView(getLayoutId());
         initView();
         ButterKnife.bind(this);
-        MyApplication.verifyStoragePermissions(this);
+        AppConfig.verifyStoragePermissions(this);
         showProgressDialog(this);
         initData();
     }
@@ -151,7 +136,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public void showDialogError(String s) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        View inflate = View.inflate(MyApplication.getAppContext(), R.layout.error_nomal, null);
+        View inflate = View.inflate(AppConfig.getAppContext(), R.layout.error_nomal, null);
         TextView error_msg = inflate.findViewById(R.id.error_msg);
         TextView error_sure = inflate.findViewById(R.id.error_sure);
         dialog.setView(inflate);
@@ -169,7 +154,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public void showDialogNone() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        View inflate = View.inflate(MyApplication.getAppContext(), R.layout.she_none_layout, null);
+        View inflate = View.inflate(AppConfig.getAppContext(), R.layout.she_none_layout, null);
         TextView none_sure = inflate.findViewById(R.id.none_sure);
         dialog.setView(inflate);
         AlertDialog dialogcreate = dialog.create();

@@ -2,6 +2,8 @@ package com.xiangchuang.risks.view;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -20,12 +22,12 @@ import com.xiangchuang.risks.model.bean.SheListBean;
 import com.xiangchuang.risks.model.bean.StartBean_new;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
-import com.xiangchuangtec.luolu.animalcounter.R;
-import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
-import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
-import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
+import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.R;
+import com.innovation.pig.insurance.netutils.Constants;
+import com.innovation.pig.insurance.netutils.GsonUtils;
+import com.innovation.pig.insurance.netutils.OkHttp3Util;
+import com.innovation.pig.insurance.netutils.PreferencesUtils;
 
 import org.json.JSONObject;
 import org.tensorflow.demo.DetectorActivity;
@@ -37,34 +39,35 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.BindView;
+
 import butterknife.OnClick;
 import innovation.media.Model;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-import static com.xiangchuangtec.luolu.animalcounter.MyApplication.isNoCamera;
+import static com.innovation.pig.insurance.AppConfig.isNoCamera;
+import static com.innovation.pig.insurance.R.id.prepared_begin;
 
 /**
  * 预理赔
  */
 public class PreparedLiPeiActivity_new extends BaseActivity {
     public static String TAG = "PreparedLiPeiActivity_new";
-    @BindView(R.id.pre_zhushe)
+
     Spinner mprezhushe;
-    @BindView(R.id.prepared_begin)
+
     TextView mpreparedbegin;
-    @BindView(R.id.pre_li_title)
+
     TextView mprelititle;
-    @BindView(R.id.pre_zhujuan_chuxian)
+
     Spinner mprezhujuanchuxian;
-    @BindView(R.id.chuxian_num)
+
     TextView mchuxiannum;
 
-    @BindView(R.id.tv_title)
+
     TextView tv_title;
-    @BindView(R.id.iv_cancel)
+
     ImageView iv_cancel;
 
     private String en_id;
@@ -82,14 +85,37 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
     private boolean hasInNo = false;
 
     @Override
+    public void initView() {
+        super.initView();
+        mprezhushe = (Spinner) findViewById(R.id.pre_zhushe);
+        mpreparedbegin = (TextView) findViewById(prepared_begin);
+        mprelititle = (TextView) findViewById(R.id.pre_li_title);
+        mprezhujuanchuxian = (Spinner) findViewById(R.id.pre_zhujuan_chuxian);
+        mchuxiannum = (TextView) findViewById(R.id.chuxian_num);
+        tv_title = (TextView) findViewById(R.id.tv_title);
+        iv_cancel = (ImageView) findViewById(R.id.iv_cancel);
+        findViewById(prepared_begin).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                onClickView((View) v);
+                if (!hasInNo) {
+                    Toast.makeText(AppConfig.getAppContext(), "保单号为空，无法申请预理赔。", Toast.LENGTH_LONG).show();
+                } else {
+                    collectToNet();
+                }
+            }
+        });
+    }
+
+    @Override
     protected int getLayoutId() {
         return R.layout.activity_prepared_li_pei_new;
     }
 
     @Override
     protected void initData() {
-        String mfleg = PreferencesUtils.getStringValue(Constants.fleg, MyApplication.getAppContext());
-        String companyName = PreferencesUtils.getStringValue(Constants.companyname, MyApplication.getAppContext());
+        String mfleg = PreferencesUtils.getStringValue(Constants.fleg, AppConfig.getAppContext());
+        String companyName = PreferencesUtils.getStringValue(Constants.companyname, AppConfig.getAppContext());
         mprelititle.setText(companyName);
         //预理赔
         if ("pre".equals(mfleg)) {
@@ -100,8 +126,8 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
             mpreparedbegin.setVisibility(View.GONE);
             tv_title.setText("理赔");
         }
-        en_id = PreferencesUtils.getStringValue(Constants.en_id, MyApplication.getAppContext(), "0");
-        userid = PreferencesUtils.getIntValue(Constants.en_user_id, MyApplication.getAppContext());
+        en_id = PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0");
+        userid = PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext());
         addreasons();
         getDataFromNet();
 
@@ -296,21 +322,21 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
         });
     }
 
-    @OnClick({R.id.prepared_begin})
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.prepared_begin:
-                if (!hasInNo) {
-                    Toast.makeText(MyApplication.getAppContext(), "保单号为空，无法申请预理赔。", Toast.LENGTH_LONG).show();
-                } else {
-                    collectToNet();
-                }
-                break;
-            default:
-                break;
-        }
 
-    }
+//    public void onClickView(View view) {
+//        switch (view.getId()) {
+//            case prepared_begin:
+//                if (!hasInNo) {
+//                    Toast.makeText(AppConfig.getAppContext(), "保单号为空，无法申请预理赔。", Toast.LENGTH_LONG).show();
+//                } else {
+//                    collectToNet();
+//                }
+//                break;
+//            default:
+//                break;
+//        }
+//
+//    }
 
     private void collectToNet() {
         Map map = new HashMap();
@@ -352,7 +378,7 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
                                     Log.i("stringbuffer",str);
                                 }
                                 isNoCamera = false;
-                                PreferencesUtils.saveKeyValue(Constants.preVideoId,str , MyApplication.getAppContext());
+                                PreferencesUtils.saveKeyValue(Constants.preVideoId,str , AppConfig.getAppContext());
                                 Global.model = Model.VERIFY.value();
                                 Intent intent = new Intent(PreparedLiPeiActivity_new.this, DetectorActivity.class);
                                 intent.putExtra(Constants.sheId, sheId + "");
@@ -363,7 +389,7 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
                             } else if(bean.getStatus() == 0) {
                                 isNoCamera = true;
                                 Global.model = Model.VERIFY.value();
-                                PreferencesUtils.saveKeyValue(Constants.preVideoId,"" , MyApplication.getAppContext());
+                                PreferencesUtils.saveKeyValue(Constants.preVideoId,"" , AppConfig.getAppContext());
                                 Intent intent = new Intent(PreparedLiPeiActivity_new.this, DetectorActivity.class);
                                 intent.putExtra(Constants.sheId, sheId + "");
                                 intent.putExtra(Constants.inspectNo, mchuxiannum.getText().toString());
@@ -377,7 +403,7 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
                                     @Override
                                     public void onNegative() { }
                                 });
-                                    Toast.makeText(MyApplication.getAppContext(), bean.getMsg(), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(AppConfig.getAppContext(), bean.getMsg(), Toast.LENGTH_LONG).show();
                             }
                         }
                     });

@@ -38,9 +38,9 @@ import android.view.KeyEvent;
 import android.widget.Toast;
 
 
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
-import com.xiangchuangtec.luolu.animalcounter.R;
-import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
+import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.R;
+import com.innovation.pig.insurance.netutils.Constants;
 
 import org.tensorflow.demo.OverlayView.DrawCallback;
 import org.tensorflow.demo.env.BorderedText_Breeding;
@@ -54,7 +54,7 @@ import java.util.List;
 import innovation.biz.classifier.BreedingPigFaceDetectTFlite;
 import innovation.biz.classifier.PigRotationPrediction;
 
-import static com.xiangchuangtec.luolu.animalcounter.MyApplication.lastXmin;
+import static com.innovation.pig.insurance.AppConfig.lastXmin;
 import static org.tensorflow.demo.Global.dilogIsShowing;
 
 /**
@@ -131,7 +131,7 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
     @Override
     public synchronized void onResume() {
         if(!dilogIsShowing){
-            MyApplication.sowCount = 0;
+            AppConfig.sowCount = 0;
             lastXmin = 0f;
             Intent intent = getIntent();
             sheId = intent.getStringExtra(Constants.sheId);

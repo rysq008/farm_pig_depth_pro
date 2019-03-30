@@ -44,13 +44,13 @@ import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.view.AddPigPicActivity;
 import com.xiangchuang.risks.view.PreparedLiPeiActivity_new;
-import com.xiangchuangtec.luolu.animalcounter.BuildConfig;
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
-import com.xiangchuangtec.luolu.animalcounter.R;
-import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
-import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
-import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
+import com.innovation.pig.insurance.BuildConfig;
+import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.R;
+import com.innovation.pig.insurance.netutils.Constants;
+import com.innovation.pig.insurance.netutils.GsonUtils;
+import com.innovation.pig.insurance.netutils.OkHttp3Util;
+import com.innovation.pig.insurance.netutils.PreferencesUtils;
 
 
 import org.json.JSONException;
@@ -101,7 +101,7 @@ import okhttp3.Response;
 
 
 import static android.content.ContentValues.TAG;
-import static com.xiangchuangtec.luolu.animalcounter.MyApplication.isNoCamera;
+import static com.innovation.pig.insurance.AppConfig.isNoCamera;
 import static innovation.entry.InnApplication.getCowEarNumber;
 import static innovation.entry.InnApplication.getCowType;
 import static innovation.entry.InnApplication.getStringTouboaExtra;
@@ -363,7 +363,7 @@ public class MediaProcessor {
 
         View.OnClickListener listener_abort = v -> {
             mInsureDialog.dismiss();
-            if (MyApplication.debugNub == 1) {
+            if (AppConfig.debugNub == 1) {
                 collectNumberHandler.sendEmptyMessage(5);
             } else {
                 String pignum = meditText.getText().toString().trim();
@@ -448,7 +448,7 @@ public class MediaProcessor {
         View.OnClickListener listener_cancel = v -> {
             editRecoed();
             mInsureDialog.dismiss();
-            MyApplication.during = 0;
+            AppConfig.during = 0;
             reInitCurrentDir();
             collectNumberHandler.sendEmptyMessage(2);
             mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
@@ -470,10 +470,10 @@ public class MediaProcessor {
     }
 
     private void editRecoed() {
-        String videoIds = PreferencesUtils.getStringValue(Constants.preVideoId, MyApplication.getAppContext(), "0");
+        String videoIds = PreferencesUtils.getStringValue(Constants.preVideoId, AppConfig.getAppContext(), "0");
         String[] ids = videoIds.split(",");
         Map map = new HashMap();
-        map.put(Constants.en_user_id, String.valueOf(PreferencesUtils.getIntValue(Constants.en_user_id, MyApplication.getAppContext())));
+        map.put(Constants.en_user_id, String.valueOf(PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext())));
         Map mapbody = new HashMap();
 
         for (int i = 0; i < ids.length; i++) {
@@ -497,7 +497,7 @@ public class MediaProcessor {
         mapbody.put(Constants.sheId, String.valueOf(sheId));
         mapbody.put(Constants.insureNo, String.valueOf(inspectNo));
         mapbody.put(Constants.reason, reason);
-        mapbody.put(Constants.preCompensateVideoId, PreferencesUtils.getStringValue(Constants.preVideoId, MyApplication.getAppContext(), "0"));
+        mapbody.put(Constants.preCompensateVideoId, PreferencesUtils.getStringValue(Constants.preVideoId, AppConfig.getAppContext(), "0"));
 
         mapbody.put(Constants.address, str_address);
         mapbody.put(Constants.timesFlag, timesFlag);
@@ -508,7 +508,7 @@ public class MediaProcessor {
 
         try {
             String currenUrl = Constants.PRECOMMIT;
-            if (MyApplication.debugNub > 0) {
+            if (AppConfig.debugNub > 0) {
                 currenUrl = Constants.PREPAY_FORCE_COMMIT;
             } else {
                 currenUrl = Constants.PRECOMMIT;
@@ -605,7 +605,7 @@ public class MediaProcessor {
 
         Activity appContext = (Activity) mActivity;
 
-        if (MyApplication.debugNub > 0) {
+        if (AppConfig.debugNub > 0) {
             OkHttp3Util.uploadPreFile(Constants.PAY_FORCE_COMMIT, zipFile, "a.zip", mapbody, null, new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
@@ -792,10 +792,10 @@ public class MediaProcessor {
             @Override
             public void onClick(View v) {
                 dialogcreate.dismiss();
-                if ("pre".equals(PreferencesUtils.getStringValue(Constants.fleg, MyApplication.getAppContext()))) {
-                    mActivity.startActivity(new Intent(MyApplication.getContext(), PreparedLiPeiActivity_new.class));
+                if ("pre".equals(PreferencesUtils.getStringValue(Constants.fleg, AppConfig.getAppContext()))) {
+                    mActivity.startActivity(new Intent(AppConfig.getActivity(), PreparedLiPeiActivity_new.class));
                 }
-                ((Activity) MyApplication.getContext()).finish();
+                ((Activity) AppConfig.getActivity()).finish();
             }
         });
     }
@@ -808,7 +808,7 @@ public class MediaProcessor {
                 new AlertDialogManager.DialogInterface() {
                     @Override
                     public void onPositive() {
-                        MyApplication.during = 0;
+                        AppConfig.during = 0;
                         mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
                         collectNumberHandler.sendEmptyMessage(2);
                     }
@@ -859,14 +859,14 @@ public class MediaProcessor {
 
     //
     private void showSuccessDialog(String mmsg) {
-        if (isNoCamera && !("lipei".equals(PreferencesUtils.getStringValue(Constants.fleg, MyApplication.getAppContext())))) {
+        if (isNoCamera && !("lipei".equals(PreferencesUtils.getStringValue(Constants.fleg, AppConfig.getAppContext())))) {
             mmsg += "\n为完成理赔，请拍摄死猪和猪舍短视频并上传。";
         }
         AlertDialogManager.showMessageDialogOne(mActivity, "提示", mmsg, new AlertDialogManager.DialogInterface() {
             @Override
             public void onPositive() {
                 destroyDialogs();
-                if ("lipei".equals(PreferencesUtils.getStringValue(Constants.fleg, MyApplication.getAppContext()))) {
+                if ("lipei".equals(PreferencesUtils.getStringValue(Constants.fleg, AppConfig.getAppContext()))) {
                     mActivity.startActivity(new Intent(mActivity, AddPigPicActivity.class)
                             .putExtra("lipeiid", lipeiId)
                             .putExtra("timesFlag", ""));
@@ -894,7 +894,7 @@ public class MediaProcessor {
         dialogcreate.show();
         result2_edit.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClickView(View v) {
                 destroyDialogs();
                 dialogcreate.dismiss();
                 mActivity.finish();
@@ -1255,7 +1255,7 @@ public class MediaProcessor {
         mapbody.put(Constants.userLibId, String.valueOf(userLibId));
         mapbody.put(Constants.animalId, String.valueOf(animalId));
         mapbody.put(Constants.lipeiId, lipeiId);
-        mapbody.put(Constants.compensateVideoId, PreferencesUtils.getStringValue(Constants.preVideoId, MyApplication.getAppContext(), "0"));
+        mapbody.put(Constants.compensateVideoId, PreferencesUtils.getStringValue(Constants.preVideoId, AppConfig.getAppContext(), "0"));
         mapbody.put(Constants.address, str_address);
         mapbody.put("seqNo", seqNo);
         OkHttp3Util.doPost(Constants.LIEDD1, mapbody, null, new Callback() {
@@ -1391,17 +1391,17 @@ public class MediaProcessor {
             @Override
             public void onClick(View v) {
                 dialogcreate.dismiss();
-                if ("pre".equals(PreferencesUtils.getStringValue(Constants.fleg, MyApplication.getAppContext()))) {
-                    mActivity.startActivity(new Intent(MyApplication.getContext(), PreparedLiPeiActivity_new.class));
+                if ("pre".equals(PreferencesUtils.getStringValue(Constants.fleg, AppConfig.getAppContext()))) {
+                    mActivity.startActivity(new Intent(AppConfig.getActivity(), PreparedLiPeiActivity_new.class));
                 }
-                ((Activity) MyApplication.getContext()).finish();
+                ((Activity) AppConfig.getActivity()).finish();
             }
         });
     }
 
     private void showPayForce(String timesFlag) {
-        String customServ = PreferencesUtils.getStringValue(Constants.customServ, MyApplication.getContext());
-        String phone = PreferencesUtils.getStringValue(Constants.phone, MyApplication.getContext());
+        String customServ = PreferencesUtils.getStringValue(Constants.customServ, AppConfig.getActivity());
+        String phone = PreferencesUtils.getStringValue(Constants.phone, AppConfig.getActivity());
 
         AlertDialog.Builder pwdBuilder = new AlertDialog.Builder(mActivity)
                 .setIcon(R.drawable.cowface)
@@ -1414,7 +1414,7 @@ public class MediaProcessor {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        if ("lipei".equals(PreferencesUtils.getStringValue(Constants.fleg, MyApplication.getAppContext()))) {
+                        if ("lipei".equals(PreferencesUtils.getStringValue(Constants.fleg, AppConfig.getAppContext()))) {
                             mActivity.startActivity(new Intent(mActivity, AddPigPicActivity.class)
                                     .putExtra("lipeiid", "")
                                     .putExtra("timesFlag", timesFlag)
@@ -2252,7 +2252,7 @@ public class MediaProcessor {
             Toast.makeText(mActivity, "压缩视频文件夹为空。", Toast.LENGTH_SHORT).show();
             return;
         }
-        String mfleg = PreferencesUtils.getStringValue(Constants.fleg, MyApplication.getAppContext());
+        String mfleg = PreferencesUtils.getStringValue(Constants.fleg, AppConfig.getAppContext());
         //结束录制视频
         if (mActivity != null) {
             editRecoed();
@@ -2265,7 +2265,7 @@ public class MediaProcessor {
 
         String timesflag = zipFileVideo2.getName();
         /* 将视频文件插入数据库 */
-        Box<VideoUploadTable> box = MyApplication.getBoxStore().boxFor(VideoUploadTable.class);
+        Box<VideoUploadTable> box = AppConfig.getBoxStore().boxFor(VideoUploadTable.class);
         VideoUploadTable bean = new VideoUploadTable();
         bean.fpath = "" + zipFileVideo2.getAbsolutePath();
         bean.timesflag = "" + zipFileVideo2.getName();
@@ -2275,7 +2275,7 @@ public class MediaProcessor {
         List<VideoUploadTable> list = new ArrayList<>();
         list.add(bean);
         /* 开启视频断点续传 */
-        UploadUtils.uploadFile(MyApplication.getContext(), new UploadTaskListener() {
+        UploadUtils.uploadFile(AppConfig.getActivity(), new UploadTaskListener() {
             @Override
             public void onUploading(UploadTask uploadTask, String percent, int position) {
 
@@ -2284,7 +2284,7 @@ public class MediaProcessor {
             @Override
             public void onUploadSuccess(UploadTask uploadTask, File file) {
                 if (BuildConfig.DEBUG) {
-                    Toast.makeText(MyApplication.getContext(), "提交成功", Toast.LENGTH_LONG).show();
+                    Toast.makeText(AppConfig.getActivity(), "提交成功", Toast.LENGTH_LONG).show();
                 }
                 VideoUploadTable videoUpLoadBean = (VideoUploadTable) uploadTask.getT();
                 videoUpLoadBean.iscomplete = true;

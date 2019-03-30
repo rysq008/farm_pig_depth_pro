@@ -13,7 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.xiangchuang.risks.utils.SystemUtil;
-import com.xiangchuangtec.luolu.animalcounter.R;
+import com.innovation.pig.insurance.R;
 
 import innovation.utils.ScreenUtil;
 

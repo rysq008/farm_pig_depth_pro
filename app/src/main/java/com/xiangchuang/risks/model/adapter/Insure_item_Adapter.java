@@ -7,7 +7,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.xiangchuang.risks.model.bean.InSureBean;
-import com.xiangchuangtec.luolu.animalcounter.R;
+import com.innovation.pig.insurance.R;
 
 import java.util.List;
 

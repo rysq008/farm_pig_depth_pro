@@ -1,6 +1,5 @@
 package innovation.biz.classifier;
 
-import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
@@ -13,7 +12,6 @@ import android.os.Trace;
 import android.util.Log;
 
 import com.xiangchuang.risks.model.bean.shanTiaoBean;
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
 
 import org.tensorflow.demo.env.ImageUtils;
 import org.tensorflow.demo.env.Logger;
@@ -38,9 +36,8 @@ import java.util.Map;
 import innovation.biz.iterm.PostureItem;
 import innovation.biz.iterm.PredictRotationIterm;
 
-import static com.xiangchuangtec.luolu.animalcounter.MyApplication.currentPadSize;
-import static com.xiangchuangtec.luolu.animalcounter.MyApplication.lastXmin;
-import static com.xiangchuangtec.luolu.animalcounter.MyApplication.sowCount;
+import static com.innovation.pig.insurance.AppConfig.currentPadSize;
+import static com.innovation.pig.insurance.AppConfig.sowCount;
 import static innovation.utils.ImageUtils.padBitmap2SpRatio;
 import static innovation.utils.ImageUtils.zoomImage;
 import static org.tensorflow.demo.DetectorActivity_new.offsetX;

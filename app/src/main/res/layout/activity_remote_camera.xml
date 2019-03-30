@@ -26,7 +26,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ff000000"
-    tools:context="com.xiangchuangtec.luolu.animalcounter.view.USBCameraActivity"
+    tools:context="com.innovation.pig.insurance.view.USBCameraActivity"
     tools:ignore="MergeRootFrame">
 
     <include
@@ -41,7 +41,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true" />
 
-    <com.xiangchuangtec.luolu.animalcounter.view.RecognitionView
+    <com.innovation.pig.insurance.view.RecognitionView
         android:id="@+id/recognition_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

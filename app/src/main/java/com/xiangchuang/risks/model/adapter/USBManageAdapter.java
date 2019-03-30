@@ -20,14 +20,13 @@ import com.xiangchuang.risks.model.bean.ZhuSheBean;
 import com.xiangchuang.risks.model.myinterface.MyInterface;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.view.JuanSettingActivity;
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
-import com.xiangchuangtec.luolu.animalcounter.R;
-import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
-import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
-import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
+import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.R;
+import com.innovation.pig.insurance.netutils.Constants;
+import com.innovation.pig.insurance.netutils.GsonUtils;
+import com.innovation.pig.insurance.netutils.OkHttp3Util;
+import com.innovation.pig.insurance.netutils.PreferencesUtils;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -36,8 +35,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import innovation.upload.UploadHelper;
-import innovation.upload.UploadUtils;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -105,11 +102,11 @@ public class USBManageAdapter extends BaseAdapter {
         viewHolder.usb_yanzheng.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PreferencesUtils.saveKeyValue(Constants.sheId, sheXTBeans.get(position).sheId, MyApplication.getAppContext());
-                PreferencesUtils.saveKeyValue(Constants.cameraId, sheXTBeans.get(position).cameraId + "", MyApplication.getAppContext());
-                PreferencesUtils.saveKeyValue(Constants.xu, sheXTBeans.get(position).cameraNo, MyApplication.getAppContext());
-                PreferencesUtils.saveKeyValue(Constants.touname, sheXTBeans.get(position).cameraName, MyApplication.getAppContext());
-                PreferencesUtils.saveKeyValue(Constants.shename, viewHolder.usb_spinner.getSelectedItem().toString(), MyApplication.getAppContext());
+                PreferencesUtils.saveKeyValue(Constants.sheId, sheXTBeans.get(position).sheId, AppConfig.getAppContext());
+                PreferencesUtils.saveKeyValue(Constants.cameraId, sheXTBeans.get(position).cameraId + "", AppConfig.getAppContext());
+                PreferencesUtils.saveKeyValue(Constants.xu, sheXTBeans.get(position).cameraNo, AppConfig.getAppContext());
+                PreferencesUtils.saveKeyValue(Constants.touname, sheXTBeans.get(position).cameraName, AppConfig.getAppContext());
+                PreferencesUtils.saveKeyValue(Constants.shename, viewHolder.usb_spinner.getSelectedItem().toString(), AppConfig.getAppContext());
                 String cameraNo = sheXTBeans.get(position).cameraNo;
                 showDialog(cameraNo);
                 /*if (Integer.valueOf(sheXTBeans.get(position).repair) == 1) {
@@ -124,12 +121,12 @@ public class USBManageAdapter extends BaseAdapter {
         viewHolder.usb_go.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PreferencesUtils.saveKeyValue(Constants.sheId, sheXTBeans.get(position).sheId, MyApplication.getAppContext());
-                PreferencesUtils.saveKeyValue(Constants.cameraId, sheXTBeans.get(position).cameraId + "", MyApplication.getAppContext());
-                PreferencesUtils.saveKeyValue(Constants.xu, sheXTBeans.get(position).cameraNo, MyApplication.getAppContext());
-                PreferencesUtils.saveKeyValue(Constants.touname, sheXTBeans.get(position).cameraName, MyApplication.getAppContext());
+                PreferencesUtils.saveKeyValue(Constants.sheId, sheXTBeans.get(position).sheId, AppConfig.getAppContext());
+                PreferencesUtils.saveKeyValue(Constants.cameraId, sheXTBeans.get(position).cameraId + "", AppConfig.getAppContext());
+                PreferencesUtils.saveKeyValue(Constants.xu, sheXTBeans.get(position).cameraNo, AppConfig.getAppContext());
+                PreferencesUtils.saveKeyValue(Constants.touname, sheXTBeans.get(position).cameraName, AppConfig.getAppContext());
                 String s = viewHolder.usb_spinner.getSelectedItem().toString();
-                PreferencesUtils.saveKeyValue(Constants.shename, s, MyApplication.getAppContext());
+                PreferencesUtils.saveKeyValue(Constants.shename, s, AppConfig.getAppContext());
                 Log.i("==sheid=", sheXTBeans.get(position).sheId + "");
                 if (!"-1".equals(sheXTBeans.get(position).sheId)) {
                     activity.goToActivity(JuanSettingActivity.class, null);
@@ -163,10 +160,10 @@ public class USBManageAdapter extends BaseAdapter {
     private void updateCamera(String cameraNo, String cameraName, int cameraId, int po, Spinner usbspinner) {
         Map map = new HashMap();
         map.put(Constants.AppKeyAuthorization, "hopen");
-        map.put(Constants.en_user_id, PreferencesUtils.getIntValue(Constants.en_user_id, MyApplication.getAppContext()) + "");
-        map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, MyApplication.getAppContext(), "0"));
-        map.put(Constants.deptId, PreferencesUtils.getStringValue(Constants.deptId, MyApplication.getAppContext()));
-        map.put(Constants.id, PreferencesUtils.getStringValue(Constants.id, MyApplication.getAppContext(), "0"));
+        map.put(Constants.en_user_id, PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext()) + "");
+        map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0"));
+        map.put(Constants.deptId, PreferencesUtils.getStringValue(Constants.deptId, AppConfig.getAppContext()));
+        map.put(Constants.id, PreferencesUtils.getStringValue(Constants.id, AppConfig.getAppContext(), "0"));
         Map mapbody = new HashMap();
         mapbody.put(Constants.cameraNo, cameraNo);
         mapbody.put(Constants.cameraName, cameraName);
@@ -214,8 +211,8 @@ public class USBManageAdapter extends BaseAdapter {
     private void getZhuShe(Spinner usbspinner, TextView usb_yanzheng, EditText usb_name, int mposition) {
         Map map = new HashMap();
         map.put(Constants.AppKeyAuthorization, "hopen");
-        map.put(Constants.en_user_id, PreferencesUtils.getIntValue(Constants.en_user_id, MyApplication.getAppContext()) + "");
-        map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, MyApplication.getAppContext(), "0"));
+        map.put(Constants.en_user_id, PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext()) + "");
+        map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0"));
         Map mapbody = new HashMap();
         mapbody.put(Constants.amountFlg, String.valueOf(9));
         mapbody.put(Constants.insureFlg, String.valueOf(9));
@@ -247,11 +244,11 @@ public class USBManageAdapter extends BaseAdapter {
                                         sheids.add(sheList.get(i).getSheId() + "");
                                     }
                                 } else {
-                                    activity.toastUtils.showLong(MyApplication.getAppContext(), "猪舍为空");
+                                    activity.toastUtils.showLong(AppConfig.getAppContext(), "猪舍为空");
                                 }
                                 initSpinner(usbspinner, usb_yanzheng, sheXTBeans.get(mposition).sheName, usb_name, mposition);
                             } else {
-                                activity.toastUtils.showLong(MyApplication.getAppContext(), bean.getMsg());
+                                activity.toastUtils.showLong(AppConfig.getAppContext(), bean.getMsg());
                             }
                         }
                     });
@@ -376,10 +373,10 @@ public class USBManageAdapter extends BaseAdapter {
     private void checkverify(String cameraNo, String yancode, AlertDialog dialogcreate) {
         Map map = new HashMap();
         map.put(Constants.AppKeyAuthorization, "hopen");
-        map.put(Constants.en_user_id, PreferencesUtils.getIntValue(Constants.en_user_id, MyApplication.getAppContext()) + "");
-        map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, MyApplication.getAppContext(), "0"));
-        map.put(Constants.deptIdnew, PreferencesUtils.getStringValue(Constants.deptId, MyApplication.getAppContext()));
-        map.put(Constants.id, PreferencesUtils.getStringValue(Constants.id, MyApplication.getAppContext(), "0"));
+        map.put(Constants.en_user_id, PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext()) + "");
+        map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0"));
+        map.put(Constants.deptIdnew, PreferencesUtils.getStringValue(Constants.deptId, AppConfig.getAppContext()));
+        map.put(Constants.id, PreferencesUtils.getStringValue(Constants.id, AppConfig.getAppContext(), "0"));
         Map mapbody = new HashMap();
         mapbody.put(Constants.cameraNo, cameraNo);
         mapbody.put(Constants.verificationCode, yancode);

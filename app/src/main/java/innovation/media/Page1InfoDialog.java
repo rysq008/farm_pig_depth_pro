@@ -2,7 +2,6 @@ package innovation.media;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -14,7 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.xiangchuangtec.luolu.animalcounter.R;
+import com.innovation.pig.insurance.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,8 +28,6 @@ import innovation.login.Utils;
 import innovation.utils.JsonHelper;
 import innovation.utils.ScreenUtil;
 import innovation.utils.StorageUtils;
-
-import static android.support.v4.content.ContextCompat.startActivity;
 
 /**
  * @author wbs on 12/16/17.
@@ -134,7 +131,7 @@ private static Logger mlogger = new Logger(Page1InfoDialog.class.getName());
 //        initView(model, info);
 //        mPositiveBtn.setOnClickListener(new View.OnClickListener() {
 //            @Override
-//            public void onClick(View v) {
+//            public void onClickView(View v) {
 //
 //            }
 //        });
@@ -206,7 +203,7 @@ private static Logger mlogger = new Logger(Page1InfoDialog.class.getName());
         mPositiveBtn.setOnClickListener(listener);
 //        mPositiveBtn.setOnClickListener(new View.OnClickListener() {
 //            @Override
-//            public void onClick(View v) {
+//            public void onClickView(View v) {
 //                Intent intent = new Intent();
 //                intent.setClass(InnApplication.getAppContext(), DetectorActivity.class);
 //                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

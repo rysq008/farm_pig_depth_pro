@@ -7,13 +7,11 @@ import com.mainaer.wjoklib.okhttp.upload.UploadManager;
 import com.mainaer.wjoklib.okhttp.upload.UploadTask;
 import com.mainaer.wjoklib.okhttp.upload.UploadTaskListener;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
-import com.xiangchuang.risks.view.HogDetailActivity_new;
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
-import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
+import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.netutils.Constants;
+import com.innovation.pig.insurance.netutils.PreferencesUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -130,11 +128,11 @@ public class UploadUtils {
 
     public static Map makeBean2Map(VideoUploadTable bean) {
         Map<String, String> params = new HashMap<String, String>();
-        String type = PreferencesUtils.getStringValue(Constants.companyfleg, MyApplication.getAppContext());
+        String type = PreferencesUtils.getStringValue(Constants.companyfleg, AppConfig.getAppContext());
         if (type.equals("1")) {
-            params.put("userId", PreferencesUtils.getStringValue(Constants.id, MyApplication.getAppContext()));//用户id
+            params.put("userId", PreferencesUtils.getStringValue(Constants.id, AppConfig.getAppContext()));//用户id
         } else {
-            params.put("userId", PreferencesUtils.getIntValue(Constants.en_user_id, MyApplication.getAppContext())+"");//用户id
+            params.put("userId", PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext())+"");//用户id
         }
         params.put("timesFlag", bean.timesflag);
         return params;

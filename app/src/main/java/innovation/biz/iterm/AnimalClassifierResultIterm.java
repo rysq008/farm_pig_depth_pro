@@ -4,8 +4,8 @@ package innovation.biz.iterm;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.xiangchuangtec.luolu.animalcounter.BuildConfig;
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
+import com.innovation.pig.insurance.BuildConfig;
+import com.innovation.pig.insurance.AppConfig;
 
 import innovation.biz.classifier.PigKeyPointsDetectTFlite;
 import innovation.biz.classifier.PigRotationPrediction;
@@ -36,9 +36,9 @@ public class AnimalClassifierResultIterm {
 
     public static void pigAngleCalculateTFlite(PostureItem postureItem) {
         int type;
-        int maxLeft = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_LEFT, MyApplication.getAppContext());
-        int maxMiddle = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_MIDDLE, MyApplication.getAppContext());
-        int maxRight = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_RIGHT, MyApplication.getAppContext());
+        int maxLeft = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_LEFT, AppConfig.getAppContext());
+        int maxMiddle = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_MIDDLE, AppConfig.getAppContext());
+        int maxRight = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_RIGHT, AppConfig.getAppContext());
         DetectorActivity.AngleTrackType = 10;
         PigFaceKeyPointsItem pigFaceKeyPointsItem = PigFaceKeyPointsItem.getInstance();
         type = Rot2AngleType.getPigAngleType((float) postureItem.rot_x, (float) postureItem.rot_y);
@@ -155,10 +155,10 @@ public class AnimalClassifierResultIterm {
         }
 
         if (DetectorActivity.type1Count >= maxLeft && DetectorActivity.type2Count >= maxMiddle && DetectorActivity.type3Count >= maxRight) {
-            MyApplication.debugNub = -1;
+            AppConfig.debugNub = -1;
             CameraConnectionFragment.collectNumberHandler.sendEmptyMessage(1);
             if (BuildConfig.DEBUG){
-                Toast.makeText(MyApplication.getAppContext(), "猪脸数据采集完成!!!", Toast.LENGTH_LONG).show();
+                Toast.makeText(AppConfig.getAppContext(), "猪脸数据采集完成!!!", Toast.LENGTH_LONG).show();
             }
         }
     }

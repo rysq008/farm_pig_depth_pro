@@ -4,6 +4,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.GridView;
@@ -19,12 +20,11 @@ import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.adapter.HogDetailAdapter;
 import com.xiangchuang.risks.model.bean.HogDetailBean;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
-import com.xiangchuangtec.luolu.animalcounter.R;
-import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
-import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
+import com.innovation.pig.insurance.R;
+import com.innovation.pig.insurance.netutils.Constants;
+import com.innovation.pig.insurance.netutils.OkHttp3Util;
+import com.innovation.pig.insurance.netutils.PreferencesUtils;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -33,26 +33,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
 public class HogDetailActivity_new extends BaseActivity {
-    @BindView(R.id.tv_title)
+
     TextView hog_name;
-    @BindView(R.id.hog_date)
+
     TextView hog_date;
-    @BindView(R.id.hog_count)
+
     TextView hog_count;
-    @BindView(R.id.gridview_pic)
+
     GridView gridview_pic;
-    @BindView(R.id.iv_cancel)
+
     ImageView ivCancel;
-    @BindView(R.id.vv_sow)
+
     VideoView vvSow;
-    @BindView(R.id.pb_loading)
+
     ProgressBar mProgressBar;
     private List<String> picpaths;
 
@@ -61,6 +60,19 @@ public class HogDetailActivity_new extends BaseActivity {
 
     private List<String> paths = new ArrayList<>();
     private int cIndex = 0;
+
+    @Override
+    public void initView() {
+        super.initView();
+        hog_name = (TextView) findViewById(R.id.tv_title);
+        hog_date = (TextView) findViewById(R.id.hog_date);
+        hog_count = (TextView) findViewById(R.id.hog_count);
+        gridview_pic = (GridView) findViewById(R.id.gridview_pic);
+        ivCancel = (ImageView) findViewById(R.id.iv_cancel);
+        vvSow = (VideoView) findViewById(R.id.vv_sow);
+        mProgressBar = (ProgressBar) findViewById(R.id.pb_loading);
+    }
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_hog_detail_new;

@@ -8,8 +8,8 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-import com.xiangchuangtec.luolu.animalcounter.BuildConfig;
-import com.xiangchuangtec.luolu.animalcounter.R;
+import com.innovation.pig.insurance.BuildConfig;
+import com.innovation.pig.insurance.R;
 
 /**
  * @author wbs on 12/16/17.

@@ -1,6 +1,5 @@
 package com.xiangchuang.risks.update;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,10 +9,9 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.xiangchuang.risks.view.CompanyActivity;
-import com.xiangchuang.risks.view.LoginFamerActivity;
 import com.xiangchuang.risks.view.SelectFunctionActivity_new;
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
-import com.xiangchuangtec.luolu.animalcounter.R;
+import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,7 +19,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.HashMap;
 
-import static com.xiangchuangtec.luolu.animalcounter.MyApplication.needUpDate;
+import static com.innovation.pig.insurance.AppConfig.needUpDate;
 
 
 public class UpdateReceiver extends BroadcastReceiver {
@@ -64,15 +62,15 @@ public class UpdateReceiver extends BroadcastReceiver {
             /**
              * 获取到当前的本地版本
              */
-            UpdateInformation.localVersion = MyApplication.getAppContext().getPackageManager().getPackageInfo(MyApplication.getAppContext().getPackageName(), 0).versionCode;
+            UpdateInformation.localVersion = AppConfig.getAppContext().getPackageManager().getPackageInfo(AppConfig.getAppContext().getPackageName(), 0).versionCode;
             Log.e("onReceive", "onReceive: " + UpdateInformation.localVersion);
             /**
              * 获取到当前的版本名字
              */
-            UpdateInformation.versionName = MyApplication.getAppContext()
+            UpdateInformation.versionName = AppConfig.getAppContext()
                     .getPackageManager()
                     .getPackageInfo(
-                            MyApplication.getAppContext().getPackageName(), 0).versionName;
+                            AppConfig.getAppContext().getPackageName(), 0).versionName;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -147,7 +145,7 @@ public class UpdateReceiver extends BroadcastReceiver {
      *
      */
     private void noNewVersion() {
-        mDialog = new AlertDialog.Builder(MyApplication.getContext());
+        mDialog = new AlertDialog.Builder(AppConfig.getActivity());
         mDialog.setIcon(R.drawable.cowface);
         mDialog.setTitle("版本更新");
         mDialog.setMessage("当前为最新版本");
@@ -165,7 +163,7 @@ public class UpdateReceiver extends BroadcastReceiver {
      *
      */
     private void forceUpdate() {
-        mDialog = new AlertDialog.Builder(MyApplication.getContext());
+        mDialog = new AlertDialog.Builder(AppConfig.getActivity());
         mDialog.setIcon(R.drawable.cowface);
         mDialog.setTitle("版本更新");
         mDialog.setMessage(UpdateInformation.upgradeinfo);
@@ -174,13 +172,13 @@ public class UpdateReceiver extends BroadcastReceiver {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                Intent mIntent = new Intent(MyApplication.getContext(), AppUpgradeService.class);
+                Intent mIntent = new Intent(AppConfig.getActivity(), AppUpgradeService.class);
                 mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 //传递数据
 //                mIntent.putExtra("appname", UpdateInformation.appname);
                 mIntent.putExtra("mDownloadUrl", UpdateInformation.updateurl);
                 mIntent.putExtra("appname", UpdateInformation.appname);
-                MyApplication.getContext().startService(mIntent);
+                AppConfig.getActivity().startService(mIntent);
 
             }
         }).setNegativeButton("稍后再说", new DialogInterface.OnClickListener() {
@@ -202,20 +200,20 @@ public class UpdateReceiver extends BroadcastReceiver {
     private void normalUpdate() {
         needUpDate = true;
 
-        if(MyApplication.getContext() instanceof SelectFunctionActivity_new){
-            ((SelectFunctionActivity_new)MyApplication.getContext()).setSign();
+        if(AppConfig.getActivity() instanceof SelectFunctionActivity_new){
+            ((SelectFunctionActivity_new)AppConfig.getActivity()).setSign();
         }else{
-            ((CompanyActivity)MyApplication.getContext()).setSign();
+            ((CompanyActivity)AppConfig.getActivity()).setSign();
         }
 
-//        mDialog = new AlertDialog.Builder(MyApplication.getContext());
+//        mDialog = new AlertDialog.Builder(AppConfig.getActivity());
 //        mDialog.setIcon(R.drawable.cowface);
 //        mDialog.setTitle("版本更新");
 //        mDialog.setMessage(UpdateInformation.upgradeinfo);
 //        mDialog.setCancelable(false);
 //        mDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 //            @Override
-//            public void onClick(DialogInterface dialog, int which) {
+//            public void onClickView(DialogInterface dialog, int which) {
 //                Intent mIntent = new Intent(context, AppUpgradeService.class);
 //                mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //                //传递数据
@@ -226,7 +224,7 @@ public class UpdateReceiver extends BroadcastReceiver {
 //            }
 //        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
 //            @Override
-//            public void onClick(DialogInterface dialog, int which) {
+//            public void onClickView(DialogInterface dialog, int which) {
 //                dialog.dismiss();
 //            }
 //        }).create().show();
@@ -244,9 +242,9 @@ public class UpdateReceiver extends BroadcastReceiver {
             updateDir = new File(Environment.getExternalStorageDirectory(),
                     UpdateInformation.downloadDir);
         } else {
-            updateDir = MyApplication.getContext().getFilesDir();
+            updateDir = AppConfig.getActivity().getFilesDir();
         }
-        updateFile = new File(updateDir.getPath(), MyApplication.getContext().getResources()
+        updateFile = new File(updateDir.getPath(), AppConfig.getActivity().getResources()
                 .getString(R.string.app_name) + ".apk");
         if (updateFile.exists()) {
             Log.d("update", "升级包存在，删除升级包");

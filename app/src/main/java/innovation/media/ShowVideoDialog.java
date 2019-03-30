@@ -8,7 +8,7 @@ import android.view.WindowManager;
 import android.widget.VideoView;
 
 
-import com.xiangchuangtec.luolu.animalcounter.R;
+import com.innovation.pig.insurance.R;
 
 import java.io.File;
 

@@ -81,11 +81,11 @@ import android.widget.Toast;
 import com.xiangchuang.risks.model.bean.RecognitionResult;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.CounterHelper;
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
-import com.xiangchuangtec.luolu.animalcounter.R;
-import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
-import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
+import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.R;
+import com.innovation.pig.insurance.netutils.Constants;
+import com.innovation.pig.insurance.netutils.OkHttp3Util;
+import com.innovation.pig.insurance.netutils.PreferencesUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -118,7 +118,7 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 import static android.content.ContentValues.TAG;
-import static com.xiangchuangtec.luolu.animalcounter.MyApplication.sowCount;
+import static com.innovation.pig.insurance.AppConfig.sowCount;
 import static org.tensorflow.demo.DetectorActivity_new.trackingOverlay;
 import static org.tensorflow.demo.Global.dilogIsShowing;
 import static org.tensorflow.demo.Global.mediaPayItem;
@@ -538,7 +538,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
                 e.printStackTrace();
             }
         }
-        PreferencesUtils.getStringValue(Constants.fleg, MyApplication.getAppContext());
+        PreferencesUtils.getStringValue(Constants.fleg, AppConfig.getAppContext());
         mReCordLayout.setVisibility(View.VISIBLE);
     }
 
@@ -679,12 +679,12 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
         switch (view.getId()) {
             case R.id.record_control:
 
-                Log.e(TAG, "onClick: " + lastClickTime);
+                Log.e(TAG, "onClickView: " + lastClickTime);
                 if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME) {
                     return;
                 }
                 lastClickTime = System.currentTimeMillis();
-                Log.e(TAG, "onClick:ok " + lastClickTime);
+                Log.e(TAG, "onClickView:ok " + lastClickTime);
                 mRecordControl.setClickable(false);
                 if (mIsRecordingVideo) {
                     stopRecordingVideo(false);
@@ -1799,7 +1799,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
         if(activity == null || activity.isFinishing()){
             return;
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(MyApplication.getContext())
+        AlertDialog.Builder builder = new AlertDialog.Builder(AppConfig.getActivity())
                 .setIcon(R.drawable.cowface)
                 .setTitle("提示")
                 .setMessage("上传失败，请重试。")
@@ -1840,8 +1840,8 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
                     for (RecognitionResult recognitionResult : myResults) {
                         JSONObject jsonObject = new JSONObject();
                         //经度 纬度 猪圈名字 图片名字 当前猪圈数
-                        jsonObject.put("lat", LocationManager_new.getInstance(MyApplication.getContext()).currentLat);
-                        jsonObject.put("lon", LocationManager_new.getInstance(MyApplication.getContext()).currentLon);
+                        jsonObject.put("lat", LocationManager_new.getInstance(AppConfig.getActivity()).currentLat);
+                        jsonObject.put("lon", LocationManager_new.getInstance(AppConfig.getActivity()).currentLon);
                         jsonObject.put("name", "猪圈" + (recognitionResult.index + 1));
                         jsonObject.put("picName", "");
                         jsonObject.put("count", recognitionResult.count);
@@ -1882,7 +1882,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
                 param.put("location", locationString);
                 param.put("timeLength", "" + (int) ((System.currentTimeMillis() - tmieVideoStart) / 1000));
                 param.put("juanCnt", "" + myResults.size());
-                param.put("createuser", "" + PreferencesUtils.getIntValue(Constants.userid, MyApplication.getAppContext()));
+                param.put("createuser", "" + PreferencesUtils.getIntValue(Constants.userid, AppConfig.getAppContext()));
                 OkHttp3Util.uploadPreFile(Constants.SHECOMMIT, zipFileVideo2, "out.zip", param, map, new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {

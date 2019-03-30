@@ -1,28 +1,23 @@
 package com.xiangchuang.risks.view;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.adapter.JuanSetting_item_Adapter;
-import com.xiangchuang.risks.model.adapter.ZhuJuanXinXI_item_Adapter;
 import com.xiangchuang.risks.model.bean.JuanSTBean;
-import com.xiangchuang.risks.model.bean.SheXTBean;
-import com.xiangchuang.risks.model.bean.ZhuJuanBean;
 import com.xiangchuang.risks.model.myinterface.MyInterface;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
-import com.xiangchuangtec.luolu.animalcounter.R;
-import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
-import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
-import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
+import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.R;
+import com.innovation.pig.insurance.netutils.Constants;
+import com.innovation.pig.insurance.netutils.OkHttp3Util;
+import com.innovation.pig.insurance.netutils.PreferencesUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,26 +29,41 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.BindView;
+
 import butterknife.OnClick;
-import innovation.upload.OkHttpRequestUtils;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
 public class JuanSettingActivity extends BaseActivity {
     public static String TAG = "JuanSettingActivity";
-    @BindView(R.id.setting_listview)
+
     ListView setting_listview;
-    @BindView(R.id.xu)
+
     TextView mxu;
-    @BindView(R.id.touname)
+
     TextView mtouname;
-    @BindView(R.id.mshename)
+
     TextView mshename;
-    @BindView(R.id.iv_cancel)
+
     ImageView iv_cancel;
     List<JuanSTBean> juanSTBeans = new ArrayList<>();
+
+    @Override
+    public void initView() {
+        super.initView();
+        setting_listview = (ListView) findViewById(R.id.setting_listview);
+        mxu = (TextView) findViewById(R.id.xu);
+        mtouname = (TextView) findViewById(R.id.touname);
+        mshename = (TextView) findViewById(R.id.mshename);
+        iv_cancel = (ImageView) findViewById(R.id.iv_cancel);
+        findViewById(R.id.iv_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickView((View) v);
+            }
+        });
+    }
 
     @Override
     protected int getLayoutId() {
@@ -62,11 +72,11 @@ public class JuanSettingActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        String xu = PreferencesUtils.getStringValue(Constants.xu, MyApplication.getAppContext(), "0");
-        String touname = PreferencesUtils.getStringValue(Constants.touname, MyApplication.getAppContext(), "0");
-        String shename = PreferencesUtils.getStringValue(Constants.shename, MyApplication.getAppContext(), "0");
-        String sheId = PreferencesUtils.getStringValue(Constants.sheId, MyApplication.getAppContext(), "0");
-        String cameraId = PreferencesUtils.getStringValue(Constants.cameraId, MyApplication.getAppContext(), "0");
+        String xu = PreferencesUtils.getStringValue(Constants.xu, AppConfig.getAppContext(), "0");
+        String touname = PreferencesUtils.getStringValue(Constants.touname, AppConfig.getAppContext(), "0");
+        String shename = PreferencesUtils.getStringValue(Constants.shename, AppConfig.getAppContext(), "0");
+        String sheId = PreferencesUtils.getStringValue(Constants.sheId, AppConfig.getAppContext(), "0");
+        String cameraId = PreferencesUtils.getStringValue(Constants.cameraId, AppConfig.getAppContext(), "0");
         mxu.setText(xu);
         mtouname.setText(touname);
         mshename.setText(shename);
@@ -76,10 +86,10 @@ public class JuanSettingActivity extends BaseActivity {
     private void getDataFromNet(String sheId, String cameraId) {
         Map map = new HashMap();
         map.put(Constants.AppKeyAuthorization, "hopen");
-        map.put(Constants.en_user_id, PreferencesUtils.getIntValue(Constants.en_user_id, MyApplication.getAppContext()) + "");
-        map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, MyApplication.getAppContext(), "0"));
-        map.put(Constants.deptIdnew, PreferencesUtils.getStringValue(Constants.deptId, MyApplication.getAppContext()));
-        map.put(Constants.id, PreferencesUtils.getStringValue(Constants.id, MyApplication.getAppContext(), "0"));
+        map.put(Constants.en_user_id, PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext()) + "");
+        map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0"));
+        map.put(Constants.deptIdnew, PreferencesUtils.getStringValue(Constants.deptId, AppConfig.getAppContext()));
+        map.put(Constants.id, PreferencesUtils.getStringValue(Constants.id, AppConfig.getAppContext(), "0"));
         Map mapbody = new HashMap();
         mapbody.put(Constants.cameraId, cameraId);
         mapbody.put(Constants.sheId, sheId);
@@ -152,8 +162,8 @@ public class JuanSettingActivity extends BaseActivity {
         });
     }
 
-    @OnClick({R.id.iv_cancel})
-    public void onClick(View view) {
+
+    public void onClickView(View view) {
         switch (view.getId()) {
             case R.id.iv_cancel:
                 finish();

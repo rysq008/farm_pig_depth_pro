@@ -1,6 +1,5 @@
 package com.xiangchuang.risks.view.camera;
 
-import android.app.UiAutomation;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,19 +7,12 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.graphics.Shader;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.xiangchuangtec.luolu.animalcounter.R;
-
-import innovation.tuil2.UIUtils;
+import com.innovation.pig.insurance.R;
 
 /**
  * Created by Hades on 16/10/9.

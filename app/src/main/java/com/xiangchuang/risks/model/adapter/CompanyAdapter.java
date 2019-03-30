@@ -2,7 +2,6 @@ package com.xiangchuang.risks.model.adapter;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -10,15 +9,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.xiangchuang.risks.base.BaseActivity;
-import com.xiangchuang.risks.model.bean.CompanyBean;
 import com.xiangchuang.risks.model.bean.InSureCompanyBean;
 import com.xiangchuang.risks.view.AddCompanyActivity;
-import com.xiangchuang.risks.view.CompanyActivity;
 import com.xiangchuang.risks.view.SelectFunctionActivity_new;
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
-import com.xiangchuangtec.luolu.animalcounter.R;
-import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
+import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.R;
+import com.innovation.pig.insurance.netutils.Constants;
+import com.innovation.pig.insurance.netutils.PreferencesUtils;
 
 import java.util.List;
 
@@ -72,13 +69,13 @@ public class CompanyAdapter extends BaseAdapter {
             public void onClick(View v) {
                 BaseActivity activity = (BaseActivity) context;
                 if(companyBeans.get(position).getEnId()!=null&&!companyBeans.get(position).getEnId().isEmpty()){
-                    PreferencesUtils.saveKeyValue(Constants.en_id, companyBeans.get(position).getEnId(), MyApplication.getAppContext());
+                    PreferencesUtils.saveKeyValue(Constants.en_id, companyBeans.get(position).getEnId(), AppConfig.getAppContext());
                 }
                 if(companyBeans.get(position).getEnName()!=null&&!companyBeans.get(position).getEnName().isEmpty()){
-                    PreferencesUtils.saveKeyValue(Constants.companyname, companyBeans.get(position).getEnName(), MyApplication.getAppContext());
+                    PreferencesUtils.saveKeyValue(Constants.companyname, companyBeans.get(position).getEnName(), AppConfig.getAppContext());
                 }
                 if(companyBeans.get(position).getEnUserId()!=null&&!companyBeans.get(position).getEnUserId().equals("")){
-                    PreferencesUtils.saveIntValue(Constants.en_user_id, Integer.valueOf(companyBeans.get(position).getEnUserId()), MyApplication.getAppContext());
+                    PreferencesUtils.saveIntValue(Constants.en_user_id, Integer.valueOf(companyBeans.get(position).getEnUserId()), AppConfig.getAppContext());
                 }
 
                 String type = companyBeans.get(position).getCanUse();

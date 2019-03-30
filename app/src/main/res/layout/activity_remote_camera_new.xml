@@ -84,7 +84,7 @@
         android:visibility="gone"
         tools:visibility="visible" />
 
-    <com.xiangchuangtec.luolu.animalcounter.view.RecognitionView
+    <com.innovation.pig.insurance.view.RecognitionView
         android:id="@+id/recognition_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

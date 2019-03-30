@@ -12,10 +12,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
-import com.xiangchuangtec.luolu.animalcounter.R;
-import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
+import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.R;
+import com.innovation.pig.insurance.netutils.Constants;
+import com.innovation.pig.insurance.netutils.PreferencesUtils;
 
 import java.util.Map;
 
@@ -220,8 +220,8 @@ public class InsureDialog extends Dialog {
 
         initView();
 
-        if (MyApplication.debugNub == 1) {
-            int n = PreferencesUtils.getIntValue(Constants.lipein, 120, MyApplication.getContext());
+        if (AppConfig.debugNub == 1) {
+            int n = PreferencesUtils.getIntValue(Constants.lipein, 120, AppConfig.getActivity());
 
             mTips.setText("系统检测到您的采集时间已超过" + n + "秒，" +
                     "您可以继续采集理赔图像，也可以强制提交当前已采集的内容，系统进行人工复核。\n" +
@@ -234,9 +234,9 @@ public class InsureDialog extends Dialog {
             mAbortBtn.setVisibility(View.VISIBLE);
             mUpOneBtn.setText("直接提交");
             mAbortBtn.setText("继续采集");
-        } else if (MyApplication.debugNub == 2) {
-            String customServ = PreferencesUtils.getStringValue(Constants.customServ, MyApplication.getContext());
-            int m = PreferencesUtils.getIntValue(Constants.lipeim, 240, MyApplication.getContext());
+        } else if (AppConfig.debugNub == 2) {
+            String customServ = PreferencesUtils.getStringValue(Constants.customServ, AppConfig.getActivity());
+            int m = PreferencesUtils.getIntValue(Constants.lipeim, 240, AppConfig.getActivity());
 
             mTips.setText("系统检测到您的采集时间已超过" + m + "秒，" +
                     "建议您强制提交当前已采集的内容，系统将进行人工复核。强制提交后请用手机直接对着牲畜的左、中、右脸拍摄一段不少于2分钟视频，留存作为档案提交到" + customServ + "处。\n" +

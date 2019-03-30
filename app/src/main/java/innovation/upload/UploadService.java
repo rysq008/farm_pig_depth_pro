@@ -7,7 +7,7 @@ import android.support.annotation.Nullable;
 
 import com.mainaer.wjoklib.okhttp.upload.UploadTask;
 import com.mainaer.wjoklib.okhttp.upload.UploadTaskListener;
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
+import com.innovation.pig.insurance.AppConfig;
 
 import java.io.File;
 import java.util.List;
@@ -33,7 +33,7 @@ public class UploadService extends Service implements UploadTaskListener {
             @Override
             public void run() {
 //                databaseHelper.queryAllTABLE_LIPEI();
-                box = MyApplication.getBoxStore().boxFor(VideoUploadTable.class);
+                box = AppConfig.getBoxStore().boxFor(VideoUploadTable.class);
                 List<VideoUploadTable> datas = box.query().equal(VideoUploadTable_.iscomplete, false).build().find();
                 UploadUtils.uploadFile(UploadService.this, UploadService.this, datas);
             }

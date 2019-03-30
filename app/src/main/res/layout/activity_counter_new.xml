@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3">
-        <com.xiangchuangtec.luolu.animalcounter.view.CameraOverlayLayout
+        <com.innovation.pig.insurance.view.CameraOverlayLayout
             android:id="@+id/cameraOverlayLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -22,12 +22,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-            <com.xiangchuangtec.luolu.animalcounter.view.RecognitionView
+            <com.innovation.pig.insurance.view.RecognitionView
                 android:id="@+id/recognition_view"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:visibility="gone" />
-        </com.xiangchuangtec.luolu.animalcounter.view.CameraOverlayLayout>
+        </com.innovation.pig.insurance.view.CameraOverlayLayout>
 
         <ImageView
             android:id="@+id/recogn"

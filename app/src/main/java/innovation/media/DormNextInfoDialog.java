@@ -19,18 +19,17 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.xiangchuang.risks.model.adapter.JuanSetting_item_Adapter;
 import com.xiangchuang.risks.model.bean.ZhuJuanBean;
 import com.xiangchuang.risks.model.bean.ZhuSheBean;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.LocationManager;
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
-import com.xiangchuangtec.luolu.animalcounter.R;
-import com.xiangchuangtec.luolu.animalcounter.model.Commit;
-import com.xiangchuangtec.luolu.animalcounter.model.DatabaseHelper;
-import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
-import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
+import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.R;
+import com.innovation.pig.insurance.model.Commit;
+import com.innovation.pig.insurance.model.DatabaseHelper;
+import com.innovation.pig.insurance.netutils.GsonUtils;
+import com.innovation.pig.insurance.netutils.OkHttp3Util;
+import com.innovation.pig.insurance.netutils.PreferencesUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,7 +43,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
+import com.innovation.pig.insurance.netutils.Constants;
 
 /**
  * @author wbs on 12/16/17.
@@ -134,8 +133,8 @@ public class DormNextInfoDialog extends Dialog implements View.OnClickListener {
     private void querySheJuanMessage() {
         Map map = new HashMap();
         map.put(Constants.AppKeyAuthorization, "hopen");
-        map.put(Constants.en_user_id, String.valueOf(PreferencesUtils.getIntValue(Constants.en_user_id, MyApplication.getAppContext())));
-        map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, MyApplication.getAppContext(), "0"));
+        map.put(Constants.en_user_id, String.valueOf(PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext())));
+        map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0"));
         Map mapbody = new HashMap();
         mapbody.put(Constants.amountFlg, String.valueOf(9));
         mapbody.put(Constants.insureFlg, String.valueOf(9));
@@ -192,8 +191,8 @@ public class DormNextInfoDialog extends Dialog implements View.OnClickListener {
     private void getzhujuanMessage(String pighouseid) {
         Map map = new HashMap();
         map.put(Constants.AppKeyAuthorization, "hopen");
-        map.put(Constants.en_user_id, PreferencesUtils.getIntValue(Constants.en_user_id, MyApplication.getAppContext()) + "");
-        map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, MyApplication.getAppContext(), "0"));
+        map.put(Constants.en_user_id, PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext()) + "");
+        map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0"));
         Map mapbody = new HashMap();
         mapbody.put(Constants.amountFlg, "" + 9);
         mapbody.put(Constants.insureFlg, "" + 9);
@@ -341,7 +340,7 @@ public class DormNextInfoDialog extends Dialog implements View.OnClickListener {
                 getDataFromNet();
                 break;
             case R.id.cancel:
-                PreferencesUtils.saveKeyValue(Constants.manualcount, "0", MyApplication.getAppContext());
+                PreferencesUtils.saveKeyValue(Constants.manualcount, "0", AppConfig.getAppContext());
                 PreferencesUtils.saveBooleanValue("isfleg",false,context);
                 cancel();
                 break;
@@ -353,8 +352,8 @@ public class DormNextInfoDialog extends Dialog implements View.OnClickListener {
     private void getDataFromNet() {
         Map map = new HashMap();
         map.put(Constants.AppKeyAuthorization, "hopen");
-        map.put(Constants.en_user_id, String.valueOf(PreferencesUtils.getIntValue(Constants.en_user_id, MyApplication.getAppContext())));
-        map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, MyApplication.getAppContext(), "0"));
+        map.put(Constants.en_user_id, String.valueOf(PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext())));
+        map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0"));
         Map mapbody = new HashMap();
         String numzidongvalue = numzidong.getText().toString();
         String numshoudongvalue = numshoudong.getText().toString();
@@ -385,8 +384,8 @@ public class DormNextInfoDialog extends Dialog implements View.OnClickListener {
                             final Commit bean = GsonUtils.getBean(s, Commit.class);
                             if (null != bean && bean.getStatus() == 1) {
                                 SpinnerZhuJuan.setSelection(0);
-                                Toast.makeText(MyApplication.getAppContext(), "保存成功", Toast.LENGTH_LONG).show();
-                                PreferencesUtils.saveKeyValue(Constants.manualcount, numshoudongvalue, MyApplication.getAppContext());
+                                Toast.makeText(AppConfig.getAppContext(), "保存成功", Toast.LENGTH_LONG).show();
+                                PreferencesUtils.saveKeyValue(Constants.manualcount, numshoudongvalue, AppConfig.getAppContext());
                             }
                             dismiss();
                             PreferencesUtils.saveBooleanValue("isfleg",false,context);
@@ -401,10 +400,10 @@ public class DormNextInfoDialog extends Dialog implements View.OnClickListener {
     private void editRecoed() {
         Map map = new HashMap();
         map.put(Constants.AppKeyAuthorization, "hopen");
-        map.put(Constants.en_user_id, String.valueOf(PreferencesUtils.getIntValue(Constants.en_user_id, MyApplication.getAppContext())));
-        map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, MyApplication.getAppContext(), "0"));
+        map.put(Constants.en_user_id, String.valueOf(PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext())));
+        map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0"));
         Map mapbody = new HashMap();
-        mapbody.put(Constants.videoId, PreferencesUtils.getStringValue(Constants.startVideoId, MyApplication.getAppContext(), "0"));
+        mapbody.put(Constants.videoId, PreferencesUtils.getStringValue(Constants.startVideoId, AppConfig.getAppContext(), "0"));
         OkHttp3Util.doPost(Constants.PRESTOP, mapbody, map, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {

@@ -40,10 +40,10 @@ import com.serenegiant.widget.UVCCameraTextureView;
 import com.xiangchuang.risks.model.bean.RecognitionResult;
 import com.xiangchuang.risks.utils.CommonUtils;
 import com.xiangchuang.risks.utils.CounterHelper;
-import com.xiangchuangtec.luolu.animalcounter.BuildConfig;
-import com.xiangchuangtec.luolu.animalcounter.JuanCountAdapter;
-import com.xiangchuangtec.luolu.animalcounter.R;
-import com.xiangchuangtec.luolu.animalcounter.view.RecognitionView;
+import com.innovation.pig.insurance.BuildConfig;
+import com.innovation.pig.insurance.JuanCountAdapter;
+import com.innovation.pig.insurance.R;
+import com.innovation.pig.insurance.view.RecognitionView;
 
 import org.json.JSONObject;
 
@@ -54,8 +54,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
+
 import innovation.location.LocationManager;
 import innovation.location.LocationManager_new;
 
@@ -117,17 +117,17 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
 
     //private PigNumDetector pigNumDetector;
     private UVCCameraTextureView mCameraTextureView;
-    @BindView(R.id.count_name)
+
     TextView mCountName;
-    @BindView(R.id.total_count)
+
     TextView mTotalCountTextView;
 
-    @BindView(R.id.usb_camera_activity)
+
     RelativeLayout counter_activity;
-    @BindView(R.id.usb_recogn)
+
     ImageView mResultImageView;
 
-    @BindView(R.id.juan_list)
+
     ListView juan_list;
 
     private boolean isTest = false;
@@ -186,7 +186,12 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
         Intent intent = getIntent();
         if (DEBUG) Log.v(TAG, "onCreate:");
         setContentView(R.layout.activity_remote_camera_new);
-        ButterKnife.bind(this);
+        mCountName = (TextView) findViewById(R.id.count_name);
+        mTotalCountTextView = (TextView) findViewById(R.id.total_count);
+        counter_activity = (RelativeLayout) findViewById(R.id.usb_camera_activity);
+        mResultImageView = (ImageView) findViewById(R.id.usb_recogn);
+        juan_list = (ListView) findViewById(R.id.juan_list);
+
         recognitionView = findViewById(R.id.recognition_view);
         mTakePictureButton = (Button) findViewById(R.id.take_picture_button);
         final View view = findViewById(R.id.camera_view);

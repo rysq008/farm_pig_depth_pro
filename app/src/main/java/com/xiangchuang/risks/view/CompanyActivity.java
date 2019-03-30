@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -26,11 +27,11 @@ import com.xiangchuang.risks.model.bean.InSureCompanyBean;
 import com.xiangchuang.risks.update.AppUpgradeService;
 import com.xiangchuang.risks.update.UpdateInformation;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
-import com.xiangchuangtec.luolu.animalcounter.R;
-import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
-import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
+import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.R;
+import com.innovation.pig.insurance.netutils.Constants;
+import com.innovation.pig.insurance.netutils.OkHttp3Util;
+import com.innovation.pig.insurance.netutils.PreferencesUtils;
 
 
 import org.json.JSONArray;
@@ -42,32 +43,32 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.BindView;
+
 import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-import static com.xiangchuangtec.luolu.animalcounter.MyApplication.needUpDate;
+import static com.innovation.pig.insurance.AppConfig.needUpDate;
 
 public class CompanyActivity extends BaseActivity {
-    @BindView(R.id.company_name)
+
     TextView company_name;
-    @BindView(R.id.addcompany)
+
     TextView addcompany;
-    @BindView(R.id.company_listview)
+
     ListView company_listview;
-    @BindView(R.id.iv_cancel)
+
     ImageView iv_cancel;
-    @BindView(R.id.tv_exit)
+
     TextView tvExit;
-    @BindView(R.id.iv_sign)
+
     ImageView ivSign;
-    @BindView(R.id.rl_edit)
+
     RelativeLayout rl_edit;
-    @BindView(R.id.search_tag_input_edit)
+
     EditText searchEdit;
-    @BindView(R.id.bt_clear)
+
     Button btnClear;
 
     private String en_id;
@@ -79,6 +80,37 @@ public class CompanyActivity extends BaseActivity {
     private TextView tvPopExit;
     private TextView tvPopUpdate;
     private ImageView ivPopUpdateSign;
+
+    @Override
+    public void initView() {
+        company_name = (TextView) findViewById(R.id.company_name);
+        addcompany = (TextView) findViewById(R.id.addcompany);
+        company_listview = (ListView) findViewById(R.id.company_listview);
+        iv_cancel = (ImageView) findViewById(R.id.iv_cancel);
+        tvExit = (TextView) findViewById(R.id.tv_exit);
+        ivSign = (ImageView) findViewById(R.id.iv_sign);
+        rl_edit = (RelativeLayout) findViewById(R.id.rl_edit);
+        searchEdit = (EditText) findViewById(R.id.search_tag_input_edit);
+        btnClear = (Button) findViewById(R.id.bt_clear);
+        findViewById(R.id.tv_exit).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickView((View) v);
+            }
+        });
+        findViewById(R.id.iv_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickView((View) v);
+            }
+        });
+        findViewById(R.id.addcompany).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickView((View) v);
+            }
+        });
+    }
 
     @Override
     protected int getLayoutId() {
@@ -171,8 +203,8 @@ public class CompanyActivity extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.addcompany, R.id.iv_cancel, R.id.tv_exit})
-    public void onClick(View view) {
+
+    public void onClickView(View view) {
         switch (view.getId()) {
             case R.id.addcompany:
                 Bundle bundle = new Bundle();
@@ -272,7 +304,7 @@ public class CompanyActivity extends BaseActivity {
         Map<String, String> map = new HashMap<>();
         map.put(Constants.AppKeyAuthorization, "hopen");
         Map<String, String> mapbody = new HashMap<>();
-        mapbody.put(Constants.deptId, PreferencesUtils.getStringValue(Constants.deptId, MyApplication.getAppContext()));
+        mapbody.put(Constants.deptId, PreferencesUtils.getStringValue(Constants.deptId, AppConfig.getAppContext()));
         OkHttp3Util.doPost(Constants.ENLIST, mapbody, map, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {

@@ -1,34 +1,27 @@
 package com.xiangchuang.risks.view;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.os.Environment;
+import android.os.Bundle;
 import android.os.SystemClock;
-import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.*;
 
-import butterknife.BindView;
+
 import butterknife.OnClick;
 
 import com.xiangchuang.risks.base.BaseActivity;
@@ -37,11 +30,11 @@ import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.utils.CounterHelper;
 import com.xiangchuang.risks.utils.PigWeightUtils;
-import com.xiangchuangtec.luolu.animalcounter.BuildConfig;
-import com.xiangchuangtec.luolu.animalcounter.R;
-import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
-import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
-import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
+import com.innovation.pig.insurance.BuildConfig;
+import com.innovation.pig.insurance.R;
+import com.innovation.pig.insurance.netutils.Constants;
+import com.innovation.pig.insurance.netutils.GsonUtils;
+import com.innovation.pig.insurance.netutils.OkHttp3Util;
 
 import innovation.utils.FileUtils;
 import innovation.utils.MyWatcher;
@@ -51,51 +44,49 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 public class AddPigPicActivity extends BaseActivity {
 
-    @BindView(R.id.iv_cancel)
+
     ImageView iv_cancel;
-    @BindView(R.id.tv_title)
+
     TextView tvTitle;
-    @BindView(R.id.etPigAge)
+
     EditText etPigAge;
-    @BindView(R.id.etAnimalWeight)
+
     EditText etAnimalWeight;
-    @BindView(R.id.btnPersonAndAnimal)
+
     ImageView btnPersonAndAnimal;
-    @BindView(R.id.tvPersonAndAnimalpath)
+
     TextView tvPersonAndAnimalpath;
-    @BindView(R.id.btnbuchongleft)
+
     ImageView btnbuchongleft;
-    @BindView(R.id.tvbuchongleft)
+
     TextView tvbuchongleft;
-    @BindView(R.id.btnbuchongright)
+
     ImageView btnbuchongright;
-    @BindView(R.id.tvbuchongright)
+
     TextView tvbuchongright;
-    @BindView(R.id.btnCommit)
+
     Button btnCommit;
-    @BindView(R.id.seekbar)
+
     SeekBar seekbar;
-    @BindView(R.id.tv_adjust)
+
     TextView tv_adjust;
-    @BindView(R.id.tv_prompt)
+
     TextView tvPrompt;
-    @BindView(R.id.ll_default)
+
     LinearLayout ll_default;
-    @BindView(R.id.etPigDeathTime)
+
     EditText etPigDeathTime;
 
     private static final int REQUESTCODE_PICK = 0;        // 相册选图标记
@@ -124,6 +115,69 @@ public class AddPigPicActivity extends BaseActivity {
 
     //记录称重接口不能识别的次数
     private int failureTime = 0;
+
+    @Override
+    public void initView() {
+        super.initView();
+        iv_cancel = (ImageView) findViewById(R.id.iv_cancel);
+        tvTitle = (TextView) findViewById(R.id.tv_title);
+        etPigAge = (EditText) findViewById(R.id.etPigAge);
+        etAnimalWeight = (EditText) findViewById(R.id.etAnimalWeight);
+        btnPersonAndAnimal = (ImageView) findViewById(R.id.btnPersonAndAnimal);
+        tvPersonAndAnimalpath = (TextView) findViewById(R.id.tvPersonAndAnimalpath);
+        btnbuchongleft = (ImageView) findViewById(R.id.btnbuchongleft);
+        tvbuchongleft = (TextView) findViewById(R.id.tvbuchongleft);
+        btnbuchongright = (ImageView) findViewById(R.id.btnbuchongright);
+        tvbuchongright = (TextView) findViewById(R.id.tvbuchongright);
+        btnCommit = (Button) findViewById(R.id.btnCommit);
+        seekbar = (SeekBar) findViewById(R.id.seekbar);
+        tv_adjust = (TextView) findViewById(R.id.tv_adjust);
+        tvPrompt = (TextView) findViewById(R.id.tv_prompt);
+        ll_default = (LinearLayout) findViewById(R.id.ll_default);
+        etPigDeathTime = (EditText) findViewById(R.id.etPigDeathTime);
+        findViewById(R.id.etPigDeathTime).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickView((View) v);
+            }
+        });
+        findViewById(R.id.iv_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickView((View) v);
+            }
+        });
+        findViewById(R.id.btnCommit).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickView((View) v);
+            }
+        });
+        findViewById(R.id.btnbuchongright).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickView((View) v);
+            }
+        });
+        findViewById(R.id.btnbuchongleft).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickView((View) v);
+            }
+        });
+        findViewById(R.id.ll_default).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickView((View) v);
+            }
+        });
+        findViewById(R.id.btnPersonAndAnimal).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickView((View) v);
+            }
+        });
+    }
 
     @Override
     protected int getLayoutId() {
@@ -192,7 +246,7 @@ public class AddPigPicActivity extends BaseActivity {
         //相册
 //        bt2.setOnClickListener(new View.OnClickListener() {
 //            @Override
-//            public void onClick(View v) {
+//            public void onClickView(View v) {
 //                // 如果朋友们要限制上传到服务器的图片类型时可以直接写如："image/jpeg 、 image/png等的类型"
 //                Intent pickIntent = new Intent(Intent.ACTION_PICK, null);
 //                pickIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/jpeg");
@@ -533,8 +587,8 @@ public class AddPigPicActivity extends BaseActivity {
 //    }
 
 
-    @OnClick({R.id.btnPersonAndAnimal, R.id.ll_default, R.id.btnbuchongleft, R.id.btnbuchongright, R.id.btnCommit, R.id.iv_cancel, R.id.etPigDeathTime})
-    public void onClick(View view) {
+
+    public void onClickView(View view) {
         switch (view.getId()) {
             case R.id.btnPersonAndAnimal:
             case R.id.ll_default:

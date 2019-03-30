@@ -3,7 +3,6 @@ package com.xiangchuang.risks.view;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -44,23 +43,19 @@ import com.hjq.permissions.XXPermissions;
 import com.xiangchuang.risks.base.BaseBarActivity;
 import com.xiangchuang.risks.model.bean.CompanyInfoBean;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
-import com.xiangchuang.risks.utils.IDCard;
-import com.xiangchuangtec.luolu.animalcounter.BuildConfig;
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
-import com.xiangchuangtec.luolu.animalcounter.R;
-import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
-import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
-import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
+import com.innovation.pig.insurance.BuildConfig;
+import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.R;
+import com.innovation.pig.insurance.netutils.Constants;
+import com.innovation.pig.insurance.netutils.GsonUtils;
+import com.innovation.pig.insurance.netutils.OkHttp3Util;
+import com.innovation.pig.insurance.netutils.PreferencesUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -78,7 +73,6 @@ import okhttp3.Response;
 import static com.xiangchuang.risks.utils.MyTextUtil.isEmojiCharacter;
 import static com.xiangchuang.risks.utils.ValidatorUtils.isLicense;
 import static com.xiangchuang.risks.utils.ValidatorUtils.isMobileNO;
-import static com.xiangchuang.risks.utils.ValidatorUtils.isPhone;
 import static innovation.utils.ImageUtils.fileToBitmap;
 
 public class AddCompanyActivity extends BaseBarActivity implements View.OnClickListener {
@@ -139,18 +133,18 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
                     @Override
                     public void hasPermission(List<String> granted, boolean isAll) {
                         if (isAll) {
-                            // toastUtils.showLong(MyApplication.getAppContext(), "获取权限成功");
+                            // toastUtils.showLong(AppConfig.getAppContext(), "获取权限成功");
                         }
                     }
 
                     @Override
                     public void noPermission(List<String> denied, boolean quick) {
                         if (quick) {
-                            Toast.makeText(MyApplication.getAppContext(), "被永久拒绝授权，请手动授予权限", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AppConfig.getAppContext(), "被永久拒绝授权，请手动授予权限", Toast.LENGTH_SHORT).show();
                             //如果是被永久拒绝就跳转到应用权限系统设置页面
-                            XXPermissions.gotoPermissionSettings(MyApplication.getAppContext());
+                            XXPermissions.gotoPermissionSettings(AppConfig.getAppContext());
                         } else {
-                            Toast.makeText(MyApplication.getAppContext(), "获取权限失败", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AppConfig.getAppContext(), "获取权限失败", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -439,9 +433,9 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
     private void saveMessageFromNet() {
         Map<String,String> map = new HashMap<>();
         map.put(Constants.AppKeyAuthorization, "hopen");
-        map.put(Constants.deptIdnew, PreferencesUtils.getStringValue(Constants.deptId, MyApplication.getAppContext()));
+        map.put(Constants.deptIdnew, PreferencesUtils.getStringValue(Constants.deptId, AppConfig.getAppContext()));
 
-        map.put(Constants.id, PreferencesUtils.getStringValue(Constants.id, MyApplication.getAppContext(), "0"));
+        map.put(Constants.id, PreferencesUtils.getStringValue(Constants.id, AppConfig.getAppContext(), "0"));
 
         Map<String,String> mapbody = new HashMap<>();
         mapbody.put("enName", tv_qiyename.getText().toString());
@@ -464,7 +458,7 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
         mapbody.put("bankBack", "");
 
         if (type) {
-            mapbody.put("enId", PreferencesUtils.getStringValue(Constants.en_id, MyApplication.getAppContext()));
+            mapbody.put("enId", PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext()));
         }
 
         OkHttp3Util.doPost(Constants.adduser, mapbody, map, new Callback() {
@@ -648,7 +642,7 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
         mProgressDialog.show();
         Map<String, String> map = new HashMap<>();
         map.put(Constants.AppKeyAuthorization, "hopen");
-        map.put(Constants.id, PreferencesUtils.getStringValue(Constants.id, MyApplication.getAppContext(), "0"));
+        map.put(Constants.id, PreferencesUtils.getStringValue(Constants.id, AppConfig.getAppContext(), "0"));
         OkHttp3Util.uploadPreFile(Constants.upload, fileURLPath, "a.jpg", null, map, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {

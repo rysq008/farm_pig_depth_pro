@@ -4,35 +4,22 @@ import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.bean.JuanSTBean;
-import com.xiangchuang.risks.model.bean.PinZhongBean;
-import com.xiangchuang.risks.model.bean.UpdateBean;
-import com.xiangchuang.risks.model.bean.ZhuJuanBean;
 import com.xiangchuang.risks.model.myinterface.MyInterface;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
-import com.xiangchuang.risks.view.JuanSettingActivity;
-import com.xiangchuang.risks.view.LoginFamerActivity;
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
-import com.xiangchuangtec.luolu.animalcounter.R;
-import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
-import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
-import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
+import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.R;
+import com.innovation.pig.insurance.netutils.Constants;
+import com.innovation.pig.insurance.netutils.OkHttp3Util;
+import com.innovation.pig.insurance.netutils.PreferencesUtils;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -117,13 +104,13 @@ public class JuanSetting_item_Adapter extends BaseAdapter {
     }
 
     private void BindingCamera(int juanId) {
-        String cameraId = PreferencesUtils.getStringValue(Constants.cameraId, MyApplication.getAppContext(), "0");
+        String cameraId = PreferencesUtils.getStringValue(Constants.cameraId, AppConfig.getAppContext(), "0");
         Map map = new HashMap();
         map.put(Constants.AppKeyAuthorization, "hopen");
-        map.put(Constants.en_user_id, PreferencesUtils.getIntValue(Constants.en_user_id, MyApplication.getAppContext()) + "");
-        map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, MyApplication.getAppContext(), "0"));
-        map.put(Constants.deptIdnew, PreferencesUtils.getStringValue(Constants.deptId, MyApplication.getAppContext()));
-        map.put(Constants.id, PreferencesUtils.getStringValue(Constants.id, MyApplication.getAppContext(), "0"));
+        map.put(Constants.en_user_id, PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext()) + "");
+        map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0"));
+        map.put(Constants.deptIdnew, PreferencesUtils.getStringValue(Constants.deptId, AppConfig.getAppContext()));
+        map.put(Constants.id, PreferencesUtils.getStringValue(Constants.id, AppConfig.getAppContext(), "0"));
         Map mapbody = new HashMap();
         mapbody.put(Constants.cameraId, cameraId);
         mapbody.put(Constants.juanId, juanId + "");

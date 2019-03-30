@@ -6,7 +6,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,14 +25,13 @@ import com.xiangchuang.risks.update.AppUpgradeService;
 import com.xiangchuang.risks.update.UpdateInformation;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
-import com.xiangchuangtec.luolu.animalcounter.BuildConfig;
-import com.xiangchuangtec.luolu.animalcounter.CounterActivity_new;
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
-import com.xiangchuangtec.luolu.animalcounter.R;
-import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
-import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
-import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
+import com.innovation.pig.insurance.BuildConfig;
+import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.R;
+import com.innovation.pig.insurance.netutils.Constants;
+import com.innovation.pig.insurance.netutils.GsonUtils;
+import com.innovation.pig.insurance.netutils.OkHttp3Util;
+import com.innovation.pig.insurance.netutils.PreferencesUtils;
 
 import org.json.JSONObject;
 import org.tensorflow.demo.DetectorActivity;
@@ -40,42 +41,42 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import butterknife.BindView;
+
 import butterknife.OnClick;
 import innovation.media.Model;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-import static com.xiangchuangtec.luolu.animalcounter.MyApplication.needUpDate;
+import static com.innovation.pig.insurance.AppConfig.needUpDate;
 
 public class SelectFunctionActivity_new extends BaseActivity {
     public static String TAG = "SelectFunctionActivity";
-    @BindView(R.id.iv_cancel)
+
     ImageView iv_cancel;
-    @BindView(R.id.select_name)
+
     TextView mselectname;
-    @BindView(R.id.select_toubao)
+
     TextView mselecttoubao;
-    @BindView(R.id.rel_toubao)
+
     RelativeLayout rel_toubao;
-    @BindView(R.id.select_xunjiandianshu)
+
     TextView mselectxunjiandianshu;
-    @BindView(R.id.select_yulipei)
+
     TextView selectYulipei;
-    @BindView(R.id.select_lipei)
+
     TextView mselectlipei;
-    @BindView(R.id.rel_lipei)
+
     RelativeLayout relLipei;
-    @BindView(R.id.select_webview)
+
     TextView selectWebview;
-    @BindView(R.id.tv_exit)
+
     TextView tvExit;
-    @BindView(R.id.rl_back)
+
     RelativeLayout rlBack;
-    @BindView(R.id.rl_edit)
+
     RelativeLayout rlEdit;
-    @BindView(R.id.iv_sign)
+
     ImageView ivSign;
 
     private String companyname;
@@ -91,18 +92,42 @@ public class SelectFunctionActivity_new extends BaseActivity {
     private ImageView ivPopUpdateSign;
 
     @Override
+    public void initView() {
+        super.initView();
+        iv_cancel = (ImageView) findViewById(R.id.iv_cancel);
+        mselectname = (TextView) findViewById(R.id.select_name);
+        mselecttoubao = (TextView) findViewById(R.id.select_toubao);
+        rel_toubao = (RelativeLayout) findViewById(R.id.rel_toubao);
+        mselectxunjiandianshu = (TextView) findViewById(R.id.select_xunjiandianshu);
+        selectYulipei = (TextView) findViewById(R.id.select_yulipei);
+        mselectlipei = (TextView) findViewById(R.id.select_lipei);
+        relLipei = (RelativeLayout) findViewById(R.id.rel_lipei);
+        selectWebview = (TextView) findViewById(R.id.select_webview);
+        tvExit = (TextView) findViewById(R.id.tv_exit);
+        rlBack = (RelativeLayout) findViewById(R.id.rl_back);
+        rlEdit = (RelativeLayout) findViewById(R.id.rl_edit);
+        ivSign = (ImageView) findViewById(R.id.iv_sign);
+    }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+
+    }
+    @Override
     protected int getLayoutId() {
         return R.layout.activity_select_function_new;
     }
 
     @Override
     protected void initData() {
-        companyname = PreferencesUtils.getStringValue(Constants.companyname, MyApplication.getAppContext(), "育肥猪农场");
-        companyfleg = PreferencesUtils.getStringValue(Constants.companyfleg, MyApplication.getAppContext(), "0");
+        companyname = PreferencesUtils.getStringValue(Constants.companyname, AppConfig.getAppContext(), "育肥猪农场");
+        companyfleg = PreferencesUtils.getStringValue(Constants.companyfleg, AppConfig.getAppContext(), "0");
         Log.i("==companyfleg=", companyfleg + "");
         mselectname.setText(companyname);
-        en_id = PreferencesUtils.getStringValue(Constants.en_id, MyApplication.getAppContext(), "0");
-        userid = PreferencesUtils.getIntValue(Constants.en_user_id, MyApplication.getAppContext());
+        en_id = PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0");
+        userid = PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext());
         //保险公司
         if ("1".equals(companyfleg)) {
             rel_toubao.setVisibility(View.VISIBLE);
@@ -114,7 +139,7 @@ public class SelectFunctionActivity_new extends BaseActivity {
             rlEdit.setVisibility(View.VISIBLE);
             //企业（养殖场）
             rel_toubao.setVisibility(View.GONE);
-            if (MyApplication.isOpenLiPei) {
+            if (AppConfig.isOpenLiPei) {
                 relLipei.setVisibility(View.VISIBLE);
             } else {
                 relLipei.setVisibility(View.GONE);
@@ -260,7 +285,7 @@ public class SelectFunctionActivity_new extends BaseActivity {
                                     mProgressDialog.dismiss();
                                     //预理赔
                                     Intent intent = new Intent(SelectFunctionActivity_new.this, PreparedLiPeiActivity_new.class);
-                                    PreferencesUtils.saveKeyValue(Constants.fleg, "pre", MyApplication.getAppContext());
+                                    PreferencesUtils.saveKeyValue(Constants.fleg, "pre", AppConfig.getAppContext());
                                     startActivity(intent);
                                 }
 
@@ -438,8 +463,8 @@ public class SelectFunctionActivity_new extends BaseActivity {
                         public void run() {
                             mProgressDialog.dismiss();
                             if (bean.getStatus() == 1) {
-                                PreferencesUtils.saveKeyValue(Constants.fleg, "lipei", MyApplication.getAppContext());
-                                PreferencesUtils.saveKeyValue(Constants.preVideoId, bean.getData(), MyApplication.getAppContext());
+                                PreferencesUtils.saveKeyValue(Constants.fleg, "lipei", AppConfig.getAppContext());
+                                PreferencesUtils.saveKeyValue(Constants.preVideoId, bean.getData(), AppConfig.getAppContext());
                                 Global.model = Model.VERIFY.value();
                                 Intent intent = new Intent(SelectFunctionActivity_new.this, DetectorActivity.class);
                                 startActivity(intent);
@@ -461,9 +486,9 @@ public class SelectFunctionActivity_new extends BaseActivity {
 
                             }
                             /*else if (bean.getStatus() == 0) {
-                                Toast.makeText(MyApplication.getAppContext(), bean.getMsg(), Toast.LENGTH_LONG).show();
+                                Toast.makeText(AppConfig.getAppContext(), bean.getMsg(), Toast.LENGTH_LONG).show();
                             } else if (bean.getStatus() == -1) {
-                                Toast.makeText(MyApplication.getAppContext(), bean.getMsg(), Toast.LENGTH_LONG).show();
+                                Toast.makeText(AppConfig.getAppContext(), bean.getMsg(), Toast.LENGTH_LONG).show();
                             }*/
                         }
                     });

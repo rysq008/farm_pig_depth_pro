@@ -1,11 +1,12 @@
 package com.xiangchuang.risks.view;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,14 +16,13 @@ import com.xiangchuang.risks.model.bean.ZhuSheBean;
 import com.xiangchuang.risks.model.adapter.ZhuSheXinXI_item_Adapter;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
-import com.xiangchuangtec.luolu.animalcounter.R;
-import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
-import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
-import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
+import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.R;
+import com.innovation.pig.insurance.netutils.Constants;
+import com.innovation.pig.insurance.netutils.GsonUtils;
+import com.innovation.pig.insurance.netutils.OkHttp3Util;
+import com.innovation.pig.insurance.netutils.PreferencesUtils;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.BindView;
+
 import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -38,22 +38,49 @@ import okhttp3.Response;
 
 public class PigHouseInformationActivity extends BaseActivity {
     public static String TAG = "PigHouseInformationActivity";
-    @BindView(R.id.zhushe_edit_text)
+
     EditText mzhusheedittext;
-    @BindView(R.id.zhushe_right_image)
+
     TextView mzhusherightimage;
-    @BindView(R.id.zhushe_list_view)
+
     ListView mzhushelistview;
-    @BindView(R.id.zhushe_zhujuanxinxi)
+
     TextView mzhushezhujuanxinxi;
-    @BindView(R.id.tv_title)
+
     TextView tv_title;
-    @BindView(R.id.iv_cancel)
+
     ImageView iv_cancel;
     private String en_id;
     private int userid;
     private List<ZhuSheBean.DataBean> sheList;
-
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mzhusheedittext = (EditText) findViewById(R.id.zhushe_edit_text);
+        mzhusherightimage = (TextView) findViewById(R.id.zhushe_right_image);
+        mzhushelistview = (ListView) findViewById(R.id.zhushe_list_view);
+        mzhushezhujuanxinxi = (TextView) findViewById(R.id.zhushe_zhujuanxinxi);
+        tv_title = (TextView) findViewById(R.id.tv_title);
+        iv_cancel = (ImageView) findViewById(R.id.iv_cancel);
+        findViewById(R.id.iv_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickView((View) v);
+            }
+        });
+        findViewById(R.id.zhushe_zhujuanxinxi).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickView((View) v);
+            }
+        });
+        findViewById(R.id.zhushe_right_image).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickView((View) v);
+            }
+        });
+    }
     @Override
     protected int getLayoutId() {
         return R.layout.activity_pig_house_information;
@@ -61,23 +88,23 @@ public class PigHouseInformationActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        en_id = PreferencesUtils.getStringValue(Constants.en_id, MyApplication.getAppContext(), "0");
-        userid = PreferencesUtils.getIntValue(Constants.en_user_id, MyApplication.getAppContext());
+        en_id = PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0");
+        userid = PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext());
         tv_title.setText("猪舍信息");
         if (!en_id.equals(0)) {
             getDataFromNet();
         } else {
-            toastUtils.showLong(MyApplication.getAppContext(), "请稍候");
-            //Toast.makeText(MyApplication.getAppContext(), "请稍候", Toast.LENGTH_LONG).show();
+            toastUtils.showLong(AppConfig.getAppContext(), "请稍候");
+            //Toast.makeText(AppConfig.getAppContext(), "请稍候", Toast.LENGTH_LONG).show();
         }
     }
 
-    @OnClick({R.id.zhushe_right_image, R.id.zhushe_zhujuanxinxi,R.id.iv_cancel})
-    public void onClick(View view) {
+
+    public void onClickView(View view) {
         switch (view.getId()) {
             case R.id.zhushe_right_image:
                 if (null == mzhusheedittext.getText().toString() || "".equals(mzhusheedittext.getText().toString())) {
-                    toastUtils.showLong(MyApplication.getAppContext(), "猪舍信息为空");
+                    toastUtils.showLong(AppConfig.getAppContext(), "猪舍信息为空");
                     // Toast.makeText(PigHouseInformationActivity.this, "猪舍信息为空", Toast.LENGTH_LONG).show();
                 } else {
                     //添加猪舍
@@ -204,10 +231,10 @@ public class PigHouseInformationActivity extends BaseActivity {
                                 public void run() {
                                     mProgressDialog.dismiss();
                                     if (bean.getStatus() == 1) {
-                                        toastUtils.showLong(MyApplication.getAppContext(), bean.getMsg());
+                                        toastUtils.showLong(AppConfig.getAppContext(), bean.getMsg());
                                         getDataFromNet();
                                     } else {
-                                        toastUtils.showLong(MyApplication.getAppContext(), bean.getMsg());
+                                        toastUtils.showLong(AppConfig.getAppContext(), bean.getMsg());
                                     }
                                 }
                             });
@@ -216,7 +243,7 @@ public class PigHouseInformationActivity extends BaseActivity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    toastUtils.showLong(MyApplication.getAppContext(), bean.getMsg());
+                                    toastUtils.showLong(AppConfig.getAppContext(), bean.getMsg());
                                 }
                             });
                         }
@@ -262,14 +289,14 @@ public class PigHouseInformationActivity extends BaseActivity {
                                 List<ZhuSheBean.DataBean> sheList = bean.getData();
                                 if (null != sheList && sheList.size() > 0) {
                                     Log.i("defaultpig=", sheList.get(0).getSheId() + "");
-                                    PreferencesUtils.saveIntValue(Constants.defaultpig, sheList.get(0).getSheId(), MyApplication.getAppContext());
+                                    PreferencesUtils.saveIntValue(Constants.defaultpig, sheList.get(0).getSheId(), AppConfig.getAppContext());
                                     mzhushelistview.setAdapter(new ZhuSheXinXI_item_Adapter(PigHouseInformationActivity.this, sheList));
                                 } else {
-                                    toastUtils.showLong(MyApplication.getAppContext(), "猪舍为空");
+                                    toastUtils.showLong(AppConfig.getAppContext(), "猪舍为空");
                                     // Toast.makeText(PigHouseInformationActivity.this, "猪舍为空", Toast.LENGTH_LONG).show();
                                 }
                             } else {
-                                toastUtils.showLong(MyApplication.getAppContext(), bean.getMsg());
+                                toastUtils.showLong(AppConfig.getAppContext(), bean.getMsg());
                             }
                         }
                     });

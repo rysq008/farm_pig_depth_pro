@@ -4,8 +4,9 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.StrictMode;
-import android.os.SystemClock;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -25,31 +26,26 @@ import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.utils.AppManager;
 import com.xiangchuang.risks.utils.ShareUtils;
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
-import com.xiangchuangtec.luolu.animalcounter.R;
-import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
-import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
+import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.R;
+import com.innovation.pig.insurance.netutils.Constants;
+import com.innovation.pig.insurance.netutils.OkHttp3Util;
+import com.innovation.pig.insurance.netutils.PreferencesUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.BindView;
+
 import butterknife.OnClick;
 import innovation.entry.InnApplication;
 import innovation.network_status.NetworkUtil;
 import innovation.upload.UploadService;
 import innovation.utils.HttpUtils;
-import io.objectbox.Box;
-import io.objectbox.android.AndroidScheduler;
-import io.objectbox.reactive.DataObserver;
-import io.objectbox.reactive.DataSubscriptionList;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -59,19 +55,48 @@ import okhttp3.Response;
  */
 public class LoginFamerActivity extends BaseActivity {
 
-    @BindView(R.id.loginfamer_login)
+
     Button mloginfamerlogin;
-    @BindView(R.id.loginfamer_userid)
+
     EditText mloginfameruserid;
-    @BindView(R.id.loginfamer_pass)
+
     EditText mloginfamerpass;
-    @BindView(R.id.pass_show)
+
     ImageView passshow;
-    @BindView(R.id.pass_tv)
+
     TextView passTv;
-    @BindView(R.id.pass_hide)
+
     ImageView passhide;
     private static final String PERMISSION_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
+
+    @Override
+    public void initView() {
+        super.initView();
+        mloginfamerlogin = (Button) findViewById(R.id.loginfamer_login);
+        mloginfameruserid = (EditText) findViewById(R.id.loginfamer_userid);
+        mloginfamerpass = (EditText) findViewById(R.id.loginfamer_pass);
+        passshow = (ImageView) findViewById(R.id.pass_show);
+        passTv = (TextView) findViewById(R.id.pass_tv);
+        passhide = (ImageView) findViewById(R.id.pass_hide);
+        findViewById(R.id.pass_show).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickView((View) v);
+            }
+        });
+        findViewById(R.id.pass_hide).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickView((View) v);
+            }
+        });
+        findViewById(R.id.loginfamer_login).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickView((View) v);
+            }
+        });
+    }
 
     @Override
     protected int getLayoutId() {
@@ -84,7 +109,7 @@ public class LoginFamerActivity extends BaseActivity {
         startService(new Intent(this, UploadService.class));
 
 
-//        Box<VideoUploadTable> box = MyApplication.getBoxStore().boxFor(VideoUploadTable.class);
+//        Box<VideoUploadTable> box = AppConfig.getBoxStore().boxFor(VideoUploadTable.class);
 //        box.removeAll();
 //        List<VideoUploadTable> list = new ArrayList<>();
 //        for (int i = 0; i <5 ; i++) {
@@ -133,7 +158,7 @@ public class LoginFamerActivity extends BaseActivity {
                                 public void hasPermission(List<String> granted, boolean isAll) {
                                     if (isAll) {
                                         // PreferencesUtils.saveBooleanValue("isallow", true, WelcomeActivity.this);
-                                        // toastUtils.showLong(MyApplication.getAppContext(), "获取权限成功");
+                                        // toastUtils.showLong(AppConfig.getAppContext(), "获取权限成功");
                                         if (android.os.Build.VERSION.SDK_INT > 9) {
                                             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                                             StrictMode.setThreadPolicy(policy);
@@ -164,8 +189,8 @@ public class LoginFamerActivity extends BaseActivity {
             });
         } else {
             //根据保存的标记判断是否登录
-            if (PreferencesUtils.getBooleanValue(Constants.ISLOGIN, MyApplication.getAppContext())) {
-                String type = PreferencesUtils.getStringValue(Constants.companyfleg, MyApplication.getAppContext());
+            if (PreferencesUtils.getBooleanValue(Constants.ISLOGIN, AppConfig.getAppContext())) {
+                String type = PreferencesUtils.getStringValue(Constants.companyfleg, AppConfig.getAppContext());
                 if (type.equals("1")) {
                     goToActivity(CompanyActivity.class, null);
                     finish();
@@ -180,8 +205,8 @@ public class LoginFamerActivity extends BaseActivity {
         ShareUtils.setUpGlobalHost(LoginFamerActivity.this, passTv);
     }
 
-    @OnClick({R.id.loginfamer_login, R.id.pass_hide, R.id.pass_show})
-    public void onClick(View view) {
+
+    public void onClickView(View view) {
         switch (view.getId()) {
             case R.id.loginfamer_login:
                 if (!NetworkUtil.isNetworkConnect(LoginFamerActivity.this)) {
@@ -189,7 +214,7 @@ public class LoginFamerActivity extends BaseActivity {
                     return;
                 }
 
-                if (ActivityCompat.checkSelfPermission(MyApplication.getContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(AppConfig.getActivity(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
                     // TODO: Consider calling
                     //    ActivityCompat#requestPermissions
                     // here to request the missing permissions, and then overriding
@@ -205,7 +230,7 @@ public class LoginFamerActivity extends BaseActivity {
                                 public void hasPermission(List<String> granted, boolean isAll) {
                                     if (isAll) {
                                         // PreferencesUtils.saveBooleanValue("isallow", true, WelcomeActivity.this);
-                                        // toastUtils.showLong(MyApplication.getAppContext(), "获取权限成功");
+                                        // toastUtils.showLong(AppConfig.getAppContext(), "获取权限成功");
                                         if (android.os.Build.VERSION.SDK_INT > 9) {
                                             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                                             StrictMode.setThreadPolicy(policy);
@@ -318,11 +343,11 @@ public class LoginFamerActivity extends BaseActivity {
                                     data = jsonObject.getJSONObject("data");
                                     int type = data.getInt("type");
 //                                    int myToken = data.getInt("token");
-//                                    PreferencesUtils.saveKeyValue(Constants.token, myToken + "", MyApplication.getAppContext());
-                                    PreferencesUtils.saveKeyValue(Constants.companyfleg, type + "", MyApplication.getAppContext());
-                                    PreferencesUtils.saveKeyValue(Constants.username, musername + "", MyApplication.getAppContext());
-                                    PreferencesUtils.saveKeyValue(Constants.password, muserpass + "", MyApplication.getAppContext());
-                                    PreferencesUtils.saveBooleanValue(Constants.ISLOGIN, true, MyApplication.getAppContext());
+//                                    PreferencesUtils.saveKeyValue(Constants.token, myToken + "", AppConfig.getAppContext());
+                                    PreferencesUtils.saveKeyValue(Constants.companyfleg, type + "", AppConfig.getAppContext());
+                                    PreferencesUtils.saveKeyValue(Constants.username, musername + "", AppConfig.getAppContext());
+                                    PreferencesUtils.saveKeyValue(Constants.password, muserpass + "", AppConfig.getAppContext());
+                                    PreferencesUtils.saveBooleanValue(Constants.ISLOGIN, true, AppConfig.getAppContext());
 
                                     //1 保险公司  2 猪场企业
                                     if (type == 1) {
@@ -331,10 +356,10 @@ public class LoginFamerActivity extends BaseActivity {
                                         String name = adminUser.getString("name");
                                         int deptId = adminUser.getInt("deptId");
                                         int id = adminUser.getInt("id");
-                                        PreferencesUtils.saveKeyValue(Constants.companyuser, name, MyApplication.getAppContext());
-                                        PreferencesUtils.saveKeyValue(Constants.insurecompany, deptName, MyApplication.getAppContext());
-                                        PreferencesUtils.saveKeyValue(Constants.deptId, deptId + "", MyApplication.getAppContext());
-                                        PreferencesUtils.saveKeyValue(Constants.id, id + "", MyApplication.getAppContext());
+                                        PreferencesUtils.saveKeyValue(Constants.companyuser, name, AppConfig.getAppContext());
+                                        PreferencesUtils.saveKeyValue(Constants.insurecompany, deptName, AppConfig.getAppContext());
+                                        PreferencesUtils.saveKeyValue(Constants.deptId, deptId + "", AppConfig.getAppContext());
+                                        PreferencesUtils.saveKeyValue(Constants.id, id + "", AppConfig.getAppContext());
 
                                         goToActivity(CompanyActivity.class, null);
                                         finish();
@@ -343,9 +368,9 @@ public class LoginFamerActivity extends BaseActivity {
                                         int enId = enUser.getInt("enId");
                                         int enUserId = enUser.getInt("enUserId");
                                         String enName = enUser.getString("enName");
-                                        PreferencesUtils.saveKeyValue(Constants.en_id, enId + "", MyApplication.getAppContext());
-                                        PreferencesUtils.saveKeyValue(Constants.companyname, enName, MyApplication.getAppContext());
-                                        PreferencesUtils.saveIntValue(Constants.en_user_id, enUserId, MyApplication.getAppContext());
+                                        PreferencesUtils.saveKeyValue(Constants.en_id, enId + "", AppConfig.getAppContext());
+                                        PreferencesUtils.saveKeyValue(Constants.companyname, enName, AppConfig.getAppContext());
+                                        PreferencesUtils.saveIntValue(Constants.en_user_id, enUserId, AppConfig.getAppContext());
                                         goToActivity(SelectFunctionActivity_new.class, null);
                                         finish();
                                     }

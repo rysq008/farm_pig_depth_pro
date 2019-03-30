@@ -7,9 +7,9 @@ import android.util.Log;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
-import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
+import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.netutils.Constants;
+import com.innovation.pig.insurance.netutils.PreferencesUtils;
 
 import org.tensorflow.demo.env.Logger;
 
@@ -103,8 +103,8 @@ public class LocationManager_new {
                 str_address = amapLocation.getAddress();
                 str_address = mLocationClient.getLastKnownLocation().getAddress();
                 Log.i("===str_address====", "str_address" + str_address);
-                PreferencesUtils.saveKeyValue(Constants.longitude, currentLon+"", MyApplication.getAppContext());
-                PreferencesUtils.saveKeyValue(Constants.latitude, currentLat+"", MyApplication.getAppContext());
+                PreferencesUtils.saveKeyValue(Constants.longitude, currentLon+"", AppConfig.getAppContext());
+                PreferencesUtils.saveKeyValue(Constants.latitude, currentLat+"", AppConfig.getAppContext());
                 getAddress.getaddress(str_address);
                 amapLocation.getAccuracy();//获取精度信息
             } else {

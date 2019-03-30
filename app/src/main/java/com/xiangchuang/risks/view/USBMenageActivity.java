@@ -1,8 +1,8 @@
 package com.xiangchuang.risks.view;
 
 import android.content.res.Configuration;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,23 +16,18 @@ import android.widget.Toast;
 
 import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.adapter.USBManageAdapter;
-import com.xiangchuang.risks.model.adapter.ZhuJuanXinXI_item_Adapter;
-import com.xiangchuang.risks.model.adapter.ZhuSheXinXI_item_Adapter;
-import com.xiangchuang.risks.model.bean.InSureCompanyBean;
 import com.xiangchuang.risks.model.bean.SheXTBean;
-import com.xiangchuang.risks.model.bean.UpdateBean;
 import com.xiangchuang.risks.model.bean.ZhuSheBean;
 import com.xiangchuang.risks.model.myinterface.MyInterface;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
-import com.xiangchuangtec.luolu.animalcounter.R;
-import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
-import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
-import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
+import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.R;
+import com.innovation.pig.insurance.netutils.Constants;
+import com.innovation.pig.insurance.netutils.GsonUtils;
+import com.innovation.pig.insurance.netutils.OkHttp3Util;
+import com.innovation.pig.insurance.netutils.PreferencesUtils;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -41,7 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.BindView;
+
 import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -49,17 +44,17 @@ import okhttp3.Response;
 
 public class USBMenageActivity extends BaseActivity {
     public static String TAG = "USBMenageActivity";
-    @BindView(R.id.usbmanage_list)
+
     ListView usbmanage_list;
-    @BindView(R.id.she_right_image)
+
     TextView she_right_image;
-    @BindView(R.id.she_xu)
+
     EditText she_xu;
-    @BindView(R.id.she_name)
+
     EditText she_name;
-    @BindView(R.id.she_she)
+
     Spinner she_she;
-    @BindView(R.id.iv_cancel)
+
     ImageView iv_cancel;
     List<String> shenames = new ArrayList<>();
     List<String> sheids = new ArrayList<>();
@@ -67,6 +62,29 @@ public class USBMenageActivity extends BaseActivity {
     private List<ZhuSheBean.DataBean> sheList;
     private String shename;
     private String sheid;
+
+    @Override
+    public void initView() {
+        super.initView();
+        usbmanage_list = (ListView) findViewById(R.id.usbmanage_list);
+        she_right_image = (TextView) findViewById(R.id.she_right_image);
+        she_xu = (EditText) findViewById(R.id.she_xu);
+        she_name = (EditText) findViewById(R.id.she_name);
+        she_she = (Spinner) findViewById(R.id.she_she);
+        iv_cancel = (ImageView) findViewById(R.id.iv_cancel);
+        findViewById(R.id.iv_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickView((View) v);
+            }
+        });
+        findViewById(R.id.she_right_image).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickView((View) v);
+            }
+        });
+    }
 
     @Override
     protected int getLayoutId() {
@@ -83,8 +101,8 @@ public class USBMenageActivity extends BaseActivity {
     private void getZhuShe() {
         Map map = new HashMap();
         map.put(Constants.AppKeyAuthorization, "hopen");
-        map.put(Constants.en_user_id, PreferencesUtils.getIntValue(Constants.en_user_id, MyApplication.getAppContext()) + "");
-        map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, MyApplication.getAppContext(), "0"));
+        map.put(Constants.en_user_id, PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext()) + "");
+        map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0"));
         Map mapbody = new HashMap();
         mapbody.put(Constants.amountFlg, String.valueOf(9));
         mapbody.put(Constants.insureFlg, String.valueOf(9));
@@ -122,11 +140,11 @@ public class USBMenageActivity extends BaseActivity {
                                     }
 
                                 } else {
-                                    toastUtils.showLong(MyApplication.getAppContext(), "猪舍为空");
+                                    toastUtils.showLong(AppConfig.getAppContext(), "猪舍为空");
                                 }
                                 initSpinner();
                             } else {
-                                toastUtils.showLong(MyApplication.getAppContext(), bean.getMsg());
+                                toastUtils.showLong(AppConfig.getAppContext(), bean.getMsg());
                             }
                         }
                     });
@@ -165,10 +183,10 @@ public class USBMenageActivity extends BaseActivity {
     private void getDataFromNet() {
         Map map = new HashMap();
         map.put(Constants.AppKeyAuthorization, "hopen");
-        map.put(Constants.en_user_id, PreferencesUtils.getIntValue(Constants.en_user_id, MyApplication.getAppContext()) + "");
-        map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, MyApplication.getAppContext(), "0"));
-        map.put(Constants.deptIdnew, PreferencesUtils.getStringValue(Constants.deptId, MyApplication.getAppContext()));
-        map.put(Constants.id, PreferencesUtils.getStringValue(Constants.id, MyApplication.getAppContext(), "0"));
+        map.put(Constants.en_user_id, PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext()) + "");
+        map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0"));
+        map.put(Constants.deptIdnew, PreferencesUtils.getStringValue(Constants.deptId, AppConfig.getAppContext()));
+        map.put(Constants.id, PreferencesUtils.getStringValue(Constants.id, AppConfig.getAppContext(), "0"));
 
         OkHttp3Util.doPost(Constants.SHESHOW, null, map, new Callback() {
             @Override
@@ -227,14 +245,13 @@ public class USBMenageActivity extends BaseActivity {
         });
     }
 
-    @OnClick({R.id.she_right_image, R.id.iv_cancel})
-    public void onClick(View view) {
+    public void onClickView(View view) {
         switch (view.getId()) {
             case R.id.she_right_image:
                 if (null == she_xu.getText().toString() || "".equals(she_xu.getText().toString())) {
-                    toastUtils.showLong(MyApplication.getAppContext(), "未填写序列号");
+                    toastUtils.showLong(AppConfig.getAppContext(), "未填写序列号");
                 } else if (null == she_name.getText().toString() || "".equals(she_name.getText().toString())) {
-                    toastUtils.showLong(MyApplication.getAppContext(), "未填写名字");
+                    toastUtils.showLong(AppConfig.getAppContext(), "未填写名字");
                 } else {
                     addSheXiangTou();
                 }
@@ -250,10 +267,10 @@ public class USBMenageActivity extends BaseActivity {
     private void addSheXiangTou() {
         Map map = new HashMap();
         map.put(Constants.AppKeyAuthorization, "hopen");
-        map.put(Constants.en_user_id, PreferencesUtils.getIntValue(Constants.en_user_id, MyApplication.getAppContext()) + "");
-        map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, MyApplication.getAppContext(), "0"));
-        map.put(Constants.deptIdnew, PreferencesUtils.getStringValue(Constants.deptId, MyApplication.getAppContext()));
-        map.put(Constants.id, PreferencesUtils.getStringValue(Constants.id, MyApplication.getAppContext(), "0"));
+        map.put(Constants.en_user_id, PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext()) + "");
+        map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0"));
+        map.put(Constants.deptIdnew, PreferencesUtils.getStringValue(Constants.deptId, AppConfig.getAppContext()));
+        map.put(Constants.id, PreferencesUtils.getStringValue(Constants.id, AppConfig.getAppContext(), "0"));
         Map mapbody = new HashMap();
         mapbody.put(Constants.cameraNo, she_xu.getText().toString());
         mapbody.put(Constants.cameraName, she_name.getText().toString());
@@ -289,7 +306,7 @@ public class USBMenageActivity extends BaseActivity {
                             @Override
                             public void run() {
                                 mProgressDialog.dismiss();
-                                toastUtils.showLong(MyApplication.getAppContext(), msg);
+                                toastUtils.showLong(AppConfig.getAppContext(), msg);
                                 getDataFromNet();
                             }
                         });

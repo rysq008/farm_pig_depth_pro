@@ -18,7 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
-import com.xiangchuangtec.luolu.animalcounter.R;
+import com.innovation.pig.insurance.R;
 
 import org.tensorflow.demo.Global;
 

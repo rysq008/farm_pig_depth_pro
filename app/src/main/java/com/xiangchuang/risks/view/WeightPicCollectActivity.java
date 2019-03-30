@@ -2,30 +2,25 @@ package com.xiangchuang.risks.view;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.hardware.Camera;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -35,14 +30,13 @@ import com.xiangchuang.risks.view.camera.CameraSurfaceView;
 import com.xiangchuang.risks.view.camera.CameraUtils;
 import com.xiangchuang.risks.view.camera.ImageUtils;
 import com.xiangchuang.risks.view.camera.SpiritView;
-import com.xiangchuangtec.luolu.animalcounter.R;
+import com.innovation.pig.insurance.R;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 
-import butterknife.BindView;
+
 import butterknife.OnClick;
 import innovation.utils.PathUtils;
 import innovation.utils.UIUtils;
@@ -55,16 +49,16 @@ import innovation.view.dialog.DialogHelper;
  */
 public class WeightPicCollectActivity extends BaseActivity implements SensorEventListener, ViewTreeObserver.OnGlobalLayoutListener {
     private static final String TAG = "WeightPicCollectActivit";
-    @BindView(R.id.iv_preview)
+
     ImageView iv_preview;
-    @BindView(R.id.btn_upload)
+
     ImageView btn_upload;
-    @BindView(R.id.btn_finish)
+
     ImageView btn_finish;
     //定义水平仪的仪表盘
-    @BindView(R.id.spiritwiew)
+
     SpiritView spiritwiew;
-    @BindView(R.id.camera_surfaceview)
+
     CameraSurfaceView camera_surfaceview;
     //定义水平仪能处理的最大倾斜角度，超过该角度气泡直接位于边界
     private int MAX_ANGLE = 30;
@@ -95,8 +89,37 @@ public class WeightPicCollectActivity extends BaseActivity implements SensorEven
     }
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void initView() {
+        super.initView();
+        iv_preview = (ImageView) findViewById(R.id.iv_preview);
+        btn_upload = (ImageView) findViewById(R.id.btn_upload);
+        btn_finish = (ImageView) findViewById(R.id.btn_finish);
+        spiritwiew = (SpiritView) findViewById(R.id.spiritwiew);
+        camera_surfaceview = (CameraSurfaceView) findViewById(R.id.camera_surfaceview);
+        findViewById(R.id.camera_surfaceview).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickView((View) v);
+            }
+        });
+        findViewById(R.id.btn_upload).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickView((View) v);
+            }
+        });
+        findViewById(R.id.btn_finish).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickView((View) v);
+            }
+        });
+        findViewById(R.id.spiritwiew).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickView((View) v);
+            }
+        });
         new CameraSurfaceView(this);
         mFileDirectory = PathUtils.weightcollect;
         mFilePath = mFileDirectory + "/" + System.currentTimeMillis() + ".jpg";
@@ -228,8 +251,8 @@ public class WeightPicCollectActivity extends BaseActivity implements SensorEven
         setResult(Activity.RESULT_OK, intent);
     }
 
-    @OnClick({R.id.spiritwiew, R.id.btn_finish, R.id.btn_upload, R.id.camera_surfaceview})
-    public void onClick(View view) {
+
+    public void onClickView(View view) {
         switch (view.getId()) {
             case R.id.spiritwiew:
                 if (btn_upload.getVisibility() == View.VISIBLE || !isCanTakePic) {

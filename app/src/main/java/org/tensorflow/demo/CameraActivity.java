@@ -25,7 +25,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.util.Log;
 import android.util.Size;
 import android.view.KeyEvent;
 import android.view.Surface;
@@ -33,8 +32,8 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
-import com.xiangchuangtec.luolu.animalcounter.R;
+import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.R;
 
 import org.tensorflow.demo.env.Logger;
 import org.tensorflow.demo.tracking.MultiBoxTracker;
@@ -73,8 +72,8 @@ public abstract class CameraActivity extends Activity implements OnImageAvailabl
             requestPermission();
         }
 
-        MyApplication.debugNub = 0;
-        MyApplication.during = 0;
+        AppConfig.debugNub = 0;
+        AppConfig.during = 0;
 
         Global.VIDEO_PROCESS = false;
 

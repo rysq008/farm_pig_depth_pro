@@ -1,5 +1,7 @@
 package com.xiangchuang.risks.view;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,12 +15,12 @@ import com.xiangchuang.risks.model.adapter.OutHurdleAdapter;
 import com.xiangchuang.risks.model.bean.ZhuJuanBean;
 import com.xiangchuang.risks.model.bean.ZhuSheBean;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
-import com.xiangchuangtec.luolu.animalcounter.R;
-import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
-import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
-import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
+import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.R;
+import com.innovation.pig.insurance.netutils.Constants;
+import com.innovation.pig.insurance.netutils.GsonUtils;
+import com.innovation.pig.insurance.netutils.OkHttp3Util;
+import com.innovation.pig.insurance.netutils.PreferencesUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,16 +28,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.BindView;
+
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
 public class OutHurdleActivity extends BaseActivity {
     public static String TAG = "OutHurdleActivity";
-    @BindView(R.id.chulan_zhushe_spinner)
+
     Spinner mchulanzhushespinner;
-    @BindView(R.id.chulan_list_view)
+
     ListView mchulanlistview;
     List<String> chulanzhushe = new ArrayList<>();
     List<Object> PigHousebean = new ArrayList<>();
@@ -46,15 +48,22 @@ public class OutHurdleActivity extends BaseActivity {
     private String chuShe;
 
     @Override
+    public void initView() {
+        super.initView();
+        mchulanzhushespinner = (Spinner) findViewById(R.id.chulan_zhushe_spinner);
+        mchulanlistview = (ListView) findViewById(R.id.chulan_list_view);
+    }
+
+    @Override
     protected int getLayoutId() {
         return R.layout.activity_out_hurdle;
     }
 
     @Override
     protected void initData() {
-        defaultpig = PreferencesUtils.getIntValue(Constants.defaultpig, MyApplication.getAppContext());
-        en_id = PreferencesUtils.getStringValue(Constants.en_id, MyApplication.getAppContext(), "0");
-        userid = PreferencesUtils.getIntValue(Constants.en_user_id, MyApplication.getAppContext());
+        defaultpig = PreferencesUtils.getIntValue(Constants.defaultpig, AppConfig.getAppContext());
+        en_id = PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0");
+        userid = PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext());
         //查询猪舍信息
         getDataFromNet();
     }

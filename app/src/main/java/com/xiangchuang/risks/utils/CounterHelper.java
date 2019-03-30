@@ -11,16 +11,14 @@ import android.util.Log;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.xiangchuang.risks.model.bean.RecognitionResult;
-import com.xiangchuang.risks.view.OutHurdleActivity;
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
-import com.xiangchuangtec.luolu.animalcounter.R;
-import com.xiangchuangtec.luolu.animalcounter.Utils;
-import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
-import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
+import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.R;
+import com.innovation.pig.insurance.Utils;
+import com.innovation.pig.insurance.netutils.Constants;
+import com.innovation.pig.insurance.netutils.OkHttp3Util;
+import com.innovation.pig.insurance.netutils.PreferencesUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,7 +34,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import innovation.utils.ThreadPoolProxy;
 import innovation.utils.ThreadPoolProxyFactory;
 import innovation.utils.ZipUtil;
 import okhttp3.Call;
@@ -127,7 +124,7 @@ public final class CounterHelper {
                 param.put("location", locationString);
                 param.put("timeLength", "" + duration);
                 param.put("juanCnt", "" + results.size());
-                param.put("createuser", "" + PreferencesUtils.getIntValue(Constants.userid, MyApplication.getAppContext()));
+                param.put("createuser", "" + PreferencesUtils.getIntValue(Constants.userid, AppConfig.getAppContext()));
                 OkHttp3Util.uploadPreFile(Constants.SHECOMMIT, zipFile, "out.zip", param, map, new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
@@ -280,7 +277,7 @@ public final class CounterHelper {
         Paint rectPaint = new Paint();
         Paint textPaint = new Paint();
 
-        Utils.setAttributes(MyApplication.getAppContext(), rectPaint, textPaint);
+        Utils.setAttributes(AppConfig.getAppContext(), rectPaint, textPaint);
         rectPaint.setTextSize(1 / 2);
 
         Paint pointPaint = new Paint();
@@ -346,7 +343,7 @@ public final class CounterHelper {
 
         Paint textPaint = new Paint();
 
-        float textSize = MyApplication.getAppContext().getResources().getDimensionPixelSize(R.dimen.draw_text_size);
+        float textSize = AppConfig.getAppContext().getResources().getDimensionPixelSize(R.dimen.draw_text_size);
         textPaint.setTextSize(textSize);
         textPaint.setStyle(Paint.Style.FILL);
         textPaint.setTextAlign(Paint.Align.CENTER);

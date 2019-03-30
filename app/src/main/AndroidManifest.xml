@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.xiangchuangtec.luolu.animalcounter">
+    package="com.innovation.pig.insurance">
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -48,9 +48,9 @@
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
 
     <!-- android:hardwareAccelerated="false" -->
-    <!-- android:name="com.xiangchuangtec.luolu.animalcounter.MyApplication" -->
+    <!-- android:name="com.xiangchuangtec.luolu.animalcounter.AppConfig" -->
     <application
-        android:name="com.xiangchuangtec.luolu.animalcounter.MyApplication"
+        android:name="com.innovation.pig.insurance.MyApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -68,7 +68,7 @@
         <!-- 2018-12-10高德KEY  adf3458ffa64cdeee292d3ed2a68b6cc -->
         <!-- 旧key eb91b7f4ba902477ac9c242f768152da -->
         <activity
-            android:name="com.xiangchuangtec.luolu.animalcounter.CounterActivity_new"
+            android:name="com.innovation.pig.insurance.CounterActivity_new"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait">
 
@@ -140,7 +140,7 @@
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.xiangchuangtec.luolu.animalcounter.provider"
+            android:authorities="com.innovation.pig.insurance.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

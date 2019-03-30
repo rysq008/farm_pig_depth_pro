@@ -70,8 +70,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
-import com.xiangchuangtec.luolu.animalcounter.R;
+import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.R;
 
 import innovation.media.MediaInsureItem;
 import innovation.media.MediaPayItem;
@@ -97,7 +97,7 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 import static android.content.ContentValues.TAG;
-import static com.xiangchuangtec.luolu.animalcounter.MyApplication.timeVideoStart;
+import static com.innovation.pig.insurance.AppConfig.timeVideoStart;
 import static org.tensorflow.demo.DetectorActivity.tracker;
 import static org.tensorflow.demo.DetectorActivity.trackingOverlay;
 
@@ -670,7 +670,7 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
 
         if (mIsRecordingVideo){
             // 停止按钮点击时
-            MyApplication.during += System.currentTimeMillis() - timeVideoStart;
+            AppConfig.during += System.currentTimeMillis() - timeVideoStart;
             //Toast.makeText(activity, InnApplication.during+"", Toast.LENGTH_SHORT).show();
             stopRecordingVideo(false);
         }
@@ -688,17 +688,17 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
             //录制/暂定切换
             case R.id.record_control:
 
-                Log.e(TAG, "onClick: " + lastClickTime);
+                Log.e(TAG, "onClickView: " + lastClickTime);
                 if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME) {
                     return;
                 }
                 lastClickTime = System.currentTimeMillis();
-                Log.e(TAG, "onClick:ok " + lastClickTime);
+                Log.e(TAG, "onClickView:ok " + lastClickTime);
                 mRecordControl.setClickable(false);
 
                 if (mIsRecordingVideo) {
                     // 停止按钮点击时
-                    MyApplication.during += System.currentTimeMillis() - timeVideoStart;
+                    AppConfig.during += System.currentTimeMillis() - timeVideoStart;
                     //Toast.makeText(activity, InnApplication.during+"", Toast.LENGTH_SHORT).show();
                     stopRecordingVideo(false);
                     Global.VIDEO_PROCESS = false;
@@ -1344,7 +1344,7 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                         if (mMediaRecorder == null) {
                             //mMediaRecorder = new MediaRecorder();
                         }
-                        MyApplication.during += System.currentTimeMillis() - timeVideoStart;
+                        AppConfig.during += System.currentTimeMillis() - timeVideoStart;
                         //Toast.makeText(activity, ""+InnApplication.during, Toast.LENGTH_SHORT).show();
                         Global.VIDEO_PROCESS = false;
                         // 录制、暂停按钮所在布局隐藏
@@ -1471,8 +1471,8 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                     if (textureView != null) {
                         textureView.refreshDrawableState();
                     }
-                    MyApplication.debugNub = 0;
-                    MyApplication.during = 0;
+                    AppConfig.debugNub = 0;
+                    AppConfig.during = 0;
                     LOGGER.i("collectNumberHandler Message 2！");
                     break;
                 //左脸达到数量
@@ -1497,7 +1497,7 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                         if (mMediaRecorder == null) {
                             //mMediaRecorder = new MediaRecorder();
                         }
-                        if (MyApplication.debugNub == 2) {
+                        if (AppConfig.debugNub == 2) {
                             // 录制、暂停按钮所在布局隐藏
                             mReCordLayout.setVisibility(View.GONE);
                             tvNotice.setVisibility(View.GONE);
@@ -1507,7 +1507,7 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                             ivRight.setVisibility(View.GONE);
                         }
 
-                        MyApplication.during += System.currentTimeMillis() - timeVideoStart;
+                        AppConfig.during += System.currentTimeMillis() - timeVideoStart;
                         Global.VIDEO_PROCESS = false;
 
                         mIsRecordingVideo = false;

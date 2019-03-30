@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
+import com.innovation.pig.insurance.AppConfig;
 
 public class NetworkChangedReceiver extends BroadcastReceiver {
     @Override
@@ -16,16 +16,16 @@ public class NetworkChangedReceiver extends BroadcastReceiver {
             case NetworkUtil.NETWORN_NONE:
                 //    InnApplication.isOfflineMode = true;
                 Toast.makeText(context, "断网了", Toast.LENGTH_SHORT).show();
-                MyApplication.isNetConnected = false;
+                AppConfig.isNetConnected = false;
                 //断网了
                 break;
             case NetworkUtil.NETWORN_MOBILE:
-                MyApplication.isNetConnected = true;
+                AppConfig.isNetConnected = true;
                 //Toast.makeText(context, "打开了移动网络", Toast.LENGTH_SHORT).show();
                 //打开了移动网络
                 break;
             case NetworkUtil.NETWORN_WIFI:
-                MyApplication.isNetConnected = true;
+                AppConfig.isNetConnected = true;
                 //Toast.makeText(context, "打开了WIFI", Toast.LENGTH_SHORT).show();
                 //打开了WIFI
                 break;

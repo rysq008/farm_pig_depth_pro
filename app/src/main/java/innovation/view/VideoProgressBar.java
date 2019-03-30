@@ -11,7 +11,7 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.xiangchuangtec.luolu.animalcounter.R;
+import com.innovation.pig.insurance.R;
 
 /**
  * Created by Wanbo on 2016/12/7.

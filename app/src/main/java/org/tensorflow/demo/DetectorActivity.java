@@ -37,12 +37,12 @@ import android.view.Display;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
-import com.xiangchuangtec.luolu.animalcounter.BuildConfig;
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
-import com.xiangchuangtec.luolu.animalcounter.R;
-import com.xiangchuangtec.luolu.animalcounter.Utils;
-import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
+import com.innovation.pig.insurance.BuildConfig;
+import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.R;
+import com.innovation.pig.insurance.Utils;
+import com.innovation.pig.insurance.netutils.Constants;
+import com.innovation.pig.insurance.netutils.PreferencesUtils;
 
 import org.tensorflow.demo.OverlayView.DrawCallback;
 import org.tensorflow.demo.env.BorderedText;
@@ -59,9 +59,9 @@ import innovation.biz.classifier.PigFaceDetectTFlite;
 import innovation.biz.classifier.PigRotationPrediction;
 import innovation.utils.FileUtils;
 
-import static com.xiangchuangtec.luolu.animalcounter.MyApplication.lastCurrentTime;
-import static com.xiangchuangtec.luolu.animalcounter.Utils.getThreshold;
-import static com.xiangchuangtec.luolu.animalcounter.Utils.setLowThreshold;
+import static com.innovation.pig.insurance.AppConfig.lastCurrentTime;
+import static com.innovation.pig.insurance.Utils.getThreshold;
+import static com.innovation.pig.insurance.Utils.setLowThreshold;
 import static innovation.utils.ImageUtils.compressBitmap;
 import static org.tensorflow.demo.CameraConnectionFragment.collectNumberHandler;
 
@@ -419,8 +419,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
          * m时间后 停止拍摄弹出强制上传
          * InnApplication.lipeim
          */
-        if ((Utils.getDuring(c) / 1000) > m && MyApplication.debugNub >= 0) {
-            MyApplication.debugNub = 2;
+        if ((Utils.getDuring(c) / 1000) > m && AppConfig.debugNub >= 0) {
+            AppConfig.debugNub = 2;
             collectNumberHandler.sendEmptyMessage(6);
             if (BuildConfig.DEBUG)
                 Toast.makeText(this, "m时间后 停止拍摄弹出强制上传", Toast.LENGTH_LONG).show();
@@ -431,8 +431,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
          * n时间后 停止拍摄弹出是否强制上传或重新拍摄
          * InnApplication.lipein
          */
-        if ((Utils.getDuring(c) / 1000) > n && MyApplication.debugNub != 1 && MyApplication.debugNub >= 0) {
-            MyApplication.debugNub = 1;
+        if ((Utils.getDuring(c) / 1000) > n && AppConfig.debugNub != 1 && AppConfig.debugNub >= 0) {
+            AppConfig.debugNub = 1;
             collectNumberHandler.sendEmptyMessage(6);
             if (BuildConfig.DEBUG)
                 Toast.makeText(this, " n时间后 停止拍摄弹出是否强制上传或重新拍摄", Toast.LENGTH_LONG).show();

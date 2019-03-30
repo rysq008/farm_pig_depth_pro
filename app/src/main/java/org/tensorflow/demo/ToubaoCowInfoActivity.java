@@ -49,8 +49,8 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.google.gson.Gson;
-import com.xiangchuangtec.luolu.animalcounter.BuildConfig;
-import com.xiangchuangtec.luolu.animalcounter.R;
+import com.innovation.pig.insurance.BuildConfig;
+import com.innovation.pig.insurance.R;
 
 import org.tensorflow.demo.env.Logger;
 
@@ -64,8 +64,8 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
+
 
 import es.dmoral.toasty.Toasty;
 import innovation.entry.AddPigObject;
@@ -93,11 +93,11 @@ import static innovation.entry.InnApplication.getStringTouboaExtra;
 public class ToubaoCowInfoActivity extends AppCompatActivity {
 
     private static String TAG = "ToubaoCowInfoActivity";
-    @BindView(R.id.areaSpinner)
+
     Spinner areaSpinner;
-    @BindView(R.id.area2Spinner)
+
     Spinner area2Spinner;
-    @BindView(R.id.area3Spinner)
+
     Spinner area3Spinner;
     private Logger mLogger = new Logger(ToubaoCowInfoActivity.class.getSimpleName());
     private TextView tv_title;
@@ -166,12 +166,14 @@ public class ToubaoCowInfoActivity extends AppCompatActivity {
     private NewBuildResultObject animalBuildResult;
     private AlertDialog dialog;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_toubao_cow_info);
-        ButterKnife.bind(this);
+        areaSpinner = (Spinner) findViewById(R.id.areaSpinner);
+        area2Spinner = (Spinner) findViewById(R.id.area2Spinner);
+        area3Spinner = (Spinner) findViewById(R.id.area3Spinner);
+
         tv_title = findViewById(R.id.tv_title);
         tv_title.setText("资料采集");
         parentView = getWindow().getDecorView();

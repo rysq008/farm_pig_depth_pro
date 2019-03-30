@@ -6,7 +6,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
+import com.innovation.pig.insurance.netutils.Constants;
 
 import org.json.JSONException;
 import org.json.JSONObject;

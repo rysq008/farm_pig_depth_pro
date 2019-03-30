@@ -15,14 +15,13 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.support.v4.content.FileProvider;
 import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.xiangchuang.risks.view.SelectFunctionActivity_new;
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
-import com.xiangchuangtec.luolu.animalcounter.R;
+import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.R;
 
 import java.io.File;
 
@@ -112,7 +111,7 @@ public class AppUpgradeService extends Service {
         new AppUpgradeThread().start();
 
 
-        mProgressDialog = new ProgressDialog(MyApplication.getContext());
+        mProgressDialog = new ProgressDialog(AppConfig.getActivity());
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         mProgressDialog.setMax(100);
         mProgressDialog.setTitle("正在下载...");

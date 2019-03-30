@@ -2,7 +2,6 @@ package innovation.media;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -12,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
-import com.xiangchuangtec.luolu.animalcounter.R;
+import com.innovation.pig.insurance.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,7 +44,7 @@ public class Angle16InfoDialog extends Dialog {
 //        initView(model, info);
 //        mPositiveBtn.setOnClickListener(new View.OnClickListener() {
 //            @Override
-//            public void onClick(View v) {
+//            public void onClickView(View v) {
 //
 //            }
 //        });
@@ -117,7 +116,7 @@ public class Angle16InfoDialog extends Dialog {
         mPositiveBtn.setOnClickListener(listener);
 //        mPositiveBtn.setOnClickListener(new View.OnClickListener() {
 //            @Override
-//            public void onClick(View v) {
+//            public void onClickView(View v) {
 //                Intent intent = new Intent();
 //                intent.setClass(InnApplication.getAppContext(), DetectorActivity.class);
 //                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -1,7 +1,7 @@
 package com.xiangchuang.risks.view;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -11,38 +11,71 @@ import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.bean.ZhuSheBean;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
-import com.xiangchuangtec.luolu.animalcounter.R;
-import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
-import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
-import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
+import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.R;
+import com.innovation.pig.insurance.netutils.Constants;
+import com.innovation.pig.insurance.netutils.GsonUtils;
+import com.innovation.pig.insurance.netutils.OkHttp3Util;
+import com.innovation.pig.insurance.netutils.PreferencesUtils;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.BindView;
+
 import butterknife.OnClick;
-import innovation.media.MediaProcessor;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
 public class SettingActivity extends BaseActivity {
-    @BindView(R.id.shesetting)
+
     TextView mshesetting;
-    @BindView(R.id.juansetting)
+
     TextView mjuansetting;
-    @BindView(R.id.select_shexiangtou)
+
     TextView select_shexiangtou;
-    @BindView(R.id.tv_title)
+
     TextView tv_title;
-    @BindView(R.id.iv_cancel)
+
     ImageView iv_cancel;
     private String en_id;
     private int userid;
+
+    @Override
+    public void initView() {
+        super.initView();
+        mshesetting = (TextView) findViewById(R.id.shesetting);
+        mjuansetting = (TextView) findViewById(R.id.juansetting);
+        select_shexiangtou = (TextView) findViewById(R.id.select_shexiangtou);
+        tv_title = (TextView) findViewById(R.id.tv_title);
+        iv_cancel = (ImageView) findViewById(R.id.iv_cancel);
+        findViewById(R.id.iv_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickView((View) v);
+            }
+        });
+        findViewById(R.id.select_shexiangtou).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickView((View) v);
+            }
+        });
+        findViewById(R.id.juansetting).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickView((View) v);
+            }
+        });
+        findViewById(R.id.shesetting).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickView((View) v);
+            }
+        });
+    }
 
     @Override
     protected int getLayoutId() {
@@ -52,12 +85,12 @@ public class SettingActivity extends BaseActivity {
     @Override
     protected void initData() {
         tv_title.setText("设置");
-        en_id = PreferencesUtils.getStringValue(Constants.en_id, MyApplication.getAppContext(), "0");
-        userid = PreferencesUtils.getIntValue(Constants.en_user_id, MyApplication.getAppContext());
+        en_id = PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0");
+        userid = PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext());
     }
 
-    @OnClick({R.id.shesetting, R.id.juansetting, R.id.select_shexiangtou,R.id.iv_cancel})
-    public void onClick(View view) {
+
+    public void onClickView(View view) {
         switch (view.getId()) {
             case R.id.shesetting:
                 goToActivity(PigHouseInformationActivity.class, null);

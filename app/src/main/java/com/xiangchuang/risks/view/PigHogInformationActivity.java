@@ -1,5 +1,7 @@
 package com.xiangchuang.risks.view;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -7,7 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,14 +20,13 @@ import com.xiangchuang.risks.model.bean.ZhuJuanBean;
 import com.xiangchuang.risks.model.adapter.ZhuJuanXinXI_item_Adapter;
 import com.xiangchuang.risks.model.bean.ZhuSheBean;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
-import com.xiangchuangtec.luolu.animalcounter.R;
-import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
-import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
-import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
+import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.R;
+import com.innovation.pig.insurance.netutils.Constants;
+import com.innovation.pig.insurance.netutils.GsonUtils;
+import com.innovation.pig.insurance.netutils.OkHttp3Util;
+import com.innovation.pig.insurance.netutils.PreferencesUtils;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -35,7 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.BindView;
+
 import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -43,21 +43,21 @@ import okhttp3.Response;
 
 public class PigHogInformationActivity extends BaseActivity {
     public static String TAG = "PigHogInformationActivity";
-    @BindView(R.id.zhujuanxinxi_spinnerzhushe)
+
     Spinner mzhujuanxinxispinnerzhushe;
-    @BindView(R.id.zhujuanxinxi_spinnerpinzhong)
+
     Spinner mzhujuanxinxispinnerpinzhong;
-    @BindView(R.id.zhujuanxinxi_edit_text)
+
     EditText mzhujuaname;
-    @BindView(R.id.zhujuanxinxi_right_image)
+
     TextView mzhujuanxinxirightimage;
-    @BindView(R.id.zhujuanxinxi_list_view)
+
     ListView mzhujuanxinxilistview;
-    @BindView(R.id.zhushe_setting)
+
     TextView mzhushesetting;
-    @BindView(R.id.tv_title)
+
     TextView tv_title;
-    @BindView(R.id.iv_cancel)
+
     ImageView iv_cancel;
     List<String> zhushename = new ArrayList<>();
     List<String> zhujuan_pinzhong = new ArrayList<>();
@@ -72,6 +72,36 @@ public class PigHogInformationActivity extends BaseActivity {
     private List<PinZhongBean.DataBean> pinzhongdata;
     private int manimalSubType;
 
+    @Override
+    public void initView() {
+        super.initView();
+        mzhujuanxinxispinnerzhushe = (Spinner) findViewById(R.id.zhujuanxinxi_spinnerzhushe);
+        mzhujuanxinxispinnerpinzhong = (Spinner) findViewById(R.id.zhujuanxinxi_spinnerpinzhong);
+        mzhujuaname = (EditText) findViewById(R.id.zhujuanxinxi_edit_text);
+        mzhujuanxinxirightimage = (TextView) findViewById(R.id.zhujuanxinxi_right_image);
+        mzhujuanxinxilistview = (ListView) findViewById(R.id.zhujuanxinxi_list_view);
+        mzhushesetting = (TextView) findViewById(R.id.zhushe_setting);
+        tv_title = (TextView) findViewById(R.id.tv_title);
+        iv_cancel = (ImageView) findViewById(R.id.iv_cancel);
+        findViewById(R.id.iv_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickView((View) v);
+            }
+        });
+        findViewById(R.id.zhushe_setting).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickView((View) v);
+            }
+        });
+        findViewById(R.id.zhujuanxinxi_right_image).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickView((View) v);
+            }
+        });
+    }
 
     @Override
     protected int getLayoutId() {
@@ -80,14 +110,14 @@ public class PigHogInformationActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        defaultpig = PreferencesUtils.getIntValue(Constants.defaultpig, MyApplication.getAppContext());
-        en_id = PreferencesUtils.getStringValue(Constants.en_id, MyApplication.getAppContext(), "0");
-        userid = PreferencesUtils.getIntValue(Constants.en_user_id, MyApplication.getAppContext());
+        defaultpig = PreferencesUtils.getIntValue(Constants.defaultpig, AppConfig.getAppContext());
+        en_id = PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0");
+        userid = PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext());
         tv_title.setText("猪圈信息");
         if (!en_id.equals(0)) {
             getDataFromNet();
         } else {
-            toastUtils.showLong(MyApplication.getAppContext(), "请稍后");
+            toastUtils.showLong(AppConfig.getAppContext(), "请稍后");
         }
     }
 
@@ -126,7 +156,7 @@ public class PigHogInformationActivity extends BaseActivity {
                                 }
                                 initSpinner();
                             } else {
-                                toastUtils.showLong(MyApplication.getAppContext(), bean.getMsg());
+                                toastUtils.showLong(AppConfig.getAppContext(), bean.getMsg());
                             }
 
                         }
@@ -136,7 +166,7 @@ public class PigHogInformationActivity extends BaseActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            toastUtils.showLong(MyApplication.getAppContext(), bean.getMsg());
+                            toastUtils.showLong(AppConfig.getAppContext(), bean.getMsg());
                         }
                     });
                 }
@@ -193,10 +223,10 @@ public class PigHogInformationActivity extends BaseActivity {
                                         if (null != sheList && sheList.size() > 0) {
                                             mzhujuanxinxilistview.setAdapter(new ZhuJuanXinXI_item_Adapter(PigHogInformationActivity.this, dataBeans, pinzhongdata));
                                         } else {
-                                            toastUtils.showLong(MyApplication.getAppContext(), "猪圈为空");
+                                            toastUtils.showLong(AppConfig.getAppContext(), "猪圈为空");
                                         }
                                     } else {
-                                        toastUtils.showLong(MyApplication.getAppContext(), "品种为空");
+                                        toastUtils.showLong(AppConfig.getAppContext(), "品种为空");
                                     }
                                 }
                             });
@@ -205,7 +235,7 @@ public class PigHogInformationActivity extends BaseActivity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    toastUtils.showLong(MyApplication.getAppContext(), "添加失败");
+                                    toastUtils.showLong(AppConfig.getAppContext(), "添加失败");
                                 }
                             });
                         }
@@ -329,8 +359,8 @@ public class PigHogInformationActivity extends BaseActivity {
     }
 
 
-    @OnClick({R.id.zhujuanxinxi_right_image, R.id.zhushe_setting,R.id.iv_cancel})
-    public void onClick(View view) {
+
+    public void onClickView(View view) {
         switch (view.getId()) {
             case R.id.zhujuanxinxi_right_image:
                 String selpinzhong = mzhujuanxinxispinnerpinzhong.getSelectedItem().toString();
@@ -401,10 +431,10 @@ public class PigHogInformationActivity extends BaseActivity {
                                 public void run() {
                                     mProgressDialog.dismiss();
                                     if (bean.getStatus() == 1) {
-                                        toastUtils.showLong(MyApplication.getAppContext(), bean.getMsg());
+                                        toastUtils.showLong(AppConfig.getAppContext(), bean.getMsg());
                                         getzhujuanMessage(sheId + "");
                                     } else {
-                                        toastUtils.showLong(MyApplication.getAppContext(), bean.getMsg());
+                                        toastUtils.showLong(AppConfig.getAppContext(), bean.getMsg());
                                     }
                                 }
                             });
@@ -413,7 +443,7 @@ public class PigHogInformationActivity extends BaseActivity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    toastUtils.showLong(MyApplication.getAppContext(), "添加失败");
+                                    toastUtils.showLong(AppConfig.getAppContext(), "添加失败");
                                     // Toast.makeText(PigHogInformationActivity.this, "添加失败", Toast.LENGTH_LONG).show();
                                 }
                             });

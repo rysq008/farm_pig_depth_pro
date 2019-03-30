@@ -21,13 +21,13 @@ import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.utils.CounterHelper;
 import com.xiangchuang.risks.utils.PermissionsDelegate;
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
-import com.xiangchuangtec.luolu.animalcounter.R;
-import com.xiangchuangtec.luolu.animalcounter.model.PollingResultAdapter_new;
-import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
-import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
-import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
+import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.R;
+import com.innovation.pig.insurance.model.PollingResultAdapter_new;
+import com.innovation.pig.insurance.netutils.Constants;
+import com.innovation.pig.insurance.netutils.GsonUtils;
+import com.innovation.pig.insurance.netutils.OkHttp3Util;
+import com.innovation.pig.insurance.netutils.PreferencesUtils;
 
 import org.tensorflow.demo.DetectorActivity_new;
 
@@ -37,7 +37,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import butterknife.BindView;
+
 import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -48,13 +48,13 @@ import okhttp3.Response;
  * 展示巡检结果
  */
 public class ShowPollingActivity_new extends BaseActivity {
-    @BindView(R.id.tv_title)
+
     TextView mshowpollingname;
-    @BindView(R.id.showpolling_number)
+
     TextView mshowpollingnumber;
-    @BindView(R.id.showpolling_result_list)
+
     ListView mshowpollingresult_list;
-    @BindView(R.id.rl_title)
+
     RelativeLayout rlTitle;
 
 
@@ -69,11 +69,20 @@ public class ShowPollingActivity_new extends BaseActivity {
         return R.layout.activity_show_polling_new;
     }
 
-
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        String companyname = PreferencesUtils.getStringValue(Constants.companyname, MyApplication.getAppContext(), "育肥猪农场");
+    public void initView() {
+        super.initView();
+        mshowpollingname = (TextView) findViewById(R.id.tv_title);
+        mshowpollingnumber = (TextView) findViewById(R.id.showpolling_number);
+        mshowpollingresult_list = (ListView) findViewById(R.id.showpolling_result_list);
+        rlTitle = (RelativeLayout) findViewById(R.id.rl_title);
+        findViewById(R.id.iv_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickView((View) v);
+            }
+        });
+        String companyname = PreferencesUtils.getStringValue(Constants.companyname, AppConfig.getAppContext(), "育肥猪农场");
         mshowpollingname.setText(companyname);
 //        PreferencesUtils.saveIntValue(Constants.deptId, mdeptid, ShowPollingActivity_new.this);
     }
@@ -197,8 +206,8 @@ public class ShowPollingActivity_new extends BaseActivity {
         mshowpollingnumber.setText(totalCount + "");
     }
 
-    @OnClick({R.id.iv_cancel})
-    public void onClick(View view) {
+
+    public void onClickView(View view) {
         switch (view.getId()) {
             case R.id.iv_cancel:
                 finish();

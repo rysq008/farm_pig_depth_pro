@@ -9,7 +9,7 @@ import android.content.res.Resources;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
+import com.innovation.pig.insurance.AppConfig;
 
 import java.util.Locale;
 
@@ -99,9 +99,9 @@ public class SystemUtil {
     public static String getLocalVersionName() {
         String localVersion = "";
         try {
-            PackageInfo packageInfo = MyApplication.getAppContext().getApplicationContext()
+            PackageInfo packageInfo = AppConfig.getAppContext().getApplicationContext()
                     .getPackageManager()
-                    .getPackageInfo(MyApplication.getAppContext().getPackageName(), 0);
+                    .getPackageInfo(AppConfig.getAppContext().getPackageName(), 0);
             localVersion = packageInfo.versionName;
         } catch (Exception e) {
             e.printStackTrace();

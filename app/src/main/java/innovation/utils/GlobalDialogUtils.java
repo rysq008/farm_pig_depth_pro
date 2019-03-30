@@ -11,12 +11,10 @@ import com.xiangchuang.risks.model.bean.BaseBean;
 import com.xiangchuang.risks.model.bean.TipsBean;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.SystemUtil;
-import com.xiangchuang.risks.utils.ToastUtils;
-import com.xiangchuang.risks.view.CompanyActivity;
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
-import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
-import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
+import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.netutils.Constants;
+import com.innovation.pig.insurance.netutils.OkHttp3Util;
+import com.innovation.pig.insurance.netutils.PreferencesUtils;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -46,7 +44,7 @@ public class GlobalDialogUtils {
         Map<String, String> mapBody = new HashMap<>();
         mapBody.put("appType", "2");
         mapBody.put("useCase", useCase);
-        mapBody.put("userId", String.valueOf(PreferencesUtils.getIntValue(Constants.userid, MyApplication.getAppContext())));
+        mapBody.put("userId", String.valueOf(PreferencesUtils.getIntValue(Constants.userid, AppConfig.getAppContext())));
         OkHttp3Util.doPost(Constants.GET_TIPS_DIALOG, mapBody, mapHeader, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {

@@ -1,6 +1,5 @@
 package innovation.media;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -15,7 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.xiangchuangtec.luolu.animalcounter.R;
+import com.innovation.pig.insurance.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;

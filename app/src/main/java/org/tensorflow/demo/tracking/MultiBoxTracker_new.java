@@ -25,23 +25,16 @@ import android.graphics.Paint.Join;
 import android.graphics.Paint.Style;
 import android.graphics.Point;
 import android.graphics.RectF;
-import android.media.Image;
-import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.widget.Toast;
 
-import com.xiangchuangtec.luolu.animalcounter.R;
-
 import innovation.biz.classifier.BreedingPigFaceDetectTFlite;
 import innovation.biz.iterm.PostureItem;
-import innovation.biz.iterm.PredictRotationIterm;
 import innovation.biz.iterm.TrackerItem;
-import innovation.utils.PreferencesUtils;
 import innovation.utils.ScreenUtil;
 
-import org.tensorflow.demo.DetectorActivity_new;
 import org.tensorflow.demo.env.BorderedText_Breeding;
 import org.tensorflow.demo.env.ImageUtils;
 import org.tensorflow.demo.env.Logger;
@@ -53,7 +46,7 @@ import java.util.Queue;
 import java.util.Vector;
 
 
-import static com.xiangchuangtec.luolu.animalcounter.MyApplication.sowCount;
+import static com.innovation.pig.insurance.AppConfig.sowCount;
 
 
 /**

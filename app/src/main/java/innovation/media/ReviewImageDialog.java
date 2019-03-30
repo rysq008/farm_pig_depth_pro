@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import com.xiangchuangtec.luolu.animalcounter.R;
+import com.innovation.pig.insurance.R;
 
 import org.tensorflow.demo.Global;
 
@@ -246,7 +246,7 @@ public class ReviewImageDialog extends Dialog {
 //            if (mOnItemClickListener != null) {
 //                itemView.setOnClickListener(new View.OnClickListener() {
 //                    @Override
-//                    public void onClick(View v) {
+//                    public void onClickView(View v) {
 //                        int position = myViewHolder.getLayoutPosition();
 //                        mOnItemClickListener.onItemClick(myViewHolder.itemView, position);
 //                    }

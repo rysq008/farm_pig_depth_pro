@@ -18,14 +18,12 @@ import com.xiangchuang.risks.model.bean.InsureListBean;
 import com.xiangchuang.risks.model.bean.PigTypeBean;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
-import com.xiangchuang.risks.utils.LocationManager;
-import com.xiangchuangtec.luolu.animalcounter.R;
-import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
-import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
-import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
+import com.innovation.pig.insurance.R;
+import com.innovation.pig.insurance.netutils.Constants;
+import com.innovation.pig.insurance.netutils.GsonUtils;
+import com.innovation.pig.insurance.netutils.OkHttp3Util;
+import com.innovation.pig.insurance.netutils.PreferencesUtils;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -34,32 +32,32 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.BindView;
+
 import innovation.utils.MyWatcher;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
 public class InsuredActivity extends BaseActivity {
-    @BindView(R.id.tv_title)
+
     TextView tv_title;
-    @BindView(R.id.companyname)
+
     TextView companyname;
-    @BindView(R.id.headnumber)
+
     EditText headnumber;
-    @BindView(R.id.coefficient)
+
     EditText coefficient;
-    @BindView(R.id.type_spinner)
+
     Spinner typespinner;
-    @BindView(R.id.submit)
+
     TextView submit;
-    @BindView(R.id.num)
+
     TextView num;
-    @BindView(R.id.noinfo)
+
     TextView noinfo;
-    @BindView(R.id.iv_cancel)
+
     ImageView iv_cancel;
-    @BindView(R.id.recycler)
+
     RecyclerView recyclerView;
     private List<String> typeNameList = new ArrayList<>();
     private String pigType = null;
@@ -67,9 +65,18 @@ public class InsuredActivity extends BaseActivity {
     private List<PigTypeBean.DataBean> pigTypeList = new ArrayList<>();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+    public void initView() {
+        super.initView();
+        tv_title = (TextView) findViewById(R.id.tv_title);
+        companyname = (TextView) findViewById(R.id.companyname);
+        headnumber = (EditText) findViewById(R.id.headnumber);
+        coefficient = (EditText) findViewById(R.id.coefficient);
+        typespinner = (Spinner) findViewById(R.id.type_spinner);
+        submit = (TextView) findViewById(R.id.submit);
+        num = (TextView) findViewById(R.id.num);
+        noinfo = (TextView) findViewById(R.id.noinfo);
+        iv_cancel = (ImageView) findViewById(R.id.iv_cancel);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler);
     }
 
     @Override

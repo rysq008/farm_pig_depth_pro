@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.xiangchuangtec.luolu.animalcounter.R;
+import com.innovation.pig.insurance.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;

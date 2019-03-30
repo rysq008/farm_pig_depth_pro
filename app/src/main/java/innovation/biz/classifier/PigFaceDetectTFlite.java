@@ -6,24 +6,20 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.SystemClock;
 import android.os.Trace;
 import android.util.Log;
 
 
-import com.xiangchuangtec.luolu.animalcounter.MyApplication;
+import com.innovation.pig.insurance.AppConfig;
 
 import innovation.biz.iterm.AnimalClassifierResultIterm;
 import innovation.biz.iterm.PostureItem;
 import innovation.biz.iterm.PredictRotationIterm;
-import innovation.media.Model;
 import innovation.utils.PointFloat;
 
-import org.tensorflow.demo.CameraConnectionFragment;
 import org.tensorflow.demo.Classifier;
-import org.tensorflow.demo.Global;
 import org.tensorflow.demo.env.ImageUtils;
 import org.tensorflow.demo.env.Logger;
 import org.tensorflow.lite.Interpreter;
@@ -100,14 +96,14 @@ public class PigFaceDetectTFlite implements Classifier {
         try {
             pigFaceRotationDetector =
                     PigRotationPrediction.create(
-                            MyApplication.getAppContext().getAssets(),
+                            AppConfig.getAppContext().getAssets(),
                             PIG_TFLITE_PREDICTION_MODEL_FILE,
                             "",
                             192,
                             true);
             pigFaceKeyPointsDetector =
                     PigKeyPointsDetectTFlite.create(
-                            MyApplication.getAppContext().getAssets(),
+                            AppConfig.getAppContext().getAssets(),
                             PIG_TFLITE_KEYPOINTS_MODEL_FILE,
                             "",
                             192,
