@@ -1,10 +1,6 @@
 apply plugin: 'com.android.application'
 
-repositories {
-    google()
-    maven { url 'https://jitpack.io' }
-    mavenCentral()
-}
+
 android {
     compileSdkVersion 26
     //    luolucode
@@ -63,6 +59,9 @@ android {
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']*/
             jniLibs.srcDirs = ['libs']
+
+//            jniLibs.srcDir 'src/main/libs'
+//            jni.srcDirs = []
         }
     }
     compileOptions {
@@ -92,14 +91,12 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.3'
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     implementation files('libs/AMap_Location_V3.6.1_20171012.jar')
-    implementation project(':openCVLibrary331')
     implementation 'com.android.support:multidex:1.0.3'
     def uploadServiceVersion = "3.4.2"
     implementation "net.gotev:uploadservice:$uploadServiceVersion"
     implementation "net.gotev:uploadservice-okhttp:$uploadServiceVersion"
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-    implementation project(':usbCameraCommon')
     implementation files('libs/commons-io-2.5.jar')
     implementation 'com.github.bumptech.glide:glide:3.7.0'
     implementation 'com.tencent.bugly:crashreport:2.8.6'
@@ -112,8 +109,28 @@ dependencies {
     implementation 'com.zhy:okhttputils:2.6.2'
     debugImplementation "io.objectbox:objectbox-android-objectbrowser:$objectboxVersion"
     releaseImplementation "io.objectbox:objectbox-android:$objectboxVersion"
-    implementation project(path: ':uplibrary')
-
     implementation 'cn.leancloud.android:avoscloud-sdk:4.7.9'
+    /*start uplibrary*/
+    // parse json
+    compile 'com.google.code.gson:gson:2.3'
+    // okhttp
+    compile 'com.squareup.okhttp3:okhttp:3.2.0'
+    // okhttp log controller
+    compile 'com.squareup.okhttp3:logging-interceptor:3.0.1'
+    // image load library
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    // green dao library
+    compile 'org.greenrobot:greendao:2.2.0'
+    /*end uplibrary*/
+    /*start usb camera*/
+    compile "com.android.support:support-annotations:${supportLibVersion}"
+    compile("com.serenegiant:common:${commonLibVersion}") {
+        exclude module: 'support-v4'
+    }
+    /*end usb camera*/
+    implementation files('libs/gson-2.8.0.jar')
+    configurations {
+        all*.exclude group: 'com.google.code.gson'
+    }
 }
 apply plugin: 'io.objectbox'
