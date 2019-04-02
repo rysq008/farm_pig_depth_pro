@@ -1,12 +1,11 @@
-apply plugin: 'com.android.application'
-//apply plugin: 'com.android.library'
-
+//apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 27
     //    luolucode
     defaultConfig {
-        applicationId "com.xiangchuangtec.luolu.animalcounter"
+//        applicationId "com.xiangchuangtec.luolu.animalcounter"
         minSdkVersion 21
         targetSdkVersion 27
         //release versionCode 1100
@@ -14,7 +13,7 @@ android {
         versionName "1.112"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
-            abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
+            abiFilters /*"armeabi", "armeabi-v7a", "x86", "mips"*/"armeabi-v7a"
         }
         multiDexEnabled true
 
@@ -124,8 +123,8 @@ dependencies {
     implementation 'org.greenrobot:greendao:2.2.0'
     /*end uplibrary*/
     /*start usb camera*/
-    implementation "com.android.support:support-annotations:${supportLibVersion}"
-    implementation("com.serenegiant:common:${commonLibVersion}") {
+    implementation "com.android.support:support-annotations:27.1.1"
+    implementation("com.serenegiant:common:1.5.20") {
         exclude module: 'support-v4'
     }
     /*end usb camera*/

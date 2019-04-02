@@ -159,7 +159,7 @@ public class LoginFamerActivity extends BaseActivity {
                                     if (isAll) {
                                         // PreferencesUtils.saveBooleanValue("isallow", true, WelcomeActivity.this);
                                         // toastUtils.showLong(AppConfig.getAppContext(), "获取权限成功");
-                                        if (android.os.Build.VERSION.SDK_INT > 9) {
+                                        if (Build.VERSION.SDK_INT > 9) {
                                             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                                             StrictMode.setThreadPolicy(policy);
                                         }

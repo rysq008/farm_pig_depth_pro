@@ -83,7 +83,7 @@
             android:layout_gravity="center"
             android:entries="@array/farm_location_arrays"
             android:popupBackground="@drawable/spinner_shape"
-            android:prompt="@string/选择养殖场"
+            android:prompt="@string/Alternativefarm"
             android:spinnerMode="dialog"
             android:textColor="@android:color/black" />
 

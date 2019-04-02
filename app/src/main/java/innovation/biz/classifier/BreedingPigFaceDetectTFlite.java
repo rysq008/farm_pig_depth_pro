@@ -80,7 +80,7 @@ public class BreedingPigFaceDetectTFlite {
 
     public static RecognitionAndPostureItem recognitionAndPostureItem;
     //记录前一帧的排序后矩形集合
-    private ArrayList<BreedingPigFaceDetectTFlite.Recognition> lastRecognitions = new ArrayList<>();
+    private ArrayList<Recognition> lastRecognitions = new ArrayList<>();
 
     int padSize;
 

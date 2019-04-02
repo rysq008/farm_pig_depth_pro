@@ -247,7 +247,7 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
     private Integer sensorOrientation;
 
     /**
-     * The {@link android.util.Size} of video recording.
+     * The {@link Size} of video recording.
      */
     private Size mVideoSize;
     private Size mVideoSize_midia;

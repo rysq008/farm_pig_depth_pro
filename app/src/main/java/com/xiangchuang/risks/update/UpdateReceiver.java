@@ -200,11 +200,11 @@ public class UpdateReceiver extends BroadcastReceiver {
     private void normalUpdate() {
         needUpDate = true;
 
-        if(AppConfig.getActivity() instanceof SelectFunctionActivity_new){
-            ((SelectFunctionActivity_new)AppConfig.getActivity()).setSign();
-        }else{
-            ((CompanyActivity)AppConfig.getActivity()).setSign();
-        }
+//        if(AppConfig.getActivity() instanceof SelectFunctionActivity_new){
+//            ((SelectFunctionActivity_new)AppConfig.getActivity()).setSign();
+//        }else{
+//            ((CompanyActivity)AppConfig.getActivity()).setSign();
+//        }
 
 //        mDialog = new AlertDialog.Builder(AppConfig.getActivity());
 //        mDialog.setIcon(R.drawable.cowface);

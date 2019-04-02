@@ -251,7 +251,7 @@ public abstract class MediaEncoder implements Runnable {
     /**
      * Method to set byte array to the MediaCodec encoder
      * @param buffer
-     * @param length　length of byte array, zero means EOS.
+     * @param length?顫潿length of byte array, zero means EOS.
      * @param presentationTimeUs
      */
     @SuppressWarnings("deprecation")

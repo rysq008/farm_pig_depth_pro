@@ -20,7 +20,7 @@
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This phone number is invalid</string>
     <string name="error_invalid_code">This code is too short</string>
-    <string name="error_incorrect_password">Login Failed！</string>
+    <string name="error_incorrect_password">Login Failed!</string>
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
@@ -52,7 +52,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">巡检明细</string>
 
-    <string name="选择养殖场">选择养殖场</string>
+    <string name="Alternativefarm">选择养殖场</string>
 
     <string-array name="farm_location_arrays">
         <item>501养殖场</item>
@@ -68,8 +68,8 @@
 
     <string name="idPostive">身份证正面照片</string>
     <string name="businessLicense">营业执照照片</string>
-    <string name="appwarning">需要开启权限才可以使用猪险app！</string>
-    <string name="locationwarning">您还未开启GPS，现在去开启吗?</string>
+    <string name="appwarning">需要开启权限才可以使用猪险app!</string>
+    <string name="locationwarning">您还未开启GPS,现在去开启吗?</string>
     <string name="permission_request">This sample needs permission for camera and audio recording.</string>
     <string name="title_activity_monitoring">MonitoringActivity</string>
 </resources>

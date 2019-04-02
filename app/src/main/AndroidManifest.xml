@@ -27,17 +27,17 @@
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
-    <!-- 用于进行网络定位 -->
+
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <!-- 用于访问GPS定位 -->
+
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位 -->
+
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <!-- 用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
+
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <!-- 用于申请调用A-GPS模块 -->
+
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
-    <!-- 用于申请获取蓝牙信息进行室内定位 -->
+
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
@@ -50,23 +50,17 @@
     <!-- android:hardwareAccelerated="false" -->
     <!-- android:name="com.xiangchuangtec.luolu.animalcounter.AppConfig" -->
     <application
-        android:name="com.innovation.pig.insurance.MyApplication"
         android:allowBackup="false"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
         android:largeHeap="true"
         android:launchMode="singleInstance"
-        android:networkSecurityConfig="@xml/network_security_config"
         android:screenOrientation="portrait"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+        tools:overrideLibrary="com.innovation.pig.insurance"
         tools:replace="android:allowBackup">
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="adf3458ffa64cdeee292d3ed2a68b6cc" />
 
-        <!-- 2018-12-10高德KEY  adf3458ffa64cdeee292d3ed2a68b6cc -->
-        <!-- 旧key eb91b7f4ba902477ac9c242f768152da -->
         <activity
             android:name="com.innovation.pig.insurance.CounterActivity_new"
             android:configChanges="orientation|keyboardHidden"
@@ -83,11 +77,11 @@
             android:name="com.xiangchuang.risks.view.LoginFamerActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
-            <intent-filter>
+<!--            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter>-->
         </activity>
         <activity
             android:name="com.xiangchuang.risks.view.ShowPollingActivity_new"
@@ -140,7 +134,7 @@
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.xiangchuangtec.luolu.animalcounter.provider"
+            android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -155,7 +149,7 @@
         <activity
             android:name="com.xiangchuang.risks.view.HogDetailActivity_new"
             android:exported="true" />
-        <activity android:name="com.xiangchuang.risks.base.BaseBarActivity" />
+<!--        <activity android:name="com.xiangchuang.risks.base.BaseBarActivity" />-->
         <activity android:name="com.xiangchuang.risks.view.JuanSettingActivity" />
         <activity android:name="com.xiangchuang.risks.view.SettingActivity" />
         <activity android:name="com.xiangchuang.risks.view.InsuredActivity" />
