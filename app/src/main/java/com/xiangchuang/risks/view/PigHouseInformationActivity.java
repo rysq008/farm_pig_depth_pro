@@ -101,24 +101,23 @@ public class PigHouseInformationActivity extends BaseActivity {
 
 
     public void onClickView(View view) {
-        switch (view.getId()) {
-            case R.id.zhushe_right_image:
-                if (null == mzhusheedittext.getText().toString() || "".equals(mzhusheedittext.getText().toString())) {
-                    toastUtils.showLong(AppConfig.getAppContext(), "猪舍信息为空");
-                    // Toast.makeText(PigHouseInformationActivity.this, "猪舍信息为空", Toast.LENGTH_LONG).show();
-                } else {
-                    //添加猪舍
-                    addZhuShe();
-                }
-                break;
-            case R.id.zhushe_zhujuanxinxi:
-                getSheData1();
-                break;
-            case R.id.iv_cancel:
-                finish();
-                break;
-            default:
-                break;
+        int i = view.getId();
+        if (i == R.id.zhushe_right_image) {
+            if (null == mzhusheedittext.getText().toString() || "".equals(mzhusheedittext.getText().toString())) {
+                toastUtils.showLong(AppConfig.getAppContext(), "猪舍信息为空");
+                // Toast.makeText(PigHouseInformationActivity.this, "猪舍信息为空", Toast.LENGTH_LONG).show();
+            } else {
+                //添加猪舍
+                addZhuShe();
+            }
+
+        } else if (i == R.id.zhushe_zhujuanxinxi) {
+            getSheData1();
+
+        } else if (i == R.id.iv_cancel) {
+            finish();
+
+        } else {
         }
 
     }

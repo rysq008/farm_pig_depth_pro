@@ -81,23 +81,21 @@ public class ReviewImageDialog extends Dialog {
         public void onItemClick(int position, View v) {
             CaptureImageItem item = imageList.get(position);
             String path = item.getUrl();
-            switch (v.getId()) {
-                case R.id.image_view:
-                    Log.i(TAG, "position:" + position);
-                    if (mShowImageDialog == null)
-                        initImageDialog();
-                    mShowImageDialog.updateView(path);
-                    mShowImageDialog.show();
+            int i = v.getId();
+            if (i == R.id.image_view) {
+                Log.i(TAG, "position:" + position);
+                if (mShowImageDialog == null)
+                    initImageDialog();
+                mShowImageDialog.updateView(path);
+                mShowImageDialog.show();
 
-                    break;
 
-                case R.id.image_del:
-                    //删除内存中对应文件
-                    FileUtils.deleteFile(path);
-                    //更新列表
-                    imageList.remove(position);
-                    myAdapter.notifyDataSetChanged();
-                    break;
+            } else if (i == R.id.image_del) {//删除内存中对应文件
+                FileUtils.deleteFile(path);
+                //更新列表
+                imageList.remove(position);
+                myAdapter.notifyDataSetChanged();
+
             }
         }
     };

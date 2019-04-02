@@ -91,22 +91,21 @@ public class SettingActivity extends BaseActivity {
 
 
     public void onClickView(View view) {
-        switch (view.getId()) {
-            case R.id.shesetting:
-                goToActivity(PigHouseInformationActivity.class, null);
-                break;
-            case R.id.juansetting:
-                getSheData1();
-                break;
-            case R.id.select_shexiangtou:
-                goToActivity(USBMenageActivity.class, null);
-                finish();
-                break;
-            case R.id.iv_cancel:
-                finish();
-                break;
-            default:
-                break;
+        int i = view.getId();
+        if (i == R.id.shesetting) {
+            goToActivity(PigHouseInformationActivity.class, null);
+
+        } else if (i == R.id.juansetting) {
+            getSheData1();
+
+        } else if (i == R.id.select_shexiangtou) {
+            goToActivity(USBMenageActivity.class, null);
+            finish();
+
+        } else if (i == R.id.iv_cancel) {
+            finish();
+
+        } else {
         }
 
     }

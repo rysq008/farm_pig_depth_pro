@@ -684,96 +684,94 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            //录制/暂定切换
-            case R.id.record_control:
+        int i = view.getId();//录制/暂定切换
+        if (i == R.id.record_control) {
+            Log.e(TAG, "onClickView: " + lastClickTime);
+            if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME) {
+                return;
+            }
+            lastClickTime = System.currentTimeMillis();
+            Log.e(TAG, "onClickView:ok " + lastClickTime);
+            mRecordControl.setClickable(false);
 
-                Log.e(TAG, "onClickView: " + lastClickTime);
-                if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME) {
-                    return;
-                }
-                lastClickTime = System.currentTimeMillis();
-                Log.e(TAG, "onClickView:ok " + lastClickTime);
-                mRecordControl.setClickable(false);
+            if (mIsRecordingVideo) {
+                // 停止按钮点击时
+                AppConfig.during += System.currentTimeMillis() - timeVideoStart;
+                //Toast.makeText(activity, InnApplication.during+"", Toast.LENGTH_SHORT).show();
+                stopRecordingVideo(false);
+                Global.VIDEO_PROCESS = false;
 
-                if (mIsRecordingVideo) {
-                    // 停止按钮点击时
-                    AppConfig.during += System.currentTimeMillis() - timeVideoStart;
-                    //Toast.makeText(activity, InnApplication.during+"", Toast.LENGTH_SHORT).show();
-                    stopRecordingVideo(false);
-                    Global.VIDEO_PROCESS = false;
-
-                    try {
-                        TimerTask timerTask = new TimerTask() {
-                            @Override
-                            public void run() {
-                                collectNumberHandler.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        try {
-                                            mMediaRecorder.stop();
-                                        } catch (IllegalStateException e) {
-                                            Log.e(TAG, " mMediaRecorder.stop:Exception " + e);
-                                            // TODO 如果当前java状态和jni里面的状态不一致，
-                                            //e.printStackTrace();
-                                            mMediaRecorder = null;
-                                            mMediaRecorder = new MediaRecorder();
-                                        } catch (RuntimeException e){
-                                            Log.e(TAG, " mMediaRecorder.stop:Exception " + e);
-                                            // TODO 如果当前java状态和jni里面的状态不一致，
-                                            //e.printStackTrace();
-                                            mMediaRecorder = null;
-                                            mMediaRecorder = new MediaRecorder();
-                                        }
-                                        mMediaRecorder.reset();
+                try {
+                    TimerTask timerTask = new TimerTask() {
+                        @Override
+                        public void run() {
+                            collectNumberHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        mMediaRecorder.stop();
+                                    } catch (IllegalStateException e) {
+                                        Log.e(TAG, " mMediaRecorder.stop:Exception " + e);
+                                        // TODO 如果当前java状态和jni里面的状态不一致，
+                                        //e.printStackTrace();
+                                        mMediaRecorder = null;
+                                        mMediaRecorder = new MediaRecorder();
+                                    } catch (RuntimeException e) {
+                                        Log.e(TAG, " mMediaRecorder.stop:Exception " + e);
+                                        // TODO 如果当前java状态和jni里面的状态不一致，
+                                        //e.printStackTrace();
+                                        mMediaRecorder = null;
+                                        mMediaRecorder = new MediaRecorder();
                                     }
-                                });
-                            }
-                        };
-                        new Timer().schedule(timerTask, 30);
-                    } catch (Exception e) {
-                        Log.e("-----停止视频录制-----------", "---->>>>>>>>>" + e);
-                        e.printStackTrace();
-                    }
+                                    mMediaRecorder.reset();
+                                }
+                            });
+                        }
+                    };
+                    new Timer().schedule(timerTask, 30);
+                } catch (Exception e) {
+                    Log.e("-----停止视频录制-----------", "---->>>>>>>>>" + e);
+                    e.printStackTrace();
+                }
 
-                } else {
-                    // 录制按钮点击时
-                    try {
-                        Global.VIDEO_PROCESS = true;
-                        timeVideoStart = System.currentTimeMillis();
-                        startRecordingVideo();
-                    } catch (IOException e) {
-                        Log.e(TAG, "record_control_IOException: " + e.toString());
-                        e.printStackTrace();
-                    }
-
-                }
-                break;
-            case R.id.record_switch:
-                if (Global.model != Model.BUILD.value()) {
-                    Global.model = Model.BUILD.value();
-                    mRecordSwitchTxt.setTextColor(Color.WHITE);
-                    mRecordVerifyTxt.setTextColor(Color.DKGRAY);
-                }
-                break;
-            case R.id.record_verify:
-                if (Global.model != Model.VERIFY.value()) {
-                    Global.model = Model.VERIFY.value();
-                    mRecordVerifyTxt.setTextColor(Color.WHITE);
-                    mRecordSwitchTxt.setTextColor(Color.DKGRAY);
-                }
-                break;
-            case R.id.myTest:
+            } else {
+                // 录制按钮点击时
                 try {
                     Global.VIDEO_PROCESS = true;
                     timeVideoStart = System.currentTimeMillis();
                     startRecordingVideo();
-                } catch (Exception e) {
+                } catch (IOException e) {
                     Log.e(TAG, "record_control_IOException: " + e.toString());
                     e.printStackTrace();
                 }
-                break;
-            default:
+
+            }
+
+        } else if (i == R.id.record_switch) {
+            if (Global.model != Model.BUILD.value()) {
+                Global.model = Model.BUILD.value();
+                mRecordSwitchTxt.setTextColor(Color.WHITE);
+                mRecordVerifyTxt.setTextColor(Color.DKGRAY);
+            }
+
+        } else if (i == R.id.record_verify) {
+            if (Global.model != Model.VERIFY.value()) {
+                Global.model = Model.VERIFY.value();
+                mRecordVerifyTxt.setTextColor(Color.WHITE);
+                mRecordSwitchTxt.setTextColor(Color.DKGRAY);
+            }
+
+        } else if (i == R.id.myTest) {
+            try {
+                Global.VIDEO_PROCESS = true;
+                timeVideoStart = System.currentTimeMillis();
+                startRecordingVideo();
+            } catch (Exception e) {
+                Log.e(TAG, "record_control_IOException: " + e.toString());
+                e.printStackTrace();
+            }
+
+        } else {
         }
     }
 

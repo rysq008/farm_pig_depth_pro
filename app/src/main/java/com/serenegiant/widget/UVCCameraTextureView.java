@@ -23,6 +23,7 @@
 
 package com.serenegiant.widget;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
@@ -169,6 +170,7 @@ public class UVCCameraTextureView extends AspectRatioTextureView    // API >= 14
             mCallback.onSurfaceChanged(this, getSurface(), 0, 0);
     }
 
+    @SuppressLint("WrongThread")
     public void handleCaptureStill(final Bitmap bmp) {
         try {
             final Bitmap bitmap = bmp;

@@ -361,27 +361,26 @@ public class PigHogInformationActivity extends BaseActivity {
 
 
     public void onClickView(View view) {
-        switch (view.getId()) {
-            case R.id.zhujuanxinxi_right_image:
-                String selpinzhong = mzhujuanxinxispinnerpinzhong.getSelectedItem().toString();
-                for (int i = 0; i < pinzhongdata.size(); i++) {
-                    if (pinzhongdata.get(i).getAnimalSubTypeName().equals(selpinzhong)) {
-                        manimalSubType = pinzhongdata.get(i).getAnimalSubType();
-                    }
+        int i1 = view.getId();
+        if (i1 == R.id.zhujuanxinxi_right_image) {
+            String selpinzhong = mzhujuanxinxispinnerpinzhong.getSelectedItem().toString();
+            for (int i = 0; i < pinzhongdata.size(); i++) {
+                if (pinzhongdata.get(i).getAnimalSubTypeName().equals(selpinzhong)) {
+                    manimalSubType = pinzhongdata.get(i).getAnimalSubType();
                 }
-                if (!"".equals(mzhujuaname.getText().toString())) {
-                    addDataToNet();
-                }
-                break;
-            case R.id.zhushe_setting:
-                goToActivity(PigHouseInformationActivity.class, null);
-                finish();
-                break;
-            case R.id.iv_cancel:
-                finish();
-                break;
-            default:
-                break;
+            }
+            if (!"".equals(mzhujuaname.getText().toString())) {
+                addDataToNet();
+            }
+
+        } else if (i1 == R.id.zhushe_setting) {
+            goToActivity(PigHouseInformationActivity.class, null);
+            finish();
+
+        } else if (i1 == R.id.iv_cancel) {
+            finish();
+
+        } else {
         }
     }
 

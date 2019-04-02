@@ -207,76 +207,75 @@ public class LoginFamerActivity extends BaseActivity {
 
 
     public void onClickView(View view) {
-        switch (view.getId()) {
-            case R.id.loginfamer_login:
-                if (!NetworkUtil.isNetworkConnect(LoginFamerActivity.this)) {
-                    Toast.makeText(this, "断网了，请联网后重试。", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+        int i = view.getId();
+        if (i == R.id.loginfamer_login) {
+            if (!NetworkUtil.isNetworkConnect(LoginFamerActivity.this)) {
+                Toast.makeText(this, "断网了，请联网后重试。", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-                if (ActivityCompat.checkSelfPermission(AppConfig.getActivity(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    XXPermissions.with(LoginFamerActivity.this)
-                            //.constantRequest() //可设置被拒绝后继续申请，直到用户授权或者永久拒绝
-                            .permission(Permission.READ_PHONE_STATE)
-                            .request(new OnPermission() {
-                                @Override
-                                public void hasPermission(List<String> granted, boolean isAll) {
-                                    if (isAll) {
-                                        // PreferencesUtils.saveBooleanValue("isallow", true, WelcomeActivity.this);
-                                        // toastUtils.showLong(AppConfig.getAppContext(), "获取权限成功");
-                                        if (android.os.Build.VERSION.SDK_INT > 9) {
-                                            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                                            StrictMode.setThreadPolicy(policy);
-                                        }
+            if (ActivityCompat.checkSelfPermission(AppConfig.getActivity(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                XXPermissions.with(LoginFamerActivity.this)
+                        //.constantRequest() //可设置被拒绝后继续申请，直到用户授权或者永久拒绝
+                        .permission(Permission.READ_PHONE_STATE)
+                        .request(new OnPermission() {
+                            @Override
+                            public void hasPermission(List<String> granted, boolean isAll) {
+                                if (isAll) {
+                                    // PreferencesUtils.saveBooleanValue("isallow", true, WelcomeActivity.this);
+                                    // toastUtils.showLong(AppConfig.getAppContext(), "获取权限成功");
+                                    if (Build.VERSION.SDK_INT > 9) {
+                                        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                                        StrictMode.setThreadPolicy(policy);
                                     }
                                 }
+                            }
 
-                                @Override
-                                public void noPermission(List<String> denied, boolean quick) {
-                                    if (quick) {
-                                        Toast.makeText(InnApplication.getAppContext(), "被永久拒绝授权，请手动授予权限", Toast.LENGTH_SHORT).show();
-                                        //如果是被永久拒绝就跳转到应用权限系统设置页面
-                                        XXPermissions.gotoPermissionSettings(InnApplication.getAppContext());
-                                        finish();
-                                    } else {
-                                        Toast.makeText(InnApplication.getAppContext(), "获取权限失败", Toast.LENGTH_SHORT).show();
-                                        AppManager.getAppManager().AppExit(LoginFamerActivity.this);
-                                    }
+                            @Override
+                            public void noPermission(List<String> denied, boolean quick) {
+                                if (quick) {
+                                    Toast.makeText(InnApplication.getAppContext(), "被永久拒绝授权，请手动授予权限", Toast.LENGTH_SHORT).show();
+                                    //如果是被永久拒绝就跳转到应用权限系统设置页面
+                                    XXPermissions.gotoPermissionSettings(InnApplication.getAppContext());
+                                    finish();
+                                } else {
+                                    Toast.makeText(InnApplication.getAppContext(), "获取权限失败", Toast.LENGTH_SHORT).show();
+                                    AppManager.getAppManager().AppExit(LoginFamerActivity.this);
                                 }
-                            });
-                    return;
-                }
-                String musername = mloginfameruserid.getText().toString();
-                String muserpass = mloginfamerpass.getText().toString();
-                if (musername.length() < 6 || musername.length() > 20) {
-                    toastUtils.showLong(this, "账号长度不正确，应为6-20位字符");
-                    return;
-                }
-                if (!TextUtils.isEmpty(musername) && !TextUtils.isEmpty(muserpass)) {
-                    getDataFromNet(musername, muserpass);
-                } else {
-                    toastUtils.showLong(this, "账号或者密码为空");
-                }
-                break;
-            case R.id.pass_hide:
-                mloginfamerpass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                passshow.setVisibility(View.VISIBLE);
-                passhide.setVisibility(View.GONE);
-                break;
-            case R.id.pass_show:
-                mloginfamerpass.setInputType(InputType.TYPE_CLASS_TEXT);
-                passhide.setVisibility(View.VISIBLE);
-                passshow.setVisibility(View.GONE);
-                break;
-            default:
-                break;
+                            }
+                        });
+                return;
+            }
+            String musername = mloginfameruserid.getText().toString();
+            String muserpass = mloginfamerpass.getText().toString();
+            if (musername.length() < 6 || musername.length() > 20) {
+                toastUtils.showLong(this, "账号长度不正确，应为6-20位字符");
+                return;
+            }
+            if (!TextUtils.isEmpty(musername) && !TextUtils.isEmpty(muserpass)) {
+                getDataFromNet(musername, muserpass);
+            } else {
+                toastUtils.showLong(this, "账号或者密码为空");
+            }
+
+        } else if (i == R.id.pass_hide) {
+            mloginfamerpass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            passshow.setVisibility(View.VISIBLE);
+            passhide.setVisibility(View.GONE);
+
+        } else if (i == R.id.pass_show) {
+            mloginfamerpass.setInputType(InputType.TYPE_CLASS_TEXT);
+            passhide.setVisibility(View.VISIBLE);
+            passshow.setVisibility(View.GONE);
+
+        } else {
         }
 
     }

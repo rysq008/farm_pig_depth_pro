@@ -246,20 +246,21 @@ public class USBMenageActivity extends BaseActivity {
     }
 
     public void onClickView(View view) {
-        switch (view.getId()) {
-            case R.id.she_right_image:
-                if (null == she_xu.getText().toString() || "".equals(she_xu.getText().toString())) {
-                    toastUtils.showLong(AppConfig.getAppContext(), "未填写序列号");
-                } else if (null == she_name.getText().toString() || "".equals(she_name.getText().toString())) {
-                    toastUtils.showLong(AppConfig.getAppContext(), "未填写名字");
-                } else {
-                    addSheXiangTou();
-                }
-                break;
-            case R.id.iv_cancel:
-                finish();
-            default:
-                break;
+        int i = view.getId();
+        if (i == R.id.she_right_image) {
+            if (null == she_xu.getText().toString() || "".equals(she_xu.getText().toString())) {
+                toastUtils.showLong(AppConfig.getAppContext(), "未填写序列号");
+            } else if (null == she_name.getText().toString() || "".equals(she_name.getText().toString())) {
+                toastUtils.showLong(AppConfig.getAppContext(), "未填写名字");
+            } else {
+                addSheXiangTou();
+            }
+
+        } else if (i == R.id.iv_cancel) {
+            finish();
+
+
+        } else {
         }
 
     }

@@ -589,24 +589,23 @@ public class AddPigPicActivity extends BaseActivity {
 
 
     public void onClickView(View view) {
-        switch (view.getId()) {
-            case R.id.btnPersonAndAnimal:
-            case R.id.ll_default:
-                picType = 0;
+        int i = view.getId();
+        if (i == R.id.btnPersonAndAnimal || i == R.id.ll_default) {
+            picType = 0;
 //                llPopup.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.activity_translate_in));
 //                pop.showAtLocation(parentView, Gravity.BOTTOM, 0, 0);
 
-                if (TextUtils.isEmpty(etPigAge.getText())) {
-                    Toast.makeText(getApplicationContext(), "请先填写畜龄。", Toast.LENGTH_SHORT).show();
-                } else {
-                    pigAge = Integer.parseInt(etPigAge.getText().toString().trim());
-                    WeightPicCollectActivity.start(AddPigPicActivity.this);
+            if (TextUtils.isEmpty(etPigAge.getText())) {
+                Toast.makeText(getApplicationContext(), "请先填写畜龄。", Toast.LENGTH_SHORT).show();
+            } else {
+                pigAge = Integer.parseInt(etPigAge.getText().toString().trim());
+                WeightPicCollectActivity.start(AddPigPicActivity.this);
 //                Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 //                //下面这句指定调用相机拍照后的照片存储的路径
 //                takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getApplicationContext(), BuildConfig.APPLICATION_ID + ".provider", tempFile));
 //                startActivityForResult(takeIntent, REQUESTCODE_TAKE);
-                }
-                break;
+            }
+
 //            case R.id.btnbuchongleft:
 //                picType = 1;
 //                llPopup.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.activity_translate_in));
@@ -617,29 +616,28 @@ public class AddPigPicActivity extends BaseActivity {
 //                llPopup.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.activity_translate_in));
 //                pop.showAtLocation(parentView, Gravity.BOTTOM, 0, 0);
 //                break;
-            case R.id.btnCommit:
-                if (SystemClock.elapsedRealtime() - lastClickTime < MIN_CLICK_DELAY_TIME) {
-                    Toast.makeText(AddPigPicActivity.this, "正在处理，请勿连续多次点击！", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                lastClickTime = SystemClock.elapsedRealtime();
+        } else if (i == R.id.btnCommit) {
+            if (SystemClock.elapsedRealtime() - lastClickTime < MIN_CLICK_DELAY_TIME) {
+                Toast.makeText(AddPigPicActivity.this, "正在处理，请勿连续多次点击！", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            lastClickTime = SystemClock.elapsedRealtime();
 //                String buchongLeftstr = tvbuchongleft.getText().toString();
 //                String buchongRightstr = tvbuchongright.getText().toString();
 
-                if (TextUtils.isEmpty(tvPersonAndAnimalpath.getText())) {
-                    Toast.makeText(getApplicationContext(), "请先拍摄死猪照片。", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                addPayInfo();
-                break;
-            case R.id.iv_cancel:
-                finish();
-                break;
-            case R.id.etPigDeathTime:
-                showDatePickerDialog();
-                break;
-            default:
-                break;
+            if (TextUtils.isEmpty(tvPersonAndAnimalpath.getText())) {
+                Toast.makeText(getApplicationContext(), "请先拍摄死猪照片。", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            addPayInfo();
+
+        } else if (i == R.id.iv_cancel) {
+            finish();
+
+        } else if (i == R.id.etPigDeathTime) {
+            showDatePickerDialog();
+
+        } else {
         }
     }
 

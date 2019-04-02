@@ -711,14 +711,14 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
     private final View.OnLongClickListener mOnLongClickListener = new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(final View view) {
-            switch (view.getId()) {
-                case R.id.camera_view:
-                    if (mCameraHandler.isOpened()) {
-                        if (checkPermissionWriteExternalStorage()) {
-                            mCameraHandler.captureStill();
-                        }
-                        return true;
+            int i = view.getId();
+            if (i == R.id.camera_view) {
+                if (mCameraHandler.isOpened()) {
+                    if (checkPermissionWriteExternalStorage()) {
+                        mCameraHandler.captureStill();
                     }
+                    return true;
+                }
             }
             return false;
         }

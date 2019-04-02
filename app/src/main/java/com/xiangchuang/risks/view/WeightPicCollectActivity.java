@@ -253,39 +253,38 @@ public class WeightPicCollectActivity extends BaseActivity implements SensorEven
 
 
     public void onClickView(View view) {
-        switch (view.getId()) {
-            case R.id.spiritwiew:
-                if (btn_upload.getVisibility() == View.VISIBLE || !isCanTakePic) {
-                    return;
-                }
-                if (mSafeToTakePicture) {
-                    mSafeToTakePicture = false;
-                    takePicture();
-                }
-                break;
-            case R.id.btn_upload:
-                if (btn_upload.getVisibility() != View.VISIBLE) {
-                    ToastUtils.getInstance().showShort(this, "请先拍照");
-                    return;
-                }
-                setResultData(mFilePath);
+        int i = view.getId();
+        if (i == R.id.spiritwiew) {
+            if (btn_upload.getVisibility() == View.VISIBLE || !isCanTakePic) {
+                return;
+            }
+            if (mSafeToTakePicture) {
+                mSafeToTakePicture = false;
+                takePicture();
+            }
+
+        } else if (i == R.id.btn_upload) {
+            if (btn_upload.getVisibility() != View.VISIBLE) {
+                ToastUtils.getInstance().showShort(this, "请先拍照");
+                return;
+            }
+            setResultData(mFilePath);
+            finish();
+
+        } else if (i == R.id.btn_finish) {
+            if (btn_upload.getVisibility() == View.VISIBLE) {
+                btn_upload.setVisibility(View.GONE);
+                iv_preview.setVisibility(View.GONE);
+                btn_finish.setImageDrawable(getResources().getDrawable(R.mipmap.iv_round_back));
+            } else {
+                setResultData("");
                 finish();
-                break;
-            case R.id.btn_finish:
-                if (btn_upload.getVisibility() == View.VISIBLE) {
-                    btn_upload.setVisibility(View.GONE);
-                    iv_preview.setVisibility(View.GONE);
-                    btn_finish.setImageDrawable(getResources().getDrawable(R.mipmap.iv_round_back));
-                } else {
-                    setResultData("");
-                    finish();
-                }
-                break;
-            case R.id.camera_surfaceview:
-                CameraUtils.doAutoFocus();
-                break;
-            default:
-                break;
+            }
+
+        } else if (i == R.id.camera_surfaceview) {
+            CameraUtils.doAutoFocus();
+
+        } else {
         }
     }
 

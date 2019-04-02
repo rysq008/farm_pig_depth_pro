@@ -329,23 +329,21 @@ public class DormNextInfoDialog extends Dialog implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.sure:
-              /*  if (SpinnerZhuJuan.getSelectedItem().toString().equals("请选择猪圈") || SpinnerZhuShe.getSelectedItem().toString().equals("请选择猪舍")) {
+        int i = view.getId();
+        if (i == R.id.sure) {/*  if (SpinnerZhuJuan.getSelectedItem().toString().equals("请选择猪圈") || SpinnerZhuShe.getSelectedItem().toString().equals("请选择猪舍")) {
                     Toast.makeText(context, "未选择猪舍/猪圈", Toast.LENGTH_LONG).show();
                 } else {
                     getDataFromNet();
                 }*/
-                editRecoed();
-                getDataFromNet();
-                break;
-            case R.id.cancel:
-                PreferencesUtils.saveKeyValue(Constants.manualcount, "0", AppConfig.getAppContext());
-                PreferencesUtils.saveBooleanValue("isfleg",false,context);
-                cancel();
-                break;
-            default:
-                break;
+            editRecoed();
+            getDataFromNet();
+
+        } else if (i == R.id.cancel) {
+            PreferencesUtils.saveKeyValue(Constants.manualcount, "0", AppConfig.getAppContext());
+            PreferencesUtils.saveBooleanValue("isfleg", false, context);
+            cancel();
+
+        } else {
         }
     }
 

@@ -18,7 +18,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/buttonNoAngle6"
-        android:onClick="dismissListener"
         android:textSize="18sp"
         android:text="OK" />
 </LinearLayout>

@@ -205,97 +205,96 @@ public class CompanyActivity extends BaseActivity {
 
 
     public void onClickView(View view) {
-        switch (view.getId()) {
-            case R.id.addcompany:
-                Bundle bundle = new Bundle();
-                bundle.putBoolean("type", false);
-                goToActivity(AddCompanyActivity.class, bundle);
-                break;
-            case R.id.iv_cancel:
-                finish();
-                break;
-            case R.id.tv_exit:
-                ivSign.setVisibility(View.GONE);
-                pop.showAsDropDown(rl_edit);
-                tvPopExit.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        pop.dismiss();
-                        AlertDialog.Builder builder = new AlertDialog.Builder(CompanyActivity.this)
-                                .setIcon(R.drawable.cowface).setTitle("提示")
-                                .setMessage("退出登录")
-                                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        //如果退出，清空保存的相关状态， 跳转到登录页
-                                        PreferencesUtils.removeAllKey(CompanyActivity.this);
-                                        Intent addIntent = new Intent(CompanyActivity.this, LoginFamerActivity.class);
-                                        startActivity(addIntent);
-                                        finish();
-                                    }
-                                })
-                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
+        int i = view.getId();
+        if (i == R.id.addcompany) {
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("type", false);
+            goToActivity(AddCompanyActivity.class, bundle);
 
-                                    }
-                                });
-                        builder.setCancelable(false);
-                        builder.show();
-                    }
-                });
+        } else if (i == R.id.iv_cancel) {
+            finish();
 
-                tvPopUpdate.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        pop.dismiss();
-                        if(needUpDate){
-                            if(ivSign.getVisibility() == View.VISIBLE){
-                                ivSign.setVisibility(View.GONE);
-                            }
-
-                            AlertDialog.Builder mDialog = new AlertDialog.Builder(CompanyActivity.this);
-                            mDialog.setIcon(R.drawable.cowface);
-                            mDialog.setTitle("版本更新");
-                            mDialog.setMessage(UpdateInformation.upgradeinfo);
-                            mDialog.setCancelable(false);
-                            mDialog.setPositiveButton("马上升级", new DialogInterface.OnClickListener() {
+        } else if (i == R.id.tv_exit) {
+            ivSign.setVisibility(View.GONE);
+            pop.showAsDropDown(rl_edit);
+            tvPopExit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    pop.dismiss();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(CompanyActivity.this)
+                            .setIcon(R.drawable.cowface).setTitle("提示")
+                            .setMessage("退出登录")
+                            .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    ivPopUpdateSign.setVisibility(View.GONE);
-                                    Intent mIntent = new Intent(CompanyActivity.this, AppUpgradeService.class);
-                                    mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    //传递数据
-                                    //mIntent.putExtra("appname", UpdateInformation.appname);
-                                    mIntent.putExtra("mDownloadUrl", UpdateInformation.updateurl);
-                                    mIntent.putExtra("appname", UpdateInformation.appname);
-                                    CompanyActivity.this.startService(mIntent);
+                                    //如果退出，清空保存的相关状态， 跳转到登录页
+                                    PreferencesUtils.removeAllKey(CompanyActivity.this);
+                                    Intent addIntent = new Intent(CompanyActivity.this, LoginFamerActivity.class);
+                                    startActivity(addIntent);
+                                    finish();
                                 }
-                            }).setNegativeButton("稍后再说", new DialogInterface.OnClickListener() {
+                            })
+                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
 
                                 }
-                            }).create().show();
-                        }else{
-                            AlertDialog.Builder mDialog = new AlertDialog.Builder(CompanyActivity.this);
-                            mDialog.setIcon(R.drawable.cowface);
-                            mDialog.setTitle("提示");
-                            mDialog.setMessage("当前已是最新版本");
-                            mDialog.setCancelable(false);
-                            mDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            }).create().show();
+                            });
+                    builder.setCancelable(false);
+                    builder.show();
+                }
+            });
+
+            tvPopUpdate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    pop.dismiss();
+                    if (needUpDate) {
+                        if (ivSign.getVisibility() == View.VISIBLE) {
+                            ivSign.setVisibility(View.GONE);
                         }
+
+                        AlertDialog.Builder mDialog = new AlertDialog.Builder(CompanyActivity.this);
+                        mDialog.setIcon(R.drawable.cowface);
+                        mDialog.setTitle("版本更新");
+                        mDialog.setMessage(UpdateInformation.upgradeinfo);
+                        mDialog.setCancelable(false);
+                        mDialog.setPositiveButton("马上升级", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ivPopUpdateSign.setVisibility(View.GONE);
+                                Intent mIntent = new Intent(CompanyActivity.this, AppUpgradeService.class);
+                                mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                //传递数据
+                                //mIntent.putExtra("appname", UpdateInformation.appname);
+                                mIntent.putExtra("mDownloadUrl", UpdateInformation.updateurl);
+                                mIntent.putExtra("appname", UpdateInformation.appname);
+                                CompanyActivity.this.startService(mIntent);
+                            }
+                        }).setNegativeButton("稍后再说", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+
+                            }
+                        }).create().show();
+                    } else {
+                        AlertDialog.Builder mDialog = new AlertDialog.Builder(CompanyActivity.this);
+                        mDialog.setIcon(R.drawable.cowface);
+                        mDialog.setTitle("提示");
+                        mDialog.setMessage("当前已是最新版本");
+                        mDialog.setCancelable(false);
+                        mDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).create().show();
                     }
-                });
-                break;
-            default:
-                break;
+                }
+            });
+
+        } else {
         }
 
     }

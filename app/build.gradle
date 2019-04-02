@@ -1,13 +1,14 @@
 apply plugin: 'com.android.application'
+//apply plugin: 'com.android.library'
 
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 27
     //    luolucode
     defaultConfig {
         applicationId "com.xiangchuangtec.luolu.animalcounter"
         minSdkVersion 21
-        targetSdkVersion 26
+        targetSdkVersion 27
         //release versionCode 1100
         versionCode 1112
         versionName "1.112"
@@ -76,17 +77,17 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     //noinspection GradleCompatible
-    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'junit:junit:4.12'
     implementation 'com.android.support.test:runner:1.0.1'
     implementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     //    luolu
-    implementation 'com.android.support:support-v4:26.1.0'
+    implementation 'com.android.support:support-v4:27.1.1'
     implementation 'org.tensorflow:tensorflow-android:1.6.0'
     implementation 'io.fotoapparat.fotoapparat:library:2.2.0'
     //noinspection GradleCompatible
-    implementation 'com.android.support:design:27.0.2'
+    implementation 'com.android.support:design:27.1.1'
     implementation 'com.squareup.okhttp3:okhttp:3.9.1'
     implementation 'com.google.code.gson:gson:2.3'
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
@@ -104,7 +105,7 @@ dependencies {
     implementation 'com.github.GrenderG:Toasty:1.3.0'
     implementation 'com.hjq:xxpermissions:5.0'
     //noinspection GradleCompatible
-    implementation 'com.android.support:support-v13:27.0.2'
+    implementation 'com.android.support:support-v13:27.1.1'
     implementation files('libs/classes.jar')
     implementation 'com.zhy:okhttputils:2.6.2'
     debugImplementation "io.objectbox:objectbox-android-objectbrowser:$objectboxVersion"
@@ -112,19 +113,19 @@ dependencies {
     implementation 'cn.leancloud.android:avoscloud-sdk:4.7.9'
     /*start uplibrary*/
     // parse json
-    compile 'com.google.code.gson:gson:2.3'
+    implementation 'com.google.code.gson:gson:2.3'
     // okhttp
-    compile 'com.squareup.okhttp3:okhttp:3.2.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.2.0'
     // okhttp log controller
-    compile 'com.squareup.okhttp3:logging-interceptor:3.0.1'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.0.1'
     // image load library
-    compile 'com.github.bumptech.glide:glide:3.7.0'
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
     // green dao library
-    compile 'org.greenrobot:greendao:2.2.0'
+    implementation 'org.greenrobot:greendao:2.2.0'
     /*end uplibrary*/
     /*start usb camera*/
-    compile "com.android.support:support-annotations:${supportLibVersion}"
-    compile("com.serenegiant:common:${commonLibVersion}") {
+    implementation "com.android.support:support-annotations:${supportLibVersion}"
+    implementation("com.serenegiant:common:${commonLibVersion}") {
         exclude module: 'support-v4'
     }
     /*end usb camera*/

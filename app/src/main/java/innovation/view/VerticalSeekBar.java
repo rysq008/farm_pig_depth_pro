@@ -7,7 +7,7 @@ import android.view.MotionEvent;
 import android.widget.SeekBar;
 
 
-public class VerticalSeekBar extends SeekBar {
+public class VerticalSeekBar extends android.support.v7.widget.AppCompatSeekBar {
 
     public VerticalSeekBar(Context context, AttributeSet attrs, int defStyle)
     {

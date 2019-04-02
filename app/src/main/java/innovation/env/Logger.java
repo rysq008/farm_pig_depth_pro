@@ -15,6 +15,7 @@ limitations under the License.
 
 package innovation.env;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 
 import java.util.HashSet;
@@ -23,6 +24,7 @@ import java.util.Set;
 /**
  * Wrapper for the platform log function, allows convenient message prefixing and log disabling.
  */
+@SuppressLint("LogTagMismatch")
 public final class Logger {
   private static final String DEFAULT_TAG = "tensorflow";
   private static final int DEFAULT_MIN_LOG_LEVEL = Log.DEBUG;
@@ -153,6 +155,7 @@ public final class Logger {
     }
   }
 
+  @SuppressLint("LogTagMismatch")
   public void i(final String format, final Object... args) {
     if (isLoggable(Log.INFO)) {
       Log.i(tag, toMessage(format, args));

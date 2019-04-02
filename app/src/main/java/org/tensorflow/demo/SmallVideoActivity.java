@@ -646,91 +646,88 @@ public class SmallVideoActivity extends AppCompatActivity implements SurfaceHold
 
         float downY = 0;
 
-        switch (v.getId()) {
-            case R.id.main_press_control: {
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN:
-                        if (ex > left && ex < right) {
-                            mProgressBar.setCancel(false);
-                            //显示上滑取消
-                            mTvTip.setVisibility(View.VISIBLE);
-                            mTvTip.setText("↑ 上滑取消");
-                            //记录按下的Y坐标
-                            downY = ey;
-                            // TODO: 2016/10/20 开始录制视频, 进度条开始走
-                            mProgressBar.setVisibility(View.VISIBLE);
-                            //开始录制
-                            Toast.makeText(this, "开始录制", Toast.LENGTH_SHORT).show();
+        int i = v.getId();
+        if (i == R.id.main_press_control) {
+            switch (action) {
+                case MotionEvent.ACTION_DOWN:
+                    if (ex > left && ex < right) {
+                        mProgressBar.setCancel(false);
+                        //显示上滑取消
+                        mTvTip.setVisibility(View.VISIBLE);
+                        mTvTip.setText("↑ 上滑取消");
+                        //记录按下的Y坐标
+                        downY = ey;
+                        // TODO: 2016/10/20 开始录制视频, 进度条开始走
+                        mProgressBar.setVisibility(View.VISIBLE);
+                        //开始录制
+                        Toast.makeText(this, "开始录制", Toast.LENGTH_SHORT).show();
 
 
-                            mProgressThread = new Thread() {
-                                @Override
-                                public void run() {
-                                    super.run();
-                                    try {
-                                        mProgress = 0;
-                                        isRunning = true;
-                                        while (isRunning) {
-                                            mProgress++;
-                                            mHandler.obtainMessage(0).sendToTarget();
-                                            Thread.sleep(20);
-                                        }
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
+                        mProgressThread = new Thread() {
+                            @Override
+                            public void run() {
+                                super.run();
+                                try {
+                                    mProgress = 0;
+                                    isRunning = true;
+                                    while (isRunning) {
+                                        mProgress++;
+                                        mHandler.obtainMessage(0).sendToTarget();
+                                        Thread.sleep(20);
                                     }
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
                                 }
-                            };
+                            }
+                        };
 
-                            mProgressThread.start();
-                            startRecord();
-                            ret = true;
+                        mProgressThread.start();
+                        startRecord();
+                        ret = true;
+                    }
+
+                    break;
+                case MotionEvent.ACTION_UP:
+                    if (ex > left && ex < right) {
+                        mTvTip.setVisibility(View.INVISIBLE);
+                        mProgressBar.setVisibility(View.INVISIBLE);
+                        //判断是否为录制结束, 或者为成功录制(时间过短)
+                        if (!isCancel) {
+                            if (mProgress < 50) {
+                                //时间太短不保存
+                                //stopRecordUnSave();
+                                Toast.makeText(this, "时间太短", Toast.LENGTH_SHORT).show();
+                                break;
+                            }
+                            //停止录制
+                            stopRecordSave();
+                        } else {
+                            //现在是取消状态,不保存
+                            stopRecordUnSave();
+                            isCancel = false;
+                            Toast.makeText(this, "取消录制", Toast.LENGTH_SHORT).show();
+                            mProgressBar.setCancel(false);
                         }
 
-                        break;
-                    case MotionEvent.ACTION_UP:
+                        ret = false;
+                    }
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    if (mProgress > 50) {
                         if (ex > left && ex < right) {
-                            mTvTip.setVisibility(View.INVISIBLE);
-                            mProgressBar.setVisibility(View.INVISIBLE);
-                            //判断是否为录制结束, 或者为成功录制(时间过短)
-                            if (!isCancel) {
-                                if (mProgress < 50) {
-                                    //时间太短不保存
-                                    //stopRecordUnSave();
-                                    Toast.makeText(this, "时间太短", Toast.LENGTH_SHORT).show();
-                                    break;
-                                }
-                                //停止录制
-                                stopRecordSave();
-                            } else {
-                                //现在是取消状态,不保存
-                                stopRecordUnSave();
-                                isCancel = false;
-                                Toast.makeText(this, "取消录制", Toast.LENGTH_SHORT).show();
-                                mProgressBar.setCancel(false);
-                            }
-
-                            ret = false;
-                        }
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        if (mProgress > 50){
-                            if (ex > left && ex < right) {
-                                float currentY = event.getY();
-                                if (downY - currentY > 10) {
-                                    isCancel = true;
-                                    mProgressBar.setCancel(true);
-                                }
+                            float currentY = event.getY();
+                            if (downY - currentY > 10) {
+                                isCancel = true;
+                                mProgressBar.setCancel(true);
                             }
                         }
-                        break;
-                    default:
-                        break;
-                }
+                    }
+                    break;
+                default:
+                    break;
             }
-            break;
-            default:
-                break;
 
+        } else {
         }
         return ret;
     }

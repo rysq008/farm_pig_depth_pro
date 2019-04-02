@@ -676,28 +676,27 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.record_control:
-
-                Log.e(TAG, "onClickView: " + lastClickTime);
-                if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME) {
-                    return;
-                }
-                lastClickTime = System.currentTimeMillis();
-                Log.e(TAG, "onClickView:ok " + lastClickTime);
-                mRecordControl.setClickable(false);
-                if (mIsRecordingVideo) {
-                    stopRecordingVideo(false);
-                    Global.VIDEO_PROCESS = false;
+        int i = view.getId();
+        if (i == R.id.record_control) {
+            Log.e(TAG, "onClickView: " + lastClickTime);
+            if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME) {
+                return;
+            }
+            lastClickTime = System.currentTimeMillis();
+            Log.e(TAG, "onClickView:ok " + lastClickTime);
+            mRecordControl.setClickable(false);
+            if (mIsRecordingVideo) {
+                stopRecordingVideo(false);
+                Global.VIDEO_PROCESS = false;
                     /*try {
 
                         mMediaRecorder.reset();
                     } catch (Exception e) {
                         Log.i("停止视频录制", e.toString());
                     }*/
-                    collectNumberHandler.sendEmptyMessage(1);
-                } else {
-                    showGuideInformation();
+                collectNumberHandler.sendEmptyMessage(1);
+            } else {
+                showGuideInformation();
 //                    try {
 //                        Global.VIDEO_PROCESS = true;
 //                        tmieVideoStart = System.currentTimeMillis();
@@ -706,49 +705,48 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
 //                        Log.e(TAG, "record_control_IOException: " + e.toString());
 //                        e.printStackTrace();
 //                    }
-                }
-                break;
-            case R.id.record_pause:
-                stopRecordingVideo(false);
-                Global.VIDEO_PROCESS = false;
+            }
 
-                mRecordPause.setVisibility(View.GONE);
+        } else if (i == R.id.record_pause) {
+            stopRecordingVideo(false);
+            Global.VIDEO_PROCESS = false;
 
-                try {
-                    TimerTask timerTask = new TimerTask() {
-                        @Override
-                        public void run() {
-                            collectNumberHandler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        mMediaRecorder.stop();
-                                    } catch (IllegalStateException e) {
-                                        Log.e(TAG, " mMediaRecorder.stop:Exception " + e);
-                                        // TODO 如果当前java状态和jni里面的状态不一致，
-                                        //e.printStackTrace();
-                                        mMediaRecorder = null;
-                                        mMediaRecorder = new MediaRecorder();
-                                    } catch (RuntimeException e){
-                                        Log.e(TAG, " mMediaRecorder.stop:Exception " + e);
-                                        // TODO 如果当前java状态和jni里面的状态不一致，
-                                        //e.printStackTrace();
-                                        mMediaRecorder = null;
-                                        mMediaRecorder = new MediaRecorder();
-                                    }
-                                    mMediaRecorder.reset();
+            mRecordPause.setVisibility(View.GONE);
+
+            try {
+                TimerTask timerTask = new TimerTask() {
+                    @Override
+                    public void run() {
+                        collectNumberHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    mMediaRecorder.stop();
+                                } catch (IllegalStateException e) {
+                                    Log.e(TAG, " mMediaRecorder.stop:Exception " + e);
+                                    // TODO 如果当前java状态和jni里面的状态不一致，
+                                    //e.printStackTrace();
+                                    mMediaRecorder = null;
+                                    mMediaRecorder = new MediaRecorder();
+                                } catch (RuntimeException e) {
+                                    Log.e(TAG, " mMediaRecorder.stop:Exception " + e);
+                                    // TODO 如果当前java状态和jni里面的状态不一致，
+                                    //e.printStackTrace();
+                                    mMediaRecorder = null;
+                                    mMediaRecorder = new MediaRecorder();
                                 }
-                            });
-                        }
-                    };
-                    new Timer().schedule(timerTask, 30);
-                } catch (Exception e) {
-                    Log.e("-----停止视频录制-----------", "---->>>>>>>>>" + e);
-                    e.printStackTrace();
-                }
-                break;
-            default:
-                break;
+                                mMediaRecorder.reset();
+                            }
+                        });
+                    }
+                };
+                new Timer().schedule(timerTask, 30);
+            } catch (Exception e) {
+                Log.e("-----停止视频录制-----------", "---->>>>>>>>>" + e);
+                e.printStackTrace();
+            }
+
+        } else {
         }
     }
 

@@ -179,22 +179,19 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
         iv_cancel.setOnClickListener(this);
 
         certificateTypeRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            switch (checkedId) {
-                case R.id.id_card_radio_button:
-                    certificateType = 1;
-                    idCardNegativePhotoConstraintLayout.setVisibility(View.VISIBLE);
-                    tvIdPositive.setText(getString(R.string.idPostive));
-                    //更新照片中文字
-                    break;
-                case R.id.id_business_licens:
-                    certificateType = 2;
-                    idCardNegativePhotoConstraintLayout.setVisibility(View.INVISIBLE);
-                    tvIdPositive.setText(R.string.businessLicense);
-                    //更新照片中文字
-                    break;
+            if (checkedId == R.id.id_card_radio_button) {
+                certificateType = 1;
+                idCardNegativePhotoConstraintLayout.setVisibility(View.VISIBLE);
+                tvIdPositive.setText(getString(R.string.idPostive));
+                //更新照片中文字
 
-                default:
-                    break;
+            } else if (checkedId == R.id.id_business_licens) {
+                certificateType = 2;
+                idCardNegativePhotoConstraintLayout.setVisibility(View.INVISIBLE);
+                tvIdPositive.setText(R.string.businessLicense);
+                //更新照片中文字
+
+            } else {
             }
         });
 
@@ -290,131 +287,129 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn_idcard_zheng_upload:
-                photograph("idcard_zheng");
-                break;
-            case R.id.btn_idcard_fan_upload:
-                photograph("idcard_fan");
-                break;
-            case R.id.btn_bank_upload:
-                photograph("bank");
-                break;
-            case R.id.btn_wancheng:
-                //&& !isPhone(tv_baodan_tel.getText().toString().trim())
-                if (!isMobileNO(tv_baodan_tel.getText().toString().trim())) {
-                    Toast.makeText(getApplicationContext(), "联系方式填写有误", Toast.LENGTH_SHORT).show();
+        int i = v.getId();
+        if (i == R.id.btn_idcard_zheng_upload) {
+            photograph("idcard_zheng");
+
+        } else if (i == R.id.btn_idcard_fan_upload) {
+            photograph("idcard_fan");
+
+        } else if (i == R.id.btn_bank_upload) {
+            photograph("bank");
+
+        } else if (i == R.id.btn_wancheng) {//&& !isPhone(tv_baodan_tel.getText().toString().trim())
+            if (!isMobileNO(tv_baodan_tel.getText().toString().trim())) {
+                Toast.makeText(getApplicationContext(), "联系方式填写有误", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+
+            if ("".equals(tv_qiyename.getText().toString())) {
+                toastUtils.showLong(this, "企业名称为空");
+                return;
+            }
+            if (isEmo(tv_qiyename.getText().toString())) {
+                Toast.makeText(AddCompanyActivity.this, "企业名称不能包含特殊字符", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+
+            if ("".equals(tvBaodanPeople.getText().toString())) {
+                toastUtils.showLong(this, "企业负责人为空");
+                return;
+            }
+            if (isEmo(tvBaodanPeople.getText().toString())) {
+                Toast.makeText(AddCompanyActivity.this, "企业负责人名不能包含特殊字符", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+
+            if (certificateType == 1) {
+                String strIDcard = IDCardValidate.validateIDcardNumber(tvBaodanIdcard.getText().toString().trim(), true);
+                if ("".equals(tvBaodanIdcard.getText().toString())) {
+                    toastUtils.showLong(this, "身份证号为空");
                     return;
                 }
-
-
-                if ("".equals(tv_qiyename.getText().toString())) {
-                    toastUtils.showLong(this, "企业名称为空");
+                if (!(strIDcard.length() == 15 || strIDcard.length() == 18)) {
+                    Toast.makeText(getApplicationContext(), strIDcard, Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (isEmo(tv_qiyename.getText().toString())) {
-                    Toast.makeText(AddCompanyActivity.this, "企业名称不能包含特殊字符", Toast.LENGTH_LONG).show();
+            } else if (certificateType == 2) {
+
+                if ("".equals(tvBaodanIdcard.getText().toString())) {
+                    toastUtils.showLong(this, "营业执照号为空");
                     return;
                 }
-
-
-                if ("".equals(tvBaodanPeople.getText().toString())) {
-                    toastUtils.showLong(this, "企业负责人为空");
+                if (!isLicense(tvBaodanIdcard.getText().toString().trim())) {
+                    Toast.makeText(getApplicationContext(), "请输入正确的营业执照号码", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (isEmo(tvBaodanPeople.getText().toString())) {
-                    Toast.makeText(AddCompanyActivity.this, "企业负责人名不能包含特殊字符", Toast.LENGTH_LONG).show();
+            }
+
+            if (certificateType == 1) {
+                if ("".equals(str_idcard_zheng.trim())) {
+                    Toast.makeText(AddCompanyActivity.this, "请上传身份证正面照片", Toast.LENGTH_LONG).show();
+                    return;
+                } else if ("".equals(str_idcard_fan.trim())) {
+                    Toast.makeText(AddCompanyActivity.this, "请上传身份证反面照片", Toast.LENGTH_LONG).show();
                     return;
                 }
-
-
-                if (certificateType == 1) {
-                    String strIDcard = IDCardValidate.validateIDcardNumber(tvBaodanIdcard.getText().toString().trim(), true);
-                    if ("".equals(tvBaodanIdcard.getText().toString())) {
-                        toastUtils.showLong(this, "身份证号为空");
-                        return;
-                    }
-                    if (!(strIDcard.length() == 15 || strIDcard.length() == 18)) {
-                        Toast.makeText(getApplicationContext(), strIDcard, Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                } else if (certificateType == 2) {
-
-                    if ("".equals(tvBaodanIdcard.getText().toString())) {
-                        toastUtils.showLong(this, "营业执照号为空");
-                        return;
-                    }
-                    if (!isLicense(tvBaodanIdcard.getText().toString().trim())) {
-                        Toast.makeText(getApplicationContext(), "请输入正确的营业执照号码", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                }
-
-                if (certificateType == 1) {
-                    if ("".equals(str_idcard_zheng.trim())) {
-                        Toast.makeText(AddCompanyActivity.this, "请上传身份证正面照片", Toast.LENGTH_LONG).show();
-                        return;
-                    } else if ("".equals(str_idcard_fan.trim())) {
-                        Toast.makeText(AddCompanyActivity.this, "请上传身份证反面照片", Toast.LENGTH_LONG).show();
-                        return;
-                    }
-                } else if (certificateType == 2) {
-                    if ("".equals(str_idcard_zheng.trim())) {
-                        Toast.makeText(AddCompanyActivity.this, "请上传营业执照正面照片", Toast.LENGTH_LONG).show();
-                        return;
-                    }
-                }
-
-                if ("".equals(tvBaodanOpenbank.getText().toString())) {
-                    toastUtils.showLong(this, "开户行名字为空");
+            } else if (certificateType == 2) {
+                if ("".equals(str_idcard_zheng.trim())) {
+                    Toast.makeText(AddCompanyActivity.this, "请上传营业执照正面照片", Toast.LENGTH_LONG).show();
                     return;
                 }
-                if (isEmo(tvBaodanOpenbank.getText().toString())) {
-                    Toast.makeText(AddCompanyActivity.this, "开户行名称不能包含特殊字符", Toast.LENGTH_LONG).show();
-                    return;
-                }
+            }
+
+            if ("".equals(tvBaodanOpenbank.getText().toString())) {
+                toastUtils.showLong(this, "开户行名字为空");
+                return;
+            }
+            if (isEmo(tvBaodanOpenbank.getText().toString())) {
+                Toast.makeText(AddCompanyActivity.this, "开户行名称不能包含特殊字符", Toast.LENGTH_LONG).show();
+                return;
+            }
 
 
-                if ("".equals(tvBaodanBankNum.getText().toString())) {
-                    toastUtils.showLong(this, "银行账户为空");
-                    return;
-                }
-                if (str_bank.equals("")) {
-                    Toast.makeText(getApplicationContext(), "请上传银行卡正面照片", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+            if ("".equals(tvBaodanBankNum.getText().toString())) {
+                toastUtils.showLong(this, "银行账户为空");
+                return;
+            }
+            if (str_bank.equals("")) {
+                Toast.makeText(getApplicationContext(), "请上传银行卡正面照片", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-                if ("".equals(tv_baodan_tel.getText().toString())) {
-                    toastUtils.showLong(this, "联系方式为空");
-                    return;
-                }
+            if ("".equals(tv_baodan_tel.getText().toString())) {
+                toastUtils.showLong(this, "联系方式为空");
+                return;
+            }
 
 //                if (!isMobileNO(tv_baodan_tel.getText().toString().trim()) && !isPhone(tv_baodan_tel.getText().toString().trim())) {
 //                    Toast.makeText(getApplicationContext(), "联系方式填写有误", Toast.LENGTH_SHORT).show();
 //                    return;
 //                }
 
-                if ("".equals(tvBaodanAddress.getText().toString())) {
-                    toastUtils.showLong(this, "企业地址为空");
-                    return;
-                }
-                if (isEmo(tvBaodanAddress.getText().toString())) {
-                    Toast.makeText(AddCompanyActivity.this, "企业地址不能包含特殊字符", Toast.LENGTH_LONG).show();
-                    return;
-                }
+            if ("".equals(tvBaodanAddress.getText().toString())) {
+                toastUtils.showLong(this, "企业地址为空");
+                return;
+            }
+            if (isEmo(tvBaodanAddress.getText().toString())) {
+                Toast.makeText(AddCompanyActivity.this, "企业地址不能包含特殊字符", Toast.LENGTH_LONG).show();
+                return;
+            }
 
-                if ("".equals(qiyepassword.getText().toString())) {
-                    toastUtils.showLong(this, "密码为空");
-                    return;
-                }
-                saveMessageFromNet();
+            if ("".equals(qiyepassword.getText().toString())) {
+                toastUtils.showLong(this, "密码为空");
+                return;
+            }
+            saveMessageFromNet();
 
-                break;
-            case R.id.iv_cancel:
-                finish();
-                break;
-            default:
-                break;
+
+        } else if (i == R.id.iv_cancel) {
+            finish();
+
+        } else {
         }
     }
 

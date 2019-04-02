@@ -208,12 +208,11 @@ public class ShowPollingActivity_new extends BaseActivity {
 
 
     public void onClickView(View view) {
-        switch (view.getId()) {
-            case R.id.iv_cancel:
-                finish();
-                break;
-            default:
-                break;
+        int i = view.getId();
+        if (i == R.id.iv_cancel) {
+            finish();
+
+        } else {
         }
 
     }

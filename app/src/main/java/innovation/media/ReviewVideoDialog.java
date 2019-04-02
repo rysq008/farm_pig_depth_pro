@@ -76,23 +76,22 @@ public class ReviewVideoDialog extends Dialog {
         public void onItemClick(int position , View v) {
             CaptureImageItem item = videoList.get(position);
             String path = item.getUrl();
-            switch (v.getId()){
-                case R.id.video_view:
-                    Log.d(TAG, "position====:" + position);
-                    if (mShowVideoDialog == null)
-                        initVideoDialog();
-                    mShowVideoDialog.updateView(path);
-                    mShowVideoDialog.show();
-                    break;
+            int i = v.getId();
+            if (i == R.id.video_view) {
+                Log.d(TAG, "position====:" + position);
+                if (mShowVideoDialog == null)
+                    initVideoDialog();
+                mShowVideoDialog.updateView(path);
+                mShowVideoDialog.show();
 
-                case R.id.video_del:
-                    Log.d(TAG, "del position====:" + position);
-                    //删除内存中对应文件
-                    FileUtils.deleteFile(path);
-                    //更新列表
-                    videoList.remove(position);
-                    myAdapter.notifyDataSetChanged();
-                    break;
+            } else if (i == R.id.video_del) {
+                Log.d(TAG, "del position====:" + position);
+                //删除内存中对应文件
+                FileUtils.deleteFile(path);
+                //更新列表
+                videoList.remove(position);
+                myAdapter.notifyDataSetChanged();
+
             }
         }
     };

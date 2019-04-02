@@ -217,15 +217,12 @@ public class CounterActivity_new extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.edit_back:
-                dialogcreate.dismiss();
-                break;
-            case R.id.edit_end:
+        int i = v.getId();
+        if (i == R.id.edit_back) {
+            dialogcreate.dismiss();
 
-                break;
-            default:
-                break;
+        } else if (i == R.id.edit_end) {
+        } else {
         }
 
     }

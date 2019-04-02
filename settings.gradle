@@ -1,2 +1,1 @@
-include ':app', ':libuvccamera', ':usbCameraCommon', ':uplibrary'
-include ':openCVLibrary331'
+include ':app', ':mytestone'
