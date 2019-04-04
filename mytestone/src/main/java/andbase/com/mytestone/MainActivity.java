@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.xiangchuang.risks.view.LoginFamerActivity;
+import com.xiangchuang.risks.view.LoginFamerServer;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,5 +21,7 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "nb", Toast.LENGTH_LONG).show();
         Intent it = new Intent(this, LoginFamerActivity.class);
         startActivity(it);
+//        Intent it = new Intent(this, LoginFamerServer.class);
+//        startService(it);
     }
 }

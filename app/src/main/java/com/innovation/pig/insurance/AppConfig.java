@@ -27,7 +27,9 @@ import com.innovation.pig.insurance.netutils.PreferencesUtils;
 import net.gotev.uploadservice.UploadService;
 import net.gotev.uploadservice.okhttp.OkHttpStack;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -183,7 +185,7 @@ public class AppConfig {
         });
 
         boxStore = MyObjectBox.builder().androidContext(app).build();
-        if (BuildConfig.DEBUG)
+//        if (BuildConfig.DEBUG)
             new AndroidObjectBrowser(boxStore).start(app);
     }
 

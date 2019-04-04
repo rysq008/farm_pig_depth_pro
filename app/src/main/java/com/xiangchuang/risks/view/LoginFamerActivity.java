@@ -4,9 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -21,16 +19,15 @@ import android.widget.Toast;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
-import com.xiangchuang.risks.base.BaseActivity;
-import com.xiangchuang.risks.utils.AVOSCloudUtils;
-import com.xiangchuang.risks.utils.AlertDialogManager;
-import com.xiangchuang.risks.utils.AppManager;
-import com.xiangchuang.risks.utils.ShareUtils;
 import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
 import com.innovation.pig.insurance.netutils.Constants;
 import com.innovation.pig.insurance.netutils.OkHttp3Util;
 import com.innovation.pig.insurance.netutils.PreferencesUtils;
+import com.xiangchuang.risks.base.BaseActivity;
+import com.xiangchuang.risks.utils.AVOSCloudUtils;
+import com.xiangchuang.risks.utils.AlertDialogManager;
+import com.xiangchuang.risks.utils.AppManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,12 +37,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
-import butterknife.OnClick;
-import innovation.entry.InnApplication;
 import innovation.network_status.NetworkUtil;
 import innovation.upload.UploadService;
-import innovation.utils.HttpUtils;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -96,11 +89,74 @@ public class LoginFamerActivity extends BaseActivity {
                 onClickView((View) v);
             }
         });
+        showProgressDialog(this);
+//        mloginfameruserid.setText("15000000001");
+//        mloginfamerpass.setText("123456");
+//        mloginfamerlogin.performClick();
     }
 
     @Override
     protected int getLayoutId() {
         return R.layout.activity_login_famer;
+    }
+
+    public void requestPermission() {
+        XXPermissions.with(LoginFamerActivity.this)
+                //.constantRequest() //可设置被拒绝后继续申请，直到用户授权或者永久拒绝
+                .permission(Permission.Group.LOCATION) //不指定权限则自动获取清单中的危险权限
+                .permission(Permission.READ_PHONE_STATE)
+                .permission(Permission.Group.STORAGE)
+                .request(new OnPermission() {
+                    @Override
+                    public void hasPermission(List<String> granted, boolean isAll) {
+                        if (isAll) {
+                            // PreferencesUtils.saveBooleanValue("isallow", true, WelcomeActivity.this);
+                            // toastUtils.showLong(AppConfig.getAppContext(), "获取权限成功");
+                            if (Build.VERSION.SDK_INT > 9) {
+                                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                                StrictMode.setThreadPolicy(policy);
+                            }
+                            if (PreferencesUtils.getBooleanValue(Constants.ISLOGIN, AppConfig.getAppContext())) {
+                                String type = PreferencesUtils.getStringValue(Constants.companyfleg, AppConfig.getAppContext());
+                                if (type.equals("1")) {
+                                    goToActivity(CompanyActivity.class, null);
+                                    finish();
+                                } else if (type.equals("2")) {
+                                    goToActivity(SelectFunctionActivity_new.class, null);
+                                    finish();
+                                }
+                            } else {
+                                if (!NetworkUtil.isNetworkConnect(LoginFamerActivity.this)) {
+                                    Toast.makeText(LoginFamerActivity.this, "断网了，请联网后重试。", Toast.LENGTH_SHORT).show();
+                                    finish();
+                                    return;
+                                }
+                                getDataFromNet("15000000001", "123456");
+                            }
+                        } else {
+
+                            Toast.makeText(LoginFamerActivity.this, "is not all permission", Toast.LENGTH_LONG).show();
+                            finish();
+                        }
+                    }
+
+                    @Override
+                    public void noPermission(List<String> denied, boolean quick) {
+                        if (quick) {
+                            Toast.makeText(AppConfig.getAppContext(), "被永久拒绝授权，请手动授予权限", Toast.LENGTH_SHORT).show();
+                            //如果是被永久拒绝就跳转到应用权限系统设置页面
+                            XXPermissions.gotoPermissionSettings(AppConfig.getAppContext());
+                            finish();
+                        } else {
+                            Toast.makeText(AppConfig.getAppContext(), "获取权限失败", Toast.LENGTH_SHORT).show();
+//                                        AppManager.getAppManager().AppExit(LoginFamerActivity.this);
+                            //如果是被永久拒绝就跳转到应用权限系统设置页面
+                            XXPermissions.gotoPermissionSettings(AppConfig.getAppContext());
+                            finish();
+                        }
+                    }
+                });
+
     }
 
     @Override
@@ -144,42 +200,18 @@ public class LoginFamerActivity extends BaseActivity {
             }
         }
 
-
-        if (!hasPermission2()) {
+//        if (!hasPermission2())
+//        {
+//        Arrays.asList(Permission.Group.LOCATION,Permission.Group.STORAGE,Permission.READ_PHONE_STATE);
+        if (XXPermissions.isHasPermission(LoginFamerActivity.this, Permission.Group.LOCATION,
+                Permission.Group.STORAGE,
+                new String[]{Permission.READ_PHONE_STATE})) {
+            requestPermission();
+        } else {
             AlertDialogManager.showMessageDialog(LoginFamerActivity.this, "提示", getString(R.string.appwarning), new AlertDialogManager.DialogInterface() {
                 @Override
                 public void onPositive() {
-                    XXPermissions.with(LoginFamerActivity.this)
-                            //.constantRequest() //可设置被拒绝后继续申请，直到用户授权或者永久拒绝
-                            .permission(Permission.Group.LOCATION) //不指定权限则自动获取清单中的危险权限
-                            .permission(Permission.READ_PHONE_STATE)
-                            .request(new OnPermission() {
-                                @Override
-                                public void hasPermission(List<String> granted, boolean isAll) {
-                                    if (isAll) {
-                                        // PreferencesUtils.saveBooleanValue("isallow", true, WelcomeActivity.this);
-                                        // toastUtils.showLong(AppConfig.getAppContext(), "获取权限成功");
-                                        if (Build.VERSION.SDK_INT > 9) {
-                                            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                                            StrictMode.setThreadPolicy(policy);
-                                        }
-                                    }
-                                }
-
-                                @Override
-                                public void noPermission(List<String> denied, boolean quick) {
-                                    if (quick) {
-                                        Toast.makeText(InnApplication.getAppContext(), "被永久拒绝授权，请手动授予权限", Toast.LENGTH_SHORT).show();
-                                        //如果是被永久拒绝就跳转到应用权限系统设置页面
-                                        XXPermissions.gotoPermissionSettings(InnApplication.getAppContext());
-                                        finish();
-                                    } else {
-                                        Toast.makeText(InnApplication.getAppContext(), "获取权限失败", Toast.LENGTH_SHORT).show();
-                                        AppManager.getAppManager().AppExit(LoginFamerActivity.this);
-                                    }
-                                }
-                            });
-
+                    requestPermission();
                 }
 
                 @Override
@@ -187,22 +219,24 @@ public class LoginFamerActivity extends BaseActivity {
                     finish();
                 }
             });
-        } else {
-            //根据保存的标记判断是否登录
-            if (PreferencesUtils.getBooleanValue(Constants.ISLOGIN, AppConfig.getAppContext())) {
-                String type = PreferencesUtils.getStringValue(Constants.companyfleg, AppConfig.getAppContext());
-                if (type.equals("1")) {
-                    goToActivity(CompanyActivity.class, null);
-                    finish();
-                } else if (type.equals("2")) {
-                    goToActivity(SelectFunctionActivity_new.class, null);
-                    finish();
-                }
-            }
         }
-        if (!HttpUtils.isOfficialHost())
-            Toast.makeText(LoginFamerActivity.this, ShareUtils.getHost("host"), Toast.LENGTH_LONG).show();
-        ShareUtils.setUpGlobalHost(LoginFamerActivity.this, passTv);
+//        requestPermission();
+//        } else {
+//            //根据保存的标记判断是否登录
+//            if (PreferencesUtils.getBooleanValue(Constants.ISLOGIN, AppConfig.getAppContext())) {
+//                String type = PreferencesUtils.getStringValue(Constants.companyfleg, AppConfig.getAppContext());
+//                if (type.equals("1")) {
+//                    goToActivity(CompanyActivity.class, null);
+//                    finish();
+//                } else if (type.equals("2")) {
+//                    goToActivity(SelectFunctionActivity_new.class, null);
+//                    finish();
+//                }
+//            }
+//        }
+//        if (!HttpUtils.isOfficialHost())
+//            Toast.makeText(LoginFamerActivity.this, ShareUtils.getHost("host"), Toast.LENGTH_LONG).show();
+//        ShareUtils.setUpGlobalHost(LoginFamerActivity.this, passTv);
     }
 
 
@@ -241,12 +275,12 @@ public class LoginFamerActivity extends BaseActivity {
                             @Override
                             public void noPermission(List<String> denied, boolean quick) {
                                 if (quick) {
-                                    Toast.makeText(InnApplication.getAppContext(), "被永久拒绝授权，请手动授予权限", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(AppConfig.getAppContext(), "被永久拒绝授权，请手动授予权限", Toast.LENGTH_SHORT).show();
                                     //如果是被永久拒绝就跳转到应用权限系统设置页面
-                                    XXPermissions.gotoPermissionSettings(InnApplication.getAppContext());
+                                    XXPermissions.gotoPermissionSettings(AppConfig.getAppContext());
                                     finish();
                                 } else {
-                                    Toast.makeText(InnApplication.getAppContext(), "获取权限失败", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(AppConfig.getAppContext(), "获取权限失败", Toast.LENGTH_SHORT).show();
                                     AppManager.getAppManager().AppExit(LoginFamerActivity.this);
                                 }
                             }
