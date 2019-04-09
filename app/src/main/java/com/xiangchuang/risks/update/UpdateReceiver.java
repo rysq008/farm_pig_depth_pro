@@ -8,8 +8,6 @@ import android.content.Intent;
 import android.os.Environment;
 import android.util.Log;
 
-import com.xiangchuang.risks.view.CompanyActivity;
-import com.xiangchuang.risks.view.SelectFunctionActivity_new;
 import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
 
@@ -96,7 +94,6 @@ public class UpdateReceiver extends BroadcastReceiver {
 
     /**
      * 检查版本更新
-     *
      */
     public void checkVersion() {
         if (UpdateInformation.localVersion < UpdateInformation.serverVersion) {
@@ -121,7 +118,6 @@ public class UpdateReceiver extends BroadcastReceiver {
 
     /**
      * 进行升级
-     *
      */
     private void update() {
         if (UpdateInformation.serverFlag == 1) {
@@ -142,7 +138,6 @@ public class UpdateReceiver extends BroadcastReceiver {
 
     /**
      * 没有新版本
-     *
      */
     private void noNewVersion() {
         mDialog = new AlertDialog.Builder(AppConfig.getActivity());
@@ -160,7 +155,6 @@ public class UpdateReceiver extends BroadcastReceiver {
 
     /**
      * 强制升级 ，如果不点击确定升级，直接退出应用
-     *
      */
     private void forceUpdate() {
         mDialog = new AlertDialog.Builder(AppConfig.getActivity());
@@ -195,10 +189,10 @@ public class UpdateReceiver extends BroadcastReceiver {
 
     /**
      * 正常升级，用户可以选择是否取消升级
-     *
      */
     private void normalUpdate() {
-        needUpDate = true;
+        if ("com.xiangchuangtec.luolu.animalcounter".equals(AppConfig.getAppContext().getPackageName()))
+            needUpDate = true;
 
 //        if(AppConfig.getActivity() instanceof SelectFunctionActivity_new){
 //            ((SelectFunctionActivity_new)AppConfig.getActivity()).setSign();
@@ -232,7 +226,6 @@ public class UpdateReceiver extends BroadcastReceiver {
 
     /**
      * 清理升级文件
-     *
      */
     private void clearUpateFile() {
         File updateDir;

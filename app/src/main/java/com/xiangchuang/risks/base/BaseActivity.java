@@ -14,9 +14,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.xiangchuang.risks.utils.ToastUtils;
 import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
+import com.xiangchuang.risks.utils.ToastUtils;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -55,13 +55,15 @@ public abstract class BaseActivity extends AppCompatActivity {
                 win.setStatusBarColor(Color.TRANSPARENT);
             }
         }*/
+        setTheme(R.style.AppFullScreenTheme);
         toastUtils = new ToastUtils();
+        if(getLayoutId() != 0)
         this.setContentView(this.getLayoutId());//缺少这一行
-       // setContentView(getLayoutId());
-        initView();
+        // setContentView(getLayoutId());
         ButterKnife.bind(this);
         AppConfig.verifyStoragePermissions(this);
         showProgressDialog(this);
+        initView();
         initData();
     }
 
@@ -113,7 +115,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (this.unbinder != null) {
             this.unbinder.unbind();
         }
-        toastUtils=null;
+        toastUtils = null;
         super.onDestroy();
     }
 

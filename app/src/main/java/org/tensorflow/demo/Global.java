@@ -63,5 +63,4 @@ public class Global {
 
     public static boolean dilogIsShowing = false;
 
-
 }

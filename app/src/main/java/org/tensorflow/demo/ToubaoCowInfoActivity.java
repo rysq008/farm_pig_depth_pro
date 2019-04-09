@@ -23,7 +23,6 @@ import android.os.StrictMode;
 import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -51,6 +50,7 @@ import com.amap.api.location.AMapLocationListener;
 import com.google.gson.Gson;
 import com.innovation.pig.insurance.BuildConfig;
 import com.innovation.pig.insurance.R;
+import com.xiangchuang.risks.base.BaseActivity;
 
 import org.tensorflow.demo.env.Logger;
 
@@ -90,7 +90,7 @@ import static innovation.entry.InnApplication.getStringTouboaExtra;
  * COMPANY：InnovationAI
  */
 
-public class ToubaoCowInfoActivity extends AppCompatActivity {
+public class ToubaoCowInfoActivity extends BaseActivity {
 
     private static String TAG = "ToubaoCowInfoActivity";
 
@@ -169,7 +169,7 @@ public class ToubaoCowInfoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_toubao_cow_info);
+//        setContentView(R.layout.activity_toubao_cow_info);
         areaSpinner = (Spinner) findViewById(R.id.areaSpinner);
         area2Spinner = (Spinner) findViewById(R.id.area2Spinner);
         area3Spinner = (Spinner) findViewById(R.id.area3Spinner);
@@ -297,6 +297,16 @@ public class ToubaoCowInfoActivity extends AppCompatActivity {
         // TODO: 2018/8/21 By:LuoLu
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_toubao_cow_info;
+    }
+
+    @Override
+    protected void initData() {
+
     }
 
     @Override

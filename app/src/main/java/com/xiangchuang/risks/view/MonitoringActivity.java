@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.webkit.JsResult;
@@ -20,6 +19,7 @@ import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
 import com.innovation.pig.insurance.netutils.Constants;
 import com.innovation.pig.insurance.netutils.PreferencesUtils;
+import com.xiangchuang.risks.base.BaseActivity;
 
 import innovation.utils.HttpUtils;
 
@@ -28,7 +28,7 @@ import static android.webkit.WebSettings.LOAD_NO_CACHE;
 /**
  * 监控信息
  */
-public class MonitoringActivity extends AppCompatActivity {
+public class MonitoringActivity extends BaseActivity {
 
     private WebView webView;
     private String en_id;
@@ -42,7 +42,7 @@ public class MonitoringActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_monitoring);
+//        setContentView(R.layout.activity_monitoring);
         webView = (WebView) findViewById(R.id.webview);
         progressBar = (ProgressBar)findViewById(R.id.progressbar);
 
@@ -78,6 +78,16 @@ public class MonitoringActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_monitoring;
+    }
+
+    @Override
+    protected void initData() {
+
     }
 
     //WebViewClient主要帮助WebView处理各种通知、请求事件

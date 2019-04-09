@@ -32,7 +32,7 @@ android {
             abiFilters /*"armeabi", "armeabi-v7a", "x86", "mips"*/"armeabi-v7a"
         }
         multiDexEnabled true
-
+        consumerProguardFiles 'proguard-rules.pro'
     }
     aaptOptions { noCompress 'tflite' }
     signingConfigs {
@@ -45,11 +45,13 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
         debug {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
     }
@@ -64,22 +66,22 @@ android {
         checkReleaseBuilds false
         abortOnError false
     }
-    sourceSets {
-        main {
-            java.srcDirs = ['src/main/java', 'src/main/java/2']
-            //  manifest.srcFile 'AndroidManifest.xml'
-            /*  java.srcDirs = ['src']
-            resources.srcDirs = ['src']
-            aidl.srcDirs = ['src']
-            renderscript.srcDirs = ['src']
-            res.srcDirs = ['res']
-            assets.srcDirs = ['assets']*/
-            jniLibs.srcDirs = ['libs']
-
-//            jniLibs.srcDir 'src/main/libs'
-//            jni.srcDirs = []
-        }
-    }
+//    sourceSets {
+//        main {
+//            java.srcDirs = ['src/main/java', 'src/main/java/2']
+//            //  manifest.srcFile 'AndroidManifest.xml'
+//            /*  java.srcDirs = ['src']
+//            resources.srcDirs = ['src']
+//            aidl.srcDirs = ['src']
+//            renderscript.srcDirs = ['src']
+//            res.srcDirs = ['res']
+//            assets.srcDirs = ['assets']*/
+////            jniLibs.srcDirs = ['libs']
+//
+////            jniLibs.srcDir 'src/main/libs'
+////            jni.srcDirs = []
+//        }
+//    }
     compileOptions {
         targetCompatibility JavaVersion.VERSION_1_8
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -166,3 +168,37 @@ dependencies {
     }
 }
 apply plugin: 'io.objectbox'
+
+
+////////// 打包发布 ////////
+//apply plugin: 'maven'
+//
+//ext {
+//    // 从Github上clone下来的项目的本地地址
+//    GITHUB_REPO_PATH = "C:\\Users\\luolu\\Documents\\ScheduleApp"/*"C:\\repos"*/
+//    // api 'com.audient:super_library:1.0.0'
+//    PUBLISH_GROUP_ID = 'com.innovation.aar'
+//    PUBLISH_ARTIFACT_ID = 'pigInsurance'
+//    PUBLISH_VERSION = android.defaultConfig.versionName/*'1.5.3'*/
+//}
+//
+//uploadArchives {
+//    repositories.mavenDeployer {
+//        def deployPath = file(project.GITHUB_REPO_PATH)
+//        repository(url: "file://${deployPath.absolutePath}")
+//        pom.project {
+//            groupId project.PUBLISH_GROUP_ID
+//            artifactId project.PUBLISH_ARTIFACT_ID
+//            version project.PUBLISH_VERSION
+//        }
+//    }
+//}
+//
+//// 源代码一起打包
+//task androidSourcesJar(type: Jar) {
+//    classifier = 'sources'
+//    from android.sourceSets.main.java.sourceFiles
+//}
+//artifacts {
+//    archives androidSourcesJar
+//}

@@ -50,14 +50,12 @@
     <!-- android:hardwareAccelerated="false" -->
     <!-- android:name="com.xiangchuangtec.luolu.animalcounter.AppConfig" -->
     <application
-        android:allowBackup="false"
         android:largeHeap="true"
         android:launchMode="singleInstance"
         android:screenOrientation="portrait"
         android:supportsRtl="true"
-        tools:overrideLibrary="com.innovation.pig.insurance"
-        tools:replace="android:allowBackup">
-
+        android:icon="@drawable/ic_launcher"
+        tools:overrideLibrary="com.innovation.pig.insurance">
         <activity
             android:name="com.innovation.pig.insurance.CounterActivity_new"
             android:configChanges="orientation|keyboardHidden"
@@ -131,7 +129,7 @@
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="${applicationId}.provider"
+            android:authorities="com.xiangchuangtec.luolu.animalcounter.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

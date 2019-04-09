@@ -697,7 +697,7 @@ public class AddPigPicActivity extends BaseActivity {
         mapbody.put("autoWeight", autoWeight);//自动识别返回重量
         mapbody.put("timesFlag", timesFlag);//强制提交信息
 
-        Log.e("mapbody", "mapbody: " + mapbody.toString());
+        Log.e("mMapbody", "mMapbody: " + mapbody.toString());
 
         OkHttp3Util.doPost(Constants.ADD_PAY_INFO, mapbody, null, new Callback() {
             @Override

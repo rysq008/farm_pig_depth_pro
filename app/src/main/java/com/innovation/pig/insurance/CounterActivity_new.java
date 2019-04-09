@@ -24,7 +24,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.RequiresApi;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -43,6 +42,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.bean.RecognitionResult;
 import com.xiangchuang.risks.utils.CommonUtils;
 import com.xiangchuang.risks.utils.CounterHelper;
@@ -92,7 +92,7 @@ import static io.fotoapparat.selector.ResolutionSelectorsKt.highestResolution;
 import static io.fotoapparat.selector.SelectorsKt.firstAvailable;
 
 
-public class CounterActivity_new extends AppCompatActivity implements View.OnClickListener, SurfaceHolder.Callback {
+public class CounterActivity_new extends BaseActivity implements View.OnClickListener, SurfaceHolder.Callback {
     static {
         if (!OpenCVLoader.initDebug()) {
             // Handle initialization error
@@ -268,7 +268,7 @@ public class CounterActivity_new extends AppCompatActivity implements View.OnCli
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_counter_new);
+//        setContentView(R.layout.activity_counter_new);
         mcountname = (TextView) findViewById(R.id.count_name);
         mTotalCountTextView = (TextView) findViewById(R.id.total_count);
         counter_activity = (LinearLayout) findViewById(R.id.counter_activity);
@@ -575,6 +575,11 @@ public class CounterActivity_new extends AppCompatActivity implements View.OnCli
         sbDormNumAndCount = new StringBuilder();
     }
 
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_counter_new;
+    }
+
     private void uploadRecognitionResult() {
         String text = String.format("本次点数采集:\n" +
                         "合计%d圈 %d头 修正后%d头 时长%d秒\n" +
@@ -793,6 +798,11 @@ public class CounterActivity_new extends AppCompatActivity implements View.OnCli
         if (!OpenCVLoader.initDebug()) {
             Log.d("OpenCV", "Internal OpenCV library not found. Using OpenCV Manager for initialization");
         }
+    }
+
+    @Override
+    protected void initData() {
+
     }
 
 

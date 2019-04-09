@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.innovation.pig.insurance.R;
+import com.xiangchuang.risks.base.BaseActivity;
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -26,7 +26,7 @@ import java.net.URL;
 
 import innovation.utils.ThreadPoolProxyFactory;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends BaseActivity implements View.OnClickListener{
 
     private static final int PICK_FILE_REQUEST = 1;
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -41,12 +41,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mysql);
+//        setContentView(R.layout.activity_mysql);
         ivAttachment = (ImageView) findViewById(R.id.ivAttachment);
         bUpload = (Button) findViewById(R.id.b_upload);
         tvFileName = (TextView) findViewById(R.id.tv_file_name);
         ivAttachment.setOnClickListener(this);
         bUpload.setOnClickListener(this);
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_mysql;
+    }
+
+    @Override
+    protected void initData() {
+
     }
 
     @Override

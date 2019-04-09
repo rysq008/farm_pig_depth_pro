@@ -9,7 +9,6 @@ import android.media.MediaRecorder;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -22,6 +21,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.NavBarUtils;
 import com.innovation.pig.insurance.R;
@@ -45,7 +45,7 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 
-public class SmallVideoActivity extends AppCompatActivity implements SurfaceHolder.Callback, View.OnTouchListener, BothWayProgressBar.OnProgressEndListener {
+public class SmallVideoActivity extends BaseActivity implements SurfaceHolder.Callback, View.OnTouchListener, BothWayProgressBar.OnProgressEndListener {
 
     private static final int LISTENER_START = 200;
     private static final String TAG = "MainActivity";
@@ -89,7 +89,7 @@ public class SmallVideoActivity extends AppCompatActivity implements SurfaceHold
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        setContentView(R.layout.activity_small_video);
+//        setContentView(R.layout.activity_small_video);
 
         DisplayMetrics metric = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metric);
@@ -98,7 +98,7 @@ public class SmallVideoActivity extends AppCompatActivity implements SurfaceHold
         initView();
     }
 
-    private void initView() {
+    public void initView() {
 //        int width = getWindowManager().getDefaultDisplay().getWidth();
 ////        float height = (getWindowManager().getDefaultDisplay().getHeight())/4*3;
 ////        if(BuildConfig.DEBUG){
@@ -185,6 +185,11 @@ public class SmallVideoActivity extends AppCompatActivity implements SurfaceHold
     }
 
     @Override
+    protected int getLayoutId() {
+        return R.layout.activity_small_video;
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         Log.d(TAG, "onStart: ");
@@ -194,6 +199,11 @@ public class SmallVideoActivity extends AppCompatActivity implements SurfaceHold
     protected void onResume() {
         super.onResume();
         mStartButton.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    protected void initData() {
+
     }
 
     @Override

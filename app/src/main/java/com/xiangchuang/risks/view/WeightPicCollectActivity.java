@@ -11,33 +11,28 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.innovation.pig.insurance.R;
 import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.utils.ToastUtils;
 import com.xiangchuang.risks.view.camera.CameraSurfaceView;
 import com.xiangchuang.risks.view.camera.CameraUtils;
 import com.xiangchuang.risks.view.camera.ImageUtils;
 import com.xiangchuang.risks.view.camera.SpiritView;
-import com.innovation.pig.insurance.R;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 
-
-import butterknife.OnClick;
 import innovation.utils.PathUtils;
 import innovation.utils.UIUtils;
 import innovation.view.dialog.DialogHelper;
@@ -72,7 +67,7 @@ public class WeightPicCollectActivity extends BaseActivity implements SensorEven
     private int mOrientation;
     private boolean mSafeToTakePicture = true, mGrantedCameraRequested, isCanTakePic;
 
-    public static void start(AppCompatActivity context) {
+    public static void start(Activity context) {
         Intent intent = new Intent(context, WeightPicCollectActivity.class);
         context.startActivityForResult(intent, 1);
     }

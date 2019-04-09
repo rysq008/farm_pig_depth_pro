@@ -45,7 +45,8 @@
             android:id="@+id/rl_edit"
             android:layout_width="50dp"
             android:layout_height="match_parent"
-            android:layout_alignParentEnd="true">
+            android:layout_alignParentEnd="true"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/tv_exit"
@@ -66,7 +67,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_margin="5dp"
                 android:background="@drawable/dian"
-                android:visibility="gone"/>
+                android:visibility="gone" />
         </RelativeLayout>
 
     </RelativeLayout>

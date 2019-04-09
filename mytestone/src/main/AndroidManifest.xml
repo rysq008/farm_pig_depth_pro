@@ -4,9 +4,11 @@
     package="andbase.com.mytestone">
 
     <application
-        android:name="andbase.com.mytestone.MyApp"
+        android:name=".MyApp"
         android:allowBackup="true"
         android:supportsRtl="true"
+        android:label="猪险"
+        android:icon="@drawable/ic_launcher"
         tools:replace="android:allowBackup"
         android:theme="@style/AppTheme">
         <activity android:name="andbase.com.mytestone.MainActivity">

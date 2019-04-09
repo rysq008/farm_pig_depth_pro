@@ -6,6 +6,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
@@ -17,19 +18,17 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.avos.avoscloud.AVOSCloud;
+import com.innovation.pig.insurance.netutils.Constants;
+import com.innovation.pig.insurance.netutils.PreferencesUtils;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.xiangchuang.risks.update.UpdateReceiver;
 import com.xiangchuang.risks.utils.ShareUtils;
 import com.xiangchuang.risks.view.LoginFamerActivity;
-import com.innovation.pig.insurance.netutils.Constants;
-import com.innovation.pig.insurance.netutils.PreferencesUtils;
 
 import net.gotev.uploadservice.UploadService;
 import net.gotev.uploadservice.okhttp.OkHttpStack;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -143,11 +142,11 @@ public class AppConfig {
 //                    Toast.makeText(activity, "------->>"+HttpUtils.baseUrl, Toast.LENGTH_LONG).show();
 //                }
                 AppConfig.activity = activity;
-                if(activity != null && !activity.getClass().getCanonicalName().contains("LoginFamerActivity")){
+                if (activity != null && !activity.getClass().getCanonicalName().contains("LoginFamerActivity")) {
                     GlobalDialogUtils.getNotice(activity.getClass().getCanonicalName(), activity);
                 }
 
-                if(!(activity instanceof LoginFamerActivity)){
+                if (!(activity instanceof LoginFamerActivity)) {
                     isFirst++;
                     doUpDateTask();
                 }
@@ -185,12 +184,24 @@ public class AppConfig {
         });
 
         boxStore = MyObjectBox.builder().androidContext(app).build();
-//        if (BuildConfig.DEBUG)
+        if (isApkInDebug(app))
             new AndroidObjectBrowser(boxStore).start(app);
     }
 
-    private void doUpDateTask(){
-        if(isFirst == 1){
+    /**
+     * 判断当前应用是否是debug状态
+     */
+    public static boolean isApkInDebug(Context context) {
+        try {
+            ApplicationInfo info = context.getApplicationInfo();
+            return (info.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private void doUpDateTask() {
+        if (isFirst == 1) {
             if (activity.getIntent().getFlags() != Intent.FLAG_ACTIVITY_SINGLE_TOP) {
                 if (BuildConfig.DEBUG) {
                     Toast.makeText(activity, "getFlags==" + activity.getIntent().getFlags(), Toast.LENGTH_SHORT).show();
@@ -220,11 +231,11 @@ public class AppConfig {
                     //                                          int[] grantResults)
                     // to handle the case where the user grants the permission. See the documentation
                     // for ActivityCompat#requestPermissions for more details.
-                    query.put("phoneImei",  "");
-                }else {
+                    query.put("phoneImei", "");
+                } else {
                     query.put("phoneImei", phone.getDeviceId() + "");
                 }
-                query.put("version",version);
+                query.put("version", version);
 
                 Set set = query.keySet();
                 for (Object aSet : set) {
@@ -376,11 +387,11 @@ public class AppConfig {
         return versionName;
     }
 
-    public static AppConfig newInstance(){
+    public static AppConfig newInstance() {
         return Holder.appConfig;
     }
 
-    private static class Holder{
+    private static class Holder {
         static AppConfig appConfig = new AppConfig();
     }
 }

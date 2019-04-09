@@ -36,7 +36,7 @@ public class ShareUtils {
     }
 
     public static final String getHost(String key) {
-        return null == preferences ? "http://60.205.209.245:8081/nongxian2/" : preferences.getString(key, "http://60.205.209.245:8081/nongxian2/");
+        return null == preferences ? "http://47.92.167.61:8081/nongxian2/" : preferences.getString(key, "http://47.92.167.61:8081/nongxian2/");
     }
 
     public static final boolean saveHost(String key, String val) {

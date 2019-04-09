@@ -48,6 +48,7 @@ public class Constants {
 //    public static final String BASENEW =  "http://47.92.167.61:8081/nongxian2/app/";
     public static String BASENEW = HttpUtils.baseUrl + "app/";
     public static String LOGINURLNEW = BASENEW + "ftnLogin";
+    public static String AAR_LOGINURLNEW = BASENEW + "ftnAarLogin";
 
     public static String ZHUSHESHOW = BASENEW + "ftnShe/list";
 
@@ -184,10 +185,19 @@ public class Constants {
     //全局动态弹框提示
     public static String GET_TIPS_DIALOG = HttpUtils.baseUrl + "appNotice/get";
 
+    public static String TOKEY = "token";
+    public static String DEPARTMENT_ID = "departmentId";
+    public static String USER_ID = "userId";
+    public static String NAME = "name";
+    public static String PHONE_NUMBER = "phoneNumber";
+    public static String IDENTITY_CARD = "identityCard";
+
+
     public static void resetBaseIp(String host) {
         HttpUtils.baseUrl = host;
         BASENEW = HttpUtils.baseUrl + "app/";
         LOGINURLNEW = BASENEW + "ftnLogin";
+        AAR_LOGINURLNEW = BASENEW + "ftnAarLogin";
 
         ZHUSHESHOW = BASENEW + "ftnShe/list";
 

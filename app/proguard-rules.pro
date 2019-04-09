@@ -33,8 +33,10 @@
 -keep public class * extends android.app.backup.BackupAgentHelper
 -keep public class * extends android.preference.Preference
 -keep public class com.android.vending.licensing.ILicensingService
+-keep public class * extends android.app.Fragment
 -keep public class * extends android.support.v4.app.Fragment
 -keep public class * extends android.support.v4.view.ViewPager
+-keep public class * extends android.os.HandlerThread
 
 -dontwarn com.android.volley.**
 -keep class com.android.volley.**{*;}
@@ -43,13 +45,30 @@
 -dontwarn com.google.zxing.**
 -keep class com.google.zxing.**{*;}
 
--keep class com.innovation.pig.insurance.**{*;}
--keep com.innovation.pig.insurance.model.**{*;}
--keep com.innovation.pig.insurance.view.**{*;}
--keep com.serenegiant.widget.**{*;}
--keep com.innovation.pig.insurance.netutils.PreferencesUtils {*;}
-
-
+-keep class com.innovation.pig.insurance.model.**{*;}
+-keep class com.innovation.pig.insurance.view.**{*;}
+-keep public class com.innovation.pig.insurance.AppConfig {*;}
+-keep class com.serenegiant.widget.**{*;}
+-keep class com.serenegiant.**{*;}
+-keep class com.xiangchuang.risks.model.bean.**{*;}
+-keep class com.xiangchuang.risks.model.custom.**{*;}
+#模型识别
+-keep class innovation.biz.**{*;}
+-keep class innovation.database.**{*;}
+-keep public class innovation.crash.CrashHandler{*;}
+-keep class innovation.database.**{*;}
+-keep class innovation.entry.**{*;}
+-keep class innovation.env.**{*;}
+-keep class innovation.view.**{*;}
+-keep class org.opencv.**{*;}
+-keep public class org.tensorflow.demo.env.ImageUtils {*;}
+-keep public class org.tensorflow.demo.tracking.ObjectTracker {*;}
+-keep public class org.tensorflow.demo.AutoFitTextureView {*;}
+-keep public class org.tensorflow.demo.ImageUtils {*;}
+-keep public class org.tensorflow.demo.ObjectTracker {*;}
+-keep public class org.tensorflow.demo.OverlayView {*;}
+-keep public class org.tensorflow.demo.tracking.**{*;}
+-keep public class com.innovation.pig.insurance.netutils.PreferencesUtils {*;}
 
 
 -keep class thirdparty.bottombar.library.**{*;}
@@ -463,3 +482,52 @@ public static java.lang.String TABLENAME;
 #腾讯bugly
 -dontwarn com.tencent.bugly.**
 -keep public class com.tencent.bugly.**{*;}
+-dontwarn io.objectbox.**
+-keep  class io.objectbox.**{*;}
+
+
+-keep  class android.arch.**{*;}
+-keep  interface android.arch.**{*;}
+-keep  class com.alibaba.fastjson.**{*;}
+-keep  interface com.alibaba.fastjson.**{*;}
+-keep  class com.bumptech.glide.**{*;}
+-keep  interface com.bumptech.glide.**{*;}
+-keep  class com.google.flatbuffers.**{*;}
+-keep  interface com.google.flatbuffers.**{*;}
+-keep  class com.hjq.permissions.**{*;}
+-keep  interface com.hjq.permissions.**{*;}
+-keep  class butterknife.**{*;}
+-keep  interface butterknife.**{*;}
+-keep  class com.nostra13.universalimageloader.**{*;}
+-keep  interface com.nostra13.universalimageloader.**{*;}
+-keep  class com.serenegiant.**{*;}
+-keep  interface com.serenegiant.**{*;}
+-keep  class com.squareup.**{*;}
+-keep  interface com.squareup.**{*;}
+-keep  class com.zhy.http.okhttp.**{*;}
+-keep  interface com.zhy.http.okhttp.**{*;}
+-keep  class io.fotoapparat.**{*;}
+-keep  interface io.fotoapparat.**{*;}
+-keep  class io.objectbox.**{*;}
+-keep  interface io.objectbox.**{*;}
+-keep  class net.gotev.uploadservice.**{*;}
+-keep  interface net.gotev.uploadservice.**{*;}
+-keep  class net.gotev.uploadservice.okhttp.**{*;}
+-keep  interface net.gotev.uploadservice.okhttp.**{*;}
+-keep  class org.xmlpull.v1.**{*;}
+-keep  interface org.xmlpull.v1.**{*;}
+-keep  class org.kxml2.**{*;}
+-keep  interface org.kxml2.**{*;}
+-keep  class org.greenrobot.essentials.**{*;}
+-keep  interface org.greenrobot.essentials.**{*;}
+-keep  class de.greenrobot.dao.**{*;}
+-keep  interface de.greenrobot.dao.**{*;}
+-keep  class org.hamcrest.**{*;}
+-keep  interface org.hamcrest.**{*;}
+-keep  class kotlinx.coroutines.experimental.**{*;}
+-keep  interface kotlinx.coroutines.experimental.**{*;}
+-keep  class org.jetbrains.annotations.**{*;}
+-keep  interface org.jetbrains.annotations.**{*;}
+-keep  class org.intellij.lang.annotations.**{*;}
+-keep  interface org.intellij.lang.annotations.**{*;}
+-keep class com.innovation.pig.insurance.netutils.Constants{*;}

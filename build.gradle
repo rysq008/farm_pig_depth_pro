@@ -36,6 +36,8 @@ allprojects {
             url "http://mvn.leancloud.cn/nexus/content/repositories/public"
         }
         mavenCentral()
+//        maven { url "https://raw.githubusercontent.com/rysq008/repos/master" }
+//        maven{url "https://raw.gitlabusercontent.com/androidapp/ScheduleApp/tree/master/raw/com/innovation/aar/pigInsurance"}
     }
 }
 

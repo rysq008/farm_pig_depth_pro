@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -21,18 +20,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.R;
+import com.innovation.pig.insurance.netutils.Constants;
+import com.innovation.pig.insurance.netutils.OkHttp3Util;
+import com.innovation.pig.insurance.netutils.PreferencesUtils;
 import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.adapter.CompanyAdapter;
 import com.xiangchuang.risks.model.bean.InSureCompanyBean;
 import com.xiangchuang.risks.update.AppUpgradeService;
 import com.xiangchuang.risks.update.UpdateInformation;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
-import com.innovation.pig.insurance.AppConfig;
-import com.innovation.pig.insurance.R;
-import com.innovation.pig.insurance.netutils.Constants;
-import com.innovation.pig.insurance.netutils.OkHttp3Util;
-import com.innovation.pig.insurance.netutils.PreferencesUtils;
-
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -43,8 +41,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
-import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -128,10 +124,10 @@ public class CompanyActivity extends BaseActivity {
         tvPopUpdate = popview.findViewById(R.id.tv_pop_update);
         ivPopUpdateSign = popview.findViewById(R.id.iv_pop_update_sign);
 
-        if(needUpDate){
+        if (needUpDate) {
             ivPopUpdateSign.setVisibility(View.VISIBLE);
             ivSign.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             ivPopUpdateSign.setVisibility(View.GONE);
             ivSign.setVisibility(View.GONE);
         }
@@ -142,9 +138,7 @@ public class CompanyActivity extends BaseActivity {
         pop.setFocusable(true);
         pop.setOutsideTouchable(true);
         pop.setContentView(popview);
-
-
-
+        
         searchEdit.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -164,20 +158,20 @@ public class CompanyActivity extends BaseActivity {
                     btnClear.setVisibility(View.VISIBLE);
                 }
 
-                if(s.length() > 0){
-                    if(inSureCompanyBeanlists.size()>0){
+                if (s.length() > 0) {
+                    if (inSureCompanyBeanlists.size() > 0) {
                         current.clear();
-                        for (InSureCompanyBean inSureCompanyBean: inSureCompanyBeanlists){
-                            if(inSureCompanyBean.getEnName().contains(s.toString())){
+                        for (InSureCompanyBean inSureCompanyBean : inSureCompanyBeanlists) {
+                            if (inSureCompanyBean.getEnName().contains(s.toString())) {
                                 current.add(inSureCompanyBean);
                             }
                         }
                         company_listview.setAdapter(new CompanyAdapter(CompanyActivity.this, current));
-                    }else {
+                    } else {
                         Toast.makeText(CompanyActivity.this, "当前没有可选猪场，请添加猪场。", Toast.LENGTH_SHORT).show();
                     }
-                }else{
-                    if(inSureCompanyBeanlists.size()>0){
+                } else {
+                    if (inSureCompanyBeanlists.size() > 0) {
                         company_listview.setAdapter(new CompanyAdapter(CompanyActivity.this, inSureCompanyBeanlists));
                     }
                 }
@@ -194,10 +188,10 @@ public class CompanyActivity extends BaseActivity {
     }
 
     public void setSign() {
-        if(needUpDate){
+        if (needUpDate) {
             ivPopUpdateSign.setVisibility(View.VISIBLE);
             ivSign.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             ivPopUpdateSign.setVisibility(View.GONE);
             ivSign.setVisibility(View.GONE);
         }
@@ -308,7 +302,7 @@ public class CompanyActivity extends BaseActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i(TAG, e.toString());
-                AVOSCloudUtils.saveErrorMessage(e,CompanyActivity.class.getSimpleName());
+                AVOSCloudUtils.saveErrorMessage(e, CompanyActivity.class.getSimpleName());
             }
 
             @Override
@@ -355,19 +349,19 @@ public class CompanyActivity extends BaseActivity {
                             @Override
                             public void run() {
 
-                                if(!TextUtils.isEmpty(searchEdit.getText())){
-                                    if(inSureCompanyBeanlists.size()>0){
+                                if (!TextUtils.isEmpty(searchEdit.getText())) {
+                                    if (inSureCompanyBeanlists.size() > 0) {
                                         current.clear();
-                                        for (InSureCompanyBean inSureCompanyBean: inSureCompanyBeanlists){
-                                            if(inSureCompanyBean.getEnName().contains(searchEdit.getText().toString())){
+                                        for (InSureCompanyBean inSureCompanyBean : inSureCompanyBeanlists) {
+                                            if (inSureCompanyBean.getEnName().contains(searchEdit.getText().toString())) {
                                                 current.add(inSureCompanyBean);
                                             }
                                         }
                                         company_listview.setAdapter(new CompanyAdapter(CompanyActivity.this, current));
-                                    }else {
+                                    } else {
                                         Toast.makeText(CompanyActivity.this, "当前没有可选猪场，请添加猪场。", Toast.LENGTH_SHORT).show();
                                     }
-                                }else{
+                                } else {
                                     company_listview.setAdapter(new CompanyAdapter(CompanyActivity.this, inSureCompanyBeanlists));
                                 }
                             }
@@ -377,7 +371,7 @@ public class CompanyActivity extends BaseActivity {
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    AVOSCloudUtils.saveErrorMessage(e,CompanyActivity.class.getSimpleName());
+                    AVOSCloudUtils.saveErrorMessage(e, CompanyActivity.class.getSimpleName());
                 }
 
 
