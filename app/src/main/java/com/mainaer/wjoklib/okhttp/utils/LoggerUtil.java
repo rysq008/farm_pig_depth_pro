@@ -4,7 +4,8 @@
 package com.mainaer.wjoklib.okhttp.utils;
 
 
-import com.innovation.pig.insurance.BuildConfig;
+import com.innovation.pig.insurance.AppConfig;
+
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,7 +21,7 @@ public class LoggerUtil {
     static Logger mLogger = Logger.getLogger("okhttp");
 
     public static void i(String msg) {
-        if(BuildConfig.DEBUG){
+        if(AppConfig.isApkInDebug()){
             mLogger.log(Level.INFO, msg);
         }
 
@@ -28,7 +29,7 @@ public class LoggerUtil {
     }
 
     public static void w(String msg) {
-        if(BuildConfig.DEBUG){
+        if(AppConfig.isApkInDebug()){
             mLogger.log(Level.WARNING, msg);
         }
     }

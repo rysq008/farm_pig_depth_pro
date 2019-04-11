@@ -30,6 +30,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.innovation.pig.insurance.AppConfig;
 import com.serenegiant.common.BaseActivity;
 import com.serenegiant.usb.CameraDialog;
 import com.serenegiant.usb.USBMonitor;
@@ -40,7 +41,7 @@ import com.serenegiant.widget.UVCCameraTextureView;
 import com.xiangchuang.risks.model.bean.RecognitionResult;
 import com.xiangchuang.risks.utils.CommonUtils;
 import com.xiangchuang.risks.utils.CounterHelper;
-import com.innovation.pig.insurance.BuildConfig;
+
 import com.innovation.pig.insurance.JuanCountAdapter;
 import com.innovation.pig.insurance.R;
 import com.innovation.pig.insurance.view.RecognitionView;
@@ -316,7 +317,7 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
                 return false;
             }
         });
-        if (BuildConfig.DEBUG) {
+        if (AppConfig.isApkInDebug()) {
             count_detail.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {

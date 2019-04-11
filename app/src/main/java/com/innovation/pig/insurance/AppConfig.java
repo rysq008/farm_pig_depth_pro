@@ -42,7 +42,6 @@ import innovation.utils.HttpRespObject;
 import innovation.utils.HttpUtils;
 import innovation.utils.ImageLoaderUtils;
 import io.objectbox.BoxStore;
-import io.objectbox.android.AndroidObjectBrowser;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
@@ -111,7 +110,7 @@ public class AppConfig {
         ShareUtils.init(app);
         HttpUtils.baseUrl = ShareUtils.getHost("host");
         HttpUtils.resetIp(HttpUtils.baseUrl);
-        UploadService.NAMESPACE = BuildConfig.APPLICATION_ID;
+        UploadService.NAMESPACE = app.getPackageName()/*BuildConfig.APPLICATION_ID*/;
         OkHttpClient client = new OkHttpClient();
         // create your own OkHttp client
         UploadService.HTTP_STACK = new OkHttpStack(client);
@@ -148,7 +147,8 @@ public class AppConfig {
 
                 if (!(activity instanceof LoginFamerActivity)) {
                     isFirst++;
-                    doUpDateTask();
+                    if ("com.xiangchuangtec.luolu.animalcounter".equals(AppConfig.getAppContext().getPackageName()))
+                        doUpDateTask();
                 }
             }
 
@@ -184,16 +184,16 @@ public class AppConfig {
         });
 
         boxStore = MyObjectBox.builder().androidContext(app).build();
-        if (isApkInDebug(app))
-            new AndroidObjectBrowser(boxStore).start(app);
+//        if (AppConfig.isApkInDebug())
+//            new AndroidObjectBrowser(boxStore).start(app);
     }
 
     /**
      * 判断当前应用是否是debug状态
      */
-    public static boolean isApkInDebug(Context context) {
+    public static boolean isApkInDebug() {
         try {
-            ApplicationInfo info = context.getApplicationInfo();
+            ApplicationInfo info = app.getApplicationInfo();
             return (info.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
         } catch (Exception e) {
             return false;
@@ -203,7 +203,7 @@ public class AppConfig {
     private void doUpDateTask() {
         if (isFirst == 1) {
             if (activity.getIntent().getFlags() != Intent.FLAG_ACTIVITY_SINGLE_TOP) {
-                if (BuildConfig.DEBUG) {
+                if (AppConfig.isApkInDebug()) {
                     Toast.makeText(activity, "getFlags==" + activity.getIntent().getFlags(), Toast.LENGTH_SHORT).show();
                 }
 

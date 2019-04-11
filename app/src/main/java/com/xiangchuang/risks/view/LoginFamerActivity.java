@@ -39,6 +39,7 @@ import okhttp3.Response;
 public class LoginFamerActivity extends BaseActivity {
 
     Intent mIntent;
+    boolean isRequest = false;
 
     @Override
     public void initView() {
@@ -104,12 +105,12 @@ public class LoginFamerActivity extends BaseActivity {
     @Override
     protected void initData() {
         mIntent = getIntent();
-//        mIntent.putExtra(Constants.TOKEY,"android_token");
-//        mIntent.putExtra(Constants.USER_ID,"android_userid2");
-//        mIntent.putExtra(Constants.PHONE_NUMBER,"19000000002");
-//        mIntent.putExtra(Constants.NAME,"android_name");
-//        mIntent.putExtra(Constants.DEPARTMENT_ID,"2"/*"android_department"*/);
-//        mIntent.putExtra(Constants.IDENTITY_CARD,"android_identitry");
+        mIntent.putExtra(Constants.TOKEY, "android_token");
+//        mIntent.putExtra(Constants.USER_ID, "android_userid3");
+//        mIntent.putExtra(Constants.PHONE_NUMBER, "19000000003");
+//        mIntent.putExtra(Constants.NAME, "android_name");
+//        mIntent.putExtra(Constants.DEPARTMENT_ID, "14079900"/*"android_department"*/);
+//        mIntent.putExtra(Constants.IDENTITY_CARD, "android_identitry");
         startService(new Intent(this, UploadService.class));
 //        if (PreferencesUtils.getBooleanValue(Constants.ISLOGIN, AppConfig.getAppContext())) {
 //            String type = PreferencesUtils.getStringValue(Constants.companyfleg, AppConfig.getAppContext());
@@ -165,6 +166,8 @@ public class LoginFamerActivity extends BaseActivity {
      * @param muserpass
      */
     private void getDataFromNet(String musername, String muserpass) {
+        if (isRequest) return;
+        isRequest = true;
         Map<String, String> mapbody = new HashMap<>();
         mapbody.put(Constants.account, musername);
         mapbody.put(Constants.password, muserpass);
@@ -198,11 +201,13 @@ public class LoginFamerActivity extends BaseActivity {
         mMapbody.put(Constants.NAME, mIntent.getStringExtra(Constants.NAME));
 
         if (TextUtils.isEmpty(mIntent.getStringExtra(Constants.PHONE_NUMBER))) {
-            Toast.makeText(this, "请传入电话号码", Toast.LENGTH_LONG).show();
-            LoginFamerActivity.this.finish();
-            return;
-        }
-        mMapbody.put(Constants.PHONE_NUMBER, mIntent.getStringExtra(Constants.PHONE_NUMBER));
+//            Toast.makeText(this, "请传入电话号码", Toast.LENGTH_LONG).show();
+//            LoginFamerActivity.this.finish();
+//            return;
+            String phone = mIntent.getStringExtra(Constants.USER_ID);
+            mMapbody.put(Constants.PHONE_NUMBER, (phone.substring(phone.length() - 11)));
+        } else
+            mMapbody.put(Constants.PHONE_NUMBER, mIntent.getStringExtra(Constants.PHONE_NUMBER));
 
         if (TextUtils.isEmpty(mIntent.getStringExtra(Constants.IDENTITY_CARD))) {
 //            Toast.makeText(this, "请传入身份证号", Toast.LENGTH_LONG).show();
@@ -233,6 +238,7 @@ public class LoginFamerActivity extends BaseActivity {
                     }
                 });
                 AVOSCloudUtils.saveErrorMessage(e, LoginFamerActivity.class.getSimpleName());
+                isRequest = false;
             }
 
             @Override
@@ -311,6 +317,8 @@ public class LoginFamerActivity extends BaseActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                     AVOSCloudUtils.saveErrorMessage(e, LoginFamerActivity.class.getSimpleName());
+                } finally {
+                    isRequest = false;
                 }
             }
         });

@@ -92,10 +92,10 @@ public class AlphaLoginFamerActivity extends BaseActivity {
                 onClickView((View) v);
             }
         });
-        showProgressDialog(this);
-        mloginfameruserid.setText("15000000001");
-        mloginfamerpass.setText("123456");
-        mloginfamerlogin.performClick();
+//        showProgressDialog(this);
+//        mloginfameruserid.setText("15000000001");
+//        mloginfamerpass.setText("123456");
+//        mloginfamerlogin.performClick();
     }
 
     @Override

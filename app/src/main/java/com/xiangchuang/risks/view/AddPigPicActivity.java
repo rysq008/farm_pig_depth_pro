@@ -24,13 +24,14 @@ import android.widget.*;
 
 import butterknife.OnClick;
 
+import com.innovation.pig.insurance.AppConfig;
 import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.bean.StartBean;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.utils.CounterHelper;
 import com.xiangchuang.risks.utils.PigWeightUtils;
-import com.innovation.pig.insurance.BuildConfig;
+
 import com.innovation.pig.insurance.R;
 import com.innovation.pig.insurance.netutils.Constants;
 import com.innovation.pig.insurance.netutils.GsonUtils;
@@ -193,7 +194,7 @@ public class AddPigPicActivity extends BaseActivity {
         parentView = getWindow().getDecorView();
         etAnimalWeight.addTextChangedListener(new MyWatcher(3, 1));
 
-        if (BuildConfig.DEBUG) {
+        if (AppConfig.isApkInDebug()) {
             Toast.makeText(this, "lipeiId=" + lipeiId + "---timesFlag=" + timesFlag, Toast.LENGTH_SHORT).show();
         }
 

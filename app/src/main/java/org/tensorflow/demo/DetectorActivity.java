@@ -37,7 +37,7 @@ import android.view.Display;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
-import com.innovation.pig.insurance.BuildConfig;
+
 import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
 import com.innovation.pig.insurance.Utils;
@@ -422,7 +422,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         if ((Utils.getDuring(c) / 1000) > m && AppConfig.debugNub >= 0) {
             AppConfig.debugNub = 2;
             collectNumberHandler.sendEmptyMessage(6);
-            if (BuildConfig.DEBUG)
+            if (AppConfig.isApkInDebug())
                 Toast.makeText(this, "m时间后 停止拍摄弹出强制上传", Toast.LENGTH_LONG).show();
             return;
         }
@@ -434,7 +434,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         if ((Utils.getDuring(c) / 1000) > n && AppConfig.debugNub != 1 && AppConfig.debugNub >= 0) {
             AppConfig.debugNub = 1;
             collectNumberHandler.sendEmptyMessage(6);
-            if (BuildConfig.DEBUG)
+            if (AppConfig.isApkInDebug())
                 Toast.makeText(this, " n时间后 停止拍摄弹出是否强制上传或重新拍摄", Toast.LENGTH_LONG).show();
         }
 

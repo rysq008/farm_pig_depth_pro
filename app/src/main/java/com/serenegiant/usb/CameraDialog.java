@@ -42,7 +42,7 @@ import android.widget.CheckedTextView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.innovation.pig.insurance.BuildConfig;
+import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
 
 import java.util.ArrayList;
@@ -64,11 +64,11 @@ public class CameraDialog extends DialogFragment {
 		CameraDialog dialog = newInstance(/* add parameters here if you need */);
 		dialog.onAttach(parent);
 		final List<DeviceFilter> filter = DeviceFilter.getDeviceFilters(parent, R.xml.device_filter);
-		if(BuildConfig.DEBUG)
+		if(AppConfig.isApkInDebug())
 		Log.e(TAG, "DeviceFilter===="+ filter.toString());
 		if(filter.size()>0){
 			List<UsbDevice> usbDeviceList = dialog.mUSBMonitor.getDeviceList(filter.get(0));
-			if(BuildConfig.DEBUG)
+			if(AppConfig.isApkInDebug())
 			Log.e(TAG, "usbDeviceList:"+ usbDeviceList.toString());
 			if(usbDeviceList.size()>0){
 				dialog.mUSBMonitor.requestPermission(usbDeviceList.get(0));

@@ -13,7 +13,8 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.innovation.pig.insurance.BuildConfig;
+import com.innovation.pig.insurance.AppConfig;
+
 import com.innovation.pig.insurance.R;
 
 import org.opencv.core.Mat;
@@ -411,7 +412,7 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
             Canvas canvas = getHolder().lockCanvas();
             if (canvas != null) {
                 canvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
-                if (BuildConfig.DEBUG)
+                if (AppConfig.isApkInDebug())
                     Log.d(TAG, "mStretch value: " + mScale);
 
                 if (mScale != 0) {

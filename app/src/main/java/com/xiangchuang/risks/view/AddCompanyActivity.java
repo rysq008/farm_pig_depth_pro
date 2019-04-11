@@ -43,7 +43,7 @@ import com.hjq.permissions.XXPermissions;
 import com.xiangchuang.risks.base.BaseBarActivity;
 import com.xiangchuang.risks.model.bean.CompanyInfoBean;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
-import com.innovation.pig.insurance.BuildConfig;
+
 import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
 import com.innovation.pig.insurance.netutils.Constants;

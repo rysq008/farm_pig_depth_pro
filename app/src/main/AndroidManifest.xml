@@ -54,7 +54,6 @@
         android:launchMode="singleInstance"
         android:screenOrientation="portrait"
         android:supportsRtl="true"
-        android:icon="@drawable/ic_launcher"
         tools:overrideLibrary="com.innovation.pig.insurance">
         <activity
             android:name="com.innovation.pig.insurance.CounterActivity_new"
@@ -77,6 +76,11 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>-->
+        </activity>
+        <activity
+            android:name="com.xiangchuang.risks.view.LoginFamerActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.xiangchuang.risks.view.ShowPollingActivity_new"

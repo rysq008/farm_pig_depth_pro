@@ -44,7 +44,7 @@ import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.view.AddPigPicActivity;
 import com.xiangchuang.risks.view.PreparedLiPeiActivity_new;
-import com.innovation.pig.insurance.BuildConfig;
+
 import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
 import com.innovation.pig.insurance.netutils.Constants;
@@ -2283,7 +2283,7 @@ public class MediaProcessor {
 
             @Override
             public void onUploadSuccess(UploadTask uploadTask, File file) {
-                if (BuildConfig.DEBUG) {
+                if (AppConfig.isApkInDebug()) {
                     Toast.makeText(AppConfig.getActivity(), "提交成功", Toast.LENGTH_LONG).show();
                 }
                 VideoUploadTable videoUpLoadBean = (VideoUploadTable) uploadTask.getT();

@@ -10,7 +10,8 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ViewGroup.LayoutParams;
 
-import com.innovation.pig.insurance.BuildConfig;
+import com.innovation.pig.insurance.AppConfig;
+
 
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -300,7 +301,7 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
 
     @Override
     public void onPreviewFrame(byte[] frame, Camera arg1) {
-        if (BuildConfig.DEBUG)
+        if (AppConfig.isApkInDebug())
             Log.d(TAG, "Preview Frame received. Frame size: " + frame.length);
         synchronized (this) {
             mFrameChain[mChainIdx].put(0, 0, frame);

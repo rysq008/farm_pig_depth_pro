@@ -2,13 +2,14 @@ package innovation.utils;
 
 import android.content.Context;
 
+import com.innovation.pig.insurance.AppConfig;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-import com.innovation.pig.insurance.BuildConfig;
+
 import com.innovation.pig.insurance.R;
 
 /**
@@ -25,7 +26,7 @@ public class ImageLoaderUtils {
         config.tasksProcessingOrder(QueueProcessingType.LIFO);
         config.diskCache(new UnlimitedDiskCache(StorageUtils.getCacheDir(context)));
 
-        if (BuildConfig.DEBUG) {
+        if (AppConfig.isApkInDebug()) {
             config.writeDebugLogs(); // 发布release包时，移除log信息
         }
 

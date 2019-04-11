@@ -101,7 +101,7 @@ public class SmallVideoActivity extends BaseActivity implements SurfaceHolder.Ca
     public void initView() {
 //        int width = getWindowManager().getDefaultDisplay().getWidth();
 ////        float height = (getWindowManager().getDefaultDisplay().getHeight())/4*3;
-////        if(BuildConfig.DEBUG){
+////        if(AppConfig.isApkInDebug()){
 ////            Toast.makeText(this, "width = "+width+"---height = "+height, Toast.LENGTH_SHORT).show();
 ////        }
 

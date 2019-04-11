@@ -25,7 +25,7 @@ import com.xiangchuang.risks.update.AppUpgradeService;
 import com.xiangchuang.risks.update.UpdateInformation;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
-import com.innovation.pig.insurance.BuildConfig;
+
 import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
 import com.innovation.pig.insurance.netutils.Constants;
@@ -224,7 +224,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
                         String left = (queryVideoFlagData.getData().getLeftNum() == null) ? "8" : queryVideoFlagData.getData().getLeftNum();
                         String middleNum = (queryVideoFlagData.getData().getLeftNum() == null) ? "8" : queryVideoFlagData.getData().getMiddleNum();
                         String rightNum = (queryVideoFlagData.getData().getLeftNum() == null) ? "8" : queryVideoFlagData.getData().getRightNum();
-                        if (BuildConfig.DEBUG) {
+                        if (AppConfig.isApkInDebug()) {
                             Log.e(TAG, "\nleft:\n" + left);
                             Log.e(TAG, "\nmiddleNum:\n" + middleNum);
                             Log.e(TAG, "\nrightNum:\n" + rightNum);

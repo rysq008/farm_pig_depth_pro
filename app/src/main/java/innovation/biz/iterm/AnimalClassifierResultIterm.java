@@ -4,7 +4,7 @@ package innovation.biz.iterm;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.innovation.pig.insurance.BuildConfig;
+
 import com.innovation.pig.insurance.AppConfig;
 
 import innovation.biz.classifier.PigKeyPointsDetectTFlite;
@@ -157,7 +157,7 @@ public class AnimalClassifierResultIterm {
         if (DetectorActivity.type1Count >= maxLeft && DetectorActivity.type2Count >= maxMiddle && DetectorActivity.type3Count >= maxRight) {
             AppConfig.debugNub = -1;
             CameraConnectionFragment.collectNumberHandler.sendEmptyMessage(1);
-            if (BuildConfig.DEBUG){
+            if (AppConfig.isApkInDebug()){
                 Toast.makeText(AppConfig.getAppContext(), "猪脸数据采集完成!!!", Toast.LENGTH_LONG).show();
             }
         }

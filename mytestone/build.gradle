@@ -62,7 +62,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation(name: 'app-release', ext: 'aar')
+    implementation(name: 'app-release11', ext: 'aar')
 //        implementation(name: 'pigInsurance-0409', ext: 'aar')
 //    compile ('com.audient:super_library:1.112'){transitive =true }
 //    compile ('com.innovation.aar:pigInsurance:1.112'){transitive =true }
