@@ -530,4 +530,15 @@ public static java.lang.String TABLENAME;
 -keep  interface org.jetbrains.annotations.**{*;}
 -keep  class org.intellij.lang.annotations.**{*;}
 -keep  interface org.intellij.lang.annotations.**{*;}
--keep class com.innovation.pig.insurance.netutils.Constants{*;}
+-keep  class com.innovation.pig.insurance.netutils.Constants{*;}
+-keep  class com.chad.library.**{*;}
+-keep  interface com.chad.library.**{*;}
+-keep  class com.yanzhenjie.loading.**{*;}
+-keep  interface com.yanzhenjie.loading.**{*;}
+-keep  class com.yanzhenjie.recyclerview.swipe.**{*;}
+-keep  interface com.yanzhenjie.recyclerview.swipe.**{*;}
+-keep  class android.support.v7.widget.helper.**{*;}
+-keep  interface android.support.v7.widget.helper.**{*;}
+-keep  class cn.bingoogolapple.bgabanner.**{*;}
+-keep  interface cn.bingoogolapple.bgabanner.**{*;}
+-keep  class cn.bingoogolapple.bgabanner.BGABanner

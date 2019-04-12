@@ -159,8 +159,14 @@ dependencies {
     implementation('com.serenegiant:common:1.5.20') {
         exclude module: 'support-v4'
     }
-
     /*end usb camera*/
+    //RV adapter
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.18'
+    implementation 'com.yanzhenjie:recyclerview-swipe:1.1.2'
+    //Banner libs files
+    implementation 'cn.bingoogolapple:bga-banner:2.0.9'
+
+
 
     //    implementation files('libs/gson-2.8.0.jar')
     configurations {

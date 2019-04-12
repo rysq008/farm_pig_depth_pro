@@ -12,6 +12,7 @@ public class PathUtils {
     public static final String app_cache_dir = getDataPath() + app_base_dir + "/data/cache";
 
     public static final String app_data_dir = getDataPath() + app_base_dir + "/data/";
+    public static final String app_data_video = getDataPath() + app_base_dir + "/data/video/";
     public static final String weightcollect = getDataPath() + app_base_dir + "/data/picture/weightcollect";
 
 

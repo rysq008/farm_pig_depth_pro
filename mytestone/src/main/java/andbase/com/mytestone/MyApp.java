@@ -6,7 +6,7 @@ import android.support.multidex.MultiDex;
 
 //import com.innovation.base.AppConfig;
 
-import com.innovation.base.FarmAppConfig;
+//import com.innovation.base.FarmAppConfig;
 import com.innovation.pig.insurance.AppConfig;
 
 public class MyApp extends Application {
@@ -15,14 +15,14 @@ public class MyApp extends Application {
     public void onCreate() {
         super.onCreate();
         AppConfig.newInstance().onCreate(this);
-        FarmAppConfig.newInstance().onCreate(this);
+//        FarmAppConfig.newInstance().onCreate(this);
     }
 
     @Override
     public void onTerminate() {
         super.onTerminate();
         AppConfig.newInstance().onTerminate();
-        FarmAppConfig.newInstance().onTerminate();
+//        FarmAppConfig.newInstance().onTerminate();
     }
 
     @Override

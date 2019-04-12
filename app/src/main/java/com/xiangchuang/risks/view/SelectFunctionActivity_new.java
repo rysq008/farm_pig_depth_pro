@@ -18,9 +18,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.xiangchuang.risks.base.BaseActivity;
+import com.xiangchuang.risks.model.bean.BaseBean;
 import com.xiangchuang.risks.model.bean.QueryVideoFlagDataBean;
 import com.xiangchuang.risks.model.bean.StartBean;
+import com.xiangchuang.risks.model.bean.UncompletedBean;
+import com.xiangchuang.risks.model.bean.WaitNumber;
 import com.xiangchuang.risks.update.AppUpgradeService;
 import com.xiangchuang.risks.update.UpdateInformation;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
@@ -38,6 +43,7 @@ import org.tensorflow.demo.DetectorActivity;
 import org.tensorflow.demo.Global;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,6 +55,8 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 import static com.innovation.pig.insurance.AppConfig.needUpDate;
+import static com.innovation.pig.insurance.netutils.Constants.DISPOSE_UNFINISH;
+import static com.innovation.pig.insurance.netutils.Constants.NUMBER;
 
 public class SelectFunctionActivity_new extends BaseActivity implements View.OnClickListener{
     public static String TAG = "SelectFunctionActivity";
@@ -91,6 +99,15 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
     private TextView tvPopUpdate;
     private ImageView ivPopUpdateSign;
 
+    //无害化处理按钮
+    TextView tvInnocentTreatment;
+    //待处理数量布局
+    RelativeLayout rlCount;
+    //待处理数量
+    TextView tvCount;
+
+    private int payNum;
+
     @Override
     public void initView() {
         super.initView();
@@ -115,6 +132,11 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
         rlBack = (RelativeLayout) findViewById(R.id.rl_back);
         rlEdit = (RelativeLayout) findViewById(R.id.rl_edit);
         ivSign = (ImageView) findViewById(R.id.iv_sign);
+
+        tvInnocentTreatment = (TextView) findViewById(R.id.tv_innocent_treatment);
+        tvInnocentTreatment.setOnClickListener(this);
+        rlCount = (RelativeLayout) findViewById(R.id.rl_count);
+        tvCount = (TextView) findViewById(R.id.tv_count);
 
     }
 
@@ -172,6 +194,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
         pop.setOutsideTouchable(true);
         pop.setContentView(popview);
 
+        getNumber();
     }
 
 
@@ -437,11 +460,121 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
             });
 
 
-        } else {
+        } else if (i == R.id.tv_innocent_treatment) {
+            getUnfinish();
         }
-
-
     }
+
+    /**
+     * 生成无害化处理信息
+     */
+    private void getUnfinish() {
+        this.mProgressDialog.show();
+        OkHttp3Util.doPost(DISPOSE_UNFINISH, null, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.i(TAG, e.toString());
+                SelectFunctionActivity_new.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        SelectFunctionActivity_new.this.mProgressDialog.dismiss();
+                        Toast.makeText(SelectFunctionActivity_new.this, "网络异常，请重试", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                AVOSCloudUtils.saveErrorMessage(e, WaitDisposeActivity.class.getSimpleName());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String string = response.body().string();
+                Log.i(TAG, string);
+
+                BaseBean<UncompletedBean> result;
+                try {
+                    Gson gson = new Gson();
+                    Type type = new TypeToken<BaseBean<UncompletedBean>>() {
+                    }.getType();
+                    result = gson.fromJson(string, type);
+                    SelectFunctionActivity_new.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            SelectFunctionActivity_new.this.mProgressDialog.dismiss();
+                            if (null != result) {
+                                if(result.getStatus() == 1){
+                                    UncompletedBean uncompletedBean = result.getData();
+                                    Bundle bundle = new Bundle();
+                                    bundle.putParcelable("Uncompleted", uncompletedBean);
+                                    goToActivity(DeadPigProcessStepActivity.class, bundle);
+                                }else{
+                                    if(payNum > 0){
+                                        SelectFunctionActivity_new.this.goToActivity(WaitDisposeActivity.class, null);
+                                    }else{
+                                        Toast.makeText(SelectFunctionActivity_new.this, "您还没有理赔数据", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            } else {
+                                Toast.makeText(SelectFunctionActivity_new.this, "网络异常，请重试", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+
+    /**
+     * 获取待处理理赔数量
+     */
+    private void getNumber() {
+        OkHttp3Util.doPost(NUMBER, (Map) null, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.i(SelectFunctionActivity_new.TAG, e.toString());
+                AVOSCloudUtils.saveErrorMessage(e, SelectFunctionActivity_new.class.getSimpleName());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String string = response.body().string();
+                Log.i(SelectFunctionActivity_new.TAG, string);
+
+                BaseBean<WaitNumber> result;
+                try{
+                    Gson gson = new Gson();
+                    Type type = new TypeToken<BaseBean<WaitNumber>>() {
+                    }.getType();
+                    result = gson.fromJson(string, type);
+
+                    if (null != result) {
+                        SelectFunctionActivity_new.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                payNum = result.getData().getNumber();
+
+                                if(payNum > 0){
+                                    rlCount.setVisibility(View.VISIBLE);
+                                    tvCount.setText(payNum+"");
+                                }else{
+                                    rlCount.setVisibility(View.GONE);
+                                }
+
+                            }
+                        });
+                    } else {
+
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+
+            }
+        });
+    }
+
 
     private void collectToNetForLiPei() {
         OkHttp3Util.doPost(Constants.LiSTART, null, new Callback() {

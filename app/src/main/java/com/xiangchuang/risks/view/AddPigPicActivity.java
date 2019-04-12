@@ -91,7 +91,7 @@ public class AddPigPicActivity extends BaseActivity {
     EditText etPigDeathTime;
 
     private static final int REQUESTCODE_PICK = 0;        // 相册选图标记
-    private static final int REQUESTCODE_TAKE = 1;        // 相机拍照标记
+    public static final int REQUESTCODE_TAKE = 1;        // 相机拍照标记
     private static final int REQUESTCODE_CUTTING = 2;    // 图片裁切标记
 
     private String lipeiId = "";

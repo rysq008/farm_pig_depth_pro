@@ -161,6 +161,28 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name="com.xiangchuang.risks.view.DeadPigProcessStepActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.xiangchuang.risks.view.CameraPicActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity
+            android:name="com.xiangchuang.risks.view.CustomRecordActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+
+
+        <activity android:name="com.xiangchuang.risks.view.WaitDisposeActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+
         <service android:name="com.xiangchuang.risks.update.AppUpgradeService"/>
         <service android:name="innovation.upload.UploadService"/>
         <service android:name="com.xiangchuang.risks.view.LoginFamerServer"/>

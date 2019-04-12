@@ -185,6 +185,22 @@ public class Constants {
     //全局动态弹框提示
     public static String GET_TIPS_DIALOG = HttpUtils.baseUrl + "appNotice/get";
 
+    //获取数量
+    public static String NUMBER = BASENEW + "innocuous/number";
+
+    //获取步骤
+    public static String DISPOSE_STEP = BASENEW + "innocuous/step";
+    //获取待处理列表
+    public static String DISPOSE_LIST = BASENEW + "innocuous/list";
+    //添加无害化处理
+    public static String DISPOSE_START = BASENEW + "innocuous/start";
+    //添加忽略处理
+    public static String DISPOSE_IGNORE = BASENEW + "innocuous/ignore";
+    //获取未完成处理列表
+    public static String DISPOSE_UNFINISH = BASENEW + "innocuous/unfinish";
+    //无害化步骤处理，提交
+    public static String DEADPIG_PROCESS_STEP_COMMIT = BASENEW + "innocuous/commit";
+
     public static String TOKEY = "token";
     public static String DEPARTMENT_ID = "departmentId";
     public static String USER_ID = "userId";
@@ -279,5 +295,13 @@ public class Constants {
         PAY_FORCE_END = BASENEW + "payment/payForceEnd";
 
         GET_TIPS_DIALOG = HttpUtils.baseUrl + "appNotice/get";
+
+        NUMBER = BASENEW + "innocuous/number";
+        DISPOSE_STEP = BASENEW + "innocuous/step";
+        DISPOSE_LIST = BASENEW + "innocuous/list";
+        DISPOSE_START = BASENEW + "innocuous/start";
+        DISPOSE_IGNORE = BASENEW + "innocuous/ignore";
+        DISPOSE_UNFINISH = BASENEW + "innocuous/unfinish";
+        DEADPIG_PROCESS_STEP_COMMIT = BASENEW + "innocuous/commit";
     }
 }
