@@ -104,22 +104,28 @@ public class AppConfig {
         app = application;
         mCrashHandler = CrashHandler.getInstance();
         mCrashHandler.init(app);
-
-        //        // 初始化参数依次为 this, AppId, AppKey
-        AVOSCloud.initialize(app, "sraDTfcMG5cUdE454yDX5Dv1-gzGzoHsz", "qQwz83LLwnWW6LyH8qkWU6J7");
         ShareUtils.init(app);
-        HttpUtils.baseUrl = ShareUtils.getHost("host");
-        HttpUtils.resetIp(HttpUtils.baseUrl);
-        UploadService.NAMESPACE = app.getPackageName()/*BuildConfig.APPLICATION_ID*/;
-        OkHttpClient client = new OkHttpClient();
-        // create your own OkHttp client
-        UploadService.HTTP_STACK = new OkHttpStack(client);
-        // make the library use your own OkHttp client
+        boxStore = MyObjectBox.builder().androidContext(app).build();
+//        if (AppConfig.isApkInDebug())
+//            new AndroidObjectBrowser(boxStore).start(app);
+
+        if ("com.xiangchuangtec.luolu.animalcounter".equals(AppConfig.getAppContext().getPackageName())) {
+            //        // 初始化参数依次为 this, AppId, AppKey
+            AVOSCloud.initialize(app, "sraDTfcMG5cUdE454yDX5Dv1-gzGzoHsz", "qQwz83LLwnWW6LyH8qkWU6J7");
+            HttpUtils.baseUrl = ShareUtils.getHost("host");
+            HttpUtils.resetIp(HttpUtils.baseUrl);
+            UploadService.NAMESPACE = app.getPackageName()/*BuildConfig.APPLICATION_ID*/;
+            OkHttpClient client = new OkHttpClient();
+            // create your own OkHttp client
+            UploadService.HTTP_STACK = new OkHttpStack(client);
+            // make the library use your own OkHttp client
+            //初始化 bugly
+            CrashReport.initCrashReport(app, "2d3ff546dd", false);
+        }
 
         //初始化 ImageLoader
         ImageLoaderUtils.initImageLoader(app);
-        //初始化 bugly
-        CrashReport.initCrashReport(app, "2d3ff546dd", false);
+
         networkChangedReceiver = new NetworkChangedReceiver();
         IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         app.registerReceiver(networkChangedReceiver, intentFilter);
@@ -141,7 +147,7 @@ public class AppConfig {
 //                    Toast.makeText(activity, "------->>"+HttpUtils.baseUrl, Toast.LENGTH_LONG).show();
 //                }
                 AppConfig.activity = activity;
-                if (activity != null && !activity.getClass().getCanonicalName().contains("LoginFamerActivity")) {
+                if (activity != null && !(activity instanceof LoginFamerActivity)) {
                     GlobalDialogUtils.getNotice(activity.getClass().getCanonicalName(), activity);
                 }
 
@@ -183,9 +189,7 @@ public class AppConfig {
             }
         });
 
-        boxStore = MyObjectBox.builder().androidContext(app).build();
-//        if (AppConfig.isApkInDebug())
-//            new AndroidObjectBrowser(boxStore).start(app);
+
     }
 
     /**
@@ -394,4 +398,11 @@ public class AppConfig {
     private static class Holder {
         static AppConfig appConfig = new AppConfig();
     }
+
+    public static String TOKEY = "token";
+    public static String DEPARTMENT_ID = "departmentId";
+    public static String USER_ID = "userId";
+    public static String NAME = "name";
+    public static String PHONE_NUMBER = "phoneNumber";
+    public static String IDENTITY_CARD = "identityCard";
 }

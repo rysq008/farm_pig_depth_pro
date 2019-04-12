@@ -59,13 +59,6 @@
             android:name="com.innovation.pig.insurance.CounterActivity_new"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait">
-
-            <!--
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            -->
         </activity>
         <activity
             android:name="com.xiangchuang.risks.view.LoginFamerActivity"
@@ -76,11 +69,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>-->
-        </activity>
-        <activity
-            android:name="com.xiangchuang.risks.view.LoginFamerActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.xiangchuang.risks.view.ShowPollingActivity_new"
