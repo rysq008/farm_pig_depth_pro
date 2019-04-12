@@ -604,21 +604,23 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
 
     @Override
     public void onBackPressed() {
-        //判断是养殖场登录 可直接退出
-        if ("2".equals(companyfleg)) {
-            long secondTime = System.currentTimeMillis();
-            if (secondTime - firstTime > 2000) {
-                Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
-                firstTime = secondTime;
+        if ("com.xiangchuangtec.luolu.animalcounter".equals(AppConfig.getAppContext().getPackageName())) {
+            //判断是养殖场登录 可直接退出
+            if ("2".equals(companyfleg)) {
+                long secondTime = System.currentTimeMillis();
+                if (secondTime - firstTime > 2000) {
+                    Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                    firstTime = secondTime;
+                } else {
+                    android.os.Process.killProcess(android.os.Process.myPid());
+                    System.exit(0);
+                }
             } else {
-                android.os.Process.killProcess(android.os.Process.myPid());
-                System.exit(0);
+                finish();
             }
-        } else {
-            finish();
+        }else{
+            super.onBackPressed();
         }
-
-
     }
 
     @Override

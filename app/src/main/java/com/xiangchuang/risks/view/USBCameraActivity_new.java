@@ -2,12 +2,12 @@ package com.xiangchuang.risks.view;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
-import android.graphics.drawable.BitmapDrawable;
 import android.hardware.usb.UsbDevice;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,18 +19,19 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.JuanCountAdapter;
+import com.innovation.pig.insurance.R;
+import com.innovation.pig.insurance.view.RecognitionView;
 import com.serenegiant.common.BaseActivity;
 import com.serenegiant.usb.CameraDialog;
 import com.serenegiant.usb.USBMonitor;
@@ -42,10 +43,6 @@ import com.xiangchuang.risks.model.bean.RecognitionResult;
 import com.xiangchuang.risks.utils.CommonUtils;
 import com.xiangchuang.risks.utils.CounterHelper;
 
-import com.innovation.pig.insurance.JuanCountAdapter;
-import com.innovation.pig.insurance.R;
-import com.innovation.pig.insurance.view.RecognitionView;
-
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -54,8 +51,6 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
-
-
 
 import innovation.location.LocationManager;
 import innovation.location.LocationManager_new;
@@ -353,13 +348,13 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
                 setCurrentBitmap(mCameraTextureView.getBitmap());
                 mResultImageView.setVisibility(View.GONE);
                 Bitmap tBitmap = getCurrentBitmap();
-                Log.e(TAG, "ByteCount: "+tBitmap.getByteCount());
+                Log.e(TAG, "ByteCount: " + tBitmap.getByteCount());
                 if (tBitmap == null) {
                     return;
                 }
                 //检测图片质量
                 int bright = innovation.utils.ImageUtils.checkImageBright(tBitmap);
-                if(bright < 40){
+                if (bright < 40) {
                     Toast.makeText(USBCameraActivity_new.this, "图片过暗", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -781,7 +776,7 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
         @Override
         public void onAttach(final UsbDevice device) {
             //Toast.makeText(USBCameraActivity_new.this, "USB_DEVICE_ATTACHED", Toast.LENGTH_SHORT).show();
-            if(isCameraClose) {
+            if (isCameraClose) {
                 CameraDialog.openCamera(USBCameraActivity_new.this);
                 mCameraHandler = UVCCameraHandler.createHandler(USBCameraActivity_new.this, mUVCCameraView,
                         USE_SURFACE_ENCODER ? 0 : 1, PREVIEW_WIDTH, PREVIEW_HEIGHT, PREVIEW_MODE);
@@ -903,18 +898,21 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
     public void onSurfaceDestroy(CameraViewInterface view, Surface surface) {
     }
 
-    private PopupWindow pop;
+    //    private PopupWindow pop;
+    private ProgressDialog pop;
 
     private void showPop() {
-        pop = new PopupWindow(getApplicationContext());
-        View view = getLayoutInflater().inflate(R.layout.item_popupwindow, null);
-        pop.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-        pop.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
-        pop.setBackgroundDrawable(new BitmapDrawable());
-        pop.setFocusable(true);
-        pop.setOutsideTouchable(true);
-        pop.setContentView(view);
-        pop.showAtLocation(counter_activity, 0, 0, 0);
+//        pop = new PopupWindow(getApplicationContext());
+//        View view = getLayoutInflater().inflate(R.layout.item_popupwindow, null);
+//        pop.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+//        pop.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
+//        pop.setBackgroundDrawable(new BitmapDrawable());
+//        pop.setFocusable(true);
+//        pop.setOutsideTouchable(true);
+//        pop.setContentView(view);
+//        pop.showAtLocation(counter_activity, 0, 0, 0);
+
+        pop = ProgressDialog.show(this, "", "处理中...");
     }
 
     private synchronized void setCurrentBitmap(Bitmap bitmap) {

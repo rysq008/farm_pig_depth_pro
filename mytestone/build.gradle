@@ -10,10 +10,10 @@ android {
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
-
+        multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
-            abiFilters /*"armeabi", "armeabi-v7a", "x86", "mips"*/"armeabi-v7a"
+            abiFilters /*"armeabi", "armeabi-v7a", "x86", "mips"*/ "armeabi-v7a"
         }
     }
     aaptOptions { noCompress 'tflite' }
@@ -22,9 +22,9 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-        debug{
-                minifyEnabled true
-                proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        debug {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 //    sourceSets {
@@ -47,6 +47,9 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
         sourceCompatibility JavaVersion.VERSION_1_8
     }
+//    configurations {
+//        all*.exclude  module: 'org.opencv'  //去除重复依赖库
+//    }
     repositories {
         flatDir {
             dirs 'libs'
@@ -62,7 +65,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation(name: 'app-release11', ext: 'aar')
+    implementation(name: 'pigInsurance_0411', ext: 'aar')
+    implementation(name: 'app-release-farm1', ext: 'aar')
 //        implementation(name: 'pigInsurance-0409', ext: 'aar')
 //    compile ('com.audient:super_library:1.112'){transitive =true }
 //    compile ('com.innovation.aar:pigInsurance:1.112'){transitive =true }
@@ -96,6 +100,9 @@ dependencies {
     }
     configurations {
         all*.exclude group: 'com.google.code.gson'
+    }
+    configurations {
+        all*.exclude group: 'org.opencv'
     }
 }
 apply plugin: 'io.objectbox'

@@ -105,9 +105,9 @@ public class LoginFamerActivity extends BaseActivity {
     @Override
     protected void initData() {
         mIntent = getIntent();
-        mIntent.putExtra(Constants.TOKEY, "android_token");
-//        mIntent.putExtra(Constants.USER_ID, "android_userid3");
-//        mIntent.putExtra(Constants.PHONE_NUMBER, "19000000003");
+//        mIntent.putExtra(Constants.TOKEY, "android_token");
+//        mIntent.putExtra(Constants.USER_ID, "android_userid5");
+//        mIntent.putExtra(Constants.PHONE_NUMBER, "19000000005");
 //        mIntent.putExtra(Constants.NAME, "android_name");
 //        mIntent.putExtra(Constants.DEPARTMENT_ID, "14079900"/*"android_department"*/);
 //        mIntent.putExtra(Constants.IDENTITY_CARD, "android_identitry");

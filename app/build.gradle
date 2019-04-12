@@ -19,6 +19,7 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 27
+    buildToolsVersion '27.0.3'
     //    luolucode
     defaultConfig {
 //        applicationId "com.xiangchuangtec.luolu.animalcounter"
@@ -86,7 +87,6 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
         sourceCompatibility JavaVersion.VERSION_1_8
     }
-    buildToolsVersion '28.0.3'
     productFlavors {
     }
 }
@@ -166,6 +166,7 @@ dependencies {
     configurations {
         all*.exclude group: 'com.google.code.gson'
     }
+//    implementation 'org.opencv:opencv-android:3.4.1'
 }
 apply plugin: 'io.objectbox'
 

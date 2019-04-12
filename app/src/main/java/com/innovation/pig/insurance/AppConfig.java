@@ -141,7 +141,7 @@ public class AppConfig {
 //                    Toast.makeText(activity, "------->>"+HttpUtils.baseUrl, Toast.LENGTH_LONG).show();
 //                }
                 AppConfig.activity = activity;
-                if (activity != null && !activity.getClass().getCanonicalName().contains("LoginFamerActivity")) {
+                if (activity != null && ! (activity instanceof LoginFamerActivity)) {
                     GlobalDialogUtils.getNotice(activity.getClass().getCanonicalName(), activity);
                 }
 
@@ -394,4 +394,11 @@ public class AppConfig {
     private static class Holder {
         static AppConfig appConfig = new AppConfig();
     }
+
+    public static String TOKEY = "token";
+    public static String DEPARTMENT_ID = "departmentId";
+    public static String USER_ID = "userId";
+    public static String NAME = "name";
+    public static String PHONE_NUMBER = "phoneNumber";
+    public static String IDENTITY_CARD = "identityCard";
 }

@@ -59,13 +59,6 @@
             android:name="com.innovation.pig.insurance.CounterActivity_new"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait">
-
-            <!--
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            -->
         </activity>
         <activity
             android:name="com.xiangchuang.risks.view.LoginFamerActivity"
@@ -76,11 +69,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>-->
-        </activity>
-        <activity
-            android:name="com.xiangchuang.risks.view.LoginFamerActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.xiangchuang.risks.view.ShowPollingActivity_new"
@@ -135,10 +123,12 @@
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.xiangchuangtec.luolu.animalcounter.provider"
             android:exported="false"
-            android:grantUriPermissions="true">
+            android:grantUriPermissions="true"
+            tools:replace="android:authorities">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths" />
+                android:resource="@xml/provider_paths"
+                tools:replace="android:resource"/>
         </provider>
 
         <!--<activity

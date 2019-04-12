@@ -383,14 +383,18 @@ public class CompanyActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        long secondTime = System.currentTimeMillis();
-        if (secondTime - firstTime > 2000) {
-            Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
-            firstTime = secondTime;
-        } else {
+        if ("com.xiangchuangtec.luolu.animalcounter".equals(AppConfig.getAppContext().getPackageName())) {
+            long secondTime = System.currentTimeMillis();
+            if (secondTime - firstTime > 2000) {
+                Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                firstTime = secondTime;
+            } else {
 //            finish();
-            android.os.Process.killProcess(android.os.Process.myPid());
-            System.exit(0);
+                android.os.Process.killProcess(android.os.Process.myPid());
+                System.exit(0);
+            }
+        }else{
+            super.onBackPressed();
         }
     }
 
