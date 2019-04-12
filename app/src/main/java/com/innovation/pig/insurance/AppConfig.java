@@ -109,7 +109,7 @@ public class AppConfig {
 //        if (AppConfig.isApkInDebug())
 //            new AndroidObjectBrowser(boxStore).start(app);
 
-        if ("com.xiangchuangtec.luolu.animalcounter".equals(AppConfig.getAppContext().getPackageName())) {
+        if (AppConfig.isOriginApk()) {
             //        // 初始化参数依次为 this, AppId, AppKey
             AVOSCloud.initialize(app, "sraDTfcMG5cUdE454yDX5Dv1-gzGzoHsz", "qQwz83LLwnWW6LyH8qkWU6J7");
             HttpUtils.baseUrl = ShareUtils.getHost("host");
@@ -120,8 +120,8 @@ public class AppConfig {
             UploadService.HTTP_STACK = new OkHttpStack(client);
             // make the library use your own OkHttp client
             //初始化 bugly
-            CrashReport.initCrashReport(app, "2d3ff546dd", false);
         }
+        CrashReport.initCrashReport(app, "2d3ff546dd", false);
 
         //初始化 ImageLoader
         ImageLoaderUtils.initImageLoader(app);
@@ -153,7 +153,7 @@ public class AppConfig {
 
                 if (!(activity instanceof LoginFamerActivity)) {
                     isFirst++;
-                    if ("com.xiangchuangtec.luolu.animalcounter".equals(AppConfig.getAppContext().getPackageName()))
+                    if (AppConfig.isOriginApk())
                         doUpDateTask();
                 }
             }
@@ -389,6 +389,10 @@ public class AppConfig {
             e.printStackTrace();
         }
         return versionName;
+    }
+
+    public static boolean isOriginApk() {
+        return ("com.xiangchuangtec.luolu.animalcounter".equals(AppConfig.getAppContext().getPackageName()));
     }
 
     public static AppConfig newInstance() {

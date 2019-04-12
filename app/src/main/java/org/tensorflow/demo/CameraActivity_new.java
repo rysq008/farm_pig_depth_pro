@@ -177,7 +177,7 @@ public abstract class CameraActivity_new extends Activity implements OnImageAvai
 
         getFragmentManager()
                 .beginTransaction()
-                .replace(R.id.container, mFragment)
+                .replace(R.id.container_camera_layout, mFragment)
                 .commit();
     }
 

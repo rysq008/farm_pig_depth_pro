@@ -194,7 +194,7 @@ public abstract class CameraActivity extends Activity implements OnImageAvailabl
 
         getFragmentManager()
                 .beginTransaction()
-                .replace(R.id.container, mFragment)
+                .replace(R.id.container_camera_layout, mFragment)
                 .commit();
     }
 
