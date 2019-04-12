@@ -58,7 +58,7 @@ import static com.innovation.pig.insurance.AppConfig.needUpDate;
 import static com.innovation.pig.insurance.netutils.Constants.DISPOSE_UNFINISH;
 import static com.innovation.pig.insurance.netutils.Constants.NUMBER;
 
-public class SelectFunctionActivity_new extends BaseActivity implements View.OnClickListener{
+public class SelectFunctionActivity_new extends BaseActivity implements View.OnClickListener {
     public static String TAG = "SelectFunctionActivity";
 
     ImageView iv_cancel;
@@ -179,10 +179,10 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
         tvPopUpdate = popview.findViewById(R.id.tv_pop_update);
         ivPopUpdateSign = popview.findViewById(R.id.iv_pop_update_sign);
 
-        if(needUpDate){
+        if (needUpDate) {
             ivPopUpdateSign.setVisibility(View.VISIBLE);
             ivSign.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             ivPopUpdateSign.setVisibility(View.GONE);
             ivSign.setVisibility(View.GONE);
         }
@@ -199,10 +199,10 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
 
 
     public void setSign() {
-        if(needUpDate){
+        if (needUpDate) {
             ivPopUpdateSign.setVisibility(View.VISIBLE);
             ivSign.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             ivPopUpdateSign.setVisibility(View.GONE);
             ivSign.setVisibility(View.GONE);
         }
@@ -217,7 +217,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
             @Override
             public void onFailure(Call call, IOException e) {
                 mProgressDialog.dismiss();
-                AVOSCloudUtils.saveErrorMessage(e,SelectFunctionActivity_new.class.getSimpleName());
+                AVOSCloudUtils.saveErrorMessage(e, SelectFunctionActivity_new.class.getSimpleName());
             }
 
             @Override
@@ -291,7 +291,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
             public void onFailure(Call call, IOException e) {
                 Log.i(TAG, e.toString());
                 mProgressDialog.dismiss();
-                AVOSCloudUtils.saveErrorMessage(e,SelectFunctionActivity_new.class.getSimpleName());
+                AVOSCloudUtils.saveErrorMessage(e, SelectFunctionActivity_new.class.getSimpleName());
             }
 
             @Override
@@ -500,15 +500,15 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
                         public void run() {
                             SelectFunctionActivity_new.this.mProgressDialog.dismiss();
                             if (null != result) {
-                                if(result.getStatus() == 1){
+                                if (result.getStatus() == 1) {
                                     UncompletedBean uncompletedBean = result.getData();
                                     Bundle bundle = new Bundle();
                                     bundle.putParcelable("Uncompleted", uncompletedBean);
                                     goToActivity(DeadPigProcessStepActivity.class, bundle);
-                                }else{
-                                    if(payNum > 0){
+                                } else {
+                                    if (payNum > 0) {
                                         SelectFunctionActivity_new.this.goToActivity(WaitDisposeActivity.class, null);
-                                    }else{
+                                    } else {
                                         Toast.makeText(SelectFunctionActivity_new.this, "您还没有理赔数据", Toast.LENGTH_SHORT).show();
                                     }
                                 }
@@ -542,7 +542,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
                 Log.i(SelectFunctionActivity_new.TAG, string);
 
                 BaseBean<WaitNumber> result;
-                try{
+                try {
                     Gson gson = new Gson();
                     Type type = new TypeToken<BaseBean<WaitNumber>>() {
                     }.getType();
@@ -554,10 +554,10 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
                             public void run() {
                                 payNum = result.getData().getNumber();
 
-                                if(payNum > 0){
+                                if (payNum > 0) {
                                     rlCount.setVisibility(View.VISIBLE);
-                                    tvCount.setText(payNum+"");
-                                }else{
+                                    tvCount.setText(payNum + "");
+                                } else {
                                     rlCount.setVisibility(View.GONE);
                                 }
 
@@ -566,7 +566,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
                     } else {
 
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -581,7 +581,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i(TAG, e.toString());
-                AVOSCloudUtils.saveErrorMessage(e,SelectFunctionActivity_new.class.getSimpleName());
+                AVOSCloudUtils.saveErrorMessage(e, SelectFunctionActivity_new.class.getSimpleName());
             }
 
             @Override
@@ -681,7 +681,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
             public void onFailure(Call call, IOException e) {
                 mProgressDialog.dismiss();
                 Log.i("ShowPollingActivity_new", e.toString());
-                AVOSCloudUtils.saveErrorMessage(e,SelectFunctionActivity_new.class.getSimpleName());
+                AVOSCloudUtils.saveErrorMessage(e, SelectFunctionActivity_new.class.getSimpleName());
             }
 
             @Override
@@ -725,7 +725,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        AVOSCloudUtils.saveErrorMessage(e,SelectFunctionActivity_new.class.getSimpleName());
+                        AVOSCloudUtils.saveErrorMessage(e, SelectFunctionActivity_new.class.getSimpleName());
                     }
 
                 }
@@ -751,7 +751,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
             } else {
                 finish();
             }
-        }else{
+        } else {
             super.onBackPressed();
         }
     }

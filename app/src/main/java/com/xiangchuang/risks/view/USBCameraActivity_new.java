@@ -911,7 +911,6 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
 //        pop.setOutsideTouchable(true);
 //        pop.setContentView(view);
 //        pop.showAtLocation(counter_activity, 0, 0, 0);
-
         pop = ProgressDialog.show(this, "", "处理中...");
     }
 

@@ -138,7 +138,7 @@ public class CompanyActivity extends BaseActivity {
         pop.setFocusable(true);
         pop.setOutsideTouchable(true);
         pop.setContentView(popview);
-        
+
         searchEdit.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -393,9 +393,10 @@ public class CompanyActivity extends BaseActivity {
                 android.os.Process.killProcess(android.os.Process.myPid());
                 System.exit(0);
             }
-        }else{
+        } else {
             super.onBackPressed();
         }
+
     }
 
 }
