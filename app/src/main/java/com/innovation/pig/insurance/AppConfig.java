@@ -120,8 +120,9 @@ public class AppConfig {
             // make the library use your own OkHttp client
             //初始化 bugly
             CrashReport.initCrashReport(app, "2d3ff546dd", false);
+            AVOSCloud.initialize(app, "sraDTfcMG5cUdE454yDX5Dv1-gzGzoHsz", "qQwz83LLwnWW6LyH8qkWU6J7");
         }
-        AVOSCloud.initialize(app, "sraDTfcMG5cUdE454yDX5Dv1-gzGzoHsz", "qQwz83LLwnWW6LyH8qkWU6J7");
+
 
         //初始化 ImageLoader
         ImageLoaderUtils.initImageLoader(app);
