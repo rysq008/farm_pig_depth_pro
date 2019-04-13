@@ -191,7 +191,7 @@ public class UpdateReceiver extends BroadcastReceiver {
      * 正常升级，用户可以选择是否取消升级
      */
     private void normalUpdate() {
-        if ("com.xiangchuangtec.luolu.animalcounter".equals(AppConfig.getAppContext().getPackageName()))
+        if (AppConfig.isOriginApk())
             needUpDate = true;
 
 //        if(AppConfig.getActivity() instanceof SelectFunctionActivity_new){

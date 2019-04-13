@@ -737,7 +737,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
 
     @Override
     public void onBackPressed() {
-        if ("com.xiangchuangtec.luolu.animalcounter".equals(AppConfig.getAppContext().getPackageName())) {
+        if (AppConfig.isOriginApk()){
             //判断是养殖场登录 可直接退出
             if ("2".equals(companyfleg)) {
                 long secondTime = System.currentTimeMillis();

@@ -64,7 +64,7 @@ public abstract class CameraActivity extends Activity implements OnImageAvailabl
         super.onCreate(null);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        setContentView(R.layout.activity_camera);
+        setContentView(R.layout.activity_camera_pig);
 
         if (hasPermission()) {
             setFragment();
@@ -194,7 +194,7 @@ public abstract class CameraActivity extends Activity implements OnImageAvailabl
 
         getFragmentManager()
                 .beginTransaction()
-                .replace(R.id.container, mFragment)
+                .replace(R.id.container_camera_layout, mFragment)
                 .commit();
     }
 
