@@ -70,6 +70,18 @@
 -keep public class org.tensorflow.demo.tracking.**{*;}
 -keep public class com.innovation.pig.insurance.netutils.PreferencesUtils {*;}
 
+-keep public class com.farm.innovation.base.FarmAppConfig {*;}
+-keep class com.farm.innovation.bean.**{*;}
+-keep class com.farm.innovation.biz.Insured.**{*;}
+-keep class com.farm.innovation.biz.classifier.**{*;}
+-keep class com.farm.innovation.biz.iterm.**{*;}
+-keep class com.farm.innovation.crash.**{*;}
+-keep class com.farm.innovation.login.model.**{*;}
+-keep class com.farm.innovation.model.user.**{*;}
+-keep class com.farm.innovation.view.**{*;}
+
+-keep class com.mainaer.wjoklib.okhttp.**{*;}
+-keep public class com.farm.innovation.utils.PreferencesUtils {*;}
 
 -keep class thirdparty.bottombar.library.**{*;}
 
@@ -542,3 +554,16 @@ public static java.lang.String TABLENAME;
 -keep  class cn.bingoogolapple.bgabanner.**{*;}
 -keep  interface cn.bingoogolapple.bgabanner.**{*;}
 -keep  class cn.bingoogolapple.bgabanner.BGABanner
+
+#-keep  class com.felipecsl.gifimageview.library.**{*;}
+#-keep  interface com.felipecsl.gifimageview.library.**{*;}
+#-keep  class at.wirecube.additive_animations.**{*;}
+#-keep  interface at.wirecube.additive_animations.**{*;}
+#-keep  class at.wirecube.additiveanimations.**{*;}
+#-keep  interface at.wirecube.additiveanimations.**{*;}
+-keep  class es.dmoral.prefs.**{*;}
+-keep  interface es.dmoral.prefs.**{*;}
+-keep  class org.greenrobot.eventbus.**{*;}
+-keep  interface org.greenrobot.eventbus.**{*;}
+-keep  class android.support.media.**{*;}
+-keep  interface android.support.media.**{*;}

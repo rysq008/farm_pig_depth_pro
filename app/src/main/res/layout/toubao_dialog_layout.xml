@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
-            android:text="@string/toubao"
+            android:text="投保"
             android:textSize="18sp" />
 
         <LinearLayout

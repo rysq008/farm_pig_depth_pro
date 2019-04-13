@@ -18,6 +18,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.avos.avoscloud.AVOSCloud;
+import com.farm.innovation.base.FarmAppConfig;
 import com.innovation.pig.insurance.netutils.Constants;
 import com.innovation.pig.insurance.netutils.PreferencesUtils;
 import com.tencent.bugly.crashreport.CrashReport;
@@ -102,6 +103,7 @@ public class AppConfig {
 
     public void onCreate(Application application) {
         app = application;
+        FarmAppConfig.newInstance().onCreate(app);
         mCrashHandler = CrashHandler.getInstance();
         mCrashHandler.init(app);
         ShareUtils.init(app);
@@ -340,6 +342,7 @@ public class AppConfig {
 
     public void onTerminate() {
         app.unregisterReceiver(networkChangedReceiver);
+        FarmAppConfig.newInstance().onTerminate();
     }
 
     private class LocationThread extends Thread {

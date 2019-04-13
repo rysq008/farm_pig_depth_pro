@@ -24,11 +24,39 @@
                 android:id="@+id/tv_famer_select"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="80dp"
+                android:minHeight="45dp"
                 android:gravity="center"
                 android:textColor="#333"
                 android:textSize="18sp"
-                android:text="农险"/>
+                android:text="牛险"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="15dp"
+                android:background="#ccc" />
+            <TextView
+                android:id="@+id/tv_donkey_select"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="45dp"
+                android:gravity="center"
+                android:textColor="#333"
+                android:textSize="18sp"
+                android:text="驴险"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="15dp"
+                android:background="#ccc" />
+            <TextView
+                android:id="@+id/tv_yak_select"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="45dp"
+                android:gravity="center"
+                android:textColor="#333"
+                android:textSize="18sp"
+                android:text="牦牛险"/>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
@@ -39,7 +67,7 @@
                 android:id="@+id/tv_pig_select"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="80dp"
+                android:minHeight="45dp"
                 android:gravity="center"
                 android:textColor="#333"
                 android:textSize="18sp"

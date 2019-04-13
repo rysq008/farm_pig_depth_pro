@@ -183,6 +183,105 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
 
+        <activity
+            android:name="com.farm.innovation.biz.welcome.WelcomeActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            >
+            <!--            <intent-filter>
+                            <action android:name="android.intent.action.MAIN" />
+                            <category android:name="android.intent.category.LAUNCHER" />
+                        </intent-filter>-->
+        </activity>
+        <activity
+            android:name="org.tensorflow.demo.FarmDetectorActivity"
+            android:launchMode="singleTask"
+            android:exported="true"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.farm.innovation.biz.login.LoginActivity"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+        <activity
+            android:name="com.farm.innovation.biz.login.LoginFamerAarActivity"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+        <activity
+            android:name="com.farm.innovation.login.RegisterActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name="com.farm.innovation.login.UsersActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name="com.farm.innovation.login.view.HomeActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+
+            android:windowSoftInputMode="adjustPan"/>
+
+
+
+        <activity
+            android:name="com.farm.innovation.biz.Insured.PayActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name="com.farm.innovation.biz.Insured.AddAnimalActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name="com.farm.innovation.biz.insurance.InsuranceAcitivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name="com.farm.innovation.biz.insurance.EnterpriseBaodanActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name="com.farm.innovation.biz.insurance.OrganizationBaodanActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name="com.farm.innovation.biz.insurance.YanBiaoDanActivity"
+            android:exported="true"
+            />
+        <activity
+            android:name="com.farm.innovation.biz.insurance.CreateYanActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name="com.farm.innovation.login.ToubaoDetailActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name="com.farm.innovation.login.UpdateToubaoActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name="com.farm.innovation.login.LipeiDetailActivity"
+            android:screenOrientation="portrait"
+            />
+
+        <activity
+            android:name="org.tensorflow.demo.ToubaoCowInfoActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            />
+
         <service android:name="com.xiangchuang.risks.update.AppUpgradeService"/>
         <service android:name="innovation.upload.UploadService"/>
         <service android:name="com.xiangchuang.risks.view.LoginFamerServer"/>

@@ -35,8 +35,7 @@ public class AlertDialogManager {
             return;
         }
         AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-        dialog.setIcon(R.drawable.ic_launcher)
-                .setTitle(title)
+        dialog.setTitle(title)
                 .setMessage(message)
                 .setPositiveButton("确定", new android.content.DialogInterface.OnClickListener() {
                     @Override

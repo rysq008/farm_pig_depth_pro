@@ -15,6 +15,7 @@ limitations under the License.
 
 package org.tensorflow.demo.env;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.os.Environment;
@@ -91,6 +92,50 @@ public class ImageUtils {
       LOGGER.e(e, "Exception!");
     }
   }
+  
+  
+  /**
+   * Saves a Bitmap object to disk for analysis.
+   *
+   * @param bitmap The bitmap to save.
+   */
+  public static void saveBitmap(Context context, final Bitmap bitmap) {
+    saveBitmap(context, bitmap, "preview.png");
+  }
+
+  /**
+   * Saves a Bitmap object to disk for analysis.
+   *
+   * @param bitmap The bitmap to save.
+   * @param filename The location to save the bitmap to.
+   */
+  public static void saveBitmap(Context context, final Bitmap bitmap, final String filename) {
+//    final String root =
+//        Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "tensorflow";//haojie del
+    final String root =
+            context.getExternalCacheDir().getAbsolutePath() + File.separator + "tensorflow";
+    LOGGER.i("Saving %dx%d bitmap to %s.", bitmap.getWidth(), bitmap.getHeight(), root);
+    final File myDir = new File(root);
+
+    if (!myDir.mkdirs()) {
+      LOGGER.i("Make dir failed");
+    }
+
+    final String fname = filename;
+    final File file = new File(myDir, fname);
+    if (file.exists()) {
+      file.delete();
+    }
+    try {
+      final FileOutputStream out = new FileOutputStream(file);
+      bitmap.compress(Bitmap.CompressFormat.PNG, 99, out);
+      out.flush();
+      out.close();
+    } catch (final Exception e) {
+      LOGGER.e(e, "Exception!");
+    }
+  }
+  
 
   // This value is 2 ^ 18 - 1, and is used to clamp the RGB values before their ranges
   // are normalized to eight bits.
@@ -209,7 +254,7 @@ public class ImageUtils {
    * @param height The height of the input image.
    * @param halfSize If true, downsample to 50% in each dimension, otherwise not.
    */
-  private static native void convertYUV420SPToARGB8888(
+  public static native void convertYUV420SPToARGB8888(
       byte[] input, int[] output, int width, int height, boolean halfSize);
 
   /**
@@ -248,7 +293,7 @@ public class ImageUtils {
    * @param width The width of the input image.
    * @param height The height of the input image.
    */
-  private static native void convertYUV420SPToRGB565(
+  public static native void convertYUV420SPToRGB565(
       byte[] input, byte[] output, int width, int height);
 
   /**
@@ -261,7 +306,7 @@ public class ImageUtils {
    * @param width The width of the input image.
    * @param height The height of the input image.
    */
-  private static native void convertARGB8888ToYUV420SP(
+  public static native void convertARGB8888ToYUV420SP(
       int[] input, byte[] output, int width, int height);
 
   /**
@@ -274,7 +319,7 @@ public class ImageUtils {
    * @param width The width of the input image.
    * @param height The height of the input image.
    */
-  private static native void convertRGB565ToYUV420SP(
+  public static native void convertRGB565ToYUV420SP(
       byte[] input, byte[] output, int width, int height);
 
   /**

@@ -1,3 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+ Copyright 2016 The TensorFlow Authors. All Rights Reserved.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
 <resources>
     <string name="app_name">猪险</string>
     <!--<string name="app_name">猪险测试版</string>-->
@@ -68,10 +83,45 @@
 
     <string name="idPostive">身份证正面照片</string>
     <string name="businessLicense">营业执照照片</string>
-    <string name="appwarning">需要开启权限才可以使用猪险app!</string>
+    <string name="appwarning">需要开启权限才可以使用!</string>
     <string name="locationwarning">您还未开启GPS,现在去开启吗?</string>
     <string name="permission_request">This sample needs permission for camera and audio recording.</string>
     <string name="title_activity_monitoring">MonitoringActivity</string>
     <string name="deadpig_process_skip_tip">"无害化处理步骤还未完成，跳过当前页面数据将清除，您确定要跳过吗？"</string>
     <string name="deadpig_process_back_tip">"无害化处理当前步骤还未完成，退回上一步当前页面数据将清除，您确定要返回上一步吗？"</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="title_activity_login_new">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="error_invalid_password">This password is too short</string>
+
+    <string name="error_message_name">请输入中文用户名</string>
+    <string name="error_message_phonenumber">手机号错误</string>
+    <string name="error_message_age">Enter Age</string>
+    <string name="error_message_password">密码错误</string>
+    <string name="success_message">注册成功</string>
+    <string name="text_not_member">No Account yet? Create one</string>
+    <string name="text_already_member">Already a member? Login</string>
+    <string name="error_user_exists">该用户已存在，请直接登录</string>
+    <string name="error_password_match">两次输入密码不一致</string>
+    <string name="error_valid_username_password">密码或手机号错误！！</string>
+    <string name="error_message_idnumber">错误的身份证号</string>
+    <string name="error_message_company">错误的所属公司</string>
+    <string name="error_message_phone_number">手机号错误</string>
+    <string name="error_message_checkcode">验证码错误</string>
+    <string name="version_name">版本：</string>
+    <string name="expression">((^(13|15|17|18)[0-9]{9}$)|(^0[1,2]{1}\\d{1}-?\\d{8}$)|(^0[3-9] {1}\\d{2}-?\\d{7,8}$)|(^0[1,2]{1}\\d{1}-?\\d{8}-(\\d{1,4})$)|(^0[3-9]{1}\\d{2}-? \\d{7,8}-(\\d{1,4})$))</string>
+    <string name="new_baodan">新建保单</string>
+    <string name="build_insure">新建验标单</string>
+    <string name="pay_apply_animal">新建理赔单</string>
+    <string name="new_enterprise_baodan">新建企业保单</string>
+    <string name="new_organization_baodan">新建组织验标单</string>
+    <string name="bankCard">银行卡正面照片</string>
+    <string name="uploadwarning">您还没有已审核的保单</string>
+    <string name="selectwarning">您还未选择牲畜信息</string>
+
+
 </resources>
