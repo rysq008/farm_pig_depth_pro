@@ -129,14 +129,14 @@ public class UncompletedBean implements Parcelable {
         private String describe;
         private int dealType;   //处理方式  0图片 1视频
         private String recTime; //录制时长
-        private String id; //处理id
+        private String stepId; //处理id
 
-        public String getId() {
-            return id;
+        public String getStepId() {
+            return stepId;
         }
 
-        public void setId(String id) {
-            this.id = id;
+        public void setStepId(String id) {
+            this.stepId = id;
         }
 
         public int getStep() {
@@ -192,7 +192,7 @@ public class UncompletedBean implements Parcelable {
             dest.writeString(this.describe);
             dest.writeInt(this.dealType);
             dest.writeString(this.recTime);
-            dest.writeString(this.id);
+            dest.writeString(this.stepId);
         }
 
         public currentStepInfo() {
@@ -203,7 +203,7 @@ public class UncompletedBean implements Parcelable {
             this.describe = in.readString();
             this.dealType = in.readInt();
             this.recTime = in.readString();
-            this.id = in.readString();
+            this.stepId = in.readString();
         }
 
         public static final Creator<currentStepInfo> CREATOR = new Creator<currentStepInfo>() {

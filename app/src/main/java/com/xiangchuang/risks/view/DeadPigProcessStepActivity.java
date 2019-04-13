@@ -34,8 +34,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,9 +44,6 @@ import innovation.view.ProcessPigInfoDialog;
 import innovation.view.dialog.DialogHelper;
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 
@@ -501,7 +496,7 @@ public class DeadPigProcessStepActivity extends BaseActivity implements View.OnC
         mProgressDialog.show();
         Map<String, String> mapbody = new HashMap<>();
         mapbody.put("innocuousId", processStepBean.getInnocuousId());//那个订单
-        mapbody.put("innocuousStepId", infoBean.getId());//步骤 id
+        mapbody.put("innocuousStepId", infoBean.getStepId());//步骤 id
         mapbody.put("step", String.valueOf(mCurrentStep));//第几步
         mapbody.put("skip", String.valueOf(skip));//是否跳过
         mapbody.put("address", LocationManager_new.getInstance(DeadPigProcessStepActivity.this).str_address);//地址

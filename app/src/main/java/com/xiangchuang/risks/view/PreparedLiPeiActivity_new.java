@@ -324,7 +324,7 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
 
 
 //    public void onClickView(View view) {
-//        switch (view.getId()) {
+//        switch (view.getStepId()) {
 //            case prepared_begin:
 //                if (!hasInNo) {
 //                    Toast.makeText(AppConfig.getAppContext(), "保单号为空，无法申请预理赔。", Toast.LENGTH_LONG).show();
