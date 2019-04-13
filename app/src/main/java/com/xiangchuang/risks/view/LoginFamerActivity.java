@@ -1,10 +1,20 @@
 package com.xiangchuang.risks.view;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.StrictMode;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hjq.permissions.OnPermission;
@@ -58,6 +68,10 @@ public class LoginFamerActivity extends BaseActivity {
                 .permission(Permission.Group.LOCATION) //不指定权限则自动获取清单中的危险权限
                 .permission(Permission.READ_PHONE_STATE)
                 .permission(Permission.Group.STORAGE)
+                .permission(Permission.CAMERA)
+                .permission(Permission.RECORD_AUDIO)
+                .permission(Permission.READ_CONTACTS)
+                .permission(Manifest.permission.INTERNET)
                 .request(new OnPermission() {
                     @Override
                     public void hasPermission(List<String> granted, boolean isAll) {
@@ -74,7 +88,8 @@ public class LoginFamerActivity extends BaseActivity {
                                 LoginFamerActivity.this.finish();
                                 return;
                             }
-                            getDataFromNet("15000000001", "123456");
+                            showTypeDialog();
+//                            getDataFromNet("15000000001", "123456");
 
                         } else {
                             Toast.makeText(LoginFamerActivity.this, "is not all permission", Toast.LENGTH_LONG).show();
@@ -324,4 +339,43 @@ public class LoginFamerActivity extends BaseActivity {
         });
     }
 
+    /**
+     * 选择险种dialog
+     */
+    private void showTypeDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(LoginFamerActivity.this);
+        LayoutInflater inflater = LayoutInflater.from(LoginFamerActivity.this);
+        View v = inflater.inflate(R.layout.select_dialog_layout, null);
+        Dialog dialog = builder.create();
+        dialog.show();
+        dialog.getWindow().setContentView(v);
+
+        TextView famer = v.findViewById(R.id.tv_famer_select);
+        TextView pig = v.findViewById(R.id.tv_pig_select);
+        ImageView close = v.findViewById(R.id.iv_close);
+
+        famer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        pig.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getDataFromNet("","");
+            }
+        });
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                LoginFamerActivity.this.finish();
+        }
+        });
+
+        dialog.getWindow().setGravity(Gravity.CENTER);
+        dialog.setCancelable(false);
+    }
 }
