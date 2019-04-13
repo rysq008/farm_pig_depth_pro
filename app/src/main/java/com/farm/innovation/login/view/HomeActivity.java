@@ -126,8 +126,7 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
         gson = new Gson();
         queryVideoFlag();
 
-        if ("com.farm.innovation.nongxian".equals(FarmAppConfig.getApplication().getPackageName()))
-            rl_edit.setVisibility(View.VISIBLE);
+        rl_edit.setVisibility(View.VISIBLE);
 
         moveFlie();
 
@@ -136,11 +135,18 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
         TextView select_type = popview.findViewById(R.id.select_type);
         TextView login_exit = popview.findViewById(R.id.login_exit);
         TextView tvPopUpdate = popview.findViewById(R.id.tv_pop_update);
+        if (!"com.farm.innovation.nongxian".equals(FarmAppConfig.getApplication().getPackageName())) {
+            login_exit.setVisibility(View.GONE);
+            tvPopUpdate.setVisibility(View.GONE);
+            findViewById(R.id.rl_pop_updata).setVisibility(View.GONE);
+        }
         ivPopUpdateSign = popview.findViewById(R.id.iv_pop_update_sign);
 
         if (needUpDate) {
-            ivPopUpdateSign.setVisibility(View.VISIBLE);
-            ivSign.setVisibility(View.VISIBLE);
+            if ("com.farm.innovation.nongxian".equals(FarmAppConfig.getApplication().getPackageName())) {
+                ivPopUpdateSign.setVisibility(View.VISIBLE);
+                ivSign.setVisibility(View.VISIBLE);
+            }
         } else {
             ivPopUpdateSign.setVisibility(View.GONE);
             ivSign.setVisibility(View.GONE);

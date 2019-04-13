@@ -30,15 +30,17 @@
             android:background="#f2f2f2" />
 
         <RelativeLayout
+            android:id="@+id/rl_pop_updata"
             android:layout_width="match_parent"
             android:layout_height="50dp">
+
             <TextView
                 android:id="@+id/tv_pop_update"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
-                android:text="版本更新"
                 android:gravity="center"
+                android:text="版本更新"
                 android:textColor="#ffffff"
                 android:textSize="16sp" />
 
@@ -46,11 +48,11 @@
                 android:id="@+id/iv_pop_update_sign"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
                 android:layout_margin="5dp"
                 android:background="@drawable/farm_dian"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
         </RelativeLayout>
 

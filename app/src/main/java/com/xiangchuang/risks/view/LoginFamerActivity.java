@@ -372,8 +372,8 @@ public class LoginFamerActivity extends BaseActivity {
         dialog.getWindow().setContentView(v);
 
         TextView famer = v.findViewById(R.id.tv_famer_select);
-        TextView donkey = v.findViewById(R.id.tv_famer_select);
-        TextView yak = v.findViewById(R.id.tv_famer_select);
+        TextView donkey = v.findViewById(R.id.tv_donkey_select);
+        TextView yak = v.findViewById(R.id.tv_yak_select);
         TextView pig = v.findViewById(R.id.tv_pig_select);
         ImageView close = v.findViewById(R.id.iv_close);
 
