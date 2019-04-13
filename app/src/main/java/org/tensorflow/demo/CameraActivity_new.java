@@ -58,7 +58,7 @@ public abstract class CameraActivity_new extends Activity implements OnImageAvai
         super.onCreate(null);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        setContentView(R.layout.activity_camera);
+        setContentView(R.layout.activity_camera_pig);
         if (hasPermission()) {
             setFragment();
         } else {
