@@ -158,7 +158,7 @@ public class DeadPigProcessStepActivity extends BaseActivity implements View.OnC
                 btn_process_pre_step.setVisibility(View.GONE);
             }
             if (mCurrentStep == processStepBean.getCurrentStep().getCurrentStepInfoList().size()) {
-                btn_process_next_step.setText("完成");
+                btn_process_next_step.setText("提交");
                 btn_process_skip_step.setVisibility(View.GONE);
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) btn_process_pre_step.getLayoutParams();
                 params.rightMargin = 0;

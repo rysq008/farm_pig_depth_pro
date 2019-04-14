@@ -84,6 +84,7 @@
 
         <activity
             android:name="com.xiangchuang.risks.view.SelectFunctionActivity_new"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity android:name="com.xiangchuang.risks.view.PigHouseInformationActivity" />
         <activity android:name="com.xiangchuang.risks.view.PigHogInformationActivity" />

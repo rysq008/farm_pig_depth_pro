@@ -200,7 +200,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@drawable/begin_btn_bg"
-                    android:text="提交"
+                    android:text="下一步"
                     android:textColor="@color/WHITE"
                     android:textSize="16dp" />
             </LinearLayout>
