@@ -27,50 +27,50 @@ import innovation.utils.HttpUtils;
 
 public class ShareUtils {
 
-    private static SharedPreferences preferences;
+    public static SharedPreferences preferences_pig;
 
     public static final void init(Context context) {
-        if (null == preferences)
-//            preferences = PreferenceManager.getDefaultSharedPreferences(context);
-            preferences = context.getSharedPreferences(context.getPackageName() + "_pig", Context.MODE_PRIVATE);
+        if (null == preferences_pig)
+//            preferences_farm = PreferenceManager.getDefaultSharedPreferences(context);
+            preferences_pig = context.getSharedPreferences(context.getPackageName() + "_pig", Context.MODE_PRIVATE);
     }
 
     public static final String getHost(String key) {
-        return null == preferences ? "http://47.92.167.61:8081/nongxian2/" : preferences.getString(key, "http://47.92.167.61:8081/nongxian2/");
+        return null == preferences_pig ? "http://47.92.167.61:8081/nongxian2/" : preferences_pig.getString(key, "http://47.92.167.61:8081/nongxian2/");
     }
 
     public static final boolean saveHost(String key, String val) {
-        return preferences.edit().putString(key, val).commit();
+        return preferences_pig.edit().putString(key, val).commit();
     }
 
     public static final void saveString(String key, String val) {
-        preferences.edit().putString(key, val).apply();
+        preferences_pig.edit().putString(key, val).apply();
     }
 
     public static final void saveInt(String key, Integer val) {
-        preferences.edit().putInt(key, val).apply();
+        preferences_pig.edit().putInt(key, val).apply();
     }
 
     public static final void saveBool(String key, Boolean val) {
-        preferences.edit().putBoolean(key, val).apply();
+        preferences_pig.edit().putBoolean(key, val).apply();
     }
 
     public static final String getString(String key) {
-        return preferences.getString(key, "");
+        return preferences_pig.getString(key, "");
     }
 
     public static final int getInt(String key) {
-        return preferences.getInt(key, 0);
+        return preferences_pig.getInt(key, 0);
     }
 
     public static final boolean getBool(String key) {
-        return preferences.getBoolean(key, false);
+        return preferences_pig.getBoolean(key, false);
     }
 
     public static final List<String> getIPList() {
         List<String> list = new ArrayList<>();
         try {
-            Map<String, Object> map = (Map<String, Object>) preferences.getAll();
+            Map<String, Object> map = (Map<String, Object>) preferences_pig.getAll();
             for (Map.Entry entry : map.entrySet()) {
                 if (entry.getValue().equals("ip")) {
                     list.add(entry.getKey().toString());

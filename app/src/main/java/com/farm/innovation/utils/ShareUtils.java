@@ -25,50 +25,50 @@ import java.util.Map;
 
 public class ShareUtils {
 
-    private static SharedPreferences preferences;
+    public static SharedPreferences preferences_farm;
 
     public static final void init(Context context) {
-//        preferences = PreferenceManager.getDefaultSharedPreferences(context);
-//        preferences = context.getSharedPreferences("yabinlee",Context.MODE_PRIVATE);
-        preferences = context.getSharedPreferences(context.getPackageName() + "_farm", Context.MODE_PRIVATE);
+//        preferences_farm = PreferenceManager.getDefaultSharedPreferences(context);
+//        preferences_farm = context.getSharedPreferences("yabinlee",Context.MODE_PRIVATE);
+        preferences_farm = context.getSharedPreferences(context.getPackageName() + "_farm", Context.MODE_PRIVATE);
     }
 
     public static final String getHost(String key) {
-        return null == preferences ? "http://60.205.209.245:8081/nongxian2/" : preferences.getString(key, "http://60.205.209.245:8081/nongxian2/");
+        return null == preferences_farm ? "http://60.205.209.245:8081/nongxian2/" : preferences_farm.getString(key, "http://60.205.209.245:8081/nongxian2/");
     }
 
     public static final boolean saveHost(String key, String val) {
-        return preferences.edit().putString(key, val).commit();
+        return preferences_farm.edit().putString(key, val).commit();
     }
 
     public static final void saveString(String key, String val) {
-        preferences.edit().putString(key, val).apply();
+        preferences_farm.edit().putString(key, val).apply();
     }
 
     public static final void saveInt(String key, Integer val) {
-        preferences.edit().putInt(key, val).apply();
+        preferences_farm.edit().putInt(key, val).apply();
     }
 
     public static final void saveBool(String key, Boolean val) {
-        preferences.edit().putBoolean(key, val).apply();
+        preferences_farm.edit().putBoolean(key, val).apply();
     }
 
     public static final String getString(String key) {
-        return preferences.getString(key, "");
+        return preferences_farm.getString(key, "");
     }
 
     public static final int getInt(String key) {
-        return preferences.getInt(key, 0);
+        return preferences_farm.getInt(key, 0);
     }
 
     public static final boolean getBool(String key) {
-        return preferences.getBoolean(key, false);
+        return preferences_farm.getBoolean(key, false);
     }
 
     public static final List<String> getIPList() {
         List<String> list = new ArrayList<>();
         try {
-            Map<String, Object> map = (Map<String, Object>) preferences.getAll();
+            Map<String, Object> map = (Map<String, Object>) preferences_farm.getAll();
             for (Map.Entry entry : map.entrySet()) {
                 if (entry.getValue().equals("ip")) {
                     list.add(entry.getKey().toString());
