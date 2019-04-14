@@ -131,7 +131,7 @@ public class FarmAppConfig {
             mLogger.e("Can't use OpenCV");
         }
 
-        if ("com.farm.innovation.nongxian".equals(FarmAppConfig.getApplication().getPackageName())) {
+        if (FarmAppConfig.isOriginApk()) {
             HttpUtils.baseUrl = ShareUtils.getHost("host");
             HttpUtils.resetIp(HttpUtils.baseUrl);
             // TODO: 2018/8/13 By:LuoLu 农险 4a5d85637e
@@ -157,7 +157,7 @@ public class FarmAppConfig {
                     GlobalDialogUtils.getNotice(activity.getClass().getCanonicalName(), activity);
                 }
                 if (activity instanceof HomeActivity) {
-                    if ("com.farm.innovation.nongxian".equals(FarmAppConfig.getApplication().getPackageName()))
+                    if (FarmAppConfig.isOriginApk())
                         doUpDateTask();
                 }
             }
@@ -340,6 +340,10 @@ public class FarmAppConfig {
             ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE,
                     REQUEST_EXTERNAL_STORAGE);
         }
+    }
+
+    public static boolean isOriginApk(){
+        return "com.farm.innovation.nongxian".equals(FarmAppConfig.getApplication().getPackageName());
     }
 
     public static boolean isApkDebugable() {

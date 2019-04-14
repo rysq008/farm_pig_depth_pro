@@ -135,15 +135,15 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
         TextView select_type = popview.findViewById(R.id.select_type);
         TextView login_exit = popview.findViewById(R.id.login_exit);
         TextView tvPopUpdate = popview.findViewById(R.id.tv_pop_update);
-        if (!"com.farm.innovation.nongxian".equals(FarmAppConfig.getApplication().getPackageName())) {
+        if (!FarmAppConfig.isOriginApk()) {
             login_exit.setVisibility(View.GONE);
             tvPopUpdate.setVisibility(View.GONE);
-            findViewById(R.id.rl_pop_updata).setVisibility(View.GONE);
+            popview.findViewById(R.id.rl_pop_updata).setVisibility(View.GONE);
         }
         ivPopUpdateSign = popview.findViewById(R.id.iv_pop_update_sign);
 
         if (needUpDate) {
-            if ("com.farm.innovation.nongxian".equals(FarmAppConfig.getApplication().getPackageName())) {
+            if (FarmAppConfig.isOriginApk()) {
                 ivPopUpdateSign.setVisibility(View.VISIBLE);
                 ivSign.setVisibility(View.VISIBLE);
             }
@@ -732,7 +732,7 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
 
     @Override
     public void onBackPressed() {
-        if ("com.farm.innovation.nongxian".equals(FarmAppConfig.getApplication().getPackageName())) {
+        if (FarmAppConfig.isOriginApk()) {
             long secondTime = System.currentTimeMillis();
             if (secondTime - firstTime > 2000) {
                 Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
