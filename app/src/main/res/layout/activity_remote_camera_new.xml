@@ -26,7 +26,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#30425A"
-    tools:context="com.xiangchuang.risks.view.USBCameraActivity_new"
+    tools:context="com.xiangchuang.risks.view.USBCameraActivity_newUsb"
     tools:ignore="MergeRootFrame">
 
    <!-- <LinearLayout

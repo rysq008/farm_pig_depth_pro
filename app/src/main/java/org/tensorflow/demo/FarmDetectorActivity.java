@@ -194,6 +194,11 @@ public class FarmDetectorActivity extends FarmCameraActivity implements OnImageA
         }
     }
 
+    @Override
+    protected void initData() {
+
+    }
+
     public static void resetParameter(){
         dTime = 0;
         aTime = 0;

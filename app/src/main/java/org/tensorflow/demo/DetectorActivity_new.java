@@ -143,6 +143,11 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
     }
 
     @Override
+    protected void initData() {
+
+    }
+
+    @Override
     public void onPreviewSizeChosen(final Size size, final int rotation) {
         Log.i("====== " ,"===再次=======");
         if (sheId != null && inspectNo != null && reason != null) {

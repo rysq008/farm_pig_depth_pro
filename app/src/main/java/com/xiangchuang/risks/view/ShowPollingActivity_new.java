@@ -5,9 +5,7 @@ import android.content.Intent;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.location.LocationManager;
-import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
@@ -38,7 +36,6 @@ import java.util.HashMap;
 import java.util.List;
 
 
-import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -144,7 +141,7 @@ public class ShowPollingActivity_new extends BaseActivity {
                                                 } else {
                                                     if (deviceHashMap.size() > 0) {
                                                         //摄像头页面
-                                                        intent = new Intent(ShowPollingActivity_new.this, USBCameraActivity_new.class);
+                                                        intent = new Intent(ShowPollingActivity_new.this, USBCameraActivity_newUsb.class);
                                                     } else {
                                                         Toast.makeText(ShowPollingActivity_new.this, "请连接外接摄像头。", Toast.LENGTH_LONG).show();
                                                         return;

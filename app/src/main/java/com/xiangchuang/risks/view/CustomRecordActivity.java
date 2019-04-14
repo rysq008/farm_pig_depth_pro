@@ -40,6 +40,7 @@ import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
 import com.innovation.pig.insurance.netutils.Constants;
 import com.innovation.pig.insurance.netutils.PreferencesUtils;
+import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.utils.TimeUtil;
 import com.xiangchuang.risks.utils.ToastUtils;
 
@@ -54,7 +55,7 @@ import innovation.utils.UIUtils;
  * 自定义录制视频
  */
 
-public class CustomRecordActivity extends Activity implements View.OnClickListener {
+public class CustomRecordActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = "CustomRecordActivity";
 
@@ -144,7 +145,7 @@ public class CustomRecordActivity extends Activity implements View.OnClickListen
                 });
     }
 
-    private void initView() {
+    public void initView() {
         framelayout = (FrameLayout) findViewById(R.id.framelayout);
         mRecordControl = (ImageView) findViewById(R.id.record_control);
         mRecordTime = (Chronometer) findViewById(R.id.record_time);
@@ -178,6 +179,16 @@ public class CustomRecordActivity extends Activity implements View.OnClickListen
         mRecordTime.setFormat("%s/" + TimeUtil.tansTime(mIntentRecordTime * 1000));
         mRecordTime.setOnChronometerTickListener(onChronometerTickListener);
         mRecordTime.requestLayout();
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return 0;
+    }
+
+    @Override
+    protected void initData() {
+
     }
 
 

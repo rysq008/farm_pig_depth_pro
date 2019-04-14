@@ -141,12 +141,12 @@ public class LoginFamerActivity extends BaseActivity {
     @Override
     protected void initData() {
         mIntent = getIntent();
-//        mIntent.putExtra(Constants.TOKEY, "android_token");
-//        mIntent.putExtra(Constants.USER_ID, "android_userid5");
-//        mIntent.putExtra(Constants.PHONE_NUMBER, "15000000001");
-//        mIntent.putExtra(Constants.NAME, "android_name");
-//        mIntent.putExtra(Constants.DEPARTMENT_ID, "28"/*"android_department"*/);
-//        mIntent.putExtra(Constants.IDENTITY_CARD, "android_identitry");
+        mIntent.putExtra(Constants.TOKEY, "android_token");
+        mIntent.putExtra(Constants.USER_ID, "android_userid5");
+        mIntent.putExtra(Constants.PHONE_NUMBER, "15000000001");
+        mIntent.putExtra(Constants.NAME, "android_name");
+        mIntent.putExtra(Constants.DEPARTMENT_ID, "28"/*"android_department"*/);
+        mIntent.putExtra(Constants.IDENTITY_CARD, "android_identitry");
         startService(new Intent(this, UploadService.class));
 //        if (PreferencesUtils.getBooleanValue(Constants.ISLOGIN, AppConfig.getAppContext())) {
 //            String type = PreferencesUtils.getStringValue(Constants.companyfleg, AppConfig.getAppContext());

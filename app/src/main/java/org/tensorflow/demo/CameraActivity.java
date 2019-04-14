@@ -34,6 +34,7 @@ import android.widget.Toast;
 
 import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
+import com.xiangchuang.risks.base.BaseActivity;
 
 import org.tensorflow.demo.env.Logger;
 import org.tensorflow.demo.tracking.MultiBoxTracker;
@@ -41,7 +42,7 @@ import org.tensorflow.demo.tracking.MultiBoxTracker;
 import java.nio.ByteBuffer;
 
 
-public abstract class CameraActivity extends Activity implements OnImageAvailableListener {
+public abstract class CameraActivity extends BaseActivity implements OnImageAvailableListener {
     private static final Logger LOGGER = new Logger();
 
     private static final int PERMISSIONS_REQUEST = 1;

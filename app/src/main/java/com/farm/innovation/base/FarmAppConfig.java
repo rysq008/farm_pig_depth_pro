@@ -153,12 +153,15 @@ public class FarmAppConfig {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
                 FarmAppConfig.activity = activity;
-                if (activity != null && !(activity instanceof WelcomeActivity)) {
-                    GlobalDialogUtils.getNotice(activity.getClass().getCanonicalName(), activity);
-                }
-                if (activity instanceof HomeActivity) {
-                    if (FarmAppConfig.isOriginApk())
-                        doUpDateTask();
+
+                if(activity instanceof BaseActivity){
+                    if (activity != null && !(activity instanceof WelcomeActivity)) {
+                        GlobalDialogUtils.getNotice(activity.getClass().getCanonicalName(), activity);
+                    }
+                    if (activity instanceof HomeActivity) {
+                        if (FarmAppConfig.isOriginApk())
+                            doUpDateTask();
+                    }
                 }
             }
 

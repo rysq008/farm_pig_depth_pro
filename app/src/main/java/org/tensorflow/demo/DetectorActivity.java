@@ -171,6 +171,11 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     }
 
     @Override
+    protected void initData() {
+
+    }
+
+    @Override
     public void onPreviewSizeChosen(final Size size, final int rotation) {
         Log.i("====== ", "===再次=======");
 

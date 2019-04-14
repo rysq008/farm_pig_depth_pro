@@ -32,12 +32,13 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.innovation.pig.insurance.R;
+import com.xiangchuang.risks.base.BaseActivity;
 
 import org.tensorflow.demo.env.Logger;
 
 import java.nio.ByteBuffer;
 
-public abstract class CameraActivity_new extends Activity implements OnImageAvailableListener {
+public abstract class CameraActivity_new extends BaseActivity implements OnImageAvailableListener {
     private static final Logger LOGGER = new Logger();
 
     private static final int PERMISSIONS_REQUEST = 1;

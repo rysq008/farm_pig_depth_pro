@@ -32,7 +32,7 @@ import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.JuanCountAdapter;
 import com.innovation.pig.insurance.R;
 import com.innovation.pig.insurance.view.RecognitionView;
-import com.serenegiant.common.BaseActivity;
+import com.serenegiant.common.UsbBaseActivity;
 import com.serenegiant.usb.CameraDialog;
 import com.serenegiant.usb.USBMonitor;
 import com.serenegiant.usb.UVCCamera;
@@ -56,7 +56,7 @@ import innovation.location.LocationManager;
 import innovation.location.LocationManager_new;
 
 
-public final class USBCameraActivity_new extends BaseActivity implements CameraDialog.CameraDialogParent, CameraViewInterface.Callback {
+public final class USBCameraActivity_newUsb extends UsbBaseActivity implements CameraDialog.CameraDialogParent, CameraViewInterface.Callback {
     private static final boolean DEBUG = true;    // TODO set false on release
 
     private static final String TAG = "USBCameraActivity";
@@ -162,7 +162,7 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            Toast.makeText(USBCameraActivity_new.this, "testCount--->" + testCount, Toast.LENGTH_SHORT).show();
+            Toast.makeText(USBCameraActivity_newUsb.this, "testCount--->" + testCount, Toast.LENGTH_SHORT).show();
             if (msg.what < testNumber) {
                 if (msg.obj.equals("b")) {
                     mTakePictureButton.performClick();
@@ -218,7 +218,7 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
         mCountCompleted.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                synchronized (USBCameraActivity_new.this) {
+                synchronized (USBCameraActivity_newUsb.this) {
                     //最后清点的猪圈尚未保存，请点击[重新采集]或[下一圈]
                     if (mGoonButton.getVisibility() == View.VISIBLE && mNextButton.getVisibility() == View.VISIBLE) {
                         // "最后清点的猪圈尚未保存，请先选择\n[重新采集]或[下一圈]";
@@ -229,9 +229,9 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
                                 "自动识别%d头 修正后%d头\n" +
                                 "完成盘查前请先选择[保存]或[放弃]后完成盘查", tempJuanNum, tempNum, tempEt);
 
-                        AlertDialog.Builder builder = new AlertDialog.Builder(USBCameraActivity_new.this);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(USBCameraActivity_newUsb.this);
 
-                        LayoutInflater inflater = LayoutInflater.from(USBCameraActivity_new.this);
+                        LayoutInflater inflater = LayoutInflater.from(USBCameraActivity_newUsb.this);
                         View view = inflater.inflate(R.layout.hog_finish_layout, null);
                         TextView msg = view.findViewById(R.id.TV_msg);
                         msg.setText(text);
@@ -286,7 +286,7 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
                     if (mRecognitionResults.size() > 0) {
                         uploadRecognitionResult();
                     } else {
-                        Toast.makeText(USBCameraActivity_new.this, "您还未清点猪舍", Toast.LENGTH_LONG).show();
+                        Toast.makeText(USBCameraActivity_newUsb.this, "您还未清点猪舍", Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -316,9 +316,9 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
             count_detail.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    EditText et = new EditText(USBCameraActivity_new.this);
+                    EditText et = new EditText(USBCameraActivity_newUsb.this);
                     et.setInputType(InputType.TYPE_CLASS_NUMBER);
-                    AlertDialog dialog = new AlertDialog.Builder(USBCameraActivity_new.this).setView(et).
+                    AlertDialog dialog = new AlertDialog.Builder(USBCameraActivity_newUsb.this).setView(et).
                             setPositiveButton("ok", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
@@ -355,7 +355,7 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
                 //检测图片质量
                 int bright = innovation.utils.ImageUtils.checkImageBright(tBitmap);
                 if (bright < 40) {
-                    Toast.makeText(USBCameraActivity_new.this, "图片过暗", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(USBCameraActivity_newUsb.this, "图片过暗", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -384,12 +384,12 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
                                     mGoonButton.setVisibility(View.VISIBLE);
                                     mNextButton.setVisibility(View.VISIBLE);
                                     mTakePictureButton.setVisibility(View.GONE);
-                                    Toast.makeText(USBCameraActivity_new.this, "识别失败，\n请重点本圈或点下一圈由AI为您完成本圈点数。", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(USBCameraActivity_newUsb.this, "识别失败，\n请重点本圈或点下一圈由AI为您完成本圈点数。", Toast.LENGTH_LONG).show();
                                 }
                                 if (isTest) {
                                     testCount++;
                                     if (testCount <= testNumber) {
-                                        Toast.makeText(USBCameraActivity_new.this, "--->" + testCount, Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(USBCameraActivity_newUsb.this, "--->" + testCount, Toast.LENGTH_SHORT).show();
                                         Message msg = tHandlet.obtainMessage(testCount, "a");
                                         tHandlet.sendMessage(msg);
                                     }
@@ -438,7 +438,7 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
                 if (isTest) {
                     testCount++;
                     if (testCount <= testNumber) {
-                        Toast.makeText(USBCameraActivity_new.this, "--->" + testCount, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(USBCameraActivity_newUsb.this, "--->" + testCount, Toast.LENGTH_SHORT).show();
                         Message msg = tHandlet.obtainMessage(testCount, "b");
 //                        msg.setTarget(tHandlet);
                         tHandlet.sendMessage(msg);
@@ -462,7 +462,7 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
                         tempCount--;
                     }
                     if ((tempNum - tempCount) > 3) {
-                        Toast.makeText(USBCameraActivity_new.this, "修正数值已达上限", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(USBCameraActivity_newUsb.this, "修正数值已达上限", Toast.LENGTH_SHORT).show();
                     } else {
                         etModifier.setText("" + tempCount);
                     }
@@ -482,7 +482,7 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
                     }
 
                     if ((tempCount - tempNum) > 3) {
-                        Toast.makeText(USBCameraActivity_new.this, "修正数值已达上限", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(USBCameraActivity_newUsb.this, "修正数值已达上限", Toast.LENGTH_SHORT).show();
                     } else {
                         etModifier.setText("" + tempCount);
                     }
@@ -496,8 +496,8 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
             @Override
             public void onClick(View v) {
 
-                AlertDialog.Builder dialog = new AlertDialog.Builder(USBCameraActivity_new.this);
-                View inflate = View.inflate(USBCameraActivity_new.this, R.layout.hog_result_layout, null);
+                AlertDialog.Builder dialog = new AlertDialog.Builder(USBCameraActivity_newUsb.this);
+                View inflate = View.inflate(USBCameraActivity_newUsb.this, R.layout.hog_result_layout, null);
                 dialog.setView(inflate);
                 ListView result_list_2 = inflate.findViewById(R.id.juan_list);
                 TextView textView = inflate.findViewById(R.id.hog_sure);
@@ -523,8 +523,8 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
                         "合计%s圈 %s头 修正后%s头 时长%s秒", mRecognitionResults.size(), mAutolCount.get(), mTotalCount.get(),
                 (System.currentTimeMillis() - mStartTime) / 1000, mOldJuanCnt, mOldAutoCount, mOldTotalCount, mOldDuration);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(USBCameraActivity_new.this);
-        LayoutInflater inflater = LayoutInflater.from(USBCameraActivity_new.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(USBCameraActivity_newUsb.this);
+        LayoutInflater inflater = LayoutInflater.from(USBCameraActivity_newUsb.this);
         View view = inflater.inflate(R.layout.hog_finish_layout, null);
         TextView msg = view.findViewById(R.id.TV_msg);
         msg.setText(text);
@@ -550,7 +550,7 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                synchronized (USBCameraActivity_new.this) {
+                synchronized (USBCameraActivity_newUsb.this) {
                     dialog.dismiss();
 
                     mGoonButton.setVisibility(View.GONE);
@@ -589,7 +589,7 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
     private void upResult() {
         List<RecognitionResult> results = new ArrayList<>(mRecognitionResults);
         CounterHelper.uploadRecognitionResult(mSheId, mSheName, (int) ((System.currentTimeMillis() - mStartTime) / 1000),
-                results, USBCameraActivity_new.this, new CounterHelper.OnUploadResultListener() {
+                results, USBCameraActivity_newUsb.this, new CounterHelper.OnUploadResultListener() {
                     @Override
                     public void onCompleted(boolean succeed, String resutl) {
                         runOnUiThread(new Runnable() {
@@ -605,7 +605,7 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
                                         if (status != 1) {
                                             showErrorDialog();
                                         } else {
-                                            Toast.makeText(USBCameraActivity_new.this, "上传成功！", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(USBCameraActivity_newUsb.this, "上传成功！", Toast.LENGTH_SHORT).show();
                                             new Handler().postDelayed(new Runnable() {
                                                 @Override
                                                 public void run() {
@@ -633,7 +633,7 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
      * 显示错误提示框
      */
     private void showErrorDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(USBCameraActivity_new.this)
+        AlertDialog.Builder builder = new AlertDialog.Builder(USBCameraActivity_newUsb.this)
                 .setIcon(R.drawable.cowface)
                 .setTitle("提示")
                 .setMessage("上传失败，请重试。")
@@ -666,8 +666,8 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
             mUVCCameraView.onResume();
         if (!mCameraHandler.isOpened()) {
             if (DEBUG) Log.v(TAG, "onStart:" + "------!isOpened-----");
-            synchronized (USBCameraActivity_new.this) {
-                CameraDialog.openCamera(USBCameraActivity_new.this);
+            synchronized (USBCameraActivity_newUsb.this) {
+                CameraDialog.openCamera(USBCameraActivity_newUsb.this);
             }
         } else {
             if (DEBUG) Log.v(TAG, "onStart:" + "-----isOpened------");
@@ -775,10 +775,10 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
     private final USBMonitor.OnDeviceConnectListener mOnDeviceConnectListener = new USBMonitor.OnDeviceConnectListener() {
         @Override
         public void onAttach(final UsbDevice device) {
-            //Toast.makeText(USBCameraActivity_new.this, "USB_DEVICE_ATTACHED", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(USBCameraActivity_newUsb.this, "USB_DEVICE_ATTACHED", Toast.LENGTH_SHORT).show();
             if (isCameraClose) {
-                CameraDialog.openCamera(USBCameraActivity_new.this);
-                mCameraHandler = UVCCameraHandler.createHandler(USBCameraActivity_new.this, mUVCCameraView,
+                CameraDialog.openCamera(USBCameraActivity_newUsb.this);
+                mCameraHandler = UVCCameraHandler.createHandler(USBCameraActivity_newUsb.this, mUVCCameraView,
                         USE_SURFACE_ENCODER ? 0 : 1, PREVIEW_WIDTH, PREVIEW_HEIGHT, PREVIEW_MODE);
                 isCameraClose = false;
             }
@@ -815,7 +815,7 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
 
         @Override
         public void onDettach(final UsbDevice device) {
-            //Toast.makeText(USBCameraActivity_new.this, "USB_DEVICE_DETACHED", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(USBCameraActivity_newUsb.this, "USB_DEVICE_DETACHED", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -950,7 +950,7 @@ public final class USBCameraActivity_new extends BaseActivity implements CameraD
             mUVCCameraView.onResume();
         if (!mCameraHandler.isOpened()) {
             if (DEBUG) Log.v(TAG, "onStart:" + "------!isOpened-----");
-            CameraDialog.openCamera(USBCameraActivity_new.this);
+            CameraDialog.openCamera(USBCameraActivity_newUsb.this);
         } else {
             if (DEBUG) Log.v(TAG, "onStart:" + "-----isOpened------");
         }

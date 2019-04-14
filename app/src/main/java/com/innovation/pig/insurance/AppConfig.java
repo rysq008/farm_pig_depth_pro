@@ -22,6 +22,7 @@ import com.farm.innovation.base.FarmAppConfig;
 import com.innovation.pig.insurance.netutils.Constants;
 import com.innovation.pig.insurance.netutils.PreferencesUtils;
 import com.tencent.bugly.crashreport.CrashReport;
+import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.update.UpdateReceiver;
 import com.xiangchuang.risks.utils.ShareUtils;
 import com.xiangchuang.risks.view.LoginFamerActivity;
@@ -150,13 +151,16 @@ public class AppConfig {
 //                    Toast.makeText(activity, "------->>"+HttpUtils.baseUrl, Toast.LENGTH_LONG).show();
 //                }
                 AppConfig.activity = activity;
-                if (activity != null && !(activity instanceof LoginFamerActivity)) {                    GlobalDialogUtils.getNotice(activity.getClass().getCanonicalName(), activity);
-                }
+                if(activity instanceof BaseActivity){
+                    if (activity != null && !(activity instanceof LoginFamerActivity)) {
+                        GlobalDialogUtils.getNotice(activity.getClass().getCanonicalName(), activity);
+                    }
 
-                if (!(activity instanceof LoginFamerActivity)) {
-                    isFirst++;
-                    if (AppConfig.isOriginApk())
-                        doUpDateTask();
+                    if (!(activity instanceof LoginFamerActivity)) {
+                        isFirst++;
+                        if (AppConfig.isOriginApk())
+                            doUpDateTask();
+                    }
                 }
             }
 

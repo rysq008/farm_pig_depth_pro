@@ -36,6 +36,7 @@ import android.view.Surface;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.farm.innovation.base.BaseActivity;
 import com.innovation.pig.insurance.R;
 import com.farm.innovation.base.FarmAppConfig;
 import com.farm.innovation.utils.PreferencesUtils;
@@ -47,7 +48,7 @@ import org.tensorflow.demo.env.Logger;
 
 import static com.farm.innovation.base.FarmAppConfig.SCREEN_ORIENTATION;
 
-public abstract class FarmCameraActivity extends Activity implements OnImageAvailableListener {
+public abstract class FarmCameraActivity extends BaseActivity implements OnImageAvailableListener {
     private static final Logger LOGGER = new Logger();
 
     private static final int PERMISSIONS_REQUEST = 1;

@@ -39,16 +39,17 @@ import com.serenegiant.dialog.MessageDialogFragment;
 import com.serenegiant.utils.BuildCheck;
 import com.serenegiant.utils.HandlerThreadHandler;
 import com.serenegiant.utils.PermissionCheck;
+import com.xiangchuang.risks.base.BaseActivity;
 
 /**
  * Created by saki on 2016/11/18.
  *
  */
-public class BaseActivity extends Activity
+public class UsbBaseActivity extends BaseActivity
 	implements MessageDialogFragment.MessageDialogListener {
 
 	private static boolean DEBUG = false;	// FIXME 実働時はfalseにセットすること
-	private static final String TAG = BaseActivity.class.getSimpleName();
+	private static final String TAG = UsbBaseActivity.class.getSimpleName();
 
 	/** UI操作のためのHandler */
 	private final Handler mUIHandler = new Handler(Looper.getMainLooper());
@@ -68,9 +69,19 @@ public class BaseActivity extends Activity
 	}
 
 	@Override
+	protected int getLayoutId() {
+		return 0;
+	}
+
+	@Override
 	protected void onPause() {
 		clearToast();
 		super.onPause();
+	}
+
+	@Override
+	protected void initData() {
+
 	}
 
 	@Override
@@ -197,9 +208,9 @@ public class BaseActivity extends Activity
 				}
 				if (args != null) {
 					final String _msg = getString(msg, args);
-					mToast = Toast.makeText(BaseActivity.this, _msg, Toast.LENGTH_SHORT);
+					mToast = Toast.makeText(UsbBaseActivity.this, _msg, Toast.LENGTH_SHORT);
 				} else {
-					mToast = Toast.makeText(BaseActivity.this, msg, Toast.LENGTH_SHORT);
+					mToast = Toast.makeText(UsbBaseActivity.this, msg, Toast.LENGTH_SHORT);
 				}
 				mToast.show();
 			} catch (final Exception e) {
