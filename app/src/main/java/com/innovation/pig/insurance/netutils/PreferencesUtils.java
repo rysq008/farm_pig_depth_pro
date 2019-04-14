@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
 
 import static com.farm.innovation.utils.ShareUtils.preferences_farm;
 import static com.xiangchuang.risks.utils.ShareUtils.preferences_pig;
@@ -71,7 +72,7 @@ public class PreferencesUtils {
     }
 
     public static int getIntValue(String key, Context context) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+     //   SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         return sp.getInt(key, 0);
     }
 
