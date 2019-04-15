@@ -176,6 +176,13 @@ public class WaitDisposeActivity extends BaseActivity implements View.OnClickLis
 
                 } catch (Exception e) {
                     e.printStackTrace();
+                }finally {
+                    WaitDisposeActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            WaitDisposeActivity.this.mProgressDialog.dismiss();
+                        }
+                    });
                 }
             }
         });

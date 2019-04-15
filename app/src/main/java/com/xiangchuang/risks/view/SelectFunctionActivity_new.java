@@ -170,6 +170,11 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
                 relLipei.setVisibility(View.GONE);
             }
         }
+        if(AppConfig.isOriginApk()){
+            rlEdit.setVisibility(View.VISIBLE);
+        }else{
+            rlEdit.setVisibility(View.GONE);
+        }
 
         queryVideoFlag();
 
