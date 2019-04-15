@@ -58,14 +58,16 @@ public abstract class BaseActivity extends AppCompatActivity {
             }
         }*/
         setTheme(R.style.AppFullScreenTheme);
-        if (getLayoutId() > 0)
-            this.setContentView(this.getLayoutId());//缺少这一行
-        // setContentView(getLayoutId());
-        ButterKnife.bind(this);
         FarmAppConfig.verifyStoragePermissions(this);
         showProgressDialog(this);
-        initView();
-        initData();
+        if (getLayoutId() > 0){
+            this.setContentView(this.getLayoutId());//缺少这一行
+            // setContentView(getLayoutId());
+            ButterKnife.bind(this);
+            initView();
+            initData();
+        }
+
     }
 
     public void initView() {

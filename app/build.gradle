@@ -1,5 +1,5 @@
-apply plugin: 'com.android.application'
-//apply plugin: 'com.android.library'
+//apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 //apply plugin: 'maven'
 //uploadArchives {
 //    configuration = configurations.archives
@@ -178,8 +178,8 @@ dependencies {
         all*.exclude group: 'com.google.code.gson'
     }
 
-    //    implementation 'org.opencv:opencv-android:3.4.1'
-    implementation files('libs/AMap2DMap_5.2.0_AMapSearch_6.5.0_AMapLocation_4.4.0_20181122.jar')
+//    //    implementation 'org.opencv:opencv-android:3.4.1'
+//    implementation files('libs/AMap2DMap_5.2.0_AMapSearch_6.5.0_AMapLocation_4.4.0_20181122.jar')
 }
 apply plugin: 'io.objectbox'
 
@@ -189,10 +189,10 @@ apply plugin: 'io.objectbox'
 //
 //ext {
 //    // 从Github上clone下来的项目的本地地址
-//    GITHUB_REPO_PATH = "C:\\Users\\luolu\\Documents\\ScheduleApp"/*"C:\\repos"*/
+//    GITHUB_REPO_PATH = /*"C:\\Users\\luolu\\Documents\\ScheduleApp"*/"C:\\repos"
 //    // api 'com.audient:super_library:1.0.0'
 //    PUBLISH_GROUP_ID = 'com.innovation.aar'
-//    PUBLISH_ARTIFACT_ID = 'pigInsurance'
+//    PUBLISH_ARTIFACT_ID = 'pig_farm_Insurance'
 //    PUBLISH_VERSION = android.defaultConfig.versionName/*'1.5.3'*/
 //}
 //

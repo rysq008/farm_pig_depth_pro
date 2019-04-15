@@ -86,6 +86,11 @@ public class CompanyActivity extends BaseActivity {
         tvExit = (TextView) findViewById(R.id.tv_exit);
         ivSign = (ImageView) findViewById(R.id.iv_sign);
         rl_edit = (RelativeLayout) findViewById(R.id.rl_edit);
+        if(AppConfig.isOriginApk()){
+            rl_edit.setVisibility(View.VISIBLE);
+        }else{
+            rl_edit.setVisibility(View.GONE);
+        }
         searchEdit = (EditText) findViewById(R.id.search_tag_input_edit);
         btnClear = (Button) findViewById(R.id.bt_clear);
         findViewById(R.id.tv_exit).setOnClickListener(new View.OnClickListener() {

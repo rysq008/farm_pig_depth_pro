@@ -62,10 +62,10 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation(name: 'app-release-merge2', ext: 'aar')
+    implementation(name: 'app-release-merge6', ext: 'aar')
 //        implementation(name: 'pigInsurance-0409', ext: 'aar')
 //    compile ('com.audient:super_library:1.112'){transitive =true }
-//    compile ('com.innovation.aar:pigInsurance:1.112'){transitive =true }
+//    implementation ('com.innovation.aar:pig_farm_Insurance:1.112'){transitive =true }
 
     implementation 'com.android.support:support-v4:27.1.1'
     implementation 'org.tensorflow:tensorflow-android:1.6.0'
@@ -100,7 +100,7 @@ dependencies {
     implementation 'cn.bingoogolapple:bga-banner:2.0.9'
 
     //======================================================
-    implementation 'com.felipecsl:gifimageview:2.2.0'
+//    implementation 'com.felipecsl:gifimageview:2.2.0'
 //    implementation 'at.wirecube:additive_animations:1.6.2'
     implementation 'com.github.GrenderG:Prefs:1.3'
     implementation 'org.greenrobot:eventbus:3.0.0'
@@ -115,8 +115,8 @@ dependencies {
     configurations {
         all*.exclude group: 'com.google.code.gson'
     }
-    configurations {
-        all*.exclude group: 'org.opencv'
-    }
+//    configurations {
+//        all*.exclude group: 'org.opencv'
+//    }
 }
-apply plugin: 'io.objectbox'
+//apply plugin: 'io.objectbox'
