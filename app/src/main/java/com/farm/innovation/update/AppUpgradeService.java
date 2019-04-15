@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.farm.innovation.base.FarmAppConfig;
 import com.farm.innovation.login.view.HomeActivity;
+import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
 
 import java.io.File;
@@ -189,7 +190,7 @@ public class AppUpgradeService extends Service {
     public void install(File apkFile) {
 //        Uri uri = Uri.fromFile(apkFile);
         if(Build.VERSION.SDK_INT>=24) {
-            Uri uri = FileProvider.getUriForFile(getApplicationContext(), "com.xiangchuangtec.luolu.animalcounter.provider", apkFile);
+            Uri uri = FileProvider.getUriForFile(getApplicationContext(), AppConfig.getAppContext().getPackageName().concat(".animalcounter.provider"), apkFile);
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);

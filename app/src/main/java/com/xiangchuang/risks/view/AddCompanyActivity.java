@@ -513,7 +513,7 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
         tempFile = new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME);
         Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         //下面这句指定调用相机拍照后的照片存储的路径
-        takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(AddCompanyActivity.this, ("com.xiangchuangtec.luolu.animalcounter.provider"), tempFile));
+        takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(AddCompanyActivity.this, (AppConfig.getAppContext().getPackageName().concat(".animalcounter.provider")), tempFile));
         startActivityForResult(takeIntent, REQUESTCODE_TAKE);
     }
 

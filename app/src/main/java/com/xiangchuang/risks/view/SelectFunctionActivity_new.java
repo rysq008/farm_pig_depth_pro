@@ -157,6 +157,11 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
             this.rel_toubao.setVisibility(View.GONE);
             this.relLipei.setVisibility(View.VISIBLE);
         }
+        if(AppConfig.isOriginApk()){
+            rlEdit.setVisibility(View.VISIBLE);
+        }else{
+            rlEdit.setVisibility(View.GONE);
+        }
 
         this.queryVideoFlag();
         this.pop = new PopupWindow(this);

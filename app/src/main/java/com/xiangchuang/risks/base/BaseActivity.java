@@ -57,15 +57,16 @@ public abstract class BaseActivity extends AppCompatActivity {
         }*/
         setTheme(R.style.AppFullScreenTheme);
         toastUtils = new ToastUtils();
-        if(getLayoutId() != 0)
-        this.setContentView(this.getLayoutId());//缺少这一行
-        // setContentView(getLayoutId());
-        ButterKnife.bind(this);
         AppConfig.verifyStoragePermissions(this);
         showProgressDialog(this);
-        initView();
-        initData();
-    }
+        if(getLayoutId() != 0){
+            this.setContentView(this.getLayoutId());//缺少这一行
+            // setContentView(getLayoutId());
+            ButterKnife.bind(this);
+            initView();
+            initData();
+        }
+     }
 
     public void initView() {
 
