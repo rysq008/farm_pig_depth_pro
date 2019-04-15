@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.util.Base64;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.google.gson.JsonArray;
@@ -35,7 +36,9 @@ import java.util.List;
 import java.util.Map;
 
 import innovation.utils.ThreadPoolProxyFactory;
+import innovation.utils.UIUtils;
 import innovation.utils.ZipUtil;
+import innovation.view.dialog.DialogHelper;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -59,7 +62,7 @@ public final class CounterHelper {
     }
 
     public interface OnImageRecognitionWeightListener {
-        void onCompleted(float weight, int status);
+        void onCompleted(float weight, int status, String errormsg);
     }
 
     public interface OnUploadResultListener {
@@ -83,7 +86,12 @@ public final class CounterHelper {
                     for (RecognitionResult recognitionResult : results) {
                         String fileName = String.format("%s/%d.jpg", path, recognitionResult.index);
                         Log.e("CounterHelper", "fileName" + fileName);
-                        saveBitmap(recognitionResult.bitmap, fileName);
+
+                        if(recognitionResult.autoCount >= 0){
+                            saveBitmap(recognitionResult.bitmap, fileName);
+                        }else{
+                            resizeAndSaveBitmap(recognitionResult.bitmap, fileName);
+                        }
                         files[recognitionResult.index] = new File(fileName);
                         JSONObject jsonObject = new JSONObject();
                         String[] split = fileName.split("/");
@@ -148,7 +156,7 @@ public final class CounterHelper {
         });
     }
 
-    public static void recognitionFromNet(final Bitmap bitmap, final OnImageRecognitionListener listener) {
+    public static void recognitionFromNet(Context context,final Bitmap bitmap, final OnImageRecognitionListener listener) {
 
         ThreadPoolProxyFactory.getNormalThreadPoolProxy().execute(new Runnable() {
             @Override
@@ -180,7 +188,7 @@ public final class CounterHelper {
                                     //resultBitmap = drawNewBitmap(resultImageFile.getAbsolutePath(), array, String.valueOf(count));
 
                                     // 给result.jpeg画框
-                                    resultBitmap = drawNewBitmap(bitmap, array, String.valueOf(count));
+                                    resultBitmap = drawNewBitmap(bitmap, array, String.valueOf(count),context);
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                     AVOSCloudUtils.saveErrorMessage(e,CounterHelper.class.getSimpleName());
@@ -214,7 +222,7 @@ public final class CounterHelper {
                 OkHttp3Util.doPost(URL_WEIGHT_TEST, param, mHeaderMap, new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        listener.onCompleted(-1, 0);
+                        listener.onCompleted(-1, 0, "");
                         AVOSCloudUtils.saveErrorMessage(e,CounterHelper.class.getSimpleName());
                     }
 
@@ -222,6 +230,7 @@ public final class CounterHelper {
                     public void onResponse(Call call, Response response) throws IOException {
                         float weight = 0;
                         int status = 0;
+                        int errorcode = 0;
                         try {
                             if (response.code() == 200) {
                                 String responseStr = response.body().string();
@@ -232,6 +241,7 @@ public final class CounterHelper {
                                     status = object.get("status").getAsInt();
                                     // 识别重量结果
                                     weight = object.get("weight").getAsFloat();
+                                    errorcode = object.get("errorcode").getAsInt();
 
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -241,7 +251,7 @@ public final class CounterHelper {
                         } finally {
                             if (response.body() != null)
                                 response.body().close();
-                            listener.onCompleted(weight, status);
+                            listener.onCompleted(weight, status, getErrorMsg(errorcode));
                         }
                     }
                 });
@@ -249,6 +259,24 @@ public final class CounterHelper {
         }));
     }
 
+    private static String getErrorMsg(int errorcode){
+        String tipContent = "";
+        if(errorcode == DialogHelper.ERROR_CODE_PIG_SMALL) {
+            tipContent = "离猪远了，手机放低点，请重新拍！";
+        } else if(errorcode == DialogHelper.ERROR_CODE_PIG_LARGE) {
+            tipContent = "离猪近了，手机放高点，请重新拍！";
+        } else if(errorcode == DialogHelper.ERROR_CODE_NO_FIND_RULER) {
+            tipContent = "没尺子或光线太暗，请重新拍！";
+        } else if(errorcode == DialogHelper.ERROR_CODE_RULER_SMALL) {
+            tipContent = "离猪远了，手机放低点，请重新拍！";
+        } else if(errorcode == DialogHelper.ERROR_CODE_RULER_LARGE) {
+            tipContent = "离猪近了，手机放高点，请重新拍！";
+        }
+//        else if(errorcode == DialogHelper.ERROR_CODE_PICTURE_DECODE_ERROR) {
+//            tipContent = "图片传输中解码出错,\n";
+//        }
+        return tipContent;
+    }
 
     private static void saveBitmap(final Bitmap bitmap, final String filename) {
         final File file = new File(filename);
@@ -261,7 +289,7 @@ public final class CounterHelper {
         Bitmap newBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
         try {
             final FileOutputStream out = new FileOutputStream(file);
-            newBitmap.compress(Bitmap.CompressFormat.JPEG, 30, out);
+            newBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
             out.flush();
             out.close();
         } catch (final Exception e) {
@@ -270,7 +298,7 @@ public final class CounterHelper {
 
     public static int number = 1;
 
-    private static Bitmap drawNewBitmap(Bitmap bitmap, JsonArray array, String text) {
+    private static Bitmap drawNewBitmap(Bitmap bitmap, JsonArray array, String text, Context context) {
         Bitmap copyBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
         Canvas canvas = new Canvas(copyBitmap);
 
@@ -316,7 +344,7 @@ public final class CounterHelper {
                 Log.i("xyayleftbottom", left + "," + top + "," + right + "," + bottom);
 
                 //canvas.drawRect(left, top, right, bottom, rectPaint);
-                canvas.drawCircle((float) x, (float) y, 35, pointPaint);
+                canvas.drawCircle((float) x, (float) y, UIUtils.dp2px(context, 10f), pointPaint);
                 textPaint.setColor(Color.YELLOW);
                 canvas.drawText(tempCount + "", (float) x, (float) y + 12f, textPaint);
             }
@@ -324,6 +352,7 @@ public final class CounterHelper {
 //                    canvas.getHeight() - 100, textPaint);
 //            canvas.drawText(text + "头", canvas.getWidth() - 200,
 //                    canvas.getHeight() - 100, textPaint);
+            textPaint.setStyle(Paint.Style.FILL);
             textPaint.setColor(Color.RED);
             canvas.drawText("圈" + number, 80,
                     120, textPaint);
@@ -395,5 +424,39 @@ public final class CounterHelper {
         String base64Str = Base64.encodeToString(data, Base64.DEFAULT);
         Log.i("base64Str", base64Str);
         return base64Str;
+    }
+
+
+    private static Bitmap resizeAndSaveBitmap(final Bitmap bitmap, final String filename) {
+        final File file = new File(filename);
+        if (file.exists()) {
+            file.delete();
+        }
+        // 图片按比例压缩，以长边=1080为准
+        // 图片质量提升为60.
+        // 获得图片的宽高
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+
+        float scale = 1f;
+
+        int max = Math.max(width, height);
+        if (max > 1080) {
+            scale = 1080f / max;
+        }
+
+        Matrix matrix = new Matrix();
+        matrix.postScale(scale, scale);
+        // 得到新的图片
+        Bitmap newBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        try {
+            final FileOutputStream out = new FileOutputStream(file);
+            newBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+            out.flush();
+            out.close();
+        } catch (final Exception e) {
+
+        }
+        return newBitmap;
     }
 }

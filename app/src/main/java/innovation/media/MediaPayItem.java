@@ -3,7 +3,6 @@ package innovation.media;
 import android.content.Context;
 
 
-
 import org.tensorflow.demo.Global;
 
 import java.io.File;
@@ -52,8 +51,7 @@ public class MediaPayItem {
     }
 
 
-    public void currentInit()
-    {
+    public void currentInit() {
         //创建投保目录
         if (mDir == null) {
             mDir = new File(StorageUtils.getExternalCacheDir(mContext), mDirName);
@@ -78,10 +76,9 @@ public class MediaPayItem {
             //创建图片下角度分类目录
             File mtmpDir;
             String tmpstr = "";
-            for(int i = 0; i < 4; i++)
-            {
+            for (int i = 0; i < 4; i++) {
                 tmpstr = getAnglePrefix(i);
-                mtmpDir = new File(StorageUtils.getExternalCacheDir(mContext), mBitmapName+"/"+tmpstr);
+                mtmpDir = new File(StorageUtils.getExternalCacheDir(mContext), mBitmapName + "/" + tmpstr);
                 if (!mtmpDir.exists()) {
                     mtmpDir.mkdirs();
                 }
@@ -123,7 +120,7 @@ public class MediaPayItem {
     }
 
 
-    public void currentDel()    {
+    public void currentDel() {
 
         FileUtils.deleteFile(mCurrentDir);
         mCurrentDir = null;
@@ -151,16 +148,16 @@ public class MediaPayItem {
 
 
     //获得图片目录下角度分类目录前缀名
-    private String getAnglePrefix(int type)
-    {
+    private String getAnglePrefix(int type) {
         String prestr = "";
-        if(type < 4)
+        if (type < 4)
             prestr = "Angle-0" + type;
         else
             prestr = "Angle-10";
 
         return prestr;
     }
+
     //获得存储角度图片的image文件名
     public String getBitmapFileName(int type) {
         String prestr = getAnglePrefix(type);
@@ -171,29 +168,70 @@ public class MediaPayItem {
                 mtmpBimmapDir.mkdirs();
             }
         }
-        SimpleDateFormat tmpSimpleDateFormat = new SimpleDateFormat("yyyyMMddhhmmssSSS", Locale.getDefault());
-        String fname = tmpSimpleDateFormat.format(new Date(System.currentTimeMillis()));
-        String strBitmapfile = new File(mtmpBimmapDir, fname).getAbsolutePath() + Global.IMAGE_SUFFIX;
+        String strBitmapfile = new File(mtmpBimmapDir, PigFaceDetectTFlite.srcPigBitmapName).getAbsolutePath();
         return strBitmapfile;
     }
 
     /**
      * 保存原图
+     *
      * @return
      */
-    public String getOriBitmapFileName(){
+    public String getOriBitmapFileName() {
         File mtmpBimmapDir = null;
         if (mtmpBimmapDir == null) {
-            mtmpBimmapDir = new File(StorageUtils.getExternalCacheDir(mContext), mBitmapName + "/" + "Ori");
+            mtmpBimmapDir = new File(StorageUtils.getExternalCacheDir(mContext), mBitmapName + "/Ori/Info");
             if (!mtmpBimmapDir.exists()) {
                 mtmpBimmapDir.mkdirs();
             }
         }
         SimpleDateFormat tmpSimpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS", Locale.getDefault());
         String fname = tmpSimpleDateFormat.format(new Date(System.currentTimeMillis()));
-        String pigPath = ("").equals(PigFaceDetectTFlite.srcPigBitmapName)?fname: PigFaceDetectTFlite.srcPigBitmapName;
+        String pigPath = ("").equals(PigFaceDetectTFlite.srcPigBitmapName) ? fname : PigFaceDetectTFlite.srcPigBitmapName;
         String strBitmapfile = new File(mtmpBimmapDir, pigPath).getAbsolutePath();
         return strBitmapfile;
+    }
+
+    public String getOriInfoBitmapFileName(String subPath) {
+        File mtmpBimmapDir = null;
+        if (mtmpBimmapDir == null) {
+            mtmpBimmapDir = new File(StorageUtils.getExternalCacheDir(mContext), mBitmapName + "/Ori/Info" + subPath);
+            if (!mtmpBimmapDir.exists()) {
+                mtmpBimmapDir.mkdirs();
+            }
+        }
+        SimpleDateFormat tmpSimpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS", Locale.getDefault());
+        String fname = tmpSimpleDateFormat.format(new Date(System.currentTimeMillis()));
+        String strBitmapfile = null;
+
+        String pigPath = PigFaceDetectTFlite.srcPigBitmapName.equals("") ? fname : PigFaceDetectTFlite.srcPigBitmapName;
+        strBitmapfile = new File(mtmpBimmapDir, pigPath).getAbsolutePath();
+        return strBitmapfile;
+    }
+
+
+    public String getOriInfoTXTFileName() {
+        File mtmpBimmapDir = null;
+        if (mtmpBimmapDir == null) {
+            mtmpBimmapDir = new File(StorageUtils.getExternalCacheDir(mContext), mBitmapName + "/Ori/Info");
+            if (!mtmpBimmapDir.exists()) {
+                mtmpBimmapDir.mkdirs();
+            }
+        }
+        String strTxtfile = new File(mtmpBimmapDir, "infoTXT").getAbsolutePath() + TXT_SUFFIX;
+        return strTxtfile;
+    }
+
+    public String getUnsuccessInfoTXTFileName() {
+        File mtmpBimmapDir = null;
+        if (mtmpBimmapDir == null) {
+            mtmpBimmapDir = new File(StorageUtils.getExternalCacheDir(mContext), mBitmapName + "/Ori/Info");
+            if (!mtmpBimmapDir.exists()) {
+                mtmpBimmapDir.mkdirs();
+            }
+        }
+        String strTxtfile = new File(mtmpBimmapDir, "unsuccessTXT").getAbsolutePath() + TXT_SUFFIX;
+        return strTxtfile;
     }
 
 
@@ -265,7 +303,7 @@ public class MediaPayItem {
     //取标号文件
     public File getNumberFile() {
         if (mNumberFile == null) {
-            mNumberFile = new File(StorageUtils.getExternalCacheDir(mContext), mNumTxtName+ TXT_SUFFIX);
+            mNumberFile = new File(StorageUtils.getExternalCacheDir(mContext), mNumTxtName + TXT_SUFFIX);
             try {
                 if (!mNumberFile.exists()) {
                     mNumberFile.createNewFile();

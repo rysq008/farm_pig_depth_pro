@@ -51,6 +51,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -84,7 +85,6 @@ public class AddPigPicActivity extends BaseActivity {
 
     TextView tv_adjust;
 
-    TextView tvPrompt;
 
     LinearLayout ll_default;
 
@@ -133,9 +133,15 @@ public class AddPigPicActivity extends BaseActivity {
         btnCommit = (Button) findViewById(R.id.btnCommit);
         seekbar = (SeekBar) findViewById(R.id.seekbar);
         tv_adjust = (TextView) findViewById(R.id.tv_adjust);
-        tvPrompt = (TextView) findViewById(R.id.tv_prompt);
+
         ll_default = (LinearLayout) findViewById(R.id.ll_default);
         etPigDeathTime = (EditText) findViewById(R.id.etPigDeathTime);
+        findViewById(R.id.btnTryPic).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickView((View) v);
+            }
+        });
         findViewById(R.id.etPigDeathTime).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -304,7 +310,8 @@ public class AddPigPicActivity extends BaseActivity {
                 }
             }
         });
-
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
+        etPigDeathTime.setText(df.format(new Date()));
     }
 
     @Override
@@ -498,12 +505,11 @@ public class AddPigPicActivity extends BaseActivity {
         //上传死猪照片时候调用称重接口
         CounterHelper.recognitionWeightFromNet(photo, new CounterHelper.OnImageRecognitionWeightListener() {
             @Override
-            public void onCompleted(float weight, int status) {
+            public void onCompleted(float weight, int status, String errorMsg) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         if (status == 1) {
-                            tvPrompt.setVisibility(View.VISIBLE);
                             mProgressDialog.dismiss();
 
                             autoWeight = weight + "";
@@ -520,14 +526,13 @@ public class AddPigPicActivity extends BaseActivity {
 
                             seekbar.setProgress(10);
                         } else {
-                            tvPrompt.setVisibility(View.GONE);
 
                             etAnimalWeight.setText("");
                             seekbar.setVisibility(View.GONE);
                             tv_adjust.setVisibility(View.GONE);
                             mProgressDialog.dismiss();
 
-                            if (failureTime > 1) {
+                            if (failureTime > 5) {
                                 autoWeight = weight + "";
 
                                 float currentWeight = PigWeightUtils.correctWeight(pigAge, 0);
@@ -540,10 +545,10 @@ public class AddPigPicActivity extends BaseActivity {
                                 mWeightRange[3] = mWeightRange[1] - mWeightRange[0];
 
                                 seekbar.setProgress(10);
-                                DialogHelper.weightCheckFailureDialog(AddPigPicActivity.this);
+//                                DialogHelper.weightCheckFailureDialog(AddPigPicActivity.this, errorMsg);
                             } else {
 
-                                DialogHelper.weightCheckDialog1(AddPigPicActivity.this);
+                                DialogHelper.weightCheckDialog1(AddPigPicActivity.this, errorMsg);
                                 failureTime += 1;
                             }
 //                            Toast.makeText(AddPigPicActivity.this, "识别失败！", Toast.LENGTH_SHORT).show();
@@ -591,7 +596,7 @@ public class AddPigPicActivity extends BaseActivity {
 
     public void onClickView(View view) {
         int i = view.getId();
-        if (i == R.id.btnPersonAndAnimal || i == R.id.ll_default) {
+        if (i == R.id.btnPersonAndAnimal || i == R.id.ll_default || i == R.id.btnTryPic) {
             picType = 0;
 //                llPopup.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.activity_translate_in));
 //                pop.showAtLocation(parentView, Gravity.BOTTOM, 0, 0);

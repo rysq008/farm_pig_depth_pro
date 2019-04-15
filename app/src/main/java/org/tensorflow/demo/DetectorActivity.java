@@ -39,6 +39,7 @@ import android.widget.Toast;
 
 
 import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.BuildConfig;
 import com.innovation.pig.insurance.R;
 import com.innovation.pig.insurance.Utils;
 import com.innovation.pig.insurance.netutils.Constants;
@@ -158,11 +159,51 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     //不能识别状态下 保存的原图
     private int saveImgOricount = 0;
 
+    //记录进检测模型的图片总数量
+    public static int allNumber = 0 ;
+    //记录进畜脸识别模型成功的图片数量
+    public static int dNumber = 0 ;
+    //记录进角度模型成功的图片数量
+    public static int aNumber = 0;
+    //记录进关键点模型成功的图片数量
+    public static int kNumber = 0;
+
+    //记录总时间
+    public static long allTime = 0;
+    //记录检测时间
+    public static long dTime = 0;
+    //记录角度时间
+    public static long aTime = 0;
+    //记录关键点时间
+    public static long kTime = 0;
+
+    //记录检测失败次数
+    public static int dTimes = 0;
+    //记录角度失败次数
+    public static int aTimes = 0;
+    //记录关键点失败次数
+    public static int kTimes = 0;
+
+    public static int preWidth;
+
+    @Override
+    protected void initData() {
+
+    }
+
     @Override
     public synchronized void onResume() {
-//        type1Count = 0;
-//        type2Count = 0;
-//        type3Count = 0;
+
+        allNumber = 0 ;
+        dNumber = 0 ;
+        aNumber = 0;
+        kNumber = 0;
+        dTimes = 0;
+        aTimes = 0;
+        kTimes = 0;
+        allTime = 0;
+        resetParameter();
+
         super.onResume();
         Intent intent = getIntent();
         sheId = intent.getStringExtra(Constants.sheId);
@@ -170,9 +211,10 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         reason = intent.getStringExtra(Constants.reason);
     }
 
-    @Override
-    protected void initData() {
-
+    public static void resetParameter(){
+        dTime = 0;
+        aTime = 0;
+        kTime = 0;
     }
 
     @Override
@@ -356,16 +398,21 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             Log.i("====== ", "===onImageAvailable3=======");
             return;
         }
-
+        allTime = System.currentTimeMillis();
         //图像质量检查
         checkImageQuality(croppedBitmap);
+        preWidth = croppedBitmap.getWidth();
 
         Bitmap rotateBitmap;
         if (imageok) {
-            Log.i("====== ", "===onImageAvailable6=======");
-            rotateBitmap = innovation.utils.ImageUtils.rotateBitmap(croppedBitmap, 90);
+            //图片resize 长边960
+            Bitmap rCroppedBitmap = resizeBitmap(croppedBitmap);
+
+            //图片旋转90度
+            rotateBitmap = innovation.utils.ImageUtils.rotateBitmap(rCroppedBitmap, 90);
 
             //com.innovation.utils.ImageUtils.saveImage(rotateBitmap);
+			//给图片边界添加填充
             padBitmap = innovation.utils.ImageUtils.padBitmap(rotateBitmap);
             cropCopyBitmap = Bitmap.createBitmap(padBitmap);
 
@@ -427,7 +474,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         if ((Utils.getDuring(c) / 1000) > m && AppConfig.debugNub >= 0) {
             AppConfig.debugNub = 2;
             collectNumberHandler.sendEmptyMessage(6);
-            if (AppConfig.isApkInDebug())
+            if (BuildConfig.DEBUG)
                 Toast.makeText(this, "m时间后 停止拍摄弹出强制上传", Toast.LENGTH_LONG).show();
             return;
         }
@@ -439,9 +486,10 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         if ((Utils.getDuring(c) / 1000) > n && AppConfig.debugNub != 1 && AppConfig.debugNub >= 0) {
             AppConfig.debugNub = 1;
             collectNumberHandler.sendEmptyMessage(6);
-            if (AppConfig.isApkInDebug())
+            if (BuildConfig.DEBUG)
                 Toast.makeText(this, " n时间后 停止拍摄弹出是否强制上传或重新拍摄", Toast.LENGTH_LONG).show();
         }
+
 
         Log.d(TAG, "猪脸分类器");
         pigTFliteDetector.pigRecognitionAndPostureItemTFlite(padBitmap, rotateBitmap);
@@ -605,5 +653,27 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     public synchronized void onDestroy() {
         super.onDestroy();
         Log.i("onDestroy", "返回");
+    }
+
+
+    private static Bitmap resizeBitmap(Bitmap bitmap) {
+        // 图片按比例压缩，以长边=192为准
+        // 获得图片的宽高
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+
+        float scale = 1f;
+
+        int max = Math.max(width, height);
+        if (max > 960) {
+            scale = 960f / max;
+        }
+        // 取得想要缩放的matrix参数
+        Matrix matrix = new Matrix();
+        matrix.postScale(scale, scale);
+        // 得到新的图片
+        Bitmap newbm = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
+
+        return newbm;
     }
 }

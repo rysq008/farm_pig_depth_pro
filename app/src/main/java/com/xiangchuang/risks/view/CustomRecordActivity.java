@@ -123,7 +123,6 @@ public class CustomRecordActivity extends BaseActivity implements View.OnClickLi
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_custom);
         mIntentRecordTime = getIntent().getIntExtra("time", 10);
         XXPermissions.with(CustomRecordActivity.this)
                 //.constantRequest() //可设置被拒绝后继续申请，直到用户授权或者永久拒绝
@@ -183,7 +182,7 @@ public class CustomRecordActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     protected int getLayoutId() {
-        return 0;
+        return R.layout.activity_custom;
     }
 
     @Override
