@@ -18,6 +18,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,6 +55,7 @@ public class WeightPicCollectActivity extends BaseActivity implements SensorEven
     //定义水平仪的仪表盘
 
     SpiritView spiritwiew;
+    FrameLayout fl_preview;
 
     CameraSurfaceView camera_surfaceview;
     //定义水平仪能处理的最大倾斜角度，超过该角度气泡直接位于边界
@@ -91,13 +93,8 @@ public class WeightPicCollectActivity extends BaseActivity implements SensorEven
         btn_upload = (ImageView) findViewById(R.id.btn_upload);
         btn_finish = (TextView) findViewById(R.id.btn_finish);
         spiritwiew = (SpiritView) findViewById(R.id.spiritwiew);
-        camera_surfaceview = (CameraSurfaceView) findViewById(R.id.camera_surfaceview);
-        findViewById(R.id.camera_surfaceview).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onClickView((View) v);
-            }
-        });
+        fl_preview = (FrameLayout) findViewById(R.id.fl_preview);
+
         findViewById(R.id.btn_upload).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,13 +113,13 @@ public class WeightPicCollectActivity extends BaseActivity implements SensorEven
                 onClickView((View) v);
             }
         });
-        new CameraSurfaceView(this);
+
         mFileDirectory = PathUtils.weightcollect;
         mFilePath = mFileDirectory + "/" + System.currentTimeMillis() + ".jpg";
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
         mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
-        camera_surfaceview.getViewTreeObserver().addOnGlobalLayoutListener(this);
+        fl_preview.getViewTreeObserver().addOnGlobalLayoutListener(this);
         CameraUtils.setPreviewHeight(UIUtils.getHeightPixels(this));
         CameraUtils.setPreviewWidth(UIUtils.getWidthPixels(this));
 //        DialogHelper.weightCheckDialog(this);
@@ -131,7 +128,7 @@ public class WeightPicCollectActivity extends BaseActivity implements SensorEven
     @Override
     public void onGlobalLayout() {
 
-        camera_surfaceview.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+        fl_preview.getViewTreeObserver().removeOnGlobalLayoutListener(this);
         if (checkPermissions(NEEDED_PERMISSIONS)) {
             initCamera();
         } else {
@@ -143,6 +140,14 @@ public class WeightPicCollectActivity extends BaseActivity implements SensorEven
      * 初始化View
      */
     private void initCamera() {
+        camera_surfaceview = new CameraSurfaceView(this);
+        fl_preview.addView(camera_surfaceview);
+        camera_surfaceview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CameraUtils.doAutoFocus();
+            }
+        });
         mOrientation = CameraUtils.calculateCameraPreviewOrientation(WeightPicCollectActivity.this);
     }
 
@@ -277,10 +282,7 @@ public class WeightPicCollectActivity extends BaseActivity implements SensorEven
                 finish();
             }
 
-        } else if (i == R.id.camera_surfaceview) {
-            CameraUtils.doAutoFocus();
-
-        } else {
+        }else {
         }
     }
 

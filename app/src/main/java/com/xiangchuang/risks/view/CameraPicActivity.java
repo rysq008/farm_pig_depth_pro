@@ -122,7 +122,12 @@ public class CameraPicActivity extends BaseActivity implements ViewTreeObserver.
     private void initCamera() {
         camera_surfaceview = new CameraSurfaceView(CameraPicActivity.this);
         framelayout.addView(camera_surfaceview);
-        camera_surfaceview.setOnClickListener(this);
+        camera_surfaceview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CameraUtils.doAutoFocus();
+            }
+        });
         mOrientation = CameraUtils.calculateCameraPreviewOrientation(CameraPicActivity.this);
     }
 
@@ -236,10 +241,7 @@ public class CameraPicActivity extends BaseActivity implements ViewTreeObserver.
         } else if (i == R.id.btn_finish) {
             finish();
 
-        } else if (i == R.id.camera_surfaceview) {
-            CameraUtils.doAutoFocus();
-
-        } else {
+        } else  {
         }
     }
 

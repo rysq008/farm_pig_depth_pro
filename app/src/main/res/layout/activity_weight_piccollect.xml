@@ -9,13 +9,7 @@
     <FrameLayout
         android:id="@+id/fl_preview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <com.xiangchuang.risks.view.camera.CameraSurfaceView
-            android:id="@+id/camera_surfaceview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </FrameLayout>
+        android:layout_height="match_parent"/>
 
     <ImageView
         android:layout_width="240dp"
