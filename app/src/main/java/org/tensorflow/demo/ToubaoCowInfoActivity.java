@@ -49,6 +49,7 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.google.gson.Gson;
 
+import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
 import com.xiangchuang.risks.base.BaseActivity;
 
@@ -252,7 +253,7 @@ public class ToubaoCowInfoActivity extends BaseActivity {
                 File tempFile = new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME);
                 Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 //下面这句指定调用相机拍照后的照片存储的路径
-                takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getApplicationContext(),  "com.xiangchuangtec.luolu.animalcounter.provider", tempFile));
+                takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getApplicationContext(),  AppConfig.getAppContext().getPackageName().concat(".animalcounter.provider"), tempFile));
                 startActivityForResult(takeIntent, REQUESTCODE_TAKE);
                 pop.dismiss();
                 ll_popup.clearAnimation();

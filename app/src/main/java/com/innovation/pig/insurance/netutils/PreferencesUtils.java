@@ -57,9 +57,9 @@ public class PreferencesUtils {
         String str = sp.getString(key, "");
         if (TextUtils.isEmpty(str)) {
             if (Constants.longitude.equals(key)) {
-                str = "40.001919854998334";
+                str = "0";
             } else if (Constants.latitude.equals(key)) {
-                str = "116.40768211425925";
+                str = "0";
             }
         }
         return str;

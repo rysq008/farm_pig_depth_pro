@@ -50,7 +50,6 @@
     <!-- android:hardwareAccelerated="false" -->
     <!-- android:name="com.xiangchuangtec.luolu.animalcounter.AppConfig" -->
     <application
-        android:name=".MyApplication"
         android:largeHeap="true"
         android:launchMode="singleInstance"
         android:screenOrientation="portrait"
@@ -65,11 +64,11 @@
             android:name="com.xiangchuang.risks.view.LoginFamerActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
-            <intent-filter>
+            <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter>-->
         </activity>
         <activity
             android:name="com.xiangchuang.risks.view.ShowPollingActivity_new"
@@ -123,7 +122,7 @@
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.xiangchuangtec.luolu.animalcounter.provider"
+            android:authorities="${applicationId}.animalcounter.provider"
             android:exported="false"
             android:grantUriPermissions="true"
             tools:replace="android:authorities">

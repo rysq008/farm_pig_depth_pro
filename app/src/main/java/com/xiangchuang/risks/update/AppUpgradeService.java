@@ -193,7 +193,7 @@ public class AppUpgradeService extends Service {
     public void install(File apkFile) {
 //        Uri uri = Uri.fromFile(apkFile);
         if(Build.VERSION.SDK_INT>=24) {
-            Uri uri = getUriForFile(getApplicationContext(), getPackageName() + ".provider", apkFile);
+            Uri uri = getUriForFile(getApplicationContext(), AppConfig.getAppContext().getPackageName().concat(".animalcounter.provider"), apkFile);
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
