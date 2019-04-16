@@ -18,7 +18,9 @@ import android.support.v4.content.ContextCompat;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.innovation.pig.insurance.R;
@@ -49,10 +51,11 @@ public class WeightPicCollectActivity extends BaseActivity implements SensorEven
 
     ImageView btn_upload;
 
-    ImageView btn_finish;
+    TextView btn_finish;
     //定义水平仪的仪表盘
 
     SpiritView spiritwiew;
+    FrameLayout fl_preview;
 
     CameraSurfaceView camera_surfaceview;
     //定义水平仪能处理的最大倾斜角度，超过该角度气泡直接位于边界
@@ -88,15 +91,10 @@ public class WeightPicCollectActivity extends BaseActivity implements SensorEven
         super.initView();
         iv_preview = (ImageView) findViewById(R.id.iv_preview);
         btn_upload = (ImageView) findViewById(R.id.btn_upload);
-        btn_finish = (ImageView) findViewById(R.id.btn_finish);
+        btn_finish = (TextView) findViewById(R.id.btn_finish);
         spiritwiew = (SpiritView) findViewById(R.id.spiritwiew);
-        camera_surfaceview = (CameraSurfaceView) findViewById(R.id.camera_surfaceview);
-        findViewById(R.id.camera_surfaceview).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onClickView((View) v);
-            }
-        });
+        fl_preview = (FrameLayout) findViewById(R.id.fl_preview);
+
         findViewById(R.id.btn_upload).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,22 +113,22 @@ public class WeightPicCollectActivity extends BaseActivity implements SensorEven
                 onClickView((View) v);
             }
         });
-        new CameraSurfaceView(this);
+
         mFileDirectory = PathUtils.weightcollect;
         mFilePath = mFileDirectory + "/" + System.currentTimeMillis() + ".jpg";
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
         mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
-        camera_surfaceview.getViewTreeObserver().addOnGlobalLayoutListener(this);
+        fl_preview.getViewTreeObserver().addOnGlobalLayoutListener(this);
         CameraUtils.setPreviewHeight(UIUtils.getHeightPixels(this));
         CameraUtils.setPreviewWidth(UIUtils.getWidthPixels(this));
-        DialogHelper.weightCheckDialog(this);
+//        DialogHelper.weightCheckDialog(this);
     }
 
     @Override
     public void onGlobalLayout() {
 
-        camera_surfaceview.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+        fl_preview.getViewTreeObserver().removeOnGlobalLayoutListener(this);
         if (checkPermissions(NEEDED_PERMISSIONS)) {
             initCamera();
         } else {
@@ -142,6 +140,14 @@ public class WeightPicCollectActivity extends BaseActivity implements SensorEven
      * 初始化View
      */
     private void initCamera() {
+        camera_surfaceview = new CameraSurfaceView(this);
+        fl_preview.addView(camera_surfaceview);
+        camera_surfaceview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CameraUtils.doAutoFocus();
+            }
+        });
         mOrientation = CameraUtils.calculateCameraPreviewOrientation(WeightPicCollectActivity.this);
     }
 
@@ -217,7 +223,7 @@ public class WeightPicCollectActivity extends BaseActivity implements SensorEven
                     btn_upload.setVisibility(View.VISIBLE);
                     iv_preview.setVisibility(View.VISIBLE);
                     iv_preview.setImageBitmap(bitmap);
-                    btn_finish.setImageDrawable(getResources().getDrawable(R.mipmap.iv_clear));
+                    btn_finish.setText("重拍");
                     File file = new File(mFileDirectory);
                     if (!file.exists()) {
                         file.mkdirs();
@@ -270,16 +276,13 @@ public class WeightPicCollectActivity extends BaseActivity implements SensorEven
             if (btn_upload.getVisibility() == View.VISIBLE) {
                 btn_upload.setVisibility(View.GONE);
                 iv_preview.setVisibility(View.GONE);
-                btn_finish.setImageDrawable(getResources().getDrawable(R.mipmap.iv_round_back));
+                btn_finish.setText("退出");
             } else {
                 setResultData("");
                 finish();
             }
 
-        } else if (i == R.id.camera_surfaceview) {
-            CameraUtils.doAutoFocus();
-
-        } else {
+        }else {
         }
     }
 
@@ -357,9 +360,9 @@ public class WeightPicCollectActivity extends BaseActivity implements SensorEven
             float anglez = (float) (event.values[2]);
             long curr_time = SystemClock.elapsedRealtime();
             long last_time = spiritwiew.getTag() == null ? 0 : (long) (spiritwiew.getTag());
-            if (curr_time - last_time < 1000)
+            if (curr_time - last_time < 500)
                 return;
-            if (angley > -10 && angley < 5 && anglez > -5 && anglez < 4) {
+            if (angley >= -3 && angley <= 3 && anglez >= -3 && anglez <= 3) {
 //                btn_take.setVisibility(View.VISIBLE);
                 spiritwiew.setColor(255);
                 isCanTakePic = true;

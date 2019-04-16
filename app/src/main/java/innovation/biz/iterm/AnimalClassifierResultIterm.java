@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 
 import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.BuildConfig;
 
 import innovation.biz.classifier.PigKeyPointsDetectTFlite;
 import innovation.biz.classifier.PigRotationPrediction;
@@ -22,6 +23,14 @@ import org.tensorflow.demo.env.Logger;
 import java.io.File;
 
 import static innovation.utils.ImageUtils.compressBitmap;
+import static org.tensorflow.demo.DetectorActivity.aNumber;
+import static org.tensorflow.demo.DetectorActivity.aTime;
+import static org.tensorflow.demo.DetectorActivity.allNumber;
+import static org.tensorflow.demo.DetectorActivity.allTime;
+import static org.tensorflow.demo.DetectorActivity.dNumber;
+import static org.tensorflow.demo.DetectorActivity.dTime;
+import static org.tensorflow.demo.DetectorActivity.kNumber;
+import static org.tensorflow.demo.DetectorActivity.kTime;
 
 /**
  * Created by Luolu on 2018/10/30.
@@ -46,6 +55,12 @@ public class AnimalClassifierResultIterm {
         String imageSrcFileName = "";
         String txtfilename = "";
         String oriImageName = "";
+        String oriInfoPath = "";
+        String oriInfoImageName = "";
+
+        oriInfoPath = Global.mediaPayItem.getOriInfoTXTFileName();
+        oriInfoImageName = Global.mediaPayItem.getOriInfoBitmapFileName("");
+        imagefilename = Global.mediaPayItem.getBitmapFileName(type);
 
         // 角度分类模型无效标志 true为无效 反之有效
         final boolean ANGLE_JUDGE_SKIP_FLG = false;
@@ -66,6 +81,11 @@ public class AnimalClassifierResultIterm {
             // 未达到上限时增加图片
             if(DetectorActivity.type1Count < maxLeft * ADD_PIC_RATE) {
                 DetectorActivity.type1Count++;
+                if (DetectorActivity.type1Count < 3) {
+                    //保存原图
+                    File file1 = new File(oriInfoImageName);
+                    FileUtils.saveBitmapToFile(compressBitmap(postureItem.oriBitmap), file1);
+                }
                 addImgFlag = true;
             }else{
                 //左脸达到上限发消息 关闭左脸提示
@@ -78,6 +98,11 @@ public class AnimalClassifierResultIterm {
             // 未达到上限时增加图片
             if(DetectorActivity.type2Count < maxMiddle * ADD_PIC_RATE) {
                 DetectorActivity.type2Count++;
+                if (DetectorActivity.type2Count < 3) {
+                    //保存原图
+                    File file1 = new File(oriInfoImageName);
+                    FileUtils.saveBitmapToFile(compressBitmap(postureItem.oriBitmap), file1);
+                }
                 addImgFlag = true;
             }
         } else if((PigRotationPrediction.pigPredictAngleType == 3|| ANGLE_JUDGE_SKIP_FLG)
@@ -87,6 +112,11 @@ public class AnimalClassifierResultIterm {
             // 未达到上限时增加图片
             if(DetectorActivity.type3Count < maxRight * ADD_PIC_RATE) {
                 DetectorActivity.type3Count++;
+                if (DetectorActivity.type3Count < 3) {
+                    //保存原图
+                    File file1 = new File(oriInfoImageName);
+                    FileUtils.saveBitmapToFile(compressBitmap(postureItem.oriBitmap), file1);
+                }
                 addImgFlag = true;
             }else{
                 //右脸达到上限发消息 关闭右脸提示
@@ -97,12 +127,21 @@ public class AnimalClassifierResultIterm {
             type = 10;
             // 未识别角度
             Log.e("maxMiddle", count + "---maxMiddle: " + maxMiddle);
-            if (count <= maxMiddle) {
-                //保存原图
-                File file = new File(oriImageName);
-                FileUtils.saveBitmapToFile(compressBitmap(postureItem.oriBitmap), file);
-                count++;
-            }
+//            if (count <= maxMiddle) {
+//                //保存原图
+//                File file = new File(oriImageName);
+//                FileUtils.saveBitmapToFile(compressBitmap(postureItem.oriBitmap), file);
+//                count++;
+//            }
+            allTime = System.currentTimeMillis() - allTime;
+            FileUtils.saveInfoToTxtFile(oriInfoPath,
+                    imagefilename.substring(imagefilename.lastIndexOf("/") + 1) +
+                            "；totalNum：" + allNumber +
+                            "；DetectTime：" + dTime +
+                            "；AngleTime：" + aTime +
+                            "；KeypointTime：" + kTime +
+                            "；totalTime：" + allTime);
+            DetectorActivity.resetParameter();
             return;
         }
 
@@ -137,7 +176,21 @@ public class AnimalClassifierResultIterm {
 
         // 符合角度且未达到上限时增加图片
         if (addImgFlag) {
+            Log.e("img_path", "imagefilename: "+imagefilename);
+
             FileUtils.saveInfoToTxtFile(txtfilename, contenType + "angle:" + type);
+
+            allTime = System.currentTimeMillis() - allTime;
+            Log.e("allTime", "allTime==="+allTime);
+            FileUtils.saveInfoToTxtFile(oriInfoPath,
+                    imagefilename.substring(imagefilename.lastIndexOf("/") + 1) +
+                            "；totalNum：" + allNumber +
+                            "；DetectTime：" + dTime +
+                            "；AngleTime：" + aTime +
+                            "；KeypointTime：" + kTime +
+                            "；totalTime：" + allTime);
+            DetectorActivity.resetParameter();
+
             //保存图片
             File tmpimagefile = new File(imagefilename);
             // File tmpImageSrcFileName = new File(imageSrcFileName);
@@ -145,8 +198,8 @@ public class AnimalClassifierResultIterm {
             FileUtils.saveBitmapToFile(postureItem.clipBitmap, tmpimagefile);
 
             //保存原图
-            File file = new File(oriImageName);
-            FileUtils.saveBitmapToFile(compressBitmap(postureItem.oriBitmap), file);
+//            File file = new File(oriImageName);
+//            FileUtils.saveBitmapToFile(compressBitmap(postureItem.oriBitmap), file);
 
             // 保存src图片
             // FileUtils.saveBitmapToFile(postureItem.srcBitmap, tmpImageSrcFileName);
@@ -156,8 +209,15 @@ public class AnimalClassifierResultIterm {
 
         if (DetectorActivity.type1Count >= maxLeft && DetectorActivity.type2Count >= maxMiddle && DetectorActivity.type3Count >= maxRight) {
             AppConfig.debugNub = -1;
+            FileUtils.saveInfoToTxtFile(oriInfoPath,
+                    "totalNum：" + allNumber +
+                            "；Detect_Success_Num：" + dNumber +
+                            "；Angle_Success_Num：" + aNumber +
+                            "；Keypoint_Success_Num：" + kNumber +
+                            "；total_Success_Num：" + (DetectorActivity.type1Count+DetectorActivity.type2Count+DetectorActivity.type3Count));
+            FileUtils.saveInfoToTxtFile(oriInfoPath,"phoneModel："+ android.os.Build.BRAND + " "+android.os.Build.MODEL + "\r\nversion：" + AppConfig.version);
             CameraConnectionFragment.collectNumberHandler.sendEmptyMessage(1);
-            if (AppConfig.isApkInDebug()){
+            if (BuildConfig.DEBUG){
                 Toast.makeText(AppConfig.getAppContext(), "猪脸数据采集完成!!!", Toast.LENGTH_LONG).show();
             }
         }

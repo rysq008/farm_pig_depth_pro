@@ -6,6 +6,7 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.SystemClock;
 import android.os.Trace;
@@ -17,13 +18,19 @@ import com.innovation.pig.insurance.AppConfig;
 import innovation.biz.iterm.AnimalClassifierResultIterm;
 import innovation.biz.iterm.PostureItem;
 import innovation.biz.iterm.PredictRotationIterm;
+import innovation.media.Model;
+import innovation.utils.FileUtils;
 import innovation.utils.PointFloat;
 
+import org.tensorflow.demo.CameraConnectionFragment;
 import org.tensorflow.demo.Classifier;
+import org.tensorflow.demo.DetectorActivity;
+import org.tensorflow.demo.Global;
 import org.tensorflow.demo.env.ImageUtils;
 import org.tensorflow.demo.env.Logger;
 import org.tensorflow.lite.Interpreter;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -38,8 +45,18 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static innovation.utils.ImageUtils.compressBitmap;
 import static innovation.utils.ImageUtils.padBitmap2SpRatio;
 import static innovation.utils.ImageUtils.zoomImage;
+import static org.tensorflow.demo.DetectorActivity.aNumber;
+import static org.tensorflow.demo.DetectorActivity.aTime;
+import static org.tensorflow.demo.DetectorActivity.aTimes;
+import static org.tensorflow.demo.DetectorActivity.allNumber;
+import static org.tensorflow.demo.DetectorActivity.dNumber;
+import static org.tensorflow.demo.DetectorActivity.dTime;
+import static org.tensorflow.demo.DetectorActivity.dTimes;
+import static org.tensorflow.demo.DetectorActivity.kTime;
+import static org.tensorflow.demo.DetectorActivity.kTimes;
 import static org.tensorflow.demo.DetectorActivity.offsetX;
 import static org.tensorflow.demo.DetectorActivity.offsetY;
 
@@ -64,10 +81,10 @@ public class PigFaceDetectTFlite implements Classifier {
     // Float model
     private static final float IMAGE_MEAN = 128.0f;
     private static final float IMAGE_STD = 128.0f;
-    // Number of threads in the java app
+    // WaitNumber of threads in the java app
     private static final int NUM_THREADS = 4;
     //保存图片的尺寸
-    private static final  int ZOOM = 480;
+    private static final int ZOOM = 480;
 
     private static final String PIG_TFLITE_PREDICTION_MODEL_FILE = "0228mobilenet_v2_192_quantized_18730_201902281922.tflite";//"pig_tflite_pose1022.tflite";//
     private static final String PIG_TFLITE_KEYPOINTS_MODEL_FILE = "0226mobilenet_v2_192_quantized_50000_201902271804.tflite";//"pig_1026_keypoint_tflite_xincai2.tflite";
@@ -113,6 +130,7 @@ public class PigFaceDetectTFlite implements Classifier {
             throw new RuntimeException("pigFaceRotationDetector or pigFaceKeyPointsDetector: Error initializing!", e);
         }
     }
+
     /**
      * Memory-map the model file in Assets.
      */
@@ -170,19 +188,18 @@ public class PigFaceDetectTFlite implements Classifier {
     }
 
     @Override
-    public List<PointFloat> recognizePointImage(Bitmap bitmap) {
+    public List<PointFloat> recognizePointImage(Bitmap bitmap, Bitmap originalBitmap) {
         return null;
     }
 
     @Override
-    public RecognitionAndPostureItem pigRecognitionAndPostureItem(Bitmap bitmap) {
+    public RecognitionAndPostureItem pigRecognitionAndPostureItem(Bitmap bitmap, Bitmap originalBitmap) {
         return null;
     }
 
 
-
     @Override
-    public PredictRotationIterm pigRotationPredictionItemTFlite(Bitmap bitmap) {
+    public PredictRotationIterm pigRotationPredictionItemTFlite(Bitmap bitmap, Bitmap originalBitmap) {
         return null;
     }
 
@@ -211,8 +228,15 @@ public class PigFaceDetectTFlite implements Classifier {
 
     @Override
     public RecognitionAndPostureItem pigRecognitionAndPostureItemTFlite(Bitmap bitmap, Bitmap oriBitmap) {
+        String oriInfoPath = "";
+        String unsuccessTXTPath = "";
+        oriInfoPath = Global.mediaPayItem.getOriInfoTXTFileName();
+        unsuccessTXTPath = Global.mediaPayItem.getUnsuccessInfoTXTFileName();
+
+
         PostureItem posture = null;
         if (bitmap == null) {
+            allNumber--;
             pigTFliteRecognitionAndPostureItem = null;
             return null;
         }
@@ -287,30 +311,86 @@ public class PigFaceDetectTFlite implements Classifier {
         Trace.beginSection("run");
         final long startTime = SystemClock.uptimeMillis();
 
-
+        //进模型图片数量++
+        allNumber++;
         tfLite.runForMultipleInputsOutputs(inputArray, outputMap);
-
+        dTime = SystemClock.uptimeMillis() - startTime;
         sLogger.i("pig Detect face tflite cost:" + (SystemClock.uptimeMillis() - startTime));
 
         Trace.endSection();
 
-        /*if (outputDetectNum[0] > 1) {
-            if(System.currentTimeMillis() - lastToastTime > 5000) {
+        //拼接检测信息字符串
+        String contenType = "DetectResult：";
+        contenType += srcPigBitmapName + "; ";
+        contenType += "box_x0 = " + outputLocations[0][0][0] + "; ";
+        contenType += "box_y0 = " + outputLocations[0][0][1] + "; ";
+        contenType += "box_x1 = " + outputLocations[0][0][2] + "; ";
+        contenType += "box_y1 = " + outputLocations[0][0][3] + "; ";
+        contenType += "score = " + outputScores[0][0] + "; ";
+        contenType += "detect_num = " + outputDetectNum[0] + "; ";
+
+        if (outputDetectNum[0] > 1) {
+            if (System.currentTimeMillis() - lastToastTime > 5000) {
                 CameraConnectionFragment.showToast("请确保采集范围内只有一头牲畜。");
                 lastToastTime = System.currentTimeMillis();
             }
             saveBitMap(bitmap, "pigDetected_ng3", srcPigBitmapName);
+            FileUtils.saveInfoToTxtFile(oriInfoPath, srcPigBitmapName +
+                    "；totalNum：" + allNumber + "；DetectTime：" + dTime + "；AngleTime：" + aTime + "；KeypointTime：" + kTime + "；totalTime：" + (dTime + aTime + kTime));
+            if (dTimes < 6) {
+                dTimes++;
+
+                String mPath = null;
+                mPath = Global.mediaPayItem.getOriInfoBitmapFileName("/detect");
+
+                //保存原图
+                File file = new File(mPath);
+                FileUtils.saveBitmapToFile(compressBitmap(oriBitmap), file);
+                //保存失败检测信息
+                FileUtils.saveInfoToTxtFile(unsuccessTXTPath, contenType);
+            }
+            DetectorActivity.resetParameter();
             return pigTFliteRecognitionAndPostureItem;
-        }*/
+        }
 
         if (outputDetectNum[0] < 1) {
             sLogger.i("对象不足：" + outputDetectNum[0]);
             saveBitMap(bitmap, "pigDetected_ng4", srcPigBitmapName);
+            FileUtils.saveInfoToTxtFile(oriInfoPath, srcPigBitmapName +
+                    "；totalNum：" + allNumber + "；DetectTime：" + dTime + "；AngleTime：" + aTime + "；KeypointTime：" + kTime + "；totalTime：" + (dTime + aTime + kTime));
+            if (dTimes < 6) {
+                dTimes++;
+
+                String mPath = null;
+                mPath = Global.mediaPayItem.getOriInfoBitmapFileName("/detect");
+
+                //保存原图
+                File file = new File(mPath);
+                FileUtils.saveBitmapToFile(compressBitmap(oriBitmap), file);
+                //保存失败检测信息
+                FileUtils.saveInfoToTxtFile(unsuccessTXTPath, contenType);
+            }
+            DetectorActivity.resetParameter();
             return pigTFliteRecognitionAndPostureItem;
         }
         if (outputScores[0][0] > 1 || outputScores[0][0] < MIN_CONFIDENCE) {
             sLogger.i("分值超出/分值不足：" + outputScores[0][0]);
             saveBitMap(bitmap, "pigDetected_ng2", srcPigBitmapName);
+            FileUtils.saveInfoToTxtFile(oriInfoPath, srcPigBitmapName +
+                    "；totalNum：" + allNumber + "；DetectTime：" + dTime + "；AngleTime：" + aTime + "；KeypointTime：" + kTime + "；totalTime：" + (dTime + aTime + kTime));
+            if (dTimes < 6) {
+                dTimes++;
+
+                String mPath = null;
+                mPath = Global.mediaPayItem.getOriInfoBitmapFileName("/detect");
+
+                //保存原图
+                File file = new File(mPath);
+                FileUtils.saveBitmapToFile(compressBitmap(oriBitmap), file);
+                //保存失败检测信息
+                FileUtils.saveInfoToTxtFile(unsuccessTXTPath, contenType);
+            }
+            DetectorActivity.resetParameter();
             return pigTFliteRecognitionAndPostureItem;
         }
 
@@ -322,8 +402,8 @@ public class PigFaceDetectTFlite implements Classifier {
         float modelY1 = (float) outputLocations[0][0][3];
         float modelX1 = (float) outputLocations[0][0][2];
 
-        Log.e(TAG, "outputLocations: Xmin="+outputLocations[0][0][0]+";Ymin="
-                + outputLocations[0][0][1]+";Xmax="+outputLocations[0][0][2] +";Ymax="+outputLocations[0][0][3]);
+        Log.e(TAG, "outputLocations: Xmin=" + outputLocations[0][0][0] + ";Ymin="
+                + outputLocations[0][0][1] + ";Xmax=" + outputLocations[0][0][2] + ";Ymax=" + outputLocations[0][0][3]);
 
         float left = modelY0 * padSize - offsetY;
         float top = modelX0 * padSize - offsetX;
@@ -332,6 +412,23 @@ public class PigFaceDetectTFlite implements Classifier {
         if (left < 0 || top < 0 || right > padSize - 2 * offsetY || bottom > padSize - 2 * offsetX) {
             sLogger.i("识别范围超出图像范围2");
             saveBitMap(bitmap, "pigDetected_ng5", srcPigBitmapName);
+
+            FileUtils.saveInfoToTxtFile(oriInfoPath, srcPigBitmapName +
+                    "；totalNum：" + allNumber + "；DetectTime：" + dTime + "；AngleTime：" + aTime + "；KeypointTime：" + kTime + "；totalTime：" + (dTime + aTime + kTime));
+            if (dTimes < 6) {
+                dTimes++;
+
+                String mPath = null;
+                mPath = Global.mediaPayItem.getOriInfoBitmapFileName("/detect");
+
+                //保存原图
+                File file = new File(mPath);
+                FileUtils.saveBitmapToFile(compressBitmap(oriBitmap), file);
+                //保存失败检测信息
+                FileUtils.saveInfoToTxtFile(unsuccessTXTPath, contenType);
+            }
+            DetectorActivity.resetParameter();
+
             return pigTFliteRecognitionAndPostureItem;
         }
 
@@ -352,24 +449,79 @@ public class PigFaceDetectTFlite implements Classifier {
         //clip image
         Bitmap clipBitmap = innovation.utils.ImageUtils.clipBitmap(bitmap, modelY0, modelX0, modelY1, modelX1, 1.2f);
         if (clipBitmap == null) {
+            FileUtils.saveInfoToTxtFile(oriInfoPath, srcPigBitmapName +
+                    "；totalNum：" + allNumber + "；DetectTime：" + dTime + "；AngleTime：" + aTime + "；KeypointTime：" + kTime + "；totalTime：" + (dTime + aTime + kTime));
+            if (dTimes < 6) {
+                dTimes++;
+                String mPath = null;
+                mPath = Global.mediaPayItem.getOriInfoBitmapFileName("/detect");
+                //保存原图
+                File file = new File(mPath);
+                FileUtils.saveBitmapToFile(compressBitmap(oriBitmap), file);
+                //保存失败检测信息
+                FileUtils.saveInfoToTxtFile(unsuccessTXTPath, contenType);
+            }
+            DetectorActivity.resetParameter();
             return pigTFliteRecognitionAndPostureItem;
         }
-
+        dNumber++;
         Bitmap padBitmap2SpRatio = padBitmap2SpRatio(clipBitmap, 1.0f);
 //        int widthZoom = ZOOM, heightZoom = ZOOM;
         Bitmap resizeClipBitmap = zoomImage(padBitmap2SpRatio, ZOOM, ZOOM);
 
-        PredictRotationIterm predictRotationIterm = pigFaceRotationDetector.pigRotationPredictionItemTFlite(clipBitmap);
+        aTime = System.currentTimeMillis();
+        PredictRotationIterm predictRotationIterm = pigFaceRotationDetector.pigRotationPredictionItemTFlite(clipBitmap, oriBitmap);
+        aTime = System.currentTimeMillis() - aTime;
 
         // 调用模型判断角度分类
         if (predictRotationIterm == null) {
+            FileUtils.saveInfoToTxtFile(oriInfoPath, srcPigBitmapName +
+                    "；totalNum：" + allNumber + "；DetectTime：" + dTime + "；AngleTime：" + aTime + "；KeypointTime：" + kTime + "；totalTime：" + (dTime + aTime + kTime));
+            if (aTimes < 4) {
+                aTimes++;
+                String mPath = null;
+                mPath = Global.mediaPayItem.getOriInfoBitmapFileName("/rota");
+                //保存原图
+                File file = new File(mPath);
+                FileUtils.saveBitmapToFile(compressBitmap(oriBitmap), file);
+
+                //保存失败检测信息
+                FileUtils.saveInfoToTxtFile(unsuccessTXTPath, contenType);
+            }
+            DetectorActivity.resetParameter();
             return pigTFliteRecognitionAndPostureItem;
         }
+        aNumber++;
 
         // 调用模型判断关键点
         // keypoint detect
-        List<PointFloat> keypointResults = pigFaceKeyPointsDetector.recognizePointImage(clipBitmap);
+        kTime = System.currentTimeMillis();
+        List<PointFloat> keypointResults = pigFaceKeyPointsDetector.recognizePointImage(clipBitmap, oriBitmap);
+        kTime = System.currentTimeMillis() - kTime;
         if (keypointResults == null) {
+            FileUtils.saveInfoToTxtFile(oriInfoPath, srcPigBitmapName +
+                    "；totalNum：" + allNumber + "；DetectTime：" + dTime + "；AngleTime：" + aTime + "；KeypointTime：" + kTime + "；totalTime：" + (dTime + aTime + kTime));
+            if (kTimes < 4) {
+                kTimes++;
+                String mPath = null;
+                mPath = Global.mediaPayItem.getOriInfoBitmapFileName("/key");
+
+                //保存原图
+                File file = new File(mPath);
+                FileUtils.saveBitmapToFile(compressBitmap(oriBitmap), file);
+
+                String angleType = "AngleResult：";
+                angleType += srcPigBitmapName + "; ";
+                angleType += "rot_x = " + predictRotationIterm.rot_x + "; ";
+                angleType += "rot_y = " + predictRotationIterm.rot_y + "; ";
+                angleType += "rot_z = " + predictRotationIterm.rot_z + "; ";
+
+                //保存关键点失败的角度信息
+                FileUtils.saveInfoToTxtFile(unsuccessTXTPath, angleType);
+                //保存关键点失败的检测信息
+                FileUtils.saveInfoToTxtFile(unsuccessTXTPath, contenType);
+            }
+            DetectorActivity.resetParameter();
             return pigTFliteRecognitionAndPostureItem;
         }
 

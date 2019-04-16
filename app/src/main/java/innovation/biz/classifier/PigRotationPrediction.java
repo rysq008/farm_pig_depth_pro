@@ -9,14 +9,17 @@ import android.os.SystemClock;
 import android.os.Trace;
 
 import innovation.biz.iterm.PredictRotationIterm;
+import innovation.utils.FileUtils;
 import innovation.utils.PointFloat;
 import innovation.utils.Rot2AngleType;
 
 import org.tensorflow.demo.Classifier;
+import org.tensorflow.demo.Global;
 import org.tensorflow.demo.env.ImageUtils;
 import org.tensorflow.demo.env.Logger;
 import org.tensorflow.lite.Interpreter;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -29,7 +32,10 @@ import java.util.Map;
 import java.util.Vector;
 
 
+import static innovation.biz.classifier.PigFaceDetectTFlite.srcPigBitmapName;
+import static innovation.utils.ImageUtils.compressBitmap;
 import static innovation.utils.ImageUtils.padBitmap;
+import static org.tensorflow.demo.DetectorActivity.aTimes;
 
 /**
  * @author luolu .2018/8/4
@@ -50,7 +56,7 @@ public class PigRotationPrediction implements Classifier {
     // Float model
     private static final float IMAGE_MEAN = 128.0f;
     private static final float IMAGE_STD = 128.0f;
-    // Number of threads in the java app
+    // WaitNumber of threads in the java app
     private static final int NUM_THREADS = 4;
     // Config values.
     private int inputSize;
@@ -120,12 +126,12 @@ public class PigRotationPrediction implements Classifier {
     private PigRotationPrediction() {}
 
     @Override
-    public List<PointFloat> recognizePointImage(Bitmap bitmap) {
+    public List<PointFloat> recognizePointImage(Bitmap bitmap, Bitmap oriBitmap) {
         return null;
     }
 
     @Override
-    public RecognitionAndPostureItem pigRecognitionAndPostureItem(Bitmap bitmap) {
+    public RecognitionAndPostureItem pigRecognitionAndPostureItem(Bitmap bitmap, Bitmap oriBitmap) {
         return null;
     }
 
@@ -167,7 +173,7 @@ public class PigRotationPrediction implements Classifier {
     }
 
     @Override
-    public PredictRotationIterm pigRotationPredictionItemTFlite(Bitmap bitmap) {
+    public PredictRotationIterm pigRotationPredictionItemTFlite(Bitmap bitmap, Bitmap oriBitmap) {
         PredictRotationIterm predictRotationIterm = null;
         if (bitmap == null) {
             return null;
@@ -298,6 +304,24 @@ public class PigRotationPrediction implements Classifier {
 //                    "X:"+String.valueOf(predictRotX * rotScale),10,60,
 //                    "Y:"+String.valueOf(predictRotY * rotScale),10,90);
 //            com.innovation.utils.ImageUtils.saveBitmap(padBitmap,"pigRotP10",srcPigBitmapName);
+            //角度不是左中右的保存信息
+            String unsuccessTXTPath = "";
+            unsuccessTXTPath = Global.mediaPayItem.getUnsuccessInfoTXTFileName();
+
+            String contenType = "AngleResult：";
+            contenType += srcPigBitmapName + "; ";
+            contenType += "rot_y = " + predictRotY + "; ";
+
+            if(aTimes < 4){
+                String mPath = null;
+                    mPath = Global.mediaPayItem.getOriInfoBitmapFileName("/rota");
+                //保存原图
+                File file = new File(mPath);
+                FileUtils.saveBitmapToFile(compressBitmap(oriBitmap), file);
+                //保存失败检测信息
+                FileUtils.saveInfoToTxtFile(unsuccessTXTPath, contenType);
+            }
+            return null;
         }
 
 

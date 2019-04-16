@@ -77,6 +77,16 @@ public class GlobalDialogUtils {
                                         @Override
                                         public void handleWv(WebView wvContent, String s) {
                                             wvContent.loadUrl(s);
+                                            wvContent.postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    if(wvContent != null){
+                                                        wvContent.requestLayout();
+                                                        wvContent.reload();
+                                                    }
+                                                }
+                                            },1000);
+
                                         }
                                     });
                                 } else {

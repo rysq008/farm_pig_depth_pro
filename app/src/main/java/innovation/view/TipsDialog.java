@@ -3,6 +3,7 @@ package innovation.view;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -41,9 +42,23 @@ public class TipsDialog extends Dialog {
         wvContent = (WebView) findViewById(R.id.wv_content);
 
         WebSettings webSettings = wvContent.getSettings();
+        webSettings.setDefaultTextEncodingName("utf-8");
+        webSettings.setAllowUniversalAccessFromFileURLs(true);
+        webSettings.setAppCacheEnabled(false);
         webSettings.setDisplayZoomControls(false);
+        webSettings.setDomStorageEnabled(true);
         webSettings.setJavaScriptEnabled(true);
-
+        this.setOnDismissListener(new OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                // 清缓存和记录，缓存引起的白屏
+                wvContent.clearCache(true);
+                wvContent.clearHistory();
+                wvContent.removeAllViews();
+                wvContent.destroy();
+                wvContent=null;
+            }
+        });
     }
     //设置点击回调
     public void setBtnReCollectListener (View.OnClickListener listener) {
@@ -64,6 +79,16 @@ public class TipsDialog extends Dialog {
             listener.handleWv(wvContent, text);
         }else {
             wvContent.loadData(text, "text/html; charset=UTF-8",null);
+            wvContent.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if(wvContent != null){
+                        wvContent.requestLayout();
+                        wvContent.reload();
+                    }
+                }
+            },1000);
+
         }
     }
 

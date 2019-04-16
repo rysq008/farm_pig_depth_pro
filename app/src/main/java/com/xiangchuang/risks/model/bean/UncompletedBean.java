@@ -135,8 +135,8 @@ public class UncompletedBean implements Parcelable {
             return stepId;
         }
 
-        public void setStepId(String id) {
-            this.stepId = id;
+        public void setStepId(String stepId) {
+            this.stepId = stepId;
         }
 
         public int getStep() {

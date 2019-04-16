@@ -175,13 +175,17 @@ public final class USBCameraActivity_newUsb extends UsbBaseActivity implements C
             }
         }
     };
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_remote_camera_new;
+    }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
         if (DEBUG) Log.v(TAG, "onCreate:");
-        setContentView(R.layout.activity_remote_camera_new);
+
         mCountName = (TextView) findViewById(R.id.count_name);
         mTotalCountTextView = (TextView) findViewById(R.id.total_count);
         counter_activity = (RelativeLayout) findViewById(R.id.usb_camera_activity);
@@ -360,7 +364,7 @@ public final class USBCameraActivity_newUsb extends UsbBaseActivity implements C
                 }
 
                 showPop();
-                CounterHelper.recognitionFromNet(tBitmap, new CounterHelper.OnImageRecognitionListener() {
+                CounterHelper.recognitionFromNet(USBCameraActivity_newUsb.this, tBitmap, new CounterHelper.OnImageRecognitionListener() {
                     @Override
                     public void onCompleted(int count, Bitmap bitmap) {
                         runOnUiThread(new Runnable() {

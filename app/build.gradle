@@ -26,8 +26,8 @@ android {
         minSdkVersion 21
         targetSdkVersion 27
         //release versionCode 1100
-        versionCode 1112
-        versionName "1.112"
+        versionCode 1113
+        versionName "1.113"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters /*"armeabi", "armeabi-v7a", "x86", "mips"*/"armeabi-v7a"
@@ -46,12 +46,12 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
         debug {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }

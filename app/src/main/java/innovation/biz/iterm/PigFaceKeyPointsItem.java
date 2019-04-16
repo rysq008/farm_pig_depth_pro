@@ -4,7 +4,7 @@ import innovation.utils.PointFloat;
 
 /**
  * Author by luolu, Date on 2018/10/12.
- * COMPANYï¼šInnovationAI
+ * COMPANY：InnovationAI
  */
 
 public class PigFaceKeyPointsItem {

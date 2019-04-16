@@ -55,13 +55,18 @@ public class DialogHelper {
      *
      * @param activity
      */
-    public static void weightCheckDialog1(final Activity activity) {
+    public static void weightCheckDialog1(final Activity activity, String errorMsg) {
+        if (TextUtils.isEmpty(errorMsg)) {
+            errorMsg = "图片提交失败！请重新拍摄并确保整只死猪在拍摄范围内。";
+        }
+
         AlertDialog.Builder builder = new AlertDialog.Builder(activity)
                 .setIcon(R.mipmap.ic_launcher).setTitle("提示")
-                .setMessage("请点击照片重新拍摄，\n确保整头死猪在拍摄范围内。")
+                .setMessage(errorMsg)
                 .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        WeightPicCollectActivity.start(activity);
                         dialog.dismiss();
                     }
                 });

@@ -1,5 +1,6 @@
 package innovation.biz.classifier;
 
+import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
@@ -62,7 +63,7 @@ public class BreedingPigFaceDetectTFlite {
     // Float model
     private static final float IMAGE_MEAN = 128.0f;
     private static final float IMAGE_STD = 128.0f;
-    // Number of threads in the java app
+    // WaitNumber of threads in the java app
     private static final int NUM_THREADS = 4;
 
     //private final Classifier donkeyFaceKeyPointsTFDetector;
@@ -80,7 +81,7 @@ public class BreedingPigFaceDetectTFlite {
 
     public static RecognitionAndPostureItem recognitionAndPostureItem;
     //记录前一帧的排序后矩形集合
-    private ArrayList<Recognition> lastRecognitions = new ArrayList<>();
+    private ArrayList<BreedingPigFaceDetectTFlite.Recognition> lastRecognitions = new ArrayList<>();
 
     int padSize;
 

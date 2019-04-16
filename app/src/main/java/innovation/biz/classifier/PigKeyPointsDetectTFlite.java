@@ -11,13 +11,16 @@ import android.os.Trace;
 
 import innovation.biz.iterm.PigFaceKeyPointsItem;
 import innovation.biz.iterm.PredictRotationIterm;
+import innovation.utils.FileUtils;
 import innovation.utils.PointFloat;
 
 import org.tensorflow.demo.Classifier;
+import org.tensorflow.demo.Global;
 import org.tensorflow.demo.env.ImageUtils;
 import org.tensorflow.demo.env.Logger;
 import org.tensorflow.lite.Interpreter;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -29,7 +32,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static innovation.biz.classifier.PigFaceDetectTFlite.srcPigBitmapName;
+import static innovation.utils.ImageUtils.compressBitmap;
 import static innovation.utils.ImageUtils.padBitmap;
+import static org.tensorflow.demo.DetectorActivity.kTimes;
 
 
 /**
@@ -50,7 +56,7 @@ public class PigKeyPointsDetectTFlite implements Classifier {
     // Float model
     private static final float IMAGE_MEAN = 128.0f;
     private static final float IMAGE_STD = 128.0f;
-    // Number of threads in the java app
+    // WaitNumber of threads in the java app
     private static final int NUM_THREADS = 4;
     // Config values.
     private int inputSize;
@@ -128,7 +134,7 @@ public class PigKeyPointsDetectTFlite implements Classifier {
     }
 
     @Override
-    public RecognitionAndPostureItem pigRecognitionAndPostureItem(Bitmap bitmap) {
+    public RecognitionAndPostureItem pigRecognitionAndPostureItem(Bitmap bitmap, Bitmap oriBitmap) {
         return null;
     }
 
@@ -139,7 +145,7 @@ public class PigKeyPointsDetectTFlite implements Classifier {
     }
 
     @Override
-    public PredictRotationIterm pigRotationPredictionItemTFlite(Bitmap bitmap) {
+    public PredictRotationIterm pigRotationPredictionItemTFlite(Bitmap bitmap, Bitmap oriBitmap) {
         return null;
     }
 
@@ -175,7 +181,7 @@ public class PigKeyPointsDetectTFlite implements Classifier {
     }
 
     @Override
-    public List<PointFloat> recognizePointImage(Bitmap bitmap) {
+    public List<PointFloat> recognizePointImage(Bitmap bitmap, Bitmap oriBitmap) {
         if (bitmap == null) {
             return null;
         }
@@ -452,8 +458,26 @@ public class PigKeyPointsDetectTFlite implements Classifier {
         }
         sLogger.i("获取的关键点 %d:" + points.toString());
 
+        String unsuccessTXTPath = "";
+        unsuccessTXTPath = Global.mediaPayItem.getUnsuccessInfoTXTFileName();
+
+        String contenType = "KeypointResult：";
+        contenType += srcPigBitmapName + "; ";
+        contenType += "point0 = " + pigFaceKeyPointsItem.getPointFloat0().toString() + "; ";
+        contenType += "point1 = " + pigFaceKeyPointsItem.getPointFloat1().toString() + "; ";
+        contenType += "point2 = " + pigFaceKeyPointsItem.getPointFloat2().toString() + "; ";
+        contenType += "point3 = " + pigFaceKeyPointsItem.getPointFloat3().toString() + "; ";
+        contenType += "point4 = " + pigFaceKeyPointsItem.getPointFloat4().toString() + "; ";
+        contenType += "point5 = " + pigFaceKeyPointsItem.getPointFloat5().toString() + "; ";
+        contenType += "point6 = " + pigFaceKeyPointsItem.getPointFloat6().toString() + "; ";
+        contenType += "point7 = " + pigFaceKeyPointsItem.getPointFloat7().toString() + "; ";
+        contenType += "point8 = " + pigFaceKeyPointsItem.getPointFloat8().toString() + "; ";
+        contenType += "point9 = " + pigFaceKeyPointsItem.getPointFloat9().toString() + "; ";
+        contenType += "point10 = " + pigFaceKeyPointsItem.getPointFloat10().toString() + "; ";
+
+
         //画关键点
-        Canvas canvasDrawPoints = new Canvas(padBitmap);
+//        Canvas canvasDrawPoints = new Canvas(padBitmap);
         if (pointsExists[3] == 0 && pointsExists[5] + pointsExists[9] == 2){
 //            com.innovation.utils.ImageUtils.drawKeypoints(canvasDrawPoints,point5,padSize,"5");
 //            com.innovation.utils.ImageUtils.drawKeypoints(canvasDrawPoints,point9,padSize,"9");
@@ -486,6 +510,16 @@ public class PigKeyPointsDetectTFlite implements Classifier {
 //
 //            }
 //            com.innovation.utils.ImageUtils.saveBitmap(padBitmap,"pigKeyP10",srcPigBitmapName);
+            if(kTimes < 4){
+                String mPath = null;
+                mPath = Global.mediaPayItem.getOriInfoBitmapFileName("/key");
+                //保存原图
+                File file = new File(mPath);
+                FileUtils.saveBitmapToFile(compressBitmap(oriBitmap), file);
+                //保存失败检测信息
+                FileUtils.saveInfoToTxtFile(unsuccessTXTPath, contenType);
+            }
+            return null;
         }
         return points;
     }

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Process;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -33,11 +34,15 @@ import com.xiangchuang.risks.utils.AlertDialogManager;
 
 import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
+import com.innovation.pig.insurance.R.string;
+import com.innovation.pig.insurance.R.drawable;
+import com.innovation.pig.insurance.R.id;
+import com.innovation.pig.insurance.R.layout;
 import com.innovation.pig.insurance.netutils.Constants;
 import com.innovation.pig.insurance.netutils.GsonUtils;
 import com.innovation.pig.insurance.netutils.OkHttp3Util;
 import com.innovation.pig.insurance.netutils.PreferencesUtils;
-
+import com.xiangchuang.risks.model.bean.QueryVideoFlagDataBean.thresholdList;
 import org.json.JSONObject;
 import org.tensorflow.demo.DetectorActivity;
 import org.tensorflow.demo.Global;
@@ -62,43 +67,28 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
     public static String TAG = "SelectFunctionActivity";
 
     ImageView iv_cancel;
-
     TextView mselectname;
-
     TextView mselecttoubao;
-
     RelativeLayout rel_toubao;
-
     TextView mselectxunjiandianshu;
-
     TextView selectYulipei;
-
     TextView mselectlipei;
-
     RelativeLayout relLipei;
-
     TextView selectWebview;
-
     TextView tvExit;
-
     RelativeLayout rlBack;
-
     RelativeLayout rlEdit;
-
     ImageView ivSign;
-
     private String companyname;
     private String en_id;
     private int userid;
     private String companyfleg;
     private boolean isLiPei = true;
-
     private PopupWindow pop;
-
     private TextView tvPopExit;
     private TextView tvPopUpdate;
     private ImageView ivPopUpdateSign;
-
+    private long firstTime = 0L;
     //无害化处理按钮
     TextView tvInnocentTreatment;
     //待处理数量布局
@@ -108,35 +98,38 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
 
     private int payNum;
 
+    private UncompletedBean.currentStep currentStep;
+
+    public SelectFunctionActivity_new() {
+    }
+
     @Override
     public void initView() {
         super.initView();
-
-        iv_cancel = (ImageView) findViewById(R.id.iv_cancel);
-        iv_cancel.setOnClickListener(this);
-        mselectname = (TextView) findViewById(R.id.select_name);
-        mselecttoubao = (TextView) findViewById(R.id.select_toubao);
-        mselecttoubao.setOnClickListener(this);
-        rel_toubao = (RelativeLayout) findViewById(R.id.rel_toubao);
-        mselectxunjiandianshu = (TextView) findViewById(R.id.select_xunjiandianshu);
-        mselectxunjiandianshu.setOnClickListener(this);
-        selectYulipei = (TextView) findViewById(R.id.select_yulipei);
-        selectYulipei.setOnClickListener(this);
-        mselectlipei = (TextView) findViewById(R.id.select_lipei);
-        mselectlipei.setOnClickListener(this);
-        relLipei = (RelativeLayout) findViewById(R.id.rel_lipei);
-        selectWebview = (TextView) findViewById(R.id.select_webview);
-        selectWebview.setOnClickListener(this);
-        tvExit = (TextView) findViewById(R.id.tv_exit);
-        tvExit.setOnClickListener(this);
-        rlBack = (RelativeLayout) findViewById(R.id.rl_back);
-        rlEdit = (RelativeLayout) findViewById(R.id.rl_edit);
-        ivSign = (ImageView) findViewById(R.id.iv_sign);
-
-        tvInnocentTreatment = (TextView) findViewById(R.id.tv_innocent_treatment);
-        tvInnocentTreatment.setOnClickListener(this);
-        rlCount = (RelativeLayout) findViewById(R.id.rl_count);
-        tvCount = (TextView) findViewById(R.id.tv_count);
+        this.iv_cancel = (ImageView) this.findViewById(id.iv_cancel);
+        this.iv_cancel.setOnClickListener(this);
+        this.mselectname = (TextView) this.findViewById(id.select_name);
+        this.mselecttoubao = (TextView) this.findViewById(id.select_toubao);
+        this.mselecttoubao.setOnClickListener(this);
+        this.rel_toubao = (RelativeLayout) this.findViewById(id.rel_toubao);
+        this.mselectxunjiandianshu = (TextView) this.findViewById(id.select_xunjiandianshu);
+        this.mselectxunjiandianshu.setOnClickListener(this);
+        this.selectYulipei = (TextView) this.findViewById(id.select_yulipei);
+        this.selectYulipei.setOnClickListener(this);
+        this.mselectlipei = (TextView) this.findViewById(id.select_lipei);
+        this.mselectlipei.setOnClickListener(this);
+        this.relLipei = (RelativeLayout) this.findViewById(id.rel_lipei);
+        this.selectWebview = (TextView) this.findViewById(id.select_webview);
+        this.selectWebview.setOnClickListener(this);
+        this.tvExit = (TextView) this.findViewById(id.tv_exit);
+        this.tvExit.setOnClickListener(this);
+        this.rlBack = (RelativeLayout) this.findViewById(id.rl_back);
+        this.rlEdit = (RelativeLayout) this.findViewById(id.rl_edit);
+        this.ivSign = (ImageView) this.findViewById(id.iv_sign);
+        this.tvInnocentTreatment = (TextView) this.findViewById(id.tv_innocent_treatment);
+        this.tvInnocentTreatment.setOnClickListener(this);
+        this.rlCount = (RelativeLayout) this.findViewById(id.rl_count);
+        this.tvCount = (TextView) this.findViewById(id.tv_count);
 
     }
 
@@ -147,28 +140,22 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
 
     @Override
     protected void initData() {
-        companyname = PreferencesUtils.getStringValue(Constants.companyname, AppConfig.getAppContext(), "育肥猪农场");
-        companyfleg = PreferencesUtils.getStringValue(Constants.companyfleg, AppConfig.getAppContext(), "0");
-        Log.i("==companyfleg=", companyfleg + "");
-        mselectname.setText(companyname);
-        en_id = PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0");
-        userid = PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext());
-        //保险公司
-        if ("1".equals(companyfleg)) {
-            rel_toubao.setVisibility(View.VISIBLE);
-            relLipei.setVisibility(View.VISIBLE);
-            iv_cancel.setVisibility(View.VISIBLE);
-            rlEdit.setVisibility(View.GONE);
-        } else if ("2".equals(companyfleg)) {
-            iv_cancel.setVisibility(View.GONE);
-            rlEdit.setVisibility(View.VISIBLE);
-            //企业（养殖场）
-            rel_toubao.setVisibility(View.GONE);
-            if (AppConfig.isOpenLiPei) {
-                relLipei.setVisibility(View.VISIBLE);
-            } else {
-                relLipei.setVisibility(View.GONE);
-            }
+        this.companyname = PreferencesUtils.getStringValue("companyname", AppConfig.getAppContext(), "育肥猪农场");
+        this.companyfleg = PreferencesUtils.getStringValue("companyfleg", AppConfig.getAppContext(), "0");
+        Log.i("==companyfleg=", this.companyfleg + "");
+        this.mselectname.setText(this.companyname);
+        this.en_id = PreferencesUtils.getStringValue("en_id", AppConfig.getAppContext(), "0");
+        this.userid = PreferencesUtils.getIntValue("en_user_id", AppConfig.getAppContext());
+        if ("1".equals(this.companyfleg)) {
+            this.rel_toubao.setVisibility(View.VISIBLE);
+            this.relLipei.setVisibility(View.VISIBLE);
+            this.iv_cancel.setVisibility(View.VISIBLE);
+            this.rlEdit.setVisibility(View.GONE);
+        } else if ("2".equals(this.companyfleg)) {
+            this.iv_cancel.setVisibility(View.GONE);
+            this.rlEdit.setVisibility(View.VISIBLE);
+            this.rel_toubao.setVisibility(View.GONE);
+            this.relLipei.setVisibility(View.VISIBLE);
         }
         if(AppConfig.isOriginApk()){
             rlEdit.setVisibility(View.VISIBLE);
@@ -176,296 +163,255 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
             rlEdit.setVisibility(View.GONE);
         }
 
-        queryVideoFlag();
-
-        pop = new PopupWindow(SelectFunctionActivity_new.this);
-        View popview = getLayoutInflater().inflate(R.layout.item_setting, null);
-        tvPopExit = popview.findViewById(R.id.tv_pop_exit);
-        tvPopUpdate = popview.findViewById(R.id.tv_pop_update);
-        ivPopUpdateSign = popview.findViewById(R.id.iv_pop_update_sign);
-
-        if (needUpDate) {
-            ivPopUpdateSign.setVisibility(View.VISIBLE);
-            ivSign.setVisibility(View.VISIBLE);
+        this.queryVideoFlag();
+        this.pop = new PopupWindow(this);
+        View popview = this.getLayoutInflater().inflate(layout.item_setting, (ViewGroup) null);
+        this.tvPopExit = (TextView) popview.findViewById(id.tv_pop_exit);
+        this.tvPopUpdate = (TextView) popview.findViewById(id.tv_pop_update);
+        this.ivPopUpdateSign = (ImageView) popview.findViewById(id.iv_pop_update_sign);
+        if (AppConfig.needUpDate) {
+            this.ivPopUpdateSign.setVisibility(View.VISIBLE);
+            this.ivSign.setVisibility(View.VISIBLE);
         } else {
-            ivPopUpdateSign.setVisibility(View.GONE);
-            ivSign.setVisibility(View.GONE);
+            this.ivPopUpdateSign.setVisibility(View.GONE);
+            this.ivSign.setVisibility(View.GONE);
         }
 
-        pop.setWidth(300);
-        pop.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-        pop.setBackgroundDrawable(new BitmapDrawable());
-        pop.setFocusable(true);
-        pop.setOutsideTouchable(true);
-        pop.setContentView(popview);
+        this.pop.setWidth(300);
+        this.pop.setHeight(-2);
+        this.pop.setBackgroundDrawable(new BitmapDrawable());
+        this.pop.setFocusable(true);
+        this.pop.setOutsideTouchable(true);
+        this.pop.setContentView(popview);
 
         getNumber();
+        getDisposeStep();
     }
 
-
     public void setSign() {
-        if (needUpDate) {
-            ivPopUpdateSign.setVisibility(View.VISIBLE);
-            ivSign.setVisibility(View.VISIBLE);
+        if (AppConfig.needUpDate) {
+            this.ivPopUpdateSign.setVisibility(View.VISIBLE);
+            this.ivSign.setVisibility(View.VISIBLE);
         } else {
-            ivPopUpdateSign.setVisibility(View.GONE);
-            ivSign.setVisibility(View.GONE);
+            this.ivPopUpdateSign.setVisibility(View.GONE);
+            this.ivSign.setVisibility(View.GONE);
         }
+
     }
 
     private void queryVideoFlag() {
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap();
         map.put("animalType", "1");
-        mProgressDialog.show();
-
-        OkHttp3Util.doPost(Constants.QUERY_VIDEOFLAG_NEW, null, map, new Callback() {
+        this.mProgressDialog.show();
+        OkHttp3Util.doPost(Constants.QUERY_VIDEOFLAG_NEW, (Map) null, map, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                mProgressDialog.dismiss();
+                SelectFunctionActivity_new.this.mProgressDialog.dismiss();
                 AVOSCloudUtils.saveErrorMessage(e, SelectFunctionActivity_new.class.getSimpleName());
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String string = response.body().string();
-                mProgressDialog.dismiss();
-                Log.i(TAG, string);
-                QueryVideoFlagDataBean queryVideoFlagData = GsonUtils.getBean(string, QueryVideoFlagDataBean.class);
+                SelectFunctionActivity_new.this.mProgressDialog.dismiss();
+                Log.i(SelectFunctionActivity_new.TAG, string);
+                final QueryVideoFlagDataBean queryVideoFlagData = (QueryVideoFlagDataBean) GsonUtils.getBean(string, QueryVideoFlagDataBean.class);
                 if (queryVideoFlagData.getStatus() == 1) {
-                    QueryVideoFlagDataBean.thresholdList thresholdList =
-                            GsonUtils.getBean(queryVideoFlagData.getData().getThreshold(), QueryVideoFlagDataBean.thresholdList.class);
-
-                    Log.e(TAG, "queryVideoFlag thresholdList: " + thresholdList.toString());
-
-                    //存储理赔的时间条件信息
+                    thresholdList thresholdList = (thresholdList) GsonUtils.getBean(queryVideoFlagData.getData().getThreshold(), thresholdList.class);
+                    Log.e(SelectFunctionActivity_new.TAG, "queryVideoFlag thresholdList: " + thresholdList.toString());
                     PreferencesUtils.saveIntValue(Constants.lipeia, Integer.parseInt(thresholdList.getLipeiA()), SelectFunctionActivity_new.this);
                     PreferencesUtils.saveIntValue(Constants.lipeib, Integer.parseInt(thresholdList.getLipeiB()), SelectFunctionActivity_new.this);
                     PreferencesUtils.saveIntValue(Constants.lipein, Integer.parseInt(thresholdList.getLipeiN()), SelectFunctionActivity_new.this);
                     PreferencesUtils.saveIntValue(Constants.lipeim, Integer.parseInt(thresholdList.getLipeiM()), SelectFunctionActivity_new.this);
-
                     PreferencesUtils.saveKeyValue(Constants.phone, queryVideoFlagData.getData().getServiceTelephone(), SelectFunctionActivity_new.this);
                     PreferencesUtils.saveKeyValue(Constants.customServ, thresholdList.getCustomServ(), SelectFunctionActivity_new.this);
-
-                    PreferencesUtils.saveKeyValue(Constants.THRESHOLD_LIST, queryVideoFlagData.getData().getThreshold(), SelectFunctionActivity_new.this);
-
+                    PreferencesUtils.saveKeyValue("thresholdlist", queryVideoFlagData.getData().getThreshold(), SelectFunctionActivity_new.this);
                     if (null != queryVideoFlagData.getData() && !"".equals(queryVideoFlagData.getData())) {
-                        String left = (queryVideoFlagData.getData().getLeftNum() == null) ? "8" : queryVideoFlagData.getData().getLeftNum();
-                        String middleNum = (queryVideoFlagData.getData().getLeftNum() == null) ? "8" : queryVideoFlagData.getData().getMiddleNum();
-                        String rightNum = (queryVideoFlagData.getData().getLeftNum() == null) ? "8" : queryVideoFlagData.getData().getRightNum();
-                        if (AppConfig.isApkInDebug()) {
-                            Log.e(TAG, "\nleft:\n" + left);
-                            Log.e(TAG, "\nmiddleNum:\n" + middleNum);
-                            Log.e(TAG, "\nrightNum:\n" + rightNum);
-                        }
-                        PreferencesUtils.saveKeyValue(PreferencesUtils.FACE_ANGLE_MAX_LEFT, left, SelectFunctionActivity_new.this);
-                        PreferencesUtils.saveKeyValue(PreferencesUtils.FACE_ANGLE_MAX_MIDDLE, middleNum, SelectFunctionActivity_new.this);
-                        PreferencesUtils.saveKeyValue(PreferencesUtils.FACE_ANGLE_MAX_RIGHT, rightNum, SelectFunctionActivity_new.this);
+                        String left = queryVideoFlagData.getData().getLeftNum() == null ? "8" : queryVideoFlagData.getData().getLeftNum();
+                        String middleNum = queryVideoFlagData.getData().getLeftNum() == null ? "8" : queryVideoFlagData.getData().getMiddleNum();
+                        String rightNum = queryVideoFlagData.getData().getLeftNum() == null ? "8" : queryVideoFlagData.getData().getRightNum();
+                        PreferencesUtils.saveKeyValue("leftNum", left, SelectFunctionActivity_new.this);
+                        PreferencesUtils.saveKeyValue("middleNum", middleNum, SelectFunctionActivity_new.this);
+                        PreferencesUtils.saveKeyValue("rightNum", rightNum, SelectFunctionActivity_new.this);
                     }
                 } else {
-                    runOnUiThread(new Runnable() {
+                    SelectFunctionActivity_new.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            new AlertDialog.Builder(SelectFunctionActivity_new.this)
-                                    .setIcon(R.drawable.cowface)
-                                    .setTitle("提示")
-                                    .setMessage(queryVideoFlagData.getMsg())
-                                    .setPositiveButton("退出", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
-                                            SelectFunctionActivity_new.this.finish();
-                                        }
-                                    })
-                                    .setCancelable(false).show();
+                            (new AlertDialog.Builder(SelectFunctionActivity_new.this)).setIcon(drawable.cowface).setTitle("提示").setMessage(queryVideoFlagData.getMsg()).setPositiveButton("退出", new android.content.DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    SelectFunctionActivity_new.this.finish();
+                                }
+                            }).setCancelable(false).show();
                         }
                     });
                 }
+
             }
         });
     }
 
-    //校验是否有保单
     private void checkBaoDan() {
-        Map<String, String> map = new HashMap<>();
-        map.put(Constants.AppKeyAuthorization, "hopen");
-        map.put(Constants.en_user_id, String.valueOf(userid));
-        map.put(Constants.en_id, en_id);
-        mProgressDialog.show();
-        OkHttp3Util.doPost(Constants.CHECKBAODAN, null, map, new Callback() {
+        Map<String, String> map = new HashMap();
+        map.put("AppKeyAuthorization", "hopen");
+        map.put("en_user_id", String.valueOf(this.userid));
+        map.put("en_id", this.en_id);
+        this.mProgressDialog.show();
+        OkHttp3Util.doPost(Constants.CHECKBAODAN, (Map) null, map, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.i(TAG, e.toString());
-                mProgressDialog.dismiss();
+                Log.i(SelectFunctionActivity_new.TAG, e.toString());
+                SelectFunctionActivity_new.this.mProgressDialog.dismiss();
                 AVOSCloudUtils.saveErrorMessage(e, SelectFunctionActivity_new.class.getSimpleName());
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String string = response.body().string();
-                Log.i(TAG, string);
-                final StartBean bean = GsonUtils.getBean(string, StartBean.class);
+                Log.i(SelectFunctionActivity_new.TAG, string);
+                final StartBean bean = (StartBean) GsonUtils.getBean(string, StartBean.class);
                 if (null != bean) {
-                    runOnUiThread(new Runnable() {
+                    SelectFunctionActivity_new.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             if (bean.getStatus() == 1) {
-                                //理赔
-                                if (isLiPei) {
-                                    collectToNetForLiPei();
+                                if (SelectFunctionActivity_new.this.isLiPei) {
+                                    SelectFunctionActivity_new.this.collectToNetForLiPei();
                                 } else {
-                                    mProgressDialog.dismiss();
-                                    //预理赔
+                                    SelectFunctionActivity_new.this.mProgressDialog.dismiss();
                                     Intent intent = new Intent(SelectFunctionActivity_new.this, PreparedLiPeiActivity_new.class);
-                                    PreferencesUtils.saveKeyValue(Constants.fleg, "pre", AppConfig.getAppContext());
-                                    startActivity(intent);
+                                    PreferencesUtils.saveKeyValue("fleg", "pre", AppConfig.getAppContext());
+                                    SelectFunctionActivity_new.this.startActivity(intent);
                                 }
-
                             } else {
-                                mProgressDialog.dismiss();
-                                AlertDialogManager.showMessageDialogOne(SelectFunctionActivity_new.this, "提示", bean.getMsg(), new AlertDialogManager.DialogInterface() {
+                                SelectFunctionActivity_new.this.mProgressDialog.dismiss();
+                                AlertDialogManager.showMessageDialogOne(SelectFunctionActivity_new.this, "提示", bean.getMsg(), new com.xiangchuang.risks.utils.AlertDialogManager.DialogInterface() {
                                     @Override
                                     public void onPositive() {
-
                                     }
 
                                     @Override
                                     public void onNegative() {
-
                                     }
                                 });
                             }
+
                         }
                     });
                 } else {
-                    mProgressDialog.dismiss();
-                    runOnUiThread(new Runnable() {
+                    SelectFunctionActivity_new.this.mProgressDialog.dismiss();
+                    SelectFunctionActivity_new.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            toastUtils.showLong(SelectFunctionActivity_new.this, "验证保单失败，请重试。");
+                            SelectFunctionActivity_new.this.toastUtils.showLong(SelectFunctionActivity_new.this, "验证保单失败，请重试。");
                         }
                     });
                 }
+
             }
         });
     }
 
+    @Override
     public void onClick(View view) {
-        int i = view.getId();//投保
-        if (i == R.id.select_toubao) {
-            goToActivity(InsuredActivity.class, null);
-
-            //理赔
-        } else if (i == R.id.select_lipei) {
-            isLiPei = true;
-            if (!isOPen(SelectFunctionActivity_new.this)) {
-                openGPS1(SelectFunctionActivity_new.this);
+        int i = view.getId();
+        if (i == id.select_toubao) {
+            this.goToActivity(InsuredActivity.class, (Bundle) null);
+        } else if (i == id.select_lipei) {
+            this.isLiPei = true;
+            if (!isOPen(this)) {
+                this.openGPS1(this);
             } else {
-                checkBaoDan();
-
+                this.checkBaoDan();
             }
-
-            //点数
-        } else if (i == R.id.select_xunjiandianshu) {
-            goToActivity(ShowPollingActivity_new.class, null);
-            //getSheData1();
-
-        } else if (i == R.id.iv_cancel) {
-            finish();
-
-            //预理赔
-        } else if (i == R.id.select_yulipei) {
-            isLiPei = false;
-            if (!isOPen(SelectFunctionActivity_new.this)) {
-                openGPS1(SelectFunctionActivity_new.this);
+        } else if (i == id.select_xunjiandianshu) {
+            this.goToActivity(ShowPollingActivity_new.class, (Bundle) null);
+        } else if (i == id.iv_cancel) {
+            this.finish();
+        } else if (i == id.select_yulipei) {
+            this.isLiPei = false;
+            if (!isOPen(this)) {
+                this.openGPS1(this);
             } else {
-                checkBaoDan();
-//                    startActivity(new Intent(SelectFunctionActivity_new.this, SmallVideoActivity.class));
+                this.checkBaoDan();
             }
-
-        } else if (i == R.id.select_webview) {
-            startActivity(new Intent(SelectFunctionActivity_new.this, MonitoringActivity.class));
-
-        } else if (i == R.id.tv_exit) {
-            ivSign.setVisibility(View.GONE);
-            pop.showAsDropDown(rlEdit);
-            tvPopExit.setOnClickListener(new View.OnClickListener() {
+        } else if (i == id.select_webview) {
+            this.startActivity(new Intent(this, MonitoringActivity.class));
+        } else if (i == id.tv_exit) {
+            this.ivSign.setVisibility(View.GONE);
+            this.pop.showAsDropDown(this.rlEdit);
+            this.tvPopExit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    pop.dismiss();
-                    AlertDialog.Builder builder = new AlertDialog.Builder(SelectFunctionActivity_new.this)
-                            .setIcon(R.drawable.cowface).setTitle("提示")
-                            .setMessage("退出登录")
-                            .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    //如果退出，清空保存的相关状态， 跳转到登录页
-                                    PreferencesUtils.removeAllKey(SelectFunctionActivity_new.this);
-                                    Intent addIntent = new Intent(SelectFunctionActivity_new.this, LoginFamerActivity.class);
-                                    startActivity(addIntent);
-                                    finish();
-                                }
-                            })
-                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
+                    SelectFunctionActivity_new.this.pop.dismiss();
+                    AlertDialog.Builder builder = (new AlertDialog.Builder(SelectFunctionActivity_new.this)).setIcon(drawable.cowface).setTitle("提示").setMessage("退出登录").setPositiveButton("确认", new android.content.DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            PreferencesUtils.removeAllKey(SelectFunctionActivity_new.this);
+                            Intent addIntent = new Intent(SelectFunctionActivity_new.this, LoginFamerActivity.class);
+                            SelectFunctionActivity_new.this.startActivity(addIntent);
+                            SelectFunctionActivity_new.this.finish();
+                        }
+                    }).setNegativeButton("取消", new android.content.DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
                     builder.setCancelable(false);
                     builder.show();
                 }
             });
-
-            tvPopUpdate.setOnClickListener(new View.OnClickListener() {
+            this.tvPopUpdate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    pop.dismiss();
-                    if (needUpDate) {
-                        if (ivSign.getVisibility() == View.VISIBLE) {
-                            ivSign.setVisibility(View.GONE);
+                    SelectFunctionActivity_new.this.pop.dismiss();
+                    AlertDialog.Builder mDialog;
+                    if (AppConfig.needUpDate) {
+                        if (SelectFunctionActivity_new.this.ivSign.getVisibility() == View.VISIBLE) {
+                            SelectFunctionActivity_new.this.ivSign.setVisibility(View.GONE);
                         }
 
-                        AlertDialog.Builder mDialog = new AlertDialog.Builder(SelectFunctionActivity_new.this);
-                        mDialog.setIcon(R.drawable.cowface);
+                        mDialog = new AlertDialog.Builder(SelectFunctionActivity_new.this);
+                        mDialog.setIcon(drawable.cowface);
                         mDialog.setTitle("版本更新");
                         mDialog.setMessage(UpdateInformation.upgradeinfo);
                         mDialog.setCancelable(false);
-                        mDialog.setPositiveButton("马上升级", new DialogInterface.OnClickListener() {
+                        mDialog.setPositiveButton("马上升级", new android.content.DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                ivPopUpdateSign.setVisibility(View.GONE);
+                                SelectFunctionActivity_new.this.ivPopUpdateSign.setVisibility(View.GONE);
                                 Intent mIntent = new Intent(SelectFunctionActivity_new.this, AppUpgradeService.class);
                                 mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                //传递数据
-                                //mIntent.putExtra("appname", UpdateInformation.appname);
                                 mIntent.putExtra("mDownloadUrl", UpdateInformation.updateurl);
                                 mIntent.putExtra("appname", UpdateInformation.appname);
                                 SelectFunctionActivity_new.this.startService(mIntent);
                             }
-                        }).setNegativeButton("稍后再说", new DialogInterface.OnClickListener() {
+                        }).setNegativeButton("稍后再说", new android.content.DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                             }
                         }).create().show();
                     } else {
-                        AlertDialog.Builder mDialog = new AlertDialog.Builder(SelectFunctionActivity_new.this);
-                        mDialog.setIcon(R.drawable.cowface);
+                        mDialog = new AlertDialog.Builder(SelectFunctionActivity_new.this);
+                        mDialog.setIcon(drawable.cowface);
                         mDialog.setTitle("提示");
                         mDialog.setMessage("当前已是最新版本");
                         mDialog.setCancelable(false);
-                        mDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        mDialog.setPositiveButton("确定", new android.content.DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                             }
                         }).create().show();
                     }
+
                 }
             });
-
-
-        } else if (i == R.id.tv_innocent_treatment) {
+        } else if (i == id.tv_innocent_treatment) {
             getUnfinish();
         }
     }
@@ -505,15 +451,15 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
                         public void run() {
                             SelectFunctionActivity_new.this.mProgressDialog.dismiss();
                             if (null != result) {
-                                if (result.getStatus() == 1) {
+                                if(result.getStatus() == 1){
                                     UncompletedBean uncompletedBean = result.getData();
                                     Bundle bundle = new Bundle();
                                     bundle.putParcelable("Uncompleted", uncompletedBean);
                                     goToActivity(DeadPigProcessStepActivity.class, bundle);
-                                } else {
-                                    if (payNum > 0) {
+                                }else{
+                                    if(payNum > 0){
                                         SelectFunctionActivity_new.this.goToActivity(WaitDisposeActivity.class, null);
-                                    } else {
+                                    }else{
                                         Toast.makeText(SelectFunctionActivity_new.this, "您还没有理赔数据", Toast.LENGTH_SHORT).show();
                                     }
                                 }
@@ -528,7 +474,6 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
             }
         });
     }
-
 
     /**
      * 获取待处理理赔数量
@@ -547,7 +492,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
                 Log.i(SelectFunctionActivity_new.TAG, string);
 
                 BaseBean<WaitNumber> result;
-                try {
+                try{
                     Gson gson = new Gson();
                     Type type = new TypeToken<BaseBean<WaitNumber>>() {
                     }.getType();
@@ -559,10 +504,10 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
                             public void run() {
                                 payNum = result.getData().getNumber();
 
-                                if (payNum > 0) {
+                                if(payNum > 0){
                                     rlCount.setVisibility(View.VISIBLE);
-                                    tvCount.setText(payNum + "");
-                                } else {
+                                    tvCount.setText(payNum+"");
+                                }else{
                                     rlCount.setVisibility(View.GONE);
                                 }
 
@@ -571,7 +516,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
                     } else {
 
                     }
-                } catch (Exception e) {
+                }catch (Exception e){
                     e.printStackTrace();
                 }
 
@@ -580,61 +525,86 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
         });
     }
 
-
-    private void collectToNetForLiPei() {
-        OkHttp3Util.doPost(Constants.LiSTART, null, new Callback() {
+    /**
+     * 获取处理步骤
+     */
+    private void getDisposeStep() {
+        OkHttp3Util.doPost(Constants.DISPOSE_STEP, (Map) null, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.i(TAG, e.toString());
+                Log.i(SelectFunctionActivity_new.TAG, e.toString());
                 AVOSCloudUtils.saveErrorMessage(e, SelectFunctionActivity_new.class.getSimpleName());
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String string = response.body().string();
-                Log.i(TAG, string);
-                final StartBean bean = GsonUtils.getBean(string, StartBean.class);
+                Log.i(SelectFunctionActivity_new.TAG, string);
+
+                BaseBean<UncompletedBean.currentStep> result;
+                try{
+                    Gson gson = new Gson();
+                    Type type = new TypeToken<BaseBean<UncompletedBean.currentStep>>() {
+                    }.getType();
+                    result = gson.fromJson(string, type);
+
+                    if (null != result) {
+                        currentStep = result.getData();
+                    } else {
+
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+
+            }
+        });
+    }
+
+    private void collectToNetForLiPei() {
+        OkHttp3Util.doPost(Constants.LiSTART, (Map) null, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.i(SelectFunctionActivity_new.TAG, e.toString());
+                AVOSCloudUtils.saveErrorMessage(e, SelectFunctionActivity_new.class.getSimpleName());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String string = response.body().string();
+                Log.i(SelectFunctionActivity_new.TAG, string);
+                final StartBean bean = (StartBean) GsonUtils.getBean(string, StartBean.class);
                 if (null != bean) {
-                    runOnUiThread(new Runnable() {
+                    SelectFunctionActivity_new.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            mProgressDialog.dismiss();
+                            SelectFunctionActivity_new.this.mProgressDialog.dismiss();
                             if (bean.getStatus() == 1) {
-                                PreferencesUtils.saveKeyValue(Constants.fleg, "lipei", AppConfig.getAppContext());
-                                PreferencesUtils.saveKeyValue(Constants.preVideoId, bean.getData(), AppConfig.getAppContext());
+                                PreferencesUtils.saveKeyValue("fleg", "lipei", AppConfig.getAppContext());
+                                PreferencesUtils.saveKeyValue("preCompensateVideoId", bean.getData(), AppConfig.getAppContext());
                                 Global.model = Model.VERIFY.value();
                                 Intent intent = new Intent(SelectFunctionActivity_new.this, DetectorActivity.class);
-                                startActivity(intent);
-//                                finish();
+                                SelectFunctionActivity_new.this.startActivity(intent);
                             } else {
-                                //showDialogError(bean.getMsg());
-                                AlertDialogManager.showMessageDialog(SelectFunctionActivity_new.this, "提示", bean.getMsg(), new AlertDialogManager.DialogInterface() {
+                                AlertDialogManager.showMessageDialog(SelectFunctionActivity_new.this, "提示", bean.getMsg(), new com.xiangchuang.risks.utils.AlertDialogManager.DialogInterface() {
                                     @Override
                                     public void onPositive() {
-
                                     }
 
                                     @Override
                                     public void onNegative() {
-
                                     }
                                 });
-
-
                             }
-                            /*else if (bean.getStatus() == 0) {
-                                Toast.makeText(AppConfig.getAppContext(), bean.getMsg(), Toast.LENGTH_LONG).show();
-                            } else if (bean.getStatus() == -1) {
-                                Toast.makeText(AppConfig.getAppContext(), bean.getMsg(), Toast.LENGTH_LONG).show();
-                            }*/
+
                         }
                     });
-
                 } else {
-                    runOnUiThread(new Runnable() {
+                    SelectFunctionActivity_new.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(SelectFunctionActivity_new.this, "开始采集失败", Toast.LENGTH_LONG).show();
+                            Toast.makeText(SelectFunctionActivity_new.this, "开始采集失败", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -644,47 +614,37 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
     }
 
     private void openGPS1(Context mContext) {
-        AlertDialogManager.showMessageDialog(mContext, "提示", getString(R.string.locationwarning), new AlertDialogManager.DialogInterface() {
+        AlertDialogManager.showMessageDialog(mContext, "提示", this.getString(string.locationwarning), new com.xiangchuang.risks.utils.AlertDialogManager.DialogInterface() {
             @Override
             public void onPositive() {
                 Intent intent = new Intent();
-                intent.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivityForResult(intent, 1315);
+                intent.setAction("android.settings.LOCATION_SOURCE_SETTINGS");
+                SelectFunctionActivity_new.this.startActivityForResult(intent, 1315);
             }
 
             @Override
             public void onNegative() {
-
             }
         });
-
     }
 
-    public static final boolean isOPen(final Context context) {
-        LocationManager locationManager
-                = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        // 通过GPS卫星定位，定位级别可以精确到街（通过24颗卫星定位，在室外和空旷的地方定位准确、速度快）
+    public static final boolean isOPen(Context context) {
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         boolean gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        // 通过WLAN或移动网络(3G/2G)确定的位置（也称作AGPS，辅助GPS定位。主要用于在室内或遮盖物（建筑群或茂密的深林等）密集的地方定位）
         boolean network = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        if (gps || network) {
-            return true;
-        }
-
-        return false;
+        return gps || network;
     }
 
-    //获取猪舍信息列表
     private void getSheData1() {
         Map map = new HashMap();
-        map.put(Constants.AppKeyAuthorization, "hopen");
+        map.put("AppKeyAuthorization", "hopen");
         Map mapbody = new HashMap();
-        mapbody.put("enId", PreferencesUtils.getStringValue(Constants.en_id, SelectFunctionActivity_new.this));
-        mProgressDialog.show();
+        mapbody.put("enId", PreferencesUtils.getStringValue("en_id", this));
+        this.mProgressDialog.show();
         OkHttp3Util.doPost(Constants.JUANEXIT, mapbody, map, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                mProgressDialog.dismiss();
+                SelectFunctionActivity_new.this.mProgressDialog.dismiss();
                 Log.i("ShowPollingActivity_new", e.toString());
                 AVOSCloudUtils.saveErrorMessage(e, SelectFunctionActivity_new.class.getSimpleName());
             }
@@ -699,66 +659,54 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
                         int status = jsonObject.getInt("status");
                         String msg = jsonObject.getString("msg");
                         if (status == 1) {
-                            runOnUiThread(new Runnable() {
+                            SelectFunctionActivity_new.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    mProgressDialog.dismiss();
-
+                                    SelectFunctionActivity_new.this.mProgressDialog.dismiss();
                                 }
                             });
-
                         } else if (status == 0) {
-                            runOnUiThread(new Runnable() {
+                            SelectFunctionActivity_new.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    mProgressDialog.dismiss();
-                                    AlertDialogManager.showMessageDialogOne(SelectFunctionActivity_new.this, "提示", "您还未设置猪圈信息", new AlertDialogManager.DialogInterface() {
+                                    SelectFunctionActivity_new.this.mProgressDialog.dismiss();
+                                    AlertDialogManager.showMessageDialogOne(SelectFunctionActivity_new.this, "提示", "您还未设置猪圈信息", new com.xiangchuang.risks.utils.AlertDialogManager.DialogInterface() {
                                         @Override
                                         public void onPositive() {
-
                                         }
 
                                         @Override
                                         public void onNegative() {
-
                                         }
                                     });
                                 }
-
                             });
-
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        AVOSCloudUtils.saveErrorMessage(e, SelectFunctionActivity_new.class.getSimpleName());
+                    } catch (Exception var7) {
+                        var7.printStackTrace();
+                        AVOSCloudUtils.saveErrorMessage(var7, SelectFunctionActivity_new.class.getSimpleName());
                     }
-
                 }
+
             }
         });
     }
 
-    private long firstTime = 0;
-
     @Override
     public void onBackPressed() {
-        if (AppConfig.isOriginApk()){
-            //判断是养殖场登录 可直接退出
-            if ("2".equals(companyfleg)) {
-                long secondTime = System.currentTimeMillis();
-                if (secondTime - firstTime > 2000) {
-                    Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
-                    firstTime = secondTime;
-                } else {
-                    android.os.Process.killProcess(android.os.Process.myPid());
-                    System.exit(0);
-                }
+        if ("2".equals(this.companyfleg)) {
+            long secondTime = System.currentTimeMillis();
+            if (secondTime - this.firstTime > 2000L) {
+                Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                this.firstTime = secondTime;
             } else {
-                finish();
+                Process.killProcess(Process.myPid());
+                System.exit(0);
             }
         } else {
-            super.onBackPressed();
+            this.finish();
         }
+
     }
 
     @Override

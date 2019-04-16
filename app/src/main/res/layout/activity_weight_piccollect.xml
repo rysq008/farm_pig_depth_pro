@@ -9,13 +9,7 @@
     <FrameLayout
         android:id="@+id/fl_preview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <com.xiangchuang.risks.view.camera.CameraSurfaceView
-            android:id="@+id/camera_surfaceview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </FrameLayout>
+        android:layout_height="match_parent"/>
 
     <ImageView
         android:layout_width="240dp"
@@ -52,17 +46,19 @@
         android:tint="@color/WHITE"
         android:visibility="gone" />
 
-    <ImageView
+    <TextView
         android:id="@+id/btn_finish"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_marginBottom="50dp"
-        android:layout_marginLeft="20dp"
-        android:scaleType="fitXY"
-        android:src="@mipmap/iv_round_back"
-        android:tint="@color/WHITE" />
+        android:gravity="center"
+        android:textSize="24dp"
+        android:padding="10dp"
+        android:text="退出"
+        android:layout_marginBottom="40dp"
+        android:layout_marginLeft="10dp"
+        android:textColor="@color/WHITE" />
 
 
     <TextView
@@ -74,5 +70,5 @@
         android:layout_marginTop="30dp"
         android:text="提示\n1、请保持手机水平，将刻度尺放入蓝色双虚线内；\n2、当拍照按钮变为白色时可拍照；"
         android:textColor="@color/DODGERBLUE"
-        android:textSize="18dp" />
+        android:textSize="20dp" />
 </RelativeLayout>
