@@ -153,7 +153,7 @@ public class DialogHelper {
     public static void exitDeadPigProcessDialog(final Activity activity,boolean isCreateOrder) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity)
                 .setIcon(R.mipmap.ic_launcher).setTitle("提示")
-                .setMessage("无害化处理步骤还未完成，未完成退出页面数据将清除，您确定要退出吗？")
+                .setMessage("此步骤的无害化处理数据还未提交，此时退出该页面后当前页面的数据将被清除，您确定退出吗？")
                 .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

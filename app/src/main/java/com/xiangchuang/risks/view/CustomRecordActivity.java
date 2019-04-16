@@ -132,7 +132,7 @@ public class CustomRecordActivity extends BaseActivity implements View.OnClickLi
                     @Override
                     public void hasPermission(List<String> granted, boolean isAll) {
                         if (isAll) {
-                            initView();
+                            initSurfaceView();
                         }
                     }
 
@@ -144,6 +144,7 @@ public class CustomRecordActivity extends BaseActivity implements View.OnClickLi
                 });
     }
 
+    @Override
     public void initView() {
         framelayout = (FrameLayout) findViewById(R.id.framelayout);
         mRecordControl = (ImageView) findViewById(R.id.record_control);
@@ -159,6 +160,20 @@ public class CustomRecordActivity extends BaseActivity implements View.OnClickLi
         tv_latitude.setText("纬度：" + PreferencesUtils.getStringValue(Constants.latitude, AppConfig.getAppContext()));
         tv_position.setText("位置：" + LocationManager_new.getInstance(CustomRecordActivity.this).str_address);
         mRecordControl.setOnClickListener(this);
+
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_custom;
+    }
+
+    @Override
+    protected void initData() {
+
+    }
+
+    private void initSurfaceView(){
         surfaceView = new SurfaceView(CustomRecordActivity.this);
         framelayout.addView(surfaceView);
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) surfaceView.getLayoutParams();
@@ -179,17 +194,6 @@ public class CustomRecordActivity extends BaseActivity implements View.OnClickLi
         mRecordTime.setOnChronometerTickListener(onChronometerTickListener);
         mRecordTime.requestLayout();
     }
-
-    @Override
-    protected int getLayoutId() {
-        return R.layout.activity_custom;
-    }
-
-    @Override
-    protected void initData() {
-
-    }
-
 
     private SurfaceHolder.Callback mSurfaceCallBack = new SurfaceHolder.Callback() {
         @Override
