@@ -44,7 +44,12 @@ public class GlobalDialogUtils {
         Map<String, String> mapBody = new HashMap<>();
         mapBody.put("appType", "2");
         mapBody.put("useCase", useCase);
-        mapBody.put("userId", String.valueOf(PreferencesUtils.getIntValue(Constants.userid, AppConfig.getAppContext())));
+        String type = PreferencesUtils.getStringValue(Constants.companyfleg, AppConfig.getAppContext());
+        if (type.equals("1")) {
+            mapBody.put("userId", PreferencesUtils.getStringValue(Constants.id, AppConfig.getAppContext()));
+        } else {
+            mapBody.put("userId", String.valueOf(PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext())));
+        }
         OkHttp3Util.doPost(Constants.GET_TIPS_DIALOG, mapBody, mapHeader, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
