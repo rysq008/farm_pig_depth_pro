@@ -42,6 +42,9 @@ import okhttp3.RequestBody;
 
 import static com.farm.innovation.base.FarmAppConfig.getStringTouboaExtra;
 
+/**
+ * 更新验标详情
+ */
 public class UpdateToubaoActivity extends BaseActivity {
 
     private static String TAG = "UpdateToubaoActivity";
@@ -53,7 +56,7 @@ public class UpdateToubaoActivity extends BaseActivity {
     private TextView tv_baodan_number;
     private TextView tv_baodan_tel;
     private TextView tv_baodan_people;
-    private EditText tv_baodan_date;
+    private TextView tv_baodan_date;
     private TextView tv_baodan_address;
 
     private ToubaoTask mToubaoTask;
@@ -147,7 +150,7 @@ public class UpdateToubaoActivity extends BaseActivity {
         tv_baodan_tel = (TextView) findViewById(R.id.tv_baodan_tel);
         tv_baodan_people = (TextView) findViewById(R.id.tv_baodan_people);
         tv_baodan_idcard = (TextView) findViewById(R.id.tv_baodan_idcard);
-        tv_baodan_date = (EditText) findViewById(R.id.tv_baodan_date);
+        tv_baodan_date = (TextView) findViewById(R.id.tv_baodan_date);
         tv_baodan_address = (TextView) findViewById(R.id.tv_baodan_address);
         tv_baodan_jing = (TextView) findViewById(R.id.tv_baodan_jing);
         tv_baodan_wei = (TextView) findViewById(R.id.tv_baodan_wei);

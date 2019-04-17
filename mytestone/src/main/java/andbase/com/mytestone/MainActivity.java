@@ -114,8 +114,8 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "nb", Toast.LENGTH_LONG).show();
                     Intent mIntent = new Intent(MainActivity.this, LoginFamerAarActivity.class);
                     mIntent.putExtra(FarmAppConfig.TOKEY, "android_token");
-                    mIntent.putExtra(FarmAppConfig.USER_ID, "android_userid6");
-                    mIntent.putExtra(FarmAppConfig.PHONE_NUMBER, "19000000006");
+                    mIntent.putExtra(FarmAppConfig.USER_ID, userid);
+                    mIntent.putExtra(FarmAppConfig.PHONE_NUMBER, phone);
                     mIntent.putExtra(FarmAppConfig.NAME, "android_name");
                     mIntent.putExtra(FarmAppConfig.DEPARTMENT_ID, "14079900"/*"android_department"*/);
                     mIntent.putExtra(FarmAppConfig.IDENTITY_CARD, "android_identitry");
