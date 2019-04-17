@@ -110,7 +110,7 @@ dependencies {
     //noinspection GradleCompatible
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.squareup.okhttp3:okhttp:3.9.1'
-    implementation 'com.google.code.gson:gson:2.3'
+    implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
 
     //    implementation files('libs/AMap_Location_V3.6.1_20171012.jar')
