@@ -7,7 +7,7 @@
         android:name=".MyApp"
         android:allowBackup="true"
         android:supportsRtl="true"
-        android:label="猪险"
+        android:label="猪险宿主工程"
         android:icon="@drawable/ic_launcher"
         tools:replace="android:allowBackup"
         android:theme="@style/AppTheme">

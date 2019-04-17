@@ -333,7 +333,7 @@ public class OrganizationBaodanActivity extends BaseActivity {
                 return;
             }
             if (str_bank.equals("")) {
-                Toast.makeText(getApplicationContext(), "未上传成�?请重新拍摄银行卡正面照片", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "请拍摄银行卡正面照片", Toast.LENGTH_SHORT).show();
                 btnFinish.setEnabled(true);
                 return;
             }
