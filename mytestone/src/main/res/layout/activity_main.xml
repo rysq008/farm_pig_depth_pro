@@ -26,7 +26,6 @@
         android:layout_marginTop="8dp"
         android:onClick="onClickView"
         android:text="农险"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintLeft_toLeftOf="parent"

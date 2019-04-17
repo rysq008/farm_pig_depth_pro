@@ -13,19 +13,10 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-//import com.innovation.biz.login.LoginFamerAarActivity;
-//import com.innovation.base.FarmAppConfig;
-//import com.innovation.biz.login.LoginFamerAarActivity;
-import com.farm.innovation.base.FarmAppConfig;
-import com.farm.innovation.biz.login.LoginFamerAarActivity;
+import com.innovation.base.FarmAppConfig;
+import com.innovation.biz.login.LoginFamerAarActivity;
 import com.innovation.pig.insurance.AppConfig;
-import com.innovation.pig.insurance.netutils.Constants;
-import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.view.LoginFamerActivity;
-
-//import com.innovation.base.AppConfig;
-//import com.innovation.base.BaseActivity;
-//import com.innovation.biz.login.LoginFamerAarActivity;
 
 import static android.widget.LinearLayout.VERTICAL;
 
@@ -48,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 //    }
 
     public void onClickView(View view) {
-        if(view.getId() == R.id.pig_tv){
+        if (view.getId() == R.id.pig_tv) {
             EditText et = new EditText(this);
             et.setInputType(InputType.TYPE_CLASS_PHONE);
             et.setHint("请输入手机号码");
@@ -85,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
                     dialog.dismiss();
                 }
             }).show();
-        }else if(view.getId() == R.id.farm_tv){
+        } else if (view.getId() == R.id.farm_tv) {
 
             EditText et = new EditText(this);
             et.setInputType(InputType.TYPE_CLASS_PHONE);
