@@ -10,9 +10,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.os.SystemClock;
-import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -21,8 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 
-
-import butterknife.OnClick;
 
 import com.innovation.pig.insurance.AppConfig;
 import com.xiangchuang.risks.base.BaseActivity;
@@ -94,7 +90,7 @@ public class AddPigPicActivity extends BaseActivity {
     public static final int REQUESTCODE_TAKE = 1;        // 相机拍照标记
     private static final int REQUESTCODE_CUTTING = 2;    // 图片裁切标记
 
-    private String lipeiId = "";
+    private String lipeiId = "", insureNo = "";
     private String timesFlag = "";
 
     private PopupWindow pop = null;
@@ -195,6 +191,7 @@ public class AddPigPicActivity extends BaseActivity {
     protected void initData() {
         lipeiId = getIntent().getStringExtra("lipeiid");
         timesFlag = getIntent().getStringExtra("timesFlag");
+        if(!TextUtils.isEmpty(getIntent().getStringExtra("insureNo")))insureNo = getIntent().getStringExtra("insureNo");
         tvTitle.setText("资料采集");
         iv_cancel.setVisibility(View.GONE);
         parentView = getWindow().getDecorView();
@@ -503,7 +500,7 @@ public class AddPigPicActivity extends BaseActivity {
      */
     private void upDeadPig(Bitmap photo) {
         //上传死猪照片时候调用称重接口
-        CounterHelper.recognitionWeightFromNet(photo, new CounterHelper.OnImageRecognitionWeightListener() {
+        CounterHelper.recognitionWeightFromNet(photo, insureNo, lipeiId , new CounterHelper.OnImageRecognitionWeightListener() {
             @Override
             public void onCompleted(float weight, int status, String errorMsg) {
                 runOnUiThread(new Runnable() {
