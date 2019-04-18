@@ -869,6 +869,7 @@ public class MediaProcessor {
                 if ("lipei".equals(PreferencesUtils.getStringValue(Constants.fleg, AppConfig.getAppContext()))) {
                     mActivity.startActivity(new Intent(mActivity, AddPigPicActivity.class)
                             .putExtra("lipeiid", lipeiId)
+                            .putExtra("insureNo", minsureNo)
                             .putExtra("timesFlag", ""));
                 } else {
                     if (isNoCamera) {
@@ -1178,6 +1179,7 @@ public class MediaProcessor {
 //                        showTryAgainDialog(timesFlag);
                         mActivity.startActivity(new Intent(mActivity, AddPigPicActivity.class)
                                 .putExtra("lipeiid", "")
+                                .putExtra("insureNo", minsureNo)
                                 .putExtra("timesFlag", timesFlag)
                         );
                         mActivity.finish();
@@ -1190,6 +1192,7 @@ public class MediaProcessor {
 
                 mActivity.startActivity(new Intent(mActivity, AddPigPicActivity.class)
                         .putExtra("lipeiid", "")
+                        .putExtra("insureNo", minsureNo)
                         .putExtra("timesFlag", timesFlag)
                 );
                 mActivity.finish();
@@ -1417,6 +1420,7 @@ public class MediaProcessor {
                         if ("lipei".equals(PreferencesUtils.getStringValue(Constants.fleg, AppConfig.getAppContext()))) {
                             mActivity.startActivity(new Intent(mActivity, AddPigPicActivity.class)
                                     .putExtra("lipeiid", "")
+                                    .putExtra("insureNo", minsureNo)
                                     .putExtra("timesFlag", timesFlag)
                             );
                         }
