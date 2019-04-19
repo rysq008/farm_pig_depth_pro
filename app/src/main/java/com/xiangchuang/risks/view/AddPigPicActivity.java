@@ -90,7 +90,7 @@ public class AddPigPicActivity extends BaseActivity {
     public static final int REQUESTCODE_TAKE = 1;        // 相机拍照标记
     private static final int REQUESTCODE_CUTTING = 2;    // 图片裁切标记
 
-    private String lipeiId = "", insureNo = "";
+    private String lipeiId = "", insureNo = "", lipeiNo = "";
     private String timesFlag = "";
 
     private PopupWindow pop = null;
@@ -192,6 +192,7 @@ public class AddPigPicActivity extends BaseActivity {
         lipeiId = getIntent().getStringExtra("lipeiid");
         timesFlag = getIntent().getStringExtra("timesFlag");
         if(!TextUtils.isEmpty(getIntent().getStringExtra("insureNo")))insureNo = getIntent().getStringExtra("insureNo");
+        if(!TextUtils.isEmpty(getIntent().getStringExtra("lipeiNo")))lipeiNo = getIntent().getStringExtra("lipeiNo");
         tvTitle.setText("资料采集");
         iv_cancel.setVisibility(View.GONE);
         parentView = getWindow().getDecorView();
@@ -500,7 +501,7 @@ public class AddPigPicActivity extends BaseActivity {
      */
     private void upDeadPig(Bitmap photo) {
         //上传死猪照片时候调用称重接口
-        CounterHelper.recognitionWeightFromNet(photo, insureNo, lipeiId , new CounterHelper.OnImageRecognitionWeightListener() {
+        CounterHelper.recognitionWeightFromNet(photo, insureNo, lipeiNo , new CounterHelper.OnImageRecognitionWeightListener() {
             @Override
             public void onCompleted(float weight, int status, String errorMsg) {
                 runOnUiThread(new Runnable() {
