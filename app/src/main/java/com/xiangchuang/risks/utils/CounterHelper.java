@@ -209,10 +209,10 @@ public final class CounterHelper {
      * 死猪估重接口
      * @param bitmap
      * @param insureNo
-     * @param liPeiId
+     * @param lipeiNo
      * @param listener
      */
-    public static void recognitionWeightFromNet(final Bitmap bitmap, String insureNo, String liPeiId, final OnImageRecognitionWeightListener listener) {
+    public static void recognitionWeightFromNet(final Bitmap bitmap, String insureNo, String lipeiNo, final OnImageRecognitionWeightListener listener) {
         ThreadPoolProxyFactory.getNormalThreadPoolProxy().execute((new Runnable() {
             @Override
             public void run() {
@@ -220,7 +220,7 @@ public final class CounterHelper {
                 param.put("picImage", getImgStr(bitmap));
                 param.put("type", "1");
                 param.put("baodan", insureNo);
-                param.put("libno", liPeiId);
+                param.put("libno", lipeiNo);
                 OkHttp3Util.doPost(URL_WEIGHT_TEST, param, mHeaderMap, new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
