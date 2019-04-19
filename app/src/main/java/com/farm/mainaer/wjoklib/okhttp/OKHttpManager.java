@@ -98,7 +98,7 @@ public final class OKHttpManager {
         return mInstance;
     }
 
-    public static void init(Context context, Class<? extends OKBaseResponse> baseResponseClass) {
+    public static void init(Context context, Class<? extends FarmOKBaseResponse> baseResponseClass) {
         init(context, new OKHttpConfig.Builder().setBaseResponseClass(baseResponseClass).build());
     }
 

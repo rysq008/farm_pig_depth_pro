@@ -8,8 +8,8 @@ import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 
-import com.farm.mainaer.wjoklib.okhttp.IUrl;
-import com.farm.mainaer.wjoklib.okhttp.OKBaseResponse;
+import com.farm.mainaer.wjoklib.okhttp.FarmIUrl;
+import com.farm.mainaer.wjoklib.okhttp.FarmOKBaseResponse;
 import com.farm.mainaer.wjoklib.okhttp.OKHttpManager;
 import com.farm.mainaer.wjoklib.okhttp.exception.OkHttpError;
 import com.farm.mainaer.wjoklib.okhttp.utils.LoggerUtil;
@@ -73,7 +73,7 @@ public abstract class OKHttpController<Listener> {
          *
          * @return
          */
-        protected abstract IUrl getUrl();
+        protected abstract FarmIUrl getUrl();
 
         /**
          * 加载成功回调
@@ -91,10 +91,10 @@ public abstract class OKHttpController<Listener> {
         /**
          * Intercept 'data' json parser
          *
-         * @param response the whole response object ({@link OKBaseResponse} instance)
+         * @param response the whole response object ({@link FarmOKBaseResponse} instance)
          * @return true if you want to skip convert 'data' json to object.
          */
-        protected boolean onInterceptor(OKBaseResponse response) {
+        protected boolean onInterceptor(FarmOKBaseResponse response) {
             return false;
         }
 
@@ -119,7 +119,7 @@ public abstract class OKHttpController<Listener> {
             this.input = input;
             this.mDataClazz = clazz;
 
-            IUrl url = getUrl();
+            FarmIUrl url = getUrl();
             LoggerUtil.i("request url = " + url.getUrl());
             // 获取请求方法
             int method = url.getMethod();
@@ -164,7 +164,7 @@ public abstract class OKHttpController<Listener> {
         }
 
         // 拼接get请求参数
-        private Request.Builder bindBody(IUrl url, Request.Builder builder) {
+        private Request.Builder bindBody(FarmIUrl url, Request.Builder builder) {
             String body = getBody(input);
             url.setQuery(body);
             builder.url(url.getUrl());
@@ -198,7 +198,7 @@ public abstract class OKHttpController<Listener> {
             try {
                 body = response.body().string();
                 // 解析成OKBaseResponse
-                OKBaseResponse baseResponse = mGson.fromJson(body, getBaseResponseClass());
+                FarmOKBaseResponse baseResponse = mGson.fromJson(body, getBaseResponseClass());
                 if (!onInterceptor(baseResponse)) {
                     // mDataClazz是否是BaseResponse
                     if (mDataClazz != null) {
@@ -341,13 +341,13 @@ public abstract class OKHttpController<Listener> {
         }
     }
 
-    public Class<? extends OKBaseResponse> getBaseResponseClass() {
+    public Class<? extends FarmOKBaseResponse> getBaseResponseClass() {
         return OKHttpManager.getConfig().getBaseResponseClass();
     }
 
     private static boolean isOKBaseResponse(Class<?> clazz) {
         List<Class<?>> list = getSuperType(clazz);
-        return list.contains(OKBaseResponse.class);
+        return list.contains(FarmOKBaseResponse.class);
     }
 
     public static List<Class<?>> getSuperType(Class<?> clazz) {

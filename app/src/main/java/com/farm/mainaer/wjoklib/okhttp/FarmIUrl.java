@@ -22,7 +22,7 @@ package com.farm.mainaer.wjoklib.okhttp;
  * @date 2015年11月7日
  *
  */
-public interface IUrl {
+public interface FarmIUrl {
     /**
      * @return http method
      */
