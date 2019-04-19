@@ -119,12 +119,12 @@ import okhttp3.Response;
 
 import static android.content.ContentValues.TAG;
 import static com.innovation.pig.insurance.AppConfig.sowCount;
-import static org.tensorflow.demo.DetectorActivity_new.trackingOverlay;
+import static org.tensorflow.demo.BreedingDetectorActivityBreeding.trackingOverlay;
 import static org.tensorflow.demo.Global.dilogIsShowing;
 import static org.tensorflow.demo.Global.mediaPayItem;
 
 @SuppressLint("ValidFragment")
-public class CameraConnectionFragment_new extends Fragment implements View.OnClickListener, FragmentCompat.OnRequestPermissionsResultCallback {
+public class BreedingCameraConnectionFragment extends Fragment implements View.OnClickListener, FragmentCompat.OnRequestPermissionsResultCallback {
     private static final Logger LOGGER = new Logger();
 
     /**
@@ -363,7 +363,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
 
     private final ConnectionCallback cameraConnectionCallback;
 
-    CameraConnectionFragment_new(
+    BreedingCameraConnectionFragment(
             final ConnectionCallback connectionCallback,
             final OnImageAvailableListener imageListener,
             final int layout, final int inputSize) {
@@ -458,10 +458,10 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
         }
     }
 
-    public static CameraConnectionFragment_new newInstance(
+    public static BreedingCameraConnectionFragment newInstance(
             final ConnectionCallback callback,
             final OnImageAvailableListener imageListener, final int layout, final int inputSize) {
-        return new CameraConnectionFragment_new(callback, imageListener, layout, inputSize);
+        return new BreedingCameraConnectionFragment(callback, imageListener, layout, inputSize);
     }
 
     @Override
@@ -920,7 +920,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
                     textureView.setAspectRatio(3, 4);
                 }
 
-                CameraConnectionFragment_new.this.cameraId = cameraId;
+                BreedingCameraConnectionFragment.this.cameraId = cameraId;
 
                 cameraConnectionCallback.onPreviewSizeChosen(previewSize, 0);
                 return;
@@ -991,7 +991,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
     }
 
     /**
-     * Opens the camera specified by {@link CameraConnectionFragment_new#cameraId}.
+     * Opens the camera specified by {@link BreedingCameraConnectionFragment#cameraId}.
      */
     @TargetApi(Build.VERSION_CODES.M)
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -1605,7 +1605,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
                 synchronized (activity) {
                     resultDialog.dismiss();
                     dilogIsShowing = false;
-                    activity.startActivity(new Intent(activity, DetectorActivity_new.class));
+                    activity.startActivity(new Intent(activity, BreedingDetectorActivityBreeding.class));
                     //删除视频zip文件
                     Global.mediaInsureItem.zipVideoNameDel();
                     //删除视频文件
@@ -1887,7 +1887,7 @@ public class CameraConnectionFragment_new extends Fragment implements View.OnCli
                         Log.e(TAG, "onFailure: " + e.toString());
                         listener.onCompleted(false, "");
 
-                        AVOSCloudUtils.saveErrorMessage(e,CameraConnectionFragment_new.class.getSimpleName());
+                        AVOSCloudUtils.saveErrorMessage(e,BreedingCameraConnectionFragment.class.getSimpleName());
                     }
 
                     @Override

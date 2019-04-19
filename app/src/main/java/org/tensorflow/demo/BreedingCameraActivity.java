@@ -17,7 +17,6 @@
 package org.tensorflow.demo;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.media.Image.Plane;
 import android.media.ImageReader.OnImageAvailableListener;
@@ -38,7 +37,7 @@ import org.tensorflow.demo.env.Logger;
 
 import java.nio.ByteBuffer;
 
-public abstract class CameraActivity_new extends BaseActivity implements OnImageAvailableListener {
+public abstract class BreedingCameraActivity extends BaseActivity implements OnImageAvailableListener {
     private static final Logger LOGGER = new Logger();
 
     private static final int PERMISSIONS_REQUEST = 1;
@@ -158,20 +157,20 @@ public abstract class CameraActivity_new extends BaseActivity implements OnImage
     private void requestPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (shouldShowRequestPermissionRationale(PERMISSION_CAMERA) || shouldShowRequestPermissionRationale(PERMISSION_STORAGE)) {
-                Toast.makeText(CameraActivity_new.this, "Camera AND storage permission are required for this demo", Toast.LENGTH_LONG).show();
+                Toast.makeText(BreedingCameraActivity.this, "Camera AND storage permission are required for this demo", Toast.LENGTH_LONG).show();
             }
             requestPermissions(new String[]{PERMISSION_CAMERA, PERMISSION_VIDEO, PERMISSION_STORAGE, PERMISSION_PHONE, PERMISSION_LOCATION}, PERMISSIONS_REQUEST);
         }
     }
 
-    public CameraConnectionFragment_new mFragment = null;
+    public BreedingCameraConnectionFragment mFragment = null;
 
     protected void setFragment() {
-        mFragment = CameraConnectionFragment_new.newInstance(
-                new CameraConnectionFragment_new.ConnectionCallback() {
+        mFragment = BreedingCameraConnectionFragment.newInstance(
+                new BreedingCameraConnectionFragment.ConnectionCallback() {
                     @Override
                     public void onPreviewSizeChosen(final Size size, final int rotation) {
-                        CameraActivity_new.this.onPreviewSizeChosen(size, rotation);
+                        BreedingCameraActivity.this.onPreviewSizeChosen(size, rotation);
                     }
                 },
                 this, getLayoutId(), getDesiredPreviewFrameSize());
