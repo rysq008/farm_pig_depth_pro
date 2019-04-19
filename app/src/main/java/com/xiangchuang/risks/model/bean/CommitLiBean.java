@@ -91,12 +91,21 @@ public class CommitLiBean {
             private String insureNo;
             private String juanName;
             private String lipeiId;
+            private String lipeiNo;
             private String preCompensateTime;
             private String sheName;
             private String similarImgUrl;
             private String similarityDegree;
             private String seqNo;
             private String compensateTime;
+
+            public String getLipeiNo() {
+                return lipeiNo;
+            }
+
+            public void setLipeiNo(String lipeiNo) {
+                this.lipeiNo = lipeiNo;
+            }
 
             public String getCompensateTime() {
                 return compensateTime;

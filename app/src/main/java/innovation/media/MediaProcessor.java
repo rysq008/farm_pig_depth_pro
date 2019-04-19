@@ -182,6 +182,7 @@ public class MediaProcessor {
     private String similarImgUrl1;
     private int animalId;
     private String lipeiId;
+    private String lipeiNo;
     private String mmsg;
     private Bitmap bitmap;
     private String minsureNo;
@@ -693,6 +694,7 @@ public class MediaProcessor {
                                                     lipeiId = bean.getData().getSimilarList().get(0).getLipeiId();
                                                     similarImgUrl = bean.getData().getSimilarList().get(0).getSimilarImgUrl();
                                                     minsureNo = bean.getData().getSimilarList().get(0).getInsureNo();
+                                                    lipeiNo = bean.getData().getSimilarList().get(0).getLipeiNo();
                                                     mpreCompensateTime = bean.getData().getSimilarList().get(0).getPreCompensateTime();
                                                     mjuanName = bean.getData().getSimilarList().get(0).getJuanName();
                                                     msheName = bean.getData().getSimilarList().get(0).getSheName();
@@ -726,6 +728,7 @@ public class MediaProcessor {
                                                     lipeiId = bean.getData().getSimilarList().get(0).getLipeiId();
                                                     similarImgUrl = bean.getData().getSimilarList().get(0).getSimilarImgUrl();
                                                     minsureNo = bean.getData().getSimilarList().get(0).getInsureNo();
+                                                    lipeiNo = bean.getData().getSimilarList().get(0).getLipeiNo();
                                                     mpreCompensateTime = bean.getData().getSimilarList().get(0).getPreCompensateTime();
                                                     mjuanName = bean.getData().getSimilarList().get(0).getJuanName();
                                                     msheName = bean.getData().getSimilarList().get(0).getSheName();
@@ -869,6 +872,8 @@ public class MediaProcessor {
                 if ("lipei".equals(PreferencesUtils.getStringValue(Constants.fleg, AppConfig.getAppContext()))) {
                     mActivity.startActivity(new Intent(mActivity, AddPigPicActivity.class)
                             .putExtra("lipeiid", lipeiId)
+                            .putExtra("insureNo", minsureNo)
+                            .putExtra("lipeiNo", lipeiNo)
                             .putExtra("timesFlag", ""));
                 } else {
                     if (isNoCamera) {
@@ -1178,6 +1183,8 @@ public class MediaProcessor {
 //                        showTryAgainDialog(timesFlag);
                         mActivity.startActivity(new Intent(mActivity, AddPigPicActivity.class)
                                 .putExtra("lipeiid", "")
+                                .putExtra("insureNo", minsureNo)
+                                .putExtra("lipeiNo", lipeiNo)
                                 .putExtra("timesFlag", timesFlag)
                         );
                         mActivity.finish();
@@ -1190,6 +1197,8 @@ public class MediaProcessor {
 
                 mActivity.startActivity(new Intent(mActivity, AddPigPicActivity.class)
                         .putExtra("lipeiid", "")
+                        .putExtra("insureNo", minsureNo)
+                        .putExtra("lipeiNo", lipeiNo)
                         .putExtra("timesFlag", timesFlag)
                 );
                 mActivity.finish();
@@ -1417,6 +1426,8 @@ public class MediaProcessor {
                         if ("lipei".equals(PreferencesUtils.getStringValue(Constants.fleg, AppConfig.getAppContext()))) {
                             mActivity.startActivity(new Intent(mActivity, AddPigPicActivity.class)
                                     .putExtra("lipeiid", "")
+                                    .putExtra("insureNo", minsureNo)
+                                    .putExtra("lipeiNo", lipeiNo)
                                     .putExtra("timesFlag", timesFlag)
                             );
                         }

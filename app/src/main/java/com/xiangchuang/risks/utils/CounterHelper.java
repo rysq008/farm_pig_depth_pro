@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.util.Base64;
-import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.google.gson.JsonArray;
@@ -208,17 +207,20 @@ public final class CounterHelper {
 
     /**
      * 死猪估重接口
-     *
      * @param bitmap
+     * @param insureNo
+     * @param lipeiNo
      * @param listener
      */
-    public static void recognitionWeightFromNet(final Bitmap bitmap, final OnImageRecognitionWeightListener listener) {
+    public static void recognitionWeightFromNet(final Bitmap bitmap, String insureNo, String lipeiNo, final OnImageRecognitionWeightListener listener) {
         ThreadPoolProxyFactory.getNormalThreadPoolProxy().execute((new Runnable() {
             @Override
             public void run() {
                 Map param = new HashMap();
                 param.put("picImage", getImgStr(bitmap));
                 param.put("type", "1");
+                param.put("baodan", insureNo);
+                param.put("libno", lipeiNo);
                 OkHttp3Util.doPost(URL_WEIGHT_TEST, param, mHeaderMap, new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
