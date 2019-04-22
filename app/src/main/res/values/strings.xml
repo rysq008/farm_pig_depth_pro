@@ -87,8 +87,8 @@
     <string name="locationwarning">您还未开启GPS,现在去开启吗?</string>
     <string name="permission_request">This sample needs permission for camera and audio recording.</string>
     <string name="title_activity_monitoring">MonitoringActivity</string>
-    <string name="deadpig_process_skip_tip">"无害化处理步骤还未完成，跳过当前页面数据将清除，您确定要跳过吗？"</string>
-    <string name="deadpig_process_back_tip">"无害化处理当前步骤还未完成，退回上一步当前页面数据将清除，您确定要返回上一步吗？"</string>
+    <string name="deadpig_process_skip_tip">无害化处理步骤还未完成，跳过当前页面数据将清除，您确定要跳过吗？</string>
+    <string name="deadpig_process_back_tip">无害化处理当前步骤还未完成，退回上一步当前页面数据将清除，您确定要返回上一步吗？</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="title_activity_login_new">Sign in</string>
