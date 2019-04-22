@@ -25,7 +25,7 @@ package com.farm.mainaer.wjoklib.okhttp;
  * @author wangjian
  * @date 2016/3/23.
  */
-public interface OKBaseResponse {
+public interface FarmOKBaseResponse {
     /**
      * 得到要解析的数据，参考demo BaseResponse
      *

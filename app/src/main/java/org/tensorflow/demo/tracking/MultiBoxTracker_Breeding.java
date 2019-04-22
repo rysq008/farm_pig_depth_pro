@@ -53,7 +53,7 @@ import static com.innovation.pig.insurance.AppConfig.sowCount;
  * A tracker wrapping ObjectTracker that also handles non-max suppression and matching existing
  * objects to new detections.
  */
-public class MultiBoxTracker_new {
+public class MultiBoxTracker_Breeding {
     private final Logger logger = new Logger();
 
     public static final float TEXT_SIZE_DIP = 24;
@@ -118,7 +118,7 @@ public class MultiBoxTracker_new {
     private long showTime_end = 0;
 
 
-    public MultiBoxTracker_new(final Context context) {
+    public MultiBoxTracker_Breeding(final Context context) {
         this.context = context;
         for (final int color : COLORS) {
             availableColors.add(color);

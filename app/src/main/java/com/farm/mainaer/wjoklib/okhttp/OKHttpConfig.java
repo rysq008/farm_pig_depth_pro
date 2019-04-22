@@ -20,7 +20,7 @@ public class OKHttpConfig {
     private long mCacheTime;
     private Cache mCache;
     private HttpLoggingInterceptor.Level mLogLevel;
-    private Class<? extends OKBaseResponse> mBaseResponseClass;
+    private Class<? extends FarmOKBaseResponse> mBaseResponseClass;
 
     private OKHttpConfig(Builder builder) {
         this.mBaseResponseClass = builder.baseResponseClass;
@@ -56,12 +56,12 @@ public class OKHttpConfig {
         return mLogLevel;
     }
 
-    public Class<? extends OKBaseResponse> getBaseResponseClass() {
+    public Class<? extends FarmOKBaseResponse> getBaseResponseClass() {
         return mBaseResponseClass;
     }
 
     public static class Builder {
-        private Class<? extends OKBaseResponse> baseResponseClass;
+        private Class<? extends FarmOKBaseResponse> baseResponseClass;
         private long connectTimeout;
         private long readTimeout;
         private long writeTimeout;
@@ -75,7 +75,7 @@ public class OKHttpConfig {
          * @param baseResponseClass
          * @return
          */
-        public Builder setBaseResponseClass(Class<? extends OKBaseResponse> baseResponseClass) {
+        public Builder setBaseResponseClass(Class<? extends FarmOKBaseResponse> baseResponseClass) {
             this.baseResponseClass = baseResponseClass;
             return this;
         }

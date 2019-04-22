@@ -1,6 +1,5 @@
 package innovation.biz.classifier;
 
-import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
@@ -41,8 +40,8 @@ import static com.innovation.pig.insurance.AppConfig.currentPadSize;
 import static com.innovation.pig.insurance.AppConfig.sowCount;
 import static innovation.utils.ImageUtils.padBitmap2SpRatio;
 import static innovation.utils.ImageUtils.zoomImage;
-import static org.tensorflow.demo.DetectorActivity_new.offsetX;
-import static org.tensorflow.demo.DetectorActivity_new.offsetY;
+import static org.tensorflow.demo.BreedingDetectorActivityBreeding.offsetX;
+import static org.tensorflow.demo.BreedingDetectorActivityBreeding.offsetY;
 
 /**
  *

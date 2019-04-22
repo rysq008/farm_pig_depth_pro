@@ -13,8 +13,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.innovation.base.FarmAppConfig;
-import com.innovation.biz.login.LoginFamerAarActivity;
 import com.innovation.pig.insurance.AppConfig;
 import com.xiangchuang.risks.view.LoginFamerActivity;
 
@@ -45,15 +43,20 @@ public class MainActivity extends AppCompatActivity {
             et.setHint("请输入手机号码");
             EditText uet = new EditText(this);
             uet.setHint("请输入用户名");
+            EditText pet = new EditText(this);
+            pet.setInputType(InputType.TYPE_CLASS_PHONE);
+            pet.setHint("请输入部门编号");
             LinearLayout linearLayout = new LinearLayout(this);
             linearLayout.setOrientation(VERTICAL);
             linearLayout.addView(uet);
             linearLayout.addView(et);
+            linearLayout.addView(pet);
             new AlertDialog.Builder(this).setTitle("请输入用户名和手机号码").setView(linearLayout).setPositiveButton("确定", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     String phone = et.getText().toString().trim();
                     String userid = uet.getText().toString().trim();
+                    String pid = pet.getText().toString().trim();
                     if (TextUtils.isEmpty(phone)) {
                         phone = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("phone", "19000000001");
                     } else {
@@ -64,13 +67,18 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putString("userid", userid).apply();
                     }
+                    if (TextUtils.isEmpty(pid)) {
+                        pid = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("pid", "28");
+                    } else {
+                        PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putString("pid", pid).apply();
+                    }
                     Toast.makeText(MainActivity.this, "nb", Toast.LENGTH_LONG).show();
                     Intent mIntent = new Intent(MainActivity.this, LoginFamerActivity.class);
                     mIntent.putExtra(AppConfig.TOKEY, "android_token");
                     mIntent.putExtra(AppConfig.USER_ID, userid/*"android_userid3"*/);
                     mIntent.putExtra(AppConfig.PHONE_NUMBER, phone);
                     mIntent.putExtra(AppConfig.NAME, "android_name");
-                    mIntent.putExtra(AppConfig.DEPARTMENT_ID, "14079900"/*"android_department"*/);
+                    mIntent.putExtra(AppConfig.DEPARTMENT_ID, pid/*"14079900"*//*"android_department"*/);
                     mIntent.putExtra(AppConfig.IDENTITY_CARD, "android_identitry");
                     startActivity(mIntent);
                     dialog.dismiss();
@@ -103,14 +111,14 @@ public class MainActivity extends AppCompatActivity {
                         PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putString("userid", userid).apply();
                     }
                     Toast.makeText(MainActivity.this, "nb", Toast.LENGTH_LONG).show();
-                    Intent mIntent = new Intent(MainActivity.this, LoginFamerAarActivity.class);
-                    mIntent.putExtra(FarmAppConfig.TOKEY, "android_token");
-                    mIntent.putExtra(FarmAppConfig.USER_ID, userid);
-                    mIntent.putExtra(FarmAppConfig.PHONE_NUMBER, phone);
-                    mIntent.putExtra(FarmAppConfig.NAME, "android_name");
-                    mIntent.putExtra(FarmAppConfig.DEPARTMENT_ID, "14079900"/*"android_department"*/);
-                    mIntent.putExtra(FarmAppConfig.IDENTITY_CARD, "android_identitry");
-                    startActivity(mIntent);
+//                    Intent mIntent = new Intent(MainActivity.this, LoginFamerAarActivity.class);
+//                    mIntent.putExtra(FarmAppConfig.TOKEY, "android_token");
+//                    mIntent.putExtra(FarmAppConfig.USER_ID, userid);
+//                    mIntent.putExtra(FarmAppConfig.PHONE_NUMBER, phone);
+//                    mIntent.putExtra(FarmAppConfig.NAME, "android_name");
+//                    mIntent.putExtra(FarmAppConfig.DEPARTMENT_ID, "14079900"/*"android_department"*/);
+//                    mIntent.putExtra(FarmAppConfig.IDENTITY_CARD, "android_identitry");
+//                    startActivity(mIntent);
                     dialog.dismiss();
 
                 }

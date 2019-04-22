@@ -189,7 +189,7 @@ apply plugin: 'maven'
 
 ext {
     // 从Github上clone下来的项目的本地地址
-    GITHUB_REPO_PATH = /*"C:\\Users\\luolu\\Documents\\ScheduleApp"*/"C:\\pig_farmer_aar"
+    GITHUB_REPO_PATH = "C:\\insurance\\farm_pig_insurance\\farm_pig_insurance"/*"C:\\pig_farmer_aar"*/
     // api 'com.audient:super_library:1.0.0'
     PUBLISH_GROUP_ID = 'com.innovation.aar'
     PUBLISH_ARTIFACT_ID = 'pig_farm_Insurance'

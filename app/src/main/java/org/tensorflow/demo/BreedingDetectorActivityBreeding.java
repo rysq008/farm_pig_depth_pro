@@ -46,7 +46,7 @@ import org.tensorflow.demo.OverlayView.DrawCallback;
 import org.tensorflow.demo.env.BorderedText_Breeding;
 import org.tensorflow.demo.env.ImageUtils;
 import org.tensorflow.demo.env.Logger;
-import org.tensorflow.demo.tracking.MultiBoxTracker_new;
+import org.tensorflow.demo.tracking.MultiBoxTracker_Breeding;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -61,7 +61,7 @@ import static org.tensorflow.demo.Global.dilogIsShowing;
  * An activity that uses a TensorFlowMultiBoxDetector and ObjectTracker to detect and then track
  * objects.
  */
-public class DetectorActivity_new extends CameraActivity_new implements OnImageAvailableListener {
+public class BreedingDetectorActivityBreeding extends BreedingCameraActivity implements OnImageAvailableListener {
     private static final String TAG = "DetectorActivity";
     private static final Logger LOGGER = new Logger();
 
@@ -90,7 +90,7 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
     private Matrix frameToCropTransform;
     private Matrix cropToFrameTransform;
 
-    public static MultiBoxTracker_new tracker;
+    public static MultiBoxTracker_Breeding tracker;
 
     private byte[] luminance;
 
@@ -156,7 +156,7 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
         final float textSizePx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, TEXT_SIZE_DIP, getResources().getDisplayMetrics());
         borderedText = new BorderedText_Breeding(textSizePx);
         borderedText.setTypeface(Typeface.MONOSPACE);
-        tracker = new MultiBoxTracker_new(this);
+        tracker = new MultiBoxTracker_Breeding(this);
 
         //猪脸识别
         try {
@@ -445,13 +445,13 @@ public class DetectorActivity_new extends CameraActivity_new implements OnImageA
         if ((tipMsg.length() > 0)) {
             Log.d(TAG, tipMsg + "== 图片不可用" + last_toast_time);
             if(System.currentTimeMillis() - last_toast_time > 5000) {
-                Log.d(TAG, "DetectorActivity.parent = " + DetectorActivity_new.this );
+                Log.d(TAG, "DetectorActivity.parent = " + BreedingDetectorActivityBreeding.this );
 
                 String finalTipMsg = tipMsg;
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(DetectorActivity_new.this, finalTipMsg, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(BreedingDetectorActivityBreeding.this, finalTipMsg, Toast.LENGTH_SHORT).show();
                         last_toast_time = System.currentTimeMillis();
                     }
                 });

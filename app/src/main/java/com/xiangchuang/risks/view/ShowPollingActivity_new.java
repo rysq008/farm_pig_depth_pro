@@ -27,7 +27,7 @@ import com.innovation.pig.insurance.netutils.GsonUtils;
 import com.innovation.pig.insurance.netutils.OkHttp3Util;
 import com.innovation.pig.insurance.netutils.PreferencesUtils;
 
-import org.tensorflow.demo.DetectorActivity_new;
+import org.tensorflow.demo.BreedingDetectorActivityBreeding;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -137,7 +137,7 @@ public class ShowPollingActivity_new extends BaseActivity {
                                             if (isOPen(ShowPollingActivity_new.this)) {
                                                 //判断如果是能繁母猪点数进入新的点数逻辑界面
                                                 if (mSheBeans.get(position).getPigType().equals("102")) {
-                                                    intent = new Intent(ShowPollingActivity_new.this, DetectorActivity_new.class);
+                                                    intent = new Intent(ShowPollingActivity_new.this, BreedingDetectorActivityBreeding.class);
                                                 } else {
                                                     if (deviceHashMap.size() > 0) {
                                                         //摄像头页面
