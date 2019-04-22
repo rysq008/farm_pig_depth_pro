@@ -36,7 +36,7 @@ allprojects {
             url "http://mvn.leancloud.cn/nexus/content/repositories/public"
         }
 //        maven { url  "https://dl.bintray.com/blazei/maven" }
-        maven {url "http://github.com/innovationaiaar/pig_farmer_aar/raw/master"}
+        maven {url "http://github.com/innovationaiaar/farm_pig_insurance/raw/master"}
         maven {url "http://github.com/innovationaiaar/farmer_aar/raw/master"}
 //        maven { url "https://raw.githubusercontent.com/rysq008/repos/master" }
 //        maven{url "https://raw.gitlabusercontent.com/androidapp/ScheduleApp/tree/master/raw/com/innovation/aar/pigInsurance"}

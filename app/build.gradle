@@ -180,17 +180,6 @@ dependencies {
 
 //    //    implementation 'org.opencv:opencv-android:3.4.1'
 //    implementation files('libs/AMap2DMap_5.2.0_AMapSearch_6.5.0_AMapLocation_4.4.0_20181122.jar')
-//    implementation 'com.amap.api:location:4.5.1'
-//    implementation 'com.amap.api:search:6.5.0'
-////    implementation 'com.amap.api:map2d:5.2.0'
-//    implementation 'com.amap.api:3dmap:6.8.0'
-    compile 'com.amap.api:3dmap:6.8.0' //3D地图so及jar
-    compile 'com.amap.api:location:4.5.1' //定位功能
-    compile 'com.amap.api:search:6.5.0.1' //搜索功能
-
-
-    implementation 'org.tensorflow:tensorflow-lite:1.10.0'
-    implementation 'commons-io:commons-io:2.5'
 }
 apply plugin: 'io.objectbox'
 
@@ -200,7 +189,7 @@ apply plugin: 'maven'
 
 ext {
     // 从Github上clone下来的项目的本地地址
-    GITHUB_REPO_PATH = /*"C:\\Users\\luolu\\Documents\\ScheduleApp"*/"C:\\pig_farmer_aar"
+    GITHUB_REPO_PATH = "C:\\insurance\\farm_pig_insurance\\farm_pig_insurance"/*"C:\\pig_farmer_aar"*/
     // api 'com.audient:super_library:1.0.0'
     PUBLISH_GROUP_ID = 'com.innovation.aar'
     PUBLISH_ARTIFACT_ID = 'pig_farm_Insurance'

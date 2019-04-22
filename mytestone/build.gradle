@@ -60,57 +60,57 @@ android {
         exclude 'META-INF/NOTICE.txt'
     }
 }
-configurations.all {
-    resolutionStrategy {
-        force 'com.squareup.okhttp3:okhttp:3.11.0'
-        force 'com.squareup.okio:okio:1.14.0'
-        force 'com.android.support.constraint:constraint-layout:1.1.1'
-        force 'com.google.code.gson:gson:2.8.5'
-        force 'com.android.support:appcompat-v7:27.1.1'
-        force 'com.android.support:support-annotations:27.1.1'
-        force 'com.android.support:support-compat:27.1.1'
-        force 'com.android.support:support-v4:27.1.1'
-        force 'com.android.support:recyclerview-v7:27.1.1'
-        force 'com.google.code.findbugs:jsr305:3.0.2'
-        force 'com.amap.api:3dmap:latest.integration'
-        force 'com.amap.api:location:latest.integration'
-        force 'com.amap.api:search:latest.integration'
-    }
-}
+//configurations.all {
+//    resolutionStrategy {
+//        force 'com.squareup.okhttp3:okhttp:3.11.0'
+//        force 'com.squareup.okio:okio:1.14.0'
+//        force 'com.android.support.constraint:constraint-layout:1.1.1'
+//        force 'com.google.code.gson:gson:2.8.5'
+//        force 'com.android.support:appcompat-v7:27.1.1'
+//        force 'com.android.support:support-annotations:27.1.1'
+//        force 'com.android.support:support-compat:27.1.1'
+//        force 'com.android.support:support-v4:27.1.1'
+//        force 'com.android.support:recyclerview-v7:27.1.1'
+//        force 'com.google.code.findbugs:jsr305:3.0.2'
+//        force 'com.amap.api:3dmap:latest.integration'
+//        force 'com.amap.api:location:latest.integration'
+//        force 'com.amap.api:search:latest.integration'
+//    }
+//}
 //configurations {
 //    all*.exclude group: 'com.google.android', module: 'support-v4'
 //    //或者粗暴点，就没有上面的坑了  all*.exclude module: 'support-v4'
 //}
-configurations.all {
+//configurations.all {
+////    resolutionStrategy {
+////        failOnVersionConflict()
+////    }
 //    resolutionStrategy {
+//        // fail eagerly on version conflict (includes transitive dependencies)
+//        // e.g. multiple different versions of the same dependency (group and name are equal)
 //        failOnVersionConflict()
-//    }
-    resolutionStrategy {
-        // fail eagerly on version conflict (includes transitive dependencies)
-        // e.g. multiple different versions of the same dependency (group and name are equal)
-        failOnVersionConflict()
-
-//        // prefer modules that are part of this build (multi-project or composite build) over external modules
-//        preferProjectModules()
-
-//        // force certain versions of dependencies (including transitive)
-//        //  *append new forced modules:
-//        force 'asm:asm-all:3.3.1', 'commons-io:commons-io:1.4'
-//        //  *replace existing forced modules with new ones:
-//        forcedModules = ['asm:asm-all:3.3.1']
 //
-//        // add dependency substitution rules
-//        dependencySubstitution {
-//            substitute module('org.gradle:api') with project(':api')
-//            substitute project(':util') with module('org.gradle:util:3.0')
-//        }
-
-//        // cache dynamic versions for 10 minutes
-//        cacheDynamicVersionsFor 10*60, 'seconds'
-//        // don't cache changing modules at all
-//        cacheChangingModulesFor 0, 'seconds'
-    }
-}
+////        // prefer modules that are part of this build (multi-project or composite build) over external modules
+////        preferProjectModules()
+//
+////        // force certain versions of dependencies (including transitive)
+////        //  *append new forced modules:
+////        force 'asm:asm-all:3.3.1', 'commons-io:commons-io:1.4'
+////        //  *replace existing forced modules with new ones:
+////        forcedModules = ['asm:asm-all:3.3.1']
+////
+////        // add dependency substitution rules
+////        dependencySubstitution {
+////            substitute module('org.gradle:api') with project(':api')
+////            substitute project(':util') with module('org.gradle:util:3.0')
+////        }
+//
+////        // cache dynamic versions for 10 minutes
+////        cacheDynamicVersionsFor 10*60, 'seconds'
+////        // don't cache changing modules at all
+////        cacheChangingModulesFor 0, 'seconds'
+//    }
+//}
 //configurations.all() {
 //    configuration ->
 //        configuration.resolutionStrategy.force(['com.squareup.okhttp3:okhttp:3.11.0',
@@ -133,11 +133,12 @@ dependencies {
 //    testImplementation 'junit:junit:4.12'
 //    androidTestImplementation 'com.android.support.test:runner:1.0.2'
 //    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-//    implementation(name: 'app-release-merge7', ext: 'aar')
-//        implementation(name: 'pigInsurance-0409', ext: 'aar')
-//    compile ('com.audient:super_library:1.112'){transitive =true }
-    implementation ('com.innovation.aar:pig_farm_Insurance:1.113'){transitive =true }
-    implementation ('com.innovation.aar:farm_Insurance:1.962'){transitive =true }
+////    implementation(name: 'app-release-merge7', ext: 'aar')
+////        implementation(name: 'pigInsurance-0409', ext: 'aar')
+////    compile ('com.audient:super_library:1.112'){transitive =true }
+    implementation ('com.innovation.aar:pig_farm_Insurance:1.113')
+            {transitive =true }
+//    implementation ('com.innovation.aar:farm_Insurance:1.962'){transitive =true }
 
 //    implementation 'com.android.support:support-v4:27.1.1'
 //    implementation 'org.tensorflow:tensorflow-android:1.6.0'
@@ -185,7 +186,7 @@ dependencies {
 //        exclude module: 'support-v4'
 //    }
 //    configurations {
-//        all*.exclude group: 'com.amap.api'
+//        all*.exclude group: 'com.google.code.gson'
 //    }
 
 ////    configurations {
