@@ -152,6 +152,7 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name="com.xiangchuang.risks.view.WeightPicCollectActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
@@ -166,12 +167,12 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.xiangchuang.risks.view.CameraPicActivity"
-            android:exported="true"
+           android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity
             android:name="com.xiangchuang.risks.view.CustomRecordActivity"
-            android:exported="true"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 

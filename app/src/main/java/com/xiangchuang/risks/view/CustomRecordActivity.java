@@ -87,12 +87,16 @@ public class CustomRecordActivity extends BaseActivity implements View.OnClickLi
     public static final int PICTURE_SIZE = 2;
     public static final int VIDEO_SIZE = 3;
     public int mIntentRecordTime;
+    private static long internalTime;
 
     public static void start(Activity context, int time) {
-
-        Intent intent = new Intent(context, CustomRecordActivity.class);
-        intent.putExtra("time", time);
-        context.startActivityForResult(intent, REQUEST_RECORDER);
+        //延时2s，防止重复启动页面
+        if(System.currentTimeMillis() - internalTime > 2000){
+            Intent intent = new Intent(context, CustomRecordActivity.class);
+            intent.putExtra("time", time);
+            context.startActivityForResult(intent, REQUEST_RECORDER);
+        }
+        internalTime = System.currentTimeMillis();
     }
 
     private MediaRecorder.OnErrorListener OnErrorListener = new MediaRecorder.OnErrorListener() {

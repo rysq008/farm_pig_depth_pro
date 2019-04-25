@@ -69,10 +69,14 @@ public class WeightPicCollectActivity extends BaseActivity implements SensorEven
     private String mFileDirectory, mFilePath;
     private int mOrientation;
     private boolean mSafeToTakePicture = true, mGrantedCameraRequested, isCanTakePic;
-
+    private static long internalTime;
     public static void start(Activity context) {
-        Intent intent = new Intent(context, WeightPicCollectActivity.class);
-        context.startActivityForResult(intent, 1);
+        //延时2s，防止重复启动页面
+        if(System.currentTimeMillis() - internalTime > 2000){
+            Intent intent = new Intent(context, WeightPicCollectActivity.class);
+            context.startActivityForResult(intent, 1);
+        }
+        internalTime = System.currentTimeMillis();
     }
 
     @Override

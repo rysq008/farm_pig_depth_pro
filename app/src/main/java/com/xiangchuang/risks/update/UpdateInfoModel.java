@@ -4,7 +4,11 @@ import innovation.utils.HttpRespObject;
 
 import org.json.JSONObject;
 
-public class UpdateInfoModel extends HttpRespObject {
+import java.io.Serializable;
+
+public class UpdateInfoModel extends HttpRespObject implements Serializable{
+
+    private static final long serialVersionUID = 3460679387304909390L;
     //app名字
     private String appname;
     //服务器版本
@@ -17,6 +21,16 @@ public class UpdateInfoModel extends HttpRespObject {
     private String updateurl;
     //升级信息
     private String upgradeinfo;
+    // 下载目录
+    private String downloadDir = "cowface";
+
+    public String getDownloadDir() {
+        return downloadDir;
+    }
+
+    public void setDownloadDir(String downloadDir) {
+        this.downloadDir = downloadDir;
+    }
 
     public String getAppname() {
         return appname;

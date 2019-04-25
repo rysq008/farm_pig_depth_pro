@@ -10,6 +10,7 @@ import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 
 import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.MyApplication;
 
 import java.util.Locale;
 
@@ -92,6 +93,24 @@ public class SystemUtil {
         }
         return "";
     }
+
+    /**
+     * 获取本地软件版本号
+     */
+    public static int getLocalVersion() {
+        int localVersion = 0;
+        try {
+            PackageInfo packageInfo = AppConfig.getAppContext().getApplicationContext()
+                    .getPackageManager()
+                    .getPackageInfo(AppConfig.getAppContext().getPackageName(), 0);
+            localVersion = packageInfo.versionCode;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return localVersion;
+    }
+
+
 
     /**
      * 获取本地软件版本号名称
