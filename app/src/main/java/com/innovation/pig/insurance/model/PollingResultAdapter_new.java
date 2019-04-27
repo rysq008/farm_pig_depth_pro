@@ -97,7 +97,9 @@ public class PollingResultAdapter_new extends BaseAdapter {
         viewHolder.poll_countHog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              onDetailitemClickListener.onClick(position);
+                if(onDetailitemClickListener != null){
+                    onDetailitemClickListener.onClick(position);
+                }
             }
         });
         String time = recordList.get(position).getDianshuTime();

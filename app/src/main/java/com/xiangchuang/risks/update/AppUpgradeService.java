@@ -15,10 +15,12 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
+import com.xiangchuang.risks.utils.SystemUtil;
 import com.xiangchuang.risks.view.SelectFunctionActivity_new;
 import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
@@ -45,7 +47,7 @@ public class AppUpgradeService extends Service {
     private static final int DOWNLOAD_SUCCESS = 0;
 
     private ProgressDialog mProgressDialog;
-
+    private UpdateInfoModel mUpdateInfoModel;
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @Override
@@ -74,8 +76,9 @@ public class AppUpgradeService extends Service {
             stopSelf();
             return super.onStartCommand(intent, flags, startId);
         }
-        mDownloadUrl = intent.getStringExtra("mDownloadUrl");
-        mAppname = intent.getStringExtra("appname");
+        mUpdateInfoModel = (UpdateInfoModel) intent.getSerializableExtra("data");
+        mDownloadUrl = mUpdateInfoModel.getUpdateurl();
+        mAppname = mUpdateInfoModel.getAppname();
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             destDir = new File(Environment.getExternalStorageDirectory().getPath() + downloadPath);
             if (destDir.exists()) {
@@ -110,14 +113,14 @@ public class AppUpgradeService extends Service {
         mNotificationManager.notify(mNotificationId, mNotification);
         new AppUpgradeThread().start();
 
-
-        mProgressDialog = new ProgressDialog(AppConfig.getActivity());
-        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        mProgressDialog.setMax(100);
-        mProgressDialog.setTitle("正在下载...");
-        mProgressDialog.setCancelable(false);
-        mProgressDialog.show();
-
+        if(AppConfig.getActivity() != null){
+            mProgressDialog = new ProgressDialog(AppConfig.getActivity());
+            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            mProgressDialog.setMax(100);
+            mProgressDialog.setTitle("正在下载...");
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.show();
+        }
         return  super.onStartCommand(intent, flags, startId);
 
     }
@@ -208,17 +211,16 @@ public class AppUpgradeService extends Service {
             startActivity(intent);
         }
 
-        if (UpdateInformation.serverFlag == 1) {
+        if (Integer.valueOf(mUpdateInfoModel.getServerFlag()) == 1) {
             // 官方推荐升级
-            if (UpdateInformation.localVersion < UpdateInformation.lastForce) {
+            if (!TextUtils.isEmpty(mUpdateInfoModel.getLastForce()) && SystemUtil.getLocalVersion() < Integer.valueOf(mUpdateInfoModel.getLastForce())) {
                 //强制升级
                 android.os.Process.killProcess(android.os.Process.myPid());
                 System.exit(0);
             } else {
                 //正常升级 不退出应用
             }
-
-        } else if (UpdateInformation.serverFlag == 2) {
+        } else if (Integer.valueOf(mUpdateInfoModel.getServerFlag()) == 2) {
             // 官方强制升级
             android.os.Process.killProcess(android.os.Process.myPid());
             System.exit(0);

@@ -29,8 +29,9 @@ import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.adapter.CompanyAdapter;
 import com.xiangchuang.risks.model.bean.InSureCompanyBean;
 import com.xiangchuang.risks.update.AppUpgradeService;
-import com.xiangchuang.risks.update.UpdateInformation;
+import com.xiangchuang.risks.update.UpdateInfoModel;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
+import com.xiangchuang.risks.utils.AppUpdateUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -41,11 +42,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nullable;
+
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-import static com.innovation.pig.insurance.AppConfig.needUpDate;
 
 public class CompanyActivity extends BaseActivity {
 
@@ -76,6 +78,8 @@ public class CompanyActivity extends BaseActivity {
     private TextView tvPopExit;
     private TextView tvPopUpdate;
     private ImageView ivPopUpdateSign;
+    private boolean isUpdate;
+    private UpdateInfoModel mUpdateInfoModel;
 
     @Override
     public void initView() {
@@ -128,14 +132,6 @@ public class CompanyActivity extends BaseActivity {
         tvPopExit = popview.findViewById(R.id.tv_pop_exit);
         tvPopUpdate = popview.findViewById(R.id.tv_pop_update);
         ivPopUpdateSign = popview.findViewById(R.id.iv_pop_update_sign);
-
-        if (needUpDate) {
-            ivPopUpdateSign.setVisibility(View.VISIBLE);
-            ivSign.setVisibility(View.VISIBLE);
-        } else {
-            ivPopUpdateSign.setVisibility(View.GONE);
-            ivSign.setVisibility(View.GONE);
-        }
 
         pop.setWidth(300);
         pop.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -192,14 +188,24 @@ public class CompanyActivity extends BaseActivity {
         });
     }
 
-    public void setSign() {
-        if (needUpDate) {
-            ivPopUpdateSign.setVisibility(View.VISIBLE);
-            ivSign.setVisibility(View.VISIBLE);
-        } else {
-            ivPopUpdateSign.setVisibility(View.GONE);
-            ivSign.setVisibility(View.GONE);
-        }
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        AppUpdateUtils appUpdateUtils = new AppUpdateUtils();
+        appUpdateUtils.appVersionCheck(CompanyActivity.this, new AppUpdateUtils.UpdateResultListener() {
+            @Override
+            public void update(boolean isUpdate, UpdateInfoModel bean) {
+                CompanyActivity.this.isUpdate = isUpdate;
+                CompanyActivity.this.mUpdateInfoModel = bean;
+                if (isUpdate) {
+                    ivPopUpdateSign.setVisibility(View.VISIBLE);
+                    ivSign.setVisibility(View.VISIBLE);
+                } else {
+                    ivPopUpdateSign.setVisibility(View.GONE);
+                    ivSign.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
 
@@ -248,7 +254,7 @@ public class CompanyActivity extends BaseActivity {
                 @Override
                 public void onClick(View v) {
                     pop.dismiss();
-                    if (needUpDate) {
+                    if (isUpdate) {
                         if (ivSign.getVisibility() == View.VISIBLE) {
                             ivSign.setVisibility(View.GONE);
                         }
@@ -256,7 +262,7 @@ public class CompanyActivity extends BaseActivity {
                         AlertDialog.Builder mDialog = new AlertDialog.Builder(CompanyActivity.this);
                         mDialog.setIcon(R.drawable.cowface);
                         mDialog.setTitle("版本更新");
-                        mDialog.setMessage(UpdateInformation.upgradeinfo);
+                        mDialog.setMessage(mUpdateInfoModel.getUpgradeinfo());
                         mDialog.setCancelable(false);
                         mDialog.setPositiveButton("马上升级", new DialogInterface.OnClickListener() {
                             @Override
@@ -265,9 +271,7 @@ public class CompanyActivity extends BaseActivity {
                                 Intent mIntent = new Intent(CompanyActivity.this, AppUpgradeService.class);
                                 mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 //传递数据
-                                //mIntent.putExtra("appname", UpdateInformation.appname);
-                                mIntent.putExtra("mDownloadUrl", UpdateInformation.updateurl);
-                                mIntent.putExtra("appname", UpdateInformation.appname);
+                                mIntent.putExtra("data", mUpdateInfoModel);
                                 CompanyActivity.this.startService(mIntent);
                             }
                         }).setNegativeButton("稍后再说", new DialogInterface.OnClickListener() {
