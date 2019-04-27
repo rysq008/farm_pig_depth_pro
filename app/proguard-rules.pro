@@ -81,7 +81,7 @@
 -keep class com.farm.innovation.view.**{*;}
 
 -keep class com.mainaer.wjoklib.okhttp.**{*;}
--keep public class com.farm.innovation.utils.PreferencesUtils {*;}
+-keep public class com.farm.innovation.utils.FarmerPreferencesUtils {*;}
 
 -keep class thirdparty.bottombar.library.**{*;}
 

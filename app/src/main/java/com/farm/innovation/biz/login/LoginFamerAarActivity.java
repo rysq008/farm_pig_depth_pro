@@ -20,9 +20,9 @@ import com.farm.innovation.login.Utils;
 import com.farm.innovation.login.view.HomeActivity;
 import com.farm.innovation.update.UploadService;
 import com.farm.innovation.utils.AVOSCloudUtils;
+import com.farm.innovation.utils.FarmerPreferencesUtils;
 import com.farm.innovation.utils.HttpUtils;
 import com.farm.innovation.utils.OkHttp3Util;
-import com.farm.innovation.utils.PreferencesUtils;
 import com.google.gson.Gson;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
@@ -74,7 +74,7 @@ public class LoginFamerAarActivity extends BaseActivity {
                     @Override
                     public void hasPermission(List<String> granted, boolean isAll) {
                         if (isAll) {
-                            // PreferencesUtils.saveBooleanValue("isallow", true, WelcomeActivity.this);
+                            // FarmerPreferencesUtils.saveBooleanValue("isallow", true, WelcomeActivity.this);
                             // toastUtils.showLong(FarmAppConfig.getAppContext(), "获取权限成功");
                             if (Build.VERSION.SDK_INT > 9) {
                                 StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -124,8 +124,8 @@ public class LoginFamerAarActivity extends BaseActivity {
 //        mIntent.putExtra(DEPARTMENT_ID, "14079900"/*"android_department"*/);
 //        mIntent.putExtra(IDENTITY_CARD, "android_identitry");
         startService(new Intent(this, UploadService.class));
-//        if (PreferencesUtils.getBooleanValue(ISLOGIN, FarmAppConfig.getAppContext())) {
-//            String type = PreferencesUtils.getStringValue(companyfleg, FarmAppConfig.getAppContext());
+//        if (FarmerPreferencesUtils.getBooleanValue(ISLOGIN, FarmAppConfig.getAppContext())) {
+//            String type = FarmerPreferencesUtils.getStringValue(companyfleg, FarmAppConfig.getAppContext());
 //            if (type.equals("1")) {
 //                goToActivity(CompanyActivity.class, null);
 //                LoginFamerAarActivity.this.finish();
@@ -273,10 +273,10 @@ public class LoginFamerAarActivity extends BaseActivity {
                                 return;
                             }
 
-                            if ((String.valueOf(tokenresp.uid)).equals(PreferencesUtils.getStringValue(HttpUtils.user_id, LoginFamerAarActivity.this))) {
-                                PreferencesUtils.saveBooleanValue("isone", true, LoginFamerAarActivity.this);
+                            if ((String.valueOf(tokenresp.uid)).equals(FarmerPreferencesUtils.getStringValue(HttpUtils.user_id, LoginFamerAarActivity.this))) {
+                                FarmerPreferencesUtils.saveBooleanValue("isone", true, LoginFamerAarActivity.this);
                             } else {
-                                PreferencesUtils.saveBooleanValue("isone", false, LoginFamerAarActivity.this);
+                                FarmerPreferencesUtils.saveBooleanValue("isone", false, LoginFamerAarActivity.this);
                             }
 
                             //  存储用户信息
@@ -295,8 +295,8 @@ public class LoginFamerAarActivity extends BaseActivity {
                             //  editor.putInt("deptid", tokenresp.deptid);
                             editor.apply();
                             int i = tokenresp.deptid;
-                            PreferencesUtils.saveIntValue(HttpUtils.deptId, tokenresp.deptid, FarmAppConfig.getApplication());
-                            PreferencesUtils.saveKeyValue(HttpUtils.user_id, String.valueOf(tokenresp.uid), FarmAppConfig.getApplication());
+                            FarmerPreferencesUtils.saveIntValue(HttpUtils.deptId, tokenresp.deptid, FarmAppConfig.getApplication());
+                            FarmerPreferencesUtils.saveKeyValue(HttpUtils.user_id, String.valueOf(tokenresp.uid), FarmAppConfig.getApplication());
                             Log.i("===id==", tokenresp.uid + "");
                         }
                         Intent add_intent = new Intent(LoginFamerAarActivity.this, HomeActivity.class);

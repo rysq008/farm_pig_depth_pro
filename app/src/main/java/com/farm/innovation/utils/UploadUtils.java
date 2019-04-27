@@ -55,7 +55,7 @@ public class UploadUtils {
     private static Request getRequest(String MD5, String userId, List<String> fileNames, String batchId) {
         Request.Builder builder = new Request.Builder();
         builder.addHeader("AppKeyAuthorization", "hopen");
-        builder.addHeader("animalType", String.valueOf(PreferencesUtils.getAnimalType(FarmAppConfig.getApplication())));
+        builder.addHeader("animalType", String.valueOf(FarmerPreferencesUtils.getAnimalType(FarmAppConfig.getApplication())));
         builder.url(BUILD_UPLOAD_OFFLINE_URL)//BUILD_UPLOAD_OFFLINE_URL
                 .post(getRequestBody(MD5, userId, fileNames, batchId));
         return builder.build();

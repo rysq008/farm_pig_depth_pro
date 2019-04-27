@@ -36,10 +36,10 @@ import com.farm.innovation.location.LocationManager;
 import com.farm.innovation.login.DatabaseHelper;
 import com.farm.innovation.login.Utils;
 import com.farm.innovation.utils.AVOSCloudUtils;
+import com.farm.innovation.utils.FarmerPreferencesUtils;
 import com.farm.innovation.utils.FileUtils;
 import com.farm.innovation.utils.HttpUtils;
 import com.farm.innovation.utils.OkHttp3Util;
-import com.farm.innovation.utils.PreferencesUtils;
 import com.farm.innovation.utils.UploadUtils;
 import com.farm.innovation.utils.ZipUtil;
 import com.farm.mainaer.wjoklib.okhttp.upload.UploadTask;
@@ -306,9 +306,9 @@ public class PayDataProcessor {
         };
         View.OnClickListener listener_upload_one = v -> {
             // TODO: 2018/8/7  本次上传按钮
-            Log.i("isOfflineMode:", "listener_abort" + PreferencesUtils.getBooleanValue("isli", mContext));
+            Log.i("isOfflineMode:", "listener_abort" + FarmerPreferencesUtils.getBooleanValue("isli", mContext));
             strfleg = "liUpload";
-            if (PreferencesUtils.getBooleanValue("isli", mContext)) {
+            if (FarmerPreferencesUtils.getBooleanValue("isli", mContext)) {
                 showProgressDialog(activity);
                 dialogProcessUploadOneImage();
             } else {
@@ -361,7 +361,7 @@ public class PayDataProcessor {
 
         mInsureDialog.setAddeButton("补充", listener_add);
         //是否离线的标记
-        boolean isli = PreferencesUtils.getBooleanValue("isli", mContext);
+        boolean isli = FarmerPreferencesUtils.getBooleanValue("isli", mContext);
         Log.i("==lipeiisli====", "" + isli);
         if (isli) {
             mInsureDialog.setUploadOneButton("完成", listener_upload_one);
@@ -661,7 +661,7 @@ public class PayDataProcessor {
             }
 
             //if (UPLOAD_VIDEO_FLAG == true) {
-            liPeiVieoFlag = PreferencesUtils.getStringValue(FarmAppConfig.liPeiVieoFlag, mContext);
+            liPeiVieoFlag = FarmerPreferencesUtils.getStringValue(FarmAppConfig.liPeiVieoFlag, mContext);
             if ("1".equals(liPeiVieoFlag)) {
                 publishProgress(MSG_UI_PROGRESS_ZIP_VIDEO);
                 File videoDir_new = new File(videoDri);//视频目录下的文件
@@ -746,7 +746,7 @@ public class PayDataProcessor {
             File zipFile_video2 = new File(file_zipVideo, fname_video); //要上传的文件
             Log.i("zipVideo=====:", zipFile_video2.getAbsolutePath());
 
-            liPeiVieoFlag = PreferencesUtils.getStringValue(FarmAppConfig.liPeiVieoFlag, mContext);
+            liPeiVieoFlag = FarmerPreferencesUtils.getStringValue(FarmAppConfig.liPeiVieoFlag, mContext);
             if ("1".equals(liPeiVieoFlag)) {
                 // 上传图片包
                 String zipImageDir = FarmGlobal.mediaPayItem.getZipImageDir();
@@ -776,12 +776,12 @@ public class PayDataProcessor {
                 //List<LiPeiLocalBean> LiPeiLocalBeans = databaseHelper.queryLocalDataFromLiPeiNotUp();
 
                 //将资源文件信息插入数据库
-                /*String lipeidate = PreferencesUtils.getStringValue("lipeidate", mContext);
+                /*String lipeidate = FarmerPreferencesUtils.getStringValue("lipeidate", mContext);
                 int cardno = databaseHelper.updateLiPeiLocalFromVideozipPath(zipFile_video2.getAbsolutePath(), lipeidate);
                 Log.i("updatecount", cardno + "条");*/
 
                 Log.e("path", "zipFile_video2.getAbsolutePath()==" + zipFile_video2.getAbsolutePath());
-                if (!PreferencesUtils.getBooleanValue("isli", mContext)) {
+                if (!FarmerPreferencesUtils.getBooleanValue("isli", mContext)) {
 
                     String timesFlag = zipFile_video2.getName();
                     String complete = databaseHelper.queryVideoUpLoadDataBytimesFlag(timesFlag);
@@ -791,7 +791,7 @@ public class PayDataProcessor {
                         videoUpLoadBean.libNub = getCheckedBaodanNo;
                         videoUpLoadBean.userId = userId + "";
                         videoUpLoadBean.libEnvinfo = getEnvInfo(mActivity, FarmAppConfig.version);
-                        videoUpLoadBean.animalType = PreferencesUtils.getAnimalType(FarmAppConfig.getActivity()) + "";
+                        videoUpLoadBean.animalType = FarmerPreferencesUtils.getAnimalType(FarmAppConfig.getActivity()) + "";
                         videoUpLoadBean.collectTimes = "99";
                         videoUpLoadBean.timesFlag = timesFlag;
                         videoUpLoadBean.collectTime = FarmAppConfig.during / 1000 + "";
@@ -828,7 +828,7 @@ public class PayDataProcessor {
 
                     Log.i("lipei fname_image:", zipFile_image2.getAbsolutePath());
                     Log.i("========debugNub", FarmAppConfig.debugNub + "");
-                    Log.i("========isli", PreferencesUtils.getBooleanValue("isli", mContext) + "");
+                    Log.i("========isli", FarmerPreferencesUtils.getBooleanValue("isli", mContext) + "");
 
                     if (FarmAppConfig.debugNub > 0) {
                         uploadForceZipImage(model, zipFile_image2, userId, getCheckedBaodanNo, timesFlag, new OnUploadListener() {
@@ -860,7 +860,7 @@ public class PayDataProcessor {
                         });
                     }
                 } else {
-                    String lipeidate = PreferencesUtils.getStringValue("lipeidate", mContext);
+                    String lipeidate = FarmerPreferencesUtils.getStringValue("lipeidate", mContext);
                     Log.e("lipeidate----------", lipeidate);
                     int cardno = databaseHelper.updateLiPeiLocalFromzipPath(zipFile_image2.getAbsolutePath(), lipeidate);
                     Log.e("lipeidate-zipFile", zipFile_image2.getAbsolutePath());
@@ -874,10 +874,10 @@ public class PayDataProcessor {
                     }
                     Log.i("updatecount", cardno + "条");
 
-                    int lipeirecordernum = databaseHelper.updateLiPeiLocalFromrecordeText("2", PreferencesUtils.getStringValue("lipeidate", mContext));
+                    int lipeirecordernum = databaseHelper.updateLiPeiLocalFromrecordeText("2", FarmerPreferencesUtils.getStringValue("lipeidate", mContext));
                     Log.i("=lipeirecordernum===", lipeirecordernum + "");
                     String insurename = "将覆盖已录入的理赔牲畜信息，确定重新录入？";
-                    int lipeirecordermsg = databaseHelper.updateLiPeiLocalFromrecordeMsg(insurename, PreferencesUtils.getStringValue("lipeidate", mContext));
+                    int lipeirecordermsg = databaseHelper.updateLiPeiLocalFromrecordeMsg(insurename, FarmerPreferencesUtils.getStringValue("lipeidate", mContext));
                     Log.i("=lipeirecordernum===", lipeirecordermsg + "");
 
                     Log.i("videopath", zipFile_video2.getAbsolutePath());
@@ -912,9 +912,9 @@ public class PayDataProcessor {
                 userId = pref_user.getInt("uid", 0);
                 mLogger.i("baodanNO: " + getCheckedBaodanNo);
                 Log.i("========zipFileImage", zipFile_image2.getAbsolutePath());
-                Log.i("========zipisli", PreferencesUtils.getBooleanValue("isli", mContext) + "");
+                Log.i("========zipisli", FarmerPreferencesUtils.getBooleanValue("isli", mContext) + "");
                 Log.i("========debugNub", FarmAppConfig.debugNub + "");
-                if (!PreferencesUtils.getBooleanValue("isli", mContext)) {
+                if (!FarmerPreferencesUtils.getBooleanValue("isli", mContext)) {
                     if (FarmAppConfig.debugNub > 0) {
                         uploadForceZipImage(model, zipFile_image2, userId, getCheckedBaodanNo, String.valueOf(System.currentTimeMillis()), new OnUploadListener() {
                             @Override
@@ -945,7 +945,7 @@ public class PayDataProcessor {
                         });
                     }
                 } else {
-                    String lipeidate = PreferencesUtils.getStringValue("lipeidate", mContext);
+                    String lipeidate = FarmerPreferencesUtils.getStringValue("lipeidate", mContext);
                     Log.e("lipeidate----------", lipeidate);
                     int cardno = databaseHelper.updateLiPeiLocalFromzipPath(zipFile_image2.getAbsolutePath(), lipeidate);
                     Log.e("lipeidate-zipFile", zipFile_image2.getAbsolutePath());
@@ -957,10 +957,10 @@ public class PayDataProcessor {
                     }
                     Log.i("updatecount", cardno + "条");
 
-                    int lipeirecordernum = databaseHelper.updateLiPeiLocalFromrecordeText("2", PreferencesUtils.getStringValue("lipeidate", mContext));
+                    int lipeirecordernum = databaseHelper.updateLiPeiLocalFromrecordeText("2", FarmerPreferencesUtils.getStringValue("lipeidate", mContext));
                     Log.i("=lipeirecordernum===", lipeirecordernum + "");
                     String insurename = "将覆盖已录入的理赔牲畜信息，确定重新录入？";
-                    int lipeirecordermsg = databaseHelper.updateLiPeiLocalFromrecordeMsg(insurename, PreferencesUtils.getStringValue("lipeidate", mContext));
+                    int lipeirecordermsg = databaseHelper.updateLiPeiLocalFromrecordeMsg(insurename, FarmerPreferencesUtils.getStringValue("lipeidate", mContext));
                     Log.i("=lipeirecordernum===", lipeirecordermsg + "");
 
                    /* Log.i("videopath", zipFile_video2.getAbsolutePath());
@@ -1001,9 +1001,9 @@ public class PayDataProcessor {
                 Map<String, String> map = new HashMap<>();
                 map.put("userId", uid + "");
                 map.put("libEnvinfo", getEnvInfo(mActivity, FarmAppConfig.version));
-                map.put("baodanNoReal", PreferencesUtils.getStringValue("baodannum", mActivity));
-                map.put("cardNo", PreferencesUtils.getStringValue("cardnum", mActivity));
-                map.put("reason", PreferencesUtils.getStringValue("reason", mActivity));
+                map.put("baodanNoReal", FarmerPreferencesUtils.getStringValue("baodannum", mActivity));
+                map.put("cardNo", FarmerPreferencesUtils.getStringValue("cardnum", mActivity));
+                map.put("reason", FarmerPreferencesUtils.getStringValue("reason", mActivity));
                 map.put("yiji", getPayYiji == null ? "" : getPayYiji);
                 map.put("erji", getPayErji == null ? "" : getPayErji);
                 map.put("sanji", getPaySanji == null ? "" : getPaySanji);
@@ -1428,9 +1428,9 @@ public class PayDataProcessor {
                         pref_user = mActivity.getSharedPreferences(Utils.USERINFO_SHAREFILE, Context.MODE_PRIVATE);
                         int userId = pref_user.getInt("uid", 0);
                         TreeMap<String, String> treeMapContrast = new TreeMap();
-                        treeMapContrast.put("baodanNoReal", PreferencesUtils.getStringValue("baodannum", context));
-                        treeMapContrast.put("reason", PreferencesUtils.getStringValue(HttpUtils.reason, context));
-                        treeMapContrast.put("cardNo", PreferencesUtils.getStringValue("cardnum", context));
+                        treeMapContrast.put("baodanNoReal", FarmerPreferencesUtils.getStringValue("baodannum", context));
+                        treeMapContrast.put("reason", FarmerPreferencesUtils.getStringValue(HttpUtils.reason, context));
+                        treeMapContrast.put("cardNo", FarmerPreferencesUtils.getStringValue("cardnum", context));
                         treeMapContrast.put("yiji", getPayYiji == null ? "" : getPayYiji);
                         treeMapContrast.put("erji", getPayErji == null ? "" : getPayErji);
                         treeMapContrast.put("sanji", getPaySanji == null ? "" : getPaySanji);
@@ -1560,7 +1560,7 @@ public class PayDataProcessor {
                     };
                     View.OnClickListener listener_ReCollect = v -> {
                         FarmAppConfig.during = 0;
-                        if (PreferencesUtils.getBooleanValue(HttpUtils.offlineupdate, context)) {
+                        if (FarmerPreferencesUtils.getBooleanValue(HttpUtils.offlineupdate, context)) {
                             dialogLipeiResult.dismiss();
                         } else {
                             dialogLipeiResult.dismiss();
@@ -1575,7 +1575,7 @@ public class PayDataProcessor {
                     };
                     dialogLipeiResult.setTitle("验证结果");
                     dialogLipeiResult.setBtnGoApplication("直接申请", listener_new);
-                    if (PreferencesUtils.getBooleanValue(HttpUtils.offlineupdate, context)) {
+                    if (FarmerPreferencesUtils.getBooleanValue(HttpUtils.offlineupdate, context)) {
                         dialogLipeiResult.setBtnReCollect("放弃", listener_ReCollect);
                     } else {
                         dialogLipeiResult.setBtnReCollect("重新拍摄", listener_ReCollect);
@@ -1855,8 +1855,8 @@ public class PayDataProcessor {
                     builder422.show();
                     break;
                 case 999: // 强制上传后提示拨打电话
-                    String customServ = PreferencesUtils.getStringValue(FarmAppConfig.customServ, FarmAppConfig.getActivity());
-                    String phone = PreferencesUtils.getStringValue(FarmAppConfig.phone, FarmAppConfig.getActivity());
+                    String customServ = FarmerPreferencesUtils.getStringValue(FarmAppConfig.customServ, FarmAppConfig.getActivity());
+                    String phone = FarmerPreferencesUtils.getStringValue(FarmAppConfig.phone, FarmAppConfig.getActivity());
 
                     AlertDialog.Builder builder999 = new AlertDialog.Builder(mActivity)
                             .setIcon(R.drawable.farm_cowface)

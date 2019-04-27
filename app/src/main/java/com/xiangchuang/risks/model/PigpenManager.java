@@ -77,7 +77,7 @@ public class PigpenManager {
 
     static private PigpenManager pigpenManager;
 
-    /*static public PigpenManager createInstance(List<LoginBean.DataBean.Sty1ListBean> list) {
+    /*static public PigpenManager createInstance(List<LoginBean.MergeLoginBodyBean.Sty1ListBean> list) {
         if (pigpenManager == null)
             pigpenManager = new PigpenManager(list);
         return pigpenManager;
@@ -87,11 +87,11 @@ public class PigpenManager {
         return pigpenManager;
     }
 
-   /* private PigpenManager(List<LoginBean.DataBean.Sty1ListBean> list) {
-        for (LoginBean.DataBean.Sty1ListBean bean : list) {
+   /* private PigpenManager(List<LoginBean.MergeLoginBodyBean.Sty1ListBean> list) {
+        for (LoginBean.MergeLoginBodyBean.Sty1ListBean bean : list) {
             ArrayList<PigstyInfo> pigstyList = new ArrayList<>();
             int pigpenId = bean.getSty1Id();
-            for (LoginBean.DataBean.Sty1ListBean.Sty2ListBean sty2bean : bean.getSty2List()) {
+            for (LoginBean.MergeLoginBodyBean.Sty1ListBean.Sty2ListBean sty2bean : bean.getSty2List()) {
                 PigstyInfo pigsty = new PigstyInfo(pigpenId, sty2bean.getSty2Id(), sty2bean.getName(), sty2bean.getCount());
                 pigstyList.add(pigsty);
             }

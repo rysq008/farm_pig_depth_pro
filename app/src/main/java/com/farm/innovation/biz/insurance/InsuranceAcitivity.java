@@ -27,9 +27,9 @@ import com.farm.innovation.login.Utils;
 import com.farm.innovation.utils.AVOSCloudUtils;
 import com.farm.innovation.utils.ConstUtils;
 import com.farm.innovation.utils.EditTextJudgeNumberWatcher;
+import com.farm.innovation.utils.FarmerPreferencesUtils;
 import com.farm.innovation.utils.HttpUtils;
 import com.farm.innovation.utils.OkHttp3Util;
-import com.farm.innovation.utils.PreferencesUtils;
 import com.innovation.pig.insurance.R;
 
 import org.json.JSONObject;
@@ -193,7 +193,7 @@ public class InsuranceAcitivity extends BaseActivity {
             } else {
             }
         });
-        ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, ConstUtils.geInsureTypeCaptions(PreferencesUtils.getAnimalType(InsuranceAcitivity.this)));
+        ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, ConstUtils.geInsureTypeCaptions(FarmerPreferencesUtils.getAnimalType(InsuranceAcitivity.this)));
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerInsuranceType.setAdapter(arrayAdapter);
         //getCurrentLocationLatLng();
@@ -269,8 +269,8 @@ public class InsuranceAcitivity extends BaseActivity {
         Map<String, String> map = new HashMap<>();
         map.put(HttpUtils.AppKeyAuthorization, "hopen");
         Map<String, String> mapbody = new HashMap<>();
-        mapbody.put(HttpUtils.deptId, PreferencesUtils.getIntValue(HttpUtils.deptId, FarmAppConfig.getApplication()) + "");
-        mapbody.put("baodanName", PreferencesUtils.getStringValue(HttpUtils.baodanName, FarmAppConfig.getApplication()));
+        mapbody.put(HttpUtils.deptId, FarmerPreferencesUtils.getIntValue(HttpUtils.deptId, FarmAppConfig.getApplication()) + "");
+        mapbody.put("baodanName", FarmerPreferencesUtils.getStringValue(HttpUtils.baodanName, FarmAppConfig.getApplication()));
         OkHttp3Util.doPost(HttpUtils.BaoDannametest, mapbody, map, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -326,23 +326,23 @@ public class InsuranceAcitivity extends BaseActivity {
     private void createDan() {
         Map<String, String> map = new HashMap<>();
         map.put(HttpUtils.AppKeyAuthorization, "hopen");
-//        String id = PreferencesUtils.getStringValue(HttpUtils.id, FarmAppConfig.getApplication());
+//        String id = FarmerPreferencesUtils.getStringValue(HttpUtils.id, FarmAppConfig.getApplication());
 //        Log.i("id====",id+"");
         SharedPreferences pref = getSharedPreferences(Utils.USERINFO_SHAREFILE, Context.MODE_PRIVATE);
         int userid = pref.getInt("uid", 0);
         map.put(HttpUtils.id, userid + "");
         Map<String, String> mapbody = new HashMap<>();
         mapbody.put("baodanNo", mTempToubaoNumber);
-        mapbody.put("baodanName", PreferencesUtils.getStringValue(HttpUtils.baodanName, FarmAppConfig.getApplication()));
-        mapbody.put("baodanType", PreferencesUtils.getStringValue(HttpUtils.baodanType, FarmAppConfig.getApplication()));
-        mapbody.put("animalType", String.valueOf(PreferencesUtils.getAnimalType(InsuranceAcitivity.this)));
-        mapbody.put("toubaoType", PreferencesUtils.getStringValue(HttpUtils.InsuranceType, FarmAppConfig.getApplication()));
-        mapbody.put("baodanRate", PreferencesUtils.getStringValue(HttpUtils.insuranceRate, FarmAppConfig.getApplication()));
-        mapbody.put("shiyangMethod", PreferencesUtils.getStringValue(HttpUtils.farmForm, FarmAppConfig.getApplication()));
-        mapbody.put("toubaoCost", PreferencesUtils.getStringValue(HttpUtils.InsuranceCost, FarmAppConfig.getApplication()));
+        mapbody.put("baodanName", FarmerPreferencesUtils.getStringValue(HttpUtils.baodanName, FarmAppConfig.getApplication()));
+        mapbody.put("baodanType", FarmerPreferencesUtils.getStringValue(HttpUtils.baodanType, FarmAppConfig.getApplication()));
+        mapbody.put("animalType", String.valueOf(FarmerPreferencesUtils.getAnimalType(InsuranceAcitivity.this)));
+        mapbody.put("toubaoType", FarmerPreferencesUtils.getStringValue(HttpUtils.InsuranceType, FarmAppConfig.getApplication()));
+        mapbody.put("baodanRate", FarmerPreferencesUtils.getStringValue(HttpUtils.insuranceRate, FarmAppConfig.getApplication()));
+        mapbody.put("shiyangMethod", FarmerPreferencesUtils.getStringValue(HttpUtils.farmForm, FarmAppConfig.getApplication()));
+        mapbody.put("toubaoCost", FarmerPreferencesUtils.getStringValue(HttpUtils.InsuranceCost, FarmAppConfig.getApplication()));
         mapbody.put("address", baodanApplyAddress.getText().toString().trim());
         mapbody.put("uid", userid + "");
-        mapbody.put(HttpUtils.deptId, PreferencesUtils.getIntValue(HttpUtils.deptId, FarmAppConfig.getApplication()) + "");
+        mapbody.put(HttpUtils.deptId, FarmerPreferencesUtils.getIntValue(HttpUtils.deptId, FarmAppConfig.getApplication()) + "");
 
         mapbody.put("longitude", String.valueOf(LocationManager.getInstance(InsuranceAcitivity.this).currentLat));
         mapbody.put("latitude", String.valueOf(LocationManager.getInstance(InsuranceAcitivity.this).currentLon));
@@ -412,22 +412,22 @@ public class InsuranceAcitivity extends BaseActivity {
      * 保存相关信息
      */
     private void saveMeaasge() {
-        PreferencesUtils.saveKeyValue(HttpUtils.baodanName, sbaodanName, FarmAppConfig.getApplication());
-        PreferencesUtils.saveKeyValue(HttpUtils.baodanType, baodanType + "", FarmAppConfig.getApplication());
+        FarmerPreferencesUtils.saveKeyValue(HttpUtils.baodanName, sbaodanName, FarmAppConfig.getApplication());
+        FarmerPreferencesUtils.saveKeyValue(HttpUtils.baodanType, baodanType + "", FarmAppConfig.getApplication());
         if (spinnerInsuranceType != null) {
             String sXZ = spinnerInsuranceType.getSelectedItem().toString();
             insuredType = ConstUtils.getInsureTypeCodeIntByCaption(sXZ);
         }
-        PreferencesUtils.saveKeyValue(HttpUtils.InsuranceType, insuredType + "", FarmAppConfig.getApplication());
+        FarmerPreferencesUtils.saveKeyValue(HttpUtils.InsuranceType, insuredType + "", FarmAppConfig.getApplication());
         sinsuranceRate = insuranceRate.getText().toString().trim();
-        PreferencesUtils.saveKeyValue(HttpUtils.insuranceRate, sinsuranceRate, FarmAppConfig.getApplication());
-        PreferencesUtils.saveKeyValue(HttpUtils.farmForm, strtype + "", FarmAppConfig.getApplication());
+        FarmerPreferencesUtils.saveKeyValue(HttpUtils.insuranceRate, sinsuranceRate, FarmAppConfig.getApplication());
+        FarmerPreferencesUtils.saveKeyValue(HttpUtils.farmForm, strtype + "", FarmAppConfig.getApplication());
         sunitInsuranceCost = unitInsuranceCost.getText().toString();
-        PreferencesUtils.saveKeyValue(HttpUtils.InsuranceCost, sunitInsuranceCost, FarmAppConfig.getApplication());
+        FarmerPreferencesUtils.saveKeyValue(HttpUtils.InsuranceCost, sunitInsuranceCost, FarmAppConfig.getApplication());
         sbaodanApplyAddress = baodanApplyAddress.getText().toString();
-        PreferencesUtils.saveKeyValue(HttpUtils.baodanApplyAddress, sbaodanApplyAddress, FarmAppConfig.getApplication());
+        FarmerPreferencesUtils.saveKeyValue(HttpUtils.baodanApplyAddress, sbaodanApplyAddress, FarmAppConfig.getApplication());
         sbaodanApplyName = baodanApplyName.getText().toString();
-        PreferencesUtils.saveKeyValue(HttpUtils.baodanApplyName, sbaodanApplyName, FarmAppConfig.getApplication());
+        FarmerPreferencesUtils.saveKeyValue(HttpUtils.baodanApplyName, sbaodanApplyName, FarmAppConfig.getApplication());
 
     }
 

@@ -80,7 +80,7 @@ import com.farm.innovation.biz.processor.InsureDataProcessor;
 import com.farm.innovation.biz.processor.PayDataProcessor;
 import com.farm.innovation.utils.ConstUtils;
 import com.farm.innovation.utils.FileUtils;
-import com.farm.innovation.utils.PreferencesUtils;
+import com.farm.innovation.utils.FarmerPreferencesUtils;
 import com.farm.innovation.view.SendView;
 import com.farm.innovation.view.VerticalSeekBar;
 import com.innovation.pig.insurance.R;
@@ -551,7 +551,7 @@ public class FarmCameraConnectionFragment extends Fragment implements View.OnCli
         //chishu
         FarmGlobal.VIDEO_PROCESS = false;
         //初始化时候获取当前动物类型
-        animalType = PreferencesUtils.getAnimalType(getActivity().getApplicationContext());
+        animalType = FarmerPreferencesUtils.getAnimalType(getActivity().getApplicationContext());
         LOGGER.i("luolu FarmGlobal.model1: " + Model.BUILD.value());
         textureView = (AutoFitTextureView) view.findViewById(R.id.texture);
         mReCordLayout = (RelativeLayout) view.findViewById(R.id.record_layout);
@@ -649,8 +649,8 @@ public class FarmCameraConnectionFragment extends Fragment implements View.OnCli
         }
         textSensorExposureTime = view.findViewById(R.id.textSensorExposureTime);
 
-        touBaoVieoFlag = PreferencesUtils.getStringValue(FarmAppConfig.touBaoVieoFlag, getActivity().getApplicationContext());
-        liPeiVieoFlag = PreferencesUtils.getStringValue(FarmAppConfig.liPeiVieoFlag, getActivity().getApplicationContext());
+        touBaoVieoFlag = FarmerPreferencesUtils.getStringValue(FarmAppConfig.touBaoVieoFlag, getActivity().getApplicationContext());
+        liPeiVieoFlag = FarmerPreferencesUtils.getStringValue(FarmAppConfig.liPeiVieoFlag, getActivity().getApplicationContext());
 
         Log.i("==touBaoVieoFlag===", touBaoVieoFlag);
         Log.i("==liPeiVieoFlag===", liPeiVieoFlag);
@@ -762,7 +762,7 @@ public class FarmCameraConnectionFragment extends Fragment implements View.OnCli
         super.onResume();
         startBackgroundThread();
         //初始化时候获取当前动物类型
-        animalType = PreferencesUtils.getAnimalType(getActivity().getApplicationContext());
+        animalType = FarmerPreferencesUtils.getAnimalType(getActivity().getApplicationContext());
         leftEnough = false;
         rightEnough = false;
 
@@ -1582,8 +1582,8 @@ public class FarmCameraConnectionFragment extends Fragment implements View.OnCli
                         }*/
 
                         // 投保理赔时是否录制视频的判断
-                        String touBaoVieoFlag = PreferencesUtils.getStringValue(FarmAppConfig.touBaoVieoFlag, activity);
-                        String liPeiVieoFlag = PreferencesUtils.getStringValue(FarmAppConfig.liPeiVieoFlag, activity);
+                        String touBaoVieoFlag = FarmerPreferencesUtils.getStringValue(FarmAppConfig.touBaoVieoFlag, activity);
+                        String liPeiVieoFlag = FarmerPreferencesUtils.getStringValue(FarmAppConfig.liPeiVieoFlag, activity);
                         if (touBaoVieoFlag.equals("0") && liPeiVieoFlag.equals("0")) {
                             if (!TextUtils.isEmpty(FarmGlobal.VideoFileName)) {
                                 //将已录制的视频删除

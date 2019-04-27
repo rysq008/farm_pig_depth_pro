@@ -40,9 +40,9 @@ import com.farm.innovation.login.TokenResp;
 import com.farm.innovation.login.Utils;
 import com.farm.innovation.login.view.HomeActivity;
 import com.farm.innovation.utils.AVOSCloudUtils;
+import com.farm.innovation.utils.FarmerPreferencesUtils;
+import com.farm.innovation.utils.FarmerShareUtils;
 import com.farm.innovation.utils.HttpUtils;
-import com.farm.innovation.utils.PreferencesUtils;
-import com.farm.innovation.utils.ShareUtils;
 import com.google.gson.Gson;
 import com.innovation.pig.insurance.R;
 
@@ -55,11 +55,11 @@ import java.util.TreeMap;
 import okhttp3.FormBody;
 import okhttp3.RequestBody;
 
-public class LoginActivity extends BaseActivity implements ILoginView {
+public class LoginFamerActivity extends BaseActivity implements ILoginView {
 
-    private static final String TAG = "LoginActivity";
-    private final AppCompatActivity activity = LoginActivity.this;
-    private final Logger mLogger = new Logger(LoginActivity.class.getSimpleName());
+    private static final String TAG = "LoginFamerActivity";
+    private final AppCompatActivity activity = LoginFamerActivity.this;
+    private final Logger mLogger = new Logger(LoginFamerActivity.class.getSimpleName());
 
 
     AppCompatEditText textInputEditPhoneNumber;
@@ -127,7 +127,7 @@ public class LoginActivity extends BaseActivity implements ILoginView {
 
         SharedPreferences pref = this.getSharedPreferences(Utils.USERINFO_SHAREFILE, Context.MODE_PRIVATE);
         if (!TextUtils.isEmpty(pref.getString("token", ""))) {
-            Intent add_intent = new Intent(LoginActivity.this, HomeActivity.class);
+            Intent add_intent = new Intent(LoginFamerActivity.this, HomeActivity.class);
             startActivity(add_intent);
             finish();
         }
@@ -135,7 +135,7 @@ public class LoginActivity extends BaseActivity implements ILoginView {
         loginPresenter = new LoginPresenter(this);
         versionName.setText(getString(R.string.version_name) + "v" + getVersionName());
 
-        ShareUtils.setUpGlobalHost(this, versionName);
+        FarmerShareUtils.setUpGlobalHost(this, versionName);
     }
 
 
@@ -247,7 +247,7 @@ public class LoginActivity extends BaseActivity implements ILoginView {
             } catch (Exception e) {
                 e.printStackTrace();
                 errString = "服务器错误！";
-                AVOSCloudUtils.saveErrorMessage(e, LoginActivity.class.getSimpleName());
+                AVOSCloudUtils.saveErrorMessage(e, LoginFamerActivity.class.getSimpleName());
                 return false;
             }
         }
@@ -267,10 +267,10 @@ public class LoginActivity extends BaseActivity implements ILoginView {
 
                         }
 
-                        if ((String.valueOf(tokenresp.uid)).equals(PreferencesUtils.getStringValue(HttpUtils.user_id, LoginActivity.this))) {
-                            PreferencesUtils.saveBooleanValue("isone", true, LoginActivity.this);
+                        if ((String.valueOf(tokenresp.uid)).equals(FarmerPreferencesUtils.getStringValue(HttpUtils.user_id, LoginFamerActivity.this))) {
+                            FarmerPreferencesUtils.saveBooleanValue("isone", true, LoginFamerActivity.this);
                         } else {
-                            PreferencesUtils.saveBooleanValue("isone", false, LoginActivity.this);
+                            FarmerPreferencesUtils.saveBooleanValue("isone", false, LoginFamerActivity.this);
                         }
 
                         //  存储用户信息
@@ -289,11 +289,11 @@ public class LoginActivity extends BaseActivity implements ILoginView {
                         //  editor.putInt("deptid", tokenresp.deptid);
                         editor.apply();
                         int i = tokenresp.deptid;
-                        PreferencesUtils.saveIntValue(HttpUtils.deptId, tokenresp.deptid, FarmAppConfig.getApplication());
-                        PreferencesUtils.saveKeyValue(HttpUtils.user_id, String.valueOf(tokenresp.uid), FarmAppConfig.getApplication());
+                        FarmerPreferencesUtils.saveIntValue(HttpUtils.deptId, tokenresp.deptid, FarmAppConfig.getApplication());
+                        FarmerPreferencesUtils.saveKeyValue(HttpUtils.user_id, String.valueOf(tokenresp.uid), FarmAppConfig.getApplication());
                         Log.i("===id==", tokenresp.uid + "");
                     }
-                    Intent add_intent = new Intent(LoginActivity.this, HomeActivity.class);
+                    Intent add_intent = new Intent(LoginFamerActivity.this, HomeActivity.class);
                     startActivity(add_intent);
                     finish();
                 } else if (resultBean.getStatus() == 0) {
@@ -313,7 +313,7 @@ public class LoginActivity extends BaseActivity implements ILoginView {
 
 
             if (success & HttpUtils.PIC_LOGIN_URL.equalsIgnoreCase(mUrl)) {
-                Intent add_intent = new Intent(LoginActivity.this, HomeActivity.class);
+                Intent add_intent = new Intent(LoginFamerActivity.this, HomeActivity.class);
                 startActivity(add_intent);
                 finish();
             } else if (!success) {
@@ -338,13 +338,13 @@ public class LoginActivity extends BaseActivity implements ILoginView {
             switch (msg.what) {
 
                 case 41:
-                    Toast.makeText(LoginActivity.this, "服务器异常，请稍后再试！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginFamerActivity.this, "服务器异常，请稍后再试！", Toast.LENGTH_SHORT).show();
                     break;
                 case 44:
-                    Toast.makeText(LoginActivity.this, resultBean.getMsg(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginFamerActivity.this, resultBean.getMsg(), Toast.LENGTH_SHORT).show();
                     break;
                 case 24:
-                    Toast.makeText(LoginActivity.this, resultBean.getMsg(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginFamerActivity.this, resultBean.getMsg(), Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     break;

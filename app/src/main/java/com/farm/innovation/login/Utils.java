@@ -9,7 +9,7 @@ import com.farm.innovation.biz.classifier.DonkeyFaceDetectTFlite;
 import com.farm.innovation.biz.classifier.PigFaceDetectTFlite;
 import com.farm.innovation.biz.iterm.Model;
 import com.farm.innovation.utils.ConstUtils;
-import com.farm.innovation.utils.PreferencesUtils;
+import com.farm.innovation.utils.FarmerPreferencesUtils;
 import com.google.gson.Gson;
 
 import org.tensorflow.demo.FarmDetectorActivity;
@@ -181,11 +181,11 @@ public class Utils {
      * 获取投保或理赔的牲畜识别阈值
      */
     public static void getThreshold(){
-        String  tlist = PreferencesUtils.getStringValue(FarmAppConfig.THRESHOLD_LIST, FarmAppConfig.getActivity());
+        String  tlist = FarmerPreferencesUtils.getStringValue(FarmAppConfig.THRESHOLD_LIST, FarmAppConfig.getActivity());
         QueryVideoFlagDataBean.thresholdList thresholdList = new Gson().fromJson(tlist, QueryVideoFlagDataBean.thresholdList.class);
         Log.e("getThreshold", thresholdList.toString());
 
-        int animalType = PreferencesUtils.getAnimalType(FarmAppConfig.getActivity());
+        int animalType = FarmerPreferencesUtils.getAnimalType(FarmAppConfig.getActivity());
         if (FarmGlobal.model == Model.BUILD.value()) {
             if (animalType == ConstUtils.ANIMAL_TYPE_PIG){
                 PigFaceDetectTFlite.MIN_CONFIDENCE = Float.parseFloat(thresholdList.getPigtoubao());
@@ -208,11 +208,11 @@ public class Utils {
      * 获取理赔的牲畜识别 降低后的阈值
      */
     public static void setLowThreshold(){
-        String  tlist = PreferencesUtils.getStringValue(FarmAppConfig.THRESHOLD_LIST, FarmAppConfig.getActivity());
+        String  tlist = FarmerPreferencesUtils.getStringValue(FarmAppConfig.THRESHOLD_LIST, FarmAppConfig.getActivity());
         QueryVideoFlagDataBean.thresholdList thresholdList = new Gson().fromJson(tlist, QueryVideoFlagDataBean.thresholdList.class);
         Log.e("getLowThreshold", thresholdList.toString() );
 
-        int animalType = PreferencesUtils.getAnimalType(FarmAppConfig.getActivity());
+        int animalType = FarmerPreferencesUtils.getAnimalType(FarmAppConfig.getActivity());
          if(FarmGlobal.model == Model.VERIFY.value()){
             if (animalType == ConstUtils.ANIMAL_TYPE_PIG){
                 PigFaceDetectTFlite.MIN_CONFIDENCE = Float.parseFloat(thresholdList.getPiglipei2());

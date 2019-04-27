@@ -43,7 +43,7 @@ import com.farm.innovation.utils.FileUtils;
 import com.farm.innovation.utils.HttpRespObject;
 import com.farm.innovation.utils.HttpUtils;
 import com.farm.innovation.utils.OkHttp3Util;
-import com.farm.innovation.utils.PreferencesUtils;
+import com.farm.innovation.utils.FarmerPreferencesUtils;
 import com.farm.innovation.utils.ValidatorUtils;
 import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
@@ -461,7 +461,7 @@ public class OrganizationBaodanActivity extends BaseActivity {
         Map<String, String> map = new HashMap<>();
         map.put(HttpUtils.AppKeyAuthorization, "hopen");
         Map<String, String> mapbody = new HashMap<>();
-        mapbody.put("bdsId", PreferencesUtils.getStringValue(HttpUtils.id, FarmAppConfig.getApplication()));
+        mapbody.put("bdsId", FarmerPreferencesUtils.getStringValue(HttpUtils.id, FarmAppConfig.getApplication()));
         mapbody.put("baodanNo", mTempToubaoNumber);
         mapbody.put("longitude", String.valueOf(currentLat));
         mapbody.put("latitude", String.valueOf(currentLon));
@@ -475,7 +475,7 @@ public class OrganizationBaodanActivity extends BaseActivity {
         mapbody.put("bankNo", bankCardNumber.getText().toString());
         mapbody.put("bankName", openBankCardName.getText().toString());
         mapbody.put("bankFront", str_bank.trim());
-        mapbody.put("yanBiaoName", PreferencesUtils.getStringValue("zuYan", OrganizationBaodanActivity.this));
+        mapbody.put("yanBiaoName", FarmerPreferencesUtils.getStringValue("zuYan", OrganizationBaodanActivity.this));
         mapbody.put("uid", String.valueOf(userId));
         getStringTouboaExtra = mTempToubaoNumber;
         OkHttp3Util.doPost(HttpUtils.BaoDanaddyan, mapbody, map, new Callback() {
@@ -537,7 +537,7 @@ public class OrganizationBaodanActivity extends BaseActivity {
                                     }
                                     finish();
                                 } else if ("btnFinish".equals(str)) {
-                                    PreferencesUtils.saveKeyValue(HttpUtils.createyan, "no", FarmAppConfig.getApplication());
+                                    FarmerPreferencesUtils.saveKeyValue(HttpUtils.createyan, "no", FarmAppConfig.getApplication());
                                     if (fileURLPath != null) {
                                         boolean deleteFile = FileUtils.deleteFile(fileURLPath.getAbsoluteFile());
                                         if (deleteFile) {

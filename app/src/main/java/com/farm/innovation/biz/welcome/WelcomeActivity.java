@@ -11,9 +11,10 @@ import android.os.StrictMode;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.farm.innovation.biz.login.LoginActivity;
+import com.farm.innovation.biz.login.LoginFamerActivity;
+import com.farm.innovation.biz.login.LoginMergeActivity;
 import com.farm.innovation.utils.HttpUtils;
-import com.farm.innovation.utils.ShareUtils;
+import com.farm.innovation.utils.FarmerShareUtils;
 import com.innovation.pig.insurance.R;
 
 
@@ -53,7 +54,8 @@ public class WelcomeActivity extends Activity {
             @Override
             public void run() {
                 if (hasPermission()) {
-                    Intent intent = new Intent(WelcomeActivity.this, LoginActivity.class);
+//                    Intent intent = new Intent(WelcomeActivity.this, LoginFamerActivity.class);
+                    Intent intent = new Intent(WelcomeActivity.this, LoginMergeActivity.class);
                     startActivity(intent);
 //        splash.setAnimation(null);
                 } else {
@@ -69,7 +71,7 @@ public class WelcomeActivity extends Activity {
             StrictMode.setThreadPolicy(policy);
         }
         if(!HttpUtils.isOfficialHost())
-            Toast.makeText(this, ShareUtils.getHost("host"), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, FarmerShareUtils.getHost("host"), Toast.LENGTH_LONG).show();
     }
 
 

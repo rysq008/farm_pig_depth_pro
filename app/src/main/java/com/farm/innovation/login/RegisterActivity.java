@@ -45,7 +45,7 @@ import com.farm.innovation.bean.MultiBaodanBean;
 import com.farm.innovation.bean.ResultBean;
 import com.farm.innovation.bean.company_child;
 import com.farm.innovation.bean.company_total;
-import com.farm.innovation.biz.login.LoginActivity;
+import com.farm.innovation.biz.login.LoginFamerActivity;
 import com.farm.innovation.utils.AVOSCloudUtils;
 import com.farm.innovation.utils.HttpRespObject;
 import com.farm.innovation.utils.HttpUtils;
@@ -664,7 +664,7 @@ public class RegisterActivity extends BaseActivity implements LoaderManager.Load
                     Log.d(TAG, mUrl + "\nregisterResponse:" + registerResponse);
                     if (resultBean.getStatus() == 1) {
                         Toast.makeText(RegisterActivity.this, resultBean.getMsg(), Toast.LENGTH_SHORT).show();
-                        Intent add_intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                        Intent add_intent = new Intent(RegisterActivity.this, LoginFamerActivity.class);
                         startActivity(add_intent);
                         finish();
                         return;

@@ -18,7 +18,7 @@ public class AVOSCloudUtils {
 //         测试 SDK 是否正常工作的代码
         AVObject avObject = new AVObject("Android_phone");
 //        avObject.put("Cookie", SharedPreUtil.getSessionId());
-        avObject.put("userId", PreferencesUtils.getStringValue(HttpUtils.user_id, FarmAppConfig.getActivity()));
+        avObject.put("userId", FarmerPreferencesUtils.getStringValue(HttpUtils.user_id, FarmAppConfig.getActivity()));
         avObject.put("brand", SystemUtil.getDeviceBrand());
         avObject.put("model", SystemUtil.getSystemModel());
         avObject.put("systemversion", SystemUtil.getSystemVersion());

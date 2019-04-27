@@ -24,9 +24,9 @@ import com.farm.innovation.location.AlertDialogManager;
 import com.farm.innovation.login.Utils;
 import com.farm.innovation.login.view.HomeActivity;
 import com.farm.innovation.utils.AVOSCloudUtils;
+import com.farm.innovation.utils.FarmerPreferencesUtils;
 import com.farm.innovation.utils.HttpUtils;
 import com.farm.innovation.utils.OkHttp3Util;
-import com.farm.innovation.utils.PreferencesUtils;
 import com.innovation.pig.insurance.R;
 
 import org.json.JSONObject;
@@ -101,7 +101,7 @@ public class CreateYanActivity extends BaseActivity {
                 finish();
             }
         });
-        String stringValue = PreferencesUtils.getStringValue(HttpUtils.baodanType, FarmAppConfig.getApplication());
+        String stringValue = FarmerPreferencesUtils.getStringValue(HttpUtils.baodanType, FarmAppConfig.getApplication());
         if ("1".equals(stringValue)) {
             btnyanWan.setVisibility(View.VISIBLE);
             btncaiji.setVisibility(View.VISIBLE);
@@ -149,7 +149,7 @@ public class CreateYanActivity extends BaseActivity {
                     Toast.makeText(CreateYanActivity.this, "验标单名称不能包含特殊字符", Toast.LENGTH_LONG).show();
                     return;
                 }
-                PreferencesUtils.saveKeyValue("zuYan", bdApplyName, CreateYanActivity.this);
+                FarmerPreferencesUtils.saveKeyValue("zuYan", bdApplyName, CreateYanActivity.this);
                 goToActivity(OrganizationBaodanActivity.class, null);
                 finish();
 
@@ -220,7 +220,7 @@ public class CreateYanActivity extends BaseActivity {
         map.put(HttpUtils.AppKeyAuthorization, "hopen");
         Map<String, String> mapbody = new HashMap<>();
         mapbody.put("baodanNo", mTempToubaoNumber);
-        mapbody.put("bdsId", PreferencesUtils.getStringValue(HttpUtils.id, FarmAppConfig.getApplication()));
+        mapbody.put("bdsId", FarmerPreferencesUtils.getStringValue(HttpUtils.id, FarmAppConfig.getApplication()));
         mapbody.put("longitude", String.valueOf(currentLat));
         mapbody.put("latitude", String.valueOf(currentLon));
         mapbody.put("yanBiaoName", bdApplyName);

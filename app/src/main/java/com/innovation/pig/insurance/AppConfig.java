@@ -25,7 +25,7 @@ import com.tencent.bugly.crashreport.CrashReport;
 import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.update.UpdateReceiver;
 import com.xiangchuang.risks.utils.ShareUtils;
-import com.xiangchuang.risks.view.LoginFamerActivity;
+import com.xiangchuang.risks.view.LoginPigAarActivity;
 
 import net.gotev.uploadservice.UploadService;
 import net.gotev.uploadservice.okhttp.OkHttpStack;
@@ -146,17 +146,17 @@ public class AppConfig {
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
 //                if(null == activity)
 //                {
-//                    HttpUtils.baseUrl = ShareUtils.getHost("host");
+//                    HttpUtils.baseUrl = FarmerShareUtils.getHost("host");
 //                    HttpUtils.resetIp(HttpUtils.baseUrl);
 //                    Toast.makeText(activity, "------->>"+HttpUtils.baseUrl, Toast.LENGTH_LONG).show();
 //                }
                 AppConfig.activity = activity;
                 if(activity instanceof BaseActivity){
-                    if (activity != null && !(activity instanceof LoginFamerActivity)) {
+                    if (activity != null && !(activity instanceof LoginPigAarActivity)) {
                         GlobalDialogUtils.getNotice(activity.getClass().getCanonicalName(), activity);
                     }
 
-                    if (!(activity instanceof LoginFamerActivity)) {
+                    if (!(activity instanceof LoginPigAarActivity)) {
                         isFirst++;
                         if (AppConfig.isOriginApk())
                             doUpDateTask();

@@ -6,8 +6,8 @@ import com.farm.innovation.biz.classifier.CowFaceDetectTFlite;
 import com.farm.innovation.biz.classifier.DonkeyFaceDetectTFlite;
 import com.farm.innovation.biz.classifier.PigFaceDetectTFlite;
 import com.farm.innovation.utils.ConstUtils;
+import com.farm.innovation.utils.FarmerPreferencesUtils;
 import com.farm.innovation.utils.FileUtils;
-import com.farm.innovation.utils.PreferencesUtils;
 import com.farm.innovation.utils.StorageUtils;
 
 import java.io.File;
@@ -177,7 +177,7 @@ public class MediaPayItem {
         SimpleDateFormat tmpSimpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS", Locale.getDefault());
         String fname = tmpSimpleDateFormat.format(new Date(System.currentTimeMillis()));
         String strBitmapfile = null;
-        int animalType =  PreferencesUtils.getAnimalType(mContext);
+        int animalType =  FarmerPreferencesUtils.getAnimalType(mContext);
         if (animalType == ConstUtils.ANIMAL_TYPE_PIG){
             strBitmapfile= new File(mtmpBimmapDir, PigFaceDetectTFlite.srcPigBitmapName).getAbsolutePath();
         }else if (animalType == ConstUtils.ANIMAL_TYPE_CATTLE){
@@ -201,7 +201,7 @@ public class MediaPayItem {
         SimpleDateFormat tmpSimpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS", Locale.getDefault());
         String fname = tmpSimpleDateFormat.format(new Date(System.currentTimeMillis()));
         String strBitmapfile = null;
-        int animalType =  PreferencesUtils.getAnimalType(mContext);
+        int animalType =  FarmerPreferencesUtils.getAnimalType(mContext);
 
         if (animalType == ConstUtils.ANIMAL_TYPE_PIG){
             String pigPath = PigFaceDetectTFlite.srcPigBitmapName.equals("")?fname: PigFaceDetectTFlite.srcPigBitmapName;
@@ -229,7 +229,7 @@ public class MediaPayItem {
         SimpleDateFormat tmpSimpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS", Locale.getDefault());
         String fname = tmpSimpleDateFormat.format(new Date(System.currentTimeMillis()));
         String strBitmapfile = null;
-        int animalType =  PreferencesUtils.getAnimalType(mContext);
+        int animalType =  FarmerPreferencesUtils.getAnimalType(mContext);
 
         if (animalType == ConstUtils.ANIMAL_TYPE_PIG){
             String pigPath = PigFaceDetectTFlite.srcPigBitmapName.equals("")?fname: PigFaceDetectTFlite.srcPigBitmapName;

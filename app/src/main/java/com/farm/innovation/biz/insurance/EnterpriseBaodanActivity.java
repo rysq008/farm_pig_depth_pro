@@ -41,7 +41,7 @@ import com.farm.innovation.utils.FileUtils;
 import com.farm.innovation.utils.HttpRespObject;
 import com.farm.innovation.utils.HttpUtils;
 import com.farm.innovation.utils.OkHttp3Util;
-import com.farm.innovation.utils.PreferencesUtils;
+import com.farm.innovation.utils.FarmerPreferencesUtils;
 import com.farm.innovation.utils.ValidatorUtils;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
@@ -533,16 +533,16 @@ public class EnterpriseBaodanActivity extends BaseActivity {
         map.put(HttpUtils.id, userid + "");
         Map<String,String> mapbody = new HashMap<>();
         mapbody.put("baodanNo", mTempToubaoNumber);
-        mapbody.put("baodanName", PreferencesUtils.getStringValue(HttpUtils.baodanName, FarmAppConfig.getApplication()));
-        mapbody.put("baodanType", PreferencesUtils.getStringValue(HttpUtils.baodanType, FarmAppConfig.getApplication()));
-        mapbody.put("animalType", String.valueOf(PreferencesUtils.getAnimalType(EnterpriseBaodanActivity.this)));
-        mapbody.put("toubaoType", PreferencesUtils.getStringValue(HttpUtils.InsuranceType, FarmAppConfig.getApplication()));
-        mapbody.put("baodanRate", PreferencesUtils.getStringValue(HttpUtils.insuranceRate, FarmAppConfig.getApplication()));
-        mapbody.put("shiyangMethod", PreferencesUtils.getStringValue(HttpUtils.farmForm, FarmAppConfig.getApplication()));
-        mapbody.put("toubaoCost", PreferencesUtils.getStringValue(HttpUtils.InsuranceCost, FarmAppConfig.getApplication()));
-        mapbody.put("address", PreferencesUtils.getStringValue(HttpUtils.baodanApplyAddress, FarmAppConfig.getApplication()));
+        mapbody.put("baodanName", FarmerPreferencesUtils.getStringValue(HttpUtils.baodanName, FarmAppConfig.getApplication()));
+        mapbody.put("baodanType", FarmerPreferencesUtils.getStringValue(HttpUtils.baodanType, FarmAppConfig.getApplication()));
+        mapbody.put("animalType", String.valueOf(FarmerPreferencesUtils.getAnimalType(EnterpriseBaodanActivity.this)));
+        mapbody.put("toubaoType", FarmerPreferencesUtils.getStringValue(HttpUtils.InsuranceType, FarmAppConfig.getApplication()));
+        mapbody.put("baodanRate", FarmerPreferencesUtils.getStringValue(HttpUtils.insuranceRate, FarmAppConfig.getApplication()));
+        mapbody.put("shiyangMethod", FarmerPreferencesUtils.getStringValue(HttpUtils.farmForm, FarmAppConfig.getApplication()));
+        mapbody.put("toubaoCost", FarmerPreferencesUtils.getStringValue(HttpUtils.InsuranceCost, FarmAppConfig.getApplication()));
+        mapbody.put("address", FarmerPreferencesUtils.getStringValue(HttpUtils.baodanApplyAddress, FarmAppConfig.getApplication()));
         mapbody.put("uid", userid + "");
-        mapbody.put(HttpUtils.deptId, PreferencesUtils.getIntValue(HttpUtils.deptId, FarmAppConfig.getApplication()) + "");
+        mapbody.put(HttpUtils.deptId, FarmerPreferencesUtils.getIntValue(HttpUtils.deptId, FarmAppConfig.getApplication()) + "");
 
         mapbody.put("longitude", String.valueOf(currentLat));
         mapbody.put("latitude", String.valueOf(currentLon));
@@ -619,7 +619,7 @@ public class EnterpriseBaodanActivity extends BaseActivity {
                                     JSONObject jsonObject1 = jsonObject.getJSONObject("data");
                                     mid = jsonObject1.getInt("id");
 
-                                    PreferencesUtils.saveKeyValue(HttpUtils.id, mid + "", FarmAppConfig.getApplication());
+                                    FarmerPreferencesUtils.saveKeyValue(HttpUtils.id, mid + "", FarmAppConfig.getApplication());
                                     goToActivity(CreateYanActivity.class, null);
                                     finish();
                                     //createYan();
@@ -705,7 +705,7 @@ public class EnterpriseBaodanActivity extends BaseActivity {
                                         Log.i(TAG, "finish,调用系统拍照的tempFile删除成功");
                                     }
                                 }
-                                PreferencesUtils.saveKeyValue(HttpUtils.id, mid + "", FarmAppConfig.getApplication());
+                                FarmerPreferencesUtils.saveKeyValue(HttpUtils.id, mid + "", FarmAppConfig.getApplication());
                                 goToActivity(CreateYanActivity.class, null);
                             }
 

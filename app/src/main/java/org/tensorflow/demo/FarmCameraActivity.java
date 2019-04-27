@@ -17,7 +17,6 @@
 package org.tensorflow.demo;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
@@ -37,9 +36,9 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.farm.innovation.base.BaseActivity;
+import com.farm.innovation.utils.FarmerPreferencesUtils;
 import com.innovation.pig.insurance.R;
 import com.farm.innovation.base.FarmAppConfig;
-import com.farm.innovation.utils.PreferencesUtils;
 
 import java.io.File;
 import java.nio.ByteBuffer;
@@ -75,9 +74,9 @@ public abstract class FarmCameraActivity extends BaseActivity implements OnImage
     protected void onCreate(final Bundle savedInstanceState) {
         LOGGER.d("onCreate " + this);
         super.onCreate(null);
-        maxLeft = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_LEFT, FarmCameraActivity.this);
-        maxMiddle = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_MIDDLE, FarmCameraActivity.this);
-        maxRight = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_RIGHT, FarmCameraActivity.this);
+        maxLeft = FarmerPreferencesUtils.getMaxPics(FarmerPreferencesUtils.FACE_ANGLE_MAX_LEFT, FarmCameraActivity.this);
+        maxMiddle = FarmerPreferencesUtils.getMaxPics(FarmerPreferencesUtils.FACE_ANGLE_MAX_MIDDLE, FarmCameraActivity.this);
+        maxRight = FarmerPreferencesUtils.getMaxPics(FarmerPreferencesUtils.FACE_ANGLE_MAX_RIGHT, FarmCameraActivity.this);
         // TODO: 2018/8/31 By:LuoLu
         if (SCREEN_ORIENTATION == 0) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -111,7 +110,7 @@ public abstract class FarmCameraActivity extends BaseActivity implements OnImage
 
             long usable = sdcardDir.getFreeSpace()/1024;
             if(usable < 612000){
-                String phone = PreferencesUtils.getStringValue(FarmAppConfig.phone, FarmAppConfig.getActivity());
+                String phone = FarmerPreferencesUtils.getStringValue(FarmAppConfig.phone, FarmAppConfig.getActivity());
                 new AlertDialog.Builder(this)
                         .setIcon(R.drawable.farm_cowface)
                         .setTitle("��ʾ")

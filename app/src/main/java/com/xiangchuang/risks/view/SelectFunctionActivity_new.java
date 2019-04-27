@@ -8,8 +8,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Process;
-import android.provider.Settings;
-import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,11 +18,27 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.farm.innovation.bean.MergeLoginBean;
+import com.farm.innovation.biz.login.LoginMergeActivity;
+import com.farm.innovation.login.RespObject;
+import com.farm.innovation.login.view.HomeActivity;
+import com.farm.innovation.utils.FarmerShareUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.R;
+import com.innovation.pig.insurance.R.drawable;
+import com.innovation.pig.insurance.R.id;
+import com.innovation.pig.insurance.R.layout;
+import com.innovation.pig.insurance.R.string;
+import com.innovation.pig.insurance.netutils.Constants;
+import com.innovation.pig.insurance.netutils.GsonUtils;
+import com.innovation.pig.insurance.netutils.OkHttp3Util;
+import com.innovation.pig.insurance.netutils.PreferencesUtils;
 import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.bean.BaseBean;
 import com.xiangchuang.risks.model.bean.QueryVideoFlagDataBean;
+import com.xiangchuang.risks.model.bean.QueryVideoFlagDataBean.thresholdList;
 import com.xiangchuang.risks.model.bean.StartBean;
 import com.xiangchuang.risks.model.bean.UncompletedBean;
 import com.xiangchuang.risks.model.bean.WaitNumber;
@@ -32,17 +47,6 @@ import com.xiangchuang.risks.update.UpdateInformation;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 
-import com.innovation.pig.insurance.AppConfig;
-import com.innovation.pig.insurance.R;
-import com.innovation.pig.insurance.R.string;
-import com.innovation.pig.insurance.R.drawable;
-import com.innovation.pig.insurance.R.id;
-import com.innovation.pig.insurance.R.layout;
-import com.innovation.pig.insurance.netutils.Constants;
-import com.innovation.pig.insurance.netutils.GsonUtils;
-import com.innovation.pig.insurance.netutils.OkHttp3Util;
-import com.innovation.pig.insurance.netutils.PreferencesUtils;
-import com.xiangchuang.risks.model.bean.QueryVideoFlagDataBean.thresholdList;
 import org.json.JSONObject;
 import org.tensorflow.demo.DetectorActivity;
 import org.tensorflow.demo.Global;
@@ -52,14 +56,12 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
-
-import butterknife.OnClick;
 import innovation.media.Model;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-import static com.innovation.pig.insurance.AppConfig.needUpDate;
+import static com.farm.innovation.utils.FarmerShareUtils.MERGE_LOGIN_INFO;
 import static com.innovation.pig.insurance.netutils.Constants.DISPOSE_UNFINISH;
 import static com.innovation.pig.insurance.netutils.Constants.NUMBER;
 
@@ -153,15 +155,15 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
             this.rlEdit.setVisibility(View.GONE);
         } else if ("2".equals(this.companyfleg)) {
             this.iv_cancel.setVisibility(View.GONE);
-            this.rlEdit.setVisibility(View.VISIBLE);
+            if (AppConfig.isOriginApk()) {
+                rlEdit.setVisibility(View.VISIBLE);
+            } else {
+                rlEdit.setVisibility(View.GONE);
+            }
             this.rel_toubao.setVisibility(View.GONE);
             this.relLipei.setVisibility(View.VISIBLE);
         }
-        if(AppConfig.isOriginApk()){
-            rlEdit.setVisibility(View.VISIBLE);
-        }else{
-            rlEdit.setVisibility(View.GONE);
-        }
+
 
         this.queryVideoFlag();
         this.pop = new PopupWindow(this);
@@ -169,12 +171,34 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
         this.tvPopExit = (TextView) popview.findViewById(id.tv_pop_exit);
         this.tvPopUpdate = (TextView) popview.findViewById(id.tv_pop_update);
         this.ivPopUpdateSign = (ImageView) popview.findViewById(id.iv_pop_update_sign);
+        TextView enter_farmer = popview.findViewById(R.id.enter_farmer);
         if (AppConfig.needUpDate) {
             this.ivPopUpdateSign.setVisibility(View.VISIBLE);
             this.ivSign.setVisibility(View.VISIBLE);
         } else {
             this.ivPopUpdateSign.setVisibility(View.GONE);
             this.ivSign.setVisibility(View.GONE);
+        }
+
+        MergeLoginBean bean = FarmerShareUtils.getData(MERGE_LOGIN_INFO);
+        if (bean != null) {
+            if (bean.data.nxData != null && !TextUtils.isEmpty(bean.data.nxData.token) && bean.data.nxData.status == RespObject.USER_STATUS_1) {
+                enter_farmer.setVisibility(View.VISIBLE);
+                enter_farmer.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (bean.data.ftnData != null) {
+                            Intent add_intent = new Intent(SelectFunctionActivity_new.this, HomeActivity.class);
+                            startActivity(add_intent);
+                            finish();
+                        }
+                    }
+                });
+            } else {
+                enter_farmer.setVisibility(View.GONE);
+            }
+        } else {
+            enter_farmer.setVisibility(View.GONE);
         }
 
         this.pop.setWidth(300);
@@ -350,7 +374,9 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             PreferencesUtils.removeAllKey(SelectFunctionActivity_new.this);
-                            Intent addIntent = new Intent(SelectFunctionActivity_new.this, LoginFamerActivity.class);
+                            FarmerShareUtils.clearMergeLoginInfo();
+//                            Intent addIntent = new Intent(SelectFunctionActivity_new.this, LoginPigAarActivity.class);
+                            Intent addIntent = new Intent(SelectFunctionActivity_new.this, LoginMergeActivity.class);
                             SelectFunctionActivity_new.this.startActivity(addIntent);
                             SelectFunctionActivity_new.this.finish();
                         }
@@ -451,15 +477,15 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
                         public void run() {
                             SelectFunctionActivity_new.this.mProgressDialog.dismiss();
                             if (null != result) {
-                                if(result.getStatus() == 1){
+                                if (result.getStatus() == 1) {
                                     UncompletedBean uncompletedBean = result.getData();
                                     Bundle bundle = new Bundle();
                                     bundle.putParcelable("Uncompleted", uncompletedBean);
                                     goToActivity(DeadPigProcessStepActivity.class, bundle);
-                                }else{
-                                    if(payNum > 0){
+                                } else {
+                                    if (payNum > 0) {
                                         SelectFunctionActivity_new.this.goToActivity(WaitDisposeActivity.class, null);
-                                    }else{
+                                    } else {
                                         Toast.makeText(SelectFunctionActivity_new.this, "您还没有理赔数据", Toast.LENGTH_SHORT).show();
                                     }
                                 }
@@ -492,7 +518,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
                 Log.i(SelectFunctionActivity_new.TAG, string);
 
                 BaseBean<WaitNumber> result;
-                try{
+                try {
                     Gson gson = new Gson();
                     Type type = new TypeToken<BaseBean<WaitNumber>>() {
                     }.getType();
@@ -504,23 +530,19 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
                             public void run() {
                                 payNum = result.getData().getNumber();
 
-                                if(payNum > 0){
+                                if (payNum > 0) {
                                     rlCount.setVisibility(View.VISIBLE);
-                                    tvCount.setText(payNum+"");
-                                }else{
+                                    tvCount.setText(payNum + "");
+                                } else {
                                     rlCount.setVisibility(View.GONE);
                                 }
-
                             }
                         });
                     } else {
-
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-
             }
         });
     }
@@ -542,7 +564,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
                 Log.i(SelectFunctionActivity_new.TAG, string);
 
                 BaseBean<UncompletedBean.currentStep> result;
-                try{
+                try {
                     Gson gson = new Gson();
                     Type type = new TypeToken<BaseBean<UncompletedBean.currentStep>>() {
                     }.getType();
@@ -553,7 +575,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
                     } else {
 
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -597,7 +619,6 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
                                     }
                                 });
                             }
-
                         }
                     });
                 } else {
@@ -608,7 +629,6 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
                         }
                     });
                 }
-
             }
         });
     }
@@ -706,7 +726,6 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
         } else {
             this.finish();
         }
-
     }
 
     @Override

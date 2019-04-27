@@ -563,7 +563,7 @@ public class SmallVideoActivity extends BaseActivity implements SurfaceHolder.Ca
             @Override
             public void onClickView(View v) {
                 dialogcreate.dismiss();
-                if ("pre".equals(PreferencesUtils.getStringValue(Constants.fleg, AppConfig.getAppContext()))){
+                if ("pre".equals(FarmerPreferencesUtils.getStringValue(Constants.fleg, AppConfig.getAppContext()))){
                     startActivity(new Intent(SmallVideoActivity.this, PreparedLiPeiActivity.class));
                 }
                 finish();

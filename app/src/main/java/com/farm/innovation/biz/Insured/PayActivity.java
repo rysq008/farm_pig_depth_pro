@@ -38,8 +38,8 @@ import com.farm.innovation.location.LocationManager;
 import com.farm.innovation.login.DatabaseHelper;
 import com.farm.innovation.login.Utils;
 import com.farm.innovation.utils.AVOSCloudUtils;
+import com.farm.innovation.utils.FarmerPreferencesUtils;
 import com.farm.innovation.utils.HttpUtils;
-import com.farm.innovation.utils.PreferencesUtils;
 import com.google.gson.Gson;
 import com.innovation.pig.insurance.R;
 
@@ -292,9 +292,9 @@ public class PayActivity extends BaseActivity {
                 treeMapInfoCheck.put("erji", sheSpinner.getSelectedItem().toString());
                 treeMapInfoCheck.put("sanji", lanSpinner.getSelectedItem().toString());
                 treeMapInfoCheck.put("pigNo", animalEarsTagNo.getText().toString().trim());
-                PreferencesUtils.saveKeyValue("reason", payReasonSpinner.getSelectedItem().toString().trim(), PayActivity.this);
-                PreferencesUtils.saveKeyValue("cardnum", etLipeiIdcard.getText().toString().trim(), PayActivity.this);
-                PreferencesUtils.saveKeyValue("baodannum", checkedBaodanNo.getText().toString().trim(), PayActivity.this);
+                FarmerPreferencesUtils.saveKeyValue("reason", payReasonSpinner.getSelectedItem().toString().trim(), PayActivity.this);
+                FarmerPreferencesUtils.saveKeyValue("cardnum", etLipeiIdcard.getText().toString().trim(), PayActivity.this);
+                FarmerPreferencesUtils.saveKeyValue("baodannum", checkedBaodanNo.getText().toString().trim(), PayActivity.this);
                 new PayDataProcessor(PayActivity.this).transerPayData(
                         checkedBaodanNo.getText().toString().trim(),
                         payReasonSpinner.getSelectedItem().toString().trim(),
@@ -390,9 +390,9 @@ public class PayActivity extends BaseActivity {
                         animalEarsTagNo.getText().toString().trim(),
                         etLipeiIdcard.getText().toString().trim());
                 strfleg = "collect";
-                PreferencesUtils.saveKeyValue("reason", payReasonSpinner.getSelectedItem().toString().trim(), PayActivity.this);
-                PreferencesUtils.saveKeyValue("cardnum", etLipeiIdcard.getText().toString().trim(), PayActivity.this);
-                PreferencesUtils.saveKeyValue("baodannum", checkedBaodanNo.getText().toString().trim(), PayActivity.this);
+                FarmerPreferencesUtils.saveKeyValue("reason", payReasonSpinner.getSelectedItem().toString().trim(), PayActivity.this);
+                FarmerPreferencesUtils.saveKeyValue("cardnum", etLipeiIdcard.getText().toString().trim(), PayActivity.this);
+                FarmerPreferencesUtils.saveKeyValue("baodannum", checkedBaodanNo.getText().toString().trim(), PayActivity.this);
                 showProgressDialog(PayActivity.this);
                 payAnimalApplyTask = new PayAnimalApplyTask(HttpUtils.ANIMAL_PAY_INFOCHECK, treeMapInfoCheck);
                 payAnimalApplyTask.execute((Void) null);
@@ -452,7 +452,7 @@ public class PayActivity extends BaseActivity {
                             lipbaodanname = data.get("baodanName");
                             lipyanbaoname = data.get("yanbiaoName");
                         }
-                        PreferencesUtils.saveKeyValue("insurename", lipname, PayActivity.this);
+                        FarmerPreferencesUtils.saveKeyValue("insurename", lipname, PayActivity.this);
                         return true;
                     } else if (bean.getStatus() == 0) {
                         Log.d(TAG, "bean.getStatus():" + bean.getStatus());
@@ -501,7 +501,7 @@ public class PayActivity extends BaseActivity {
                             cardnum, payreason, qu + "$," + she + "$," + lan + "$",
                             lipeidate, LocationManager.getInstance(PayActivity.this).currentLon + "",
                             LocationManager.getInstance(PayActivity.this).currentLat + "",
-                            String.valueOf(PreferencesUtils.getAnimalType(PayActivity.this))
+                            String.valueOf(FarmerPreferencesUtils.getAnimalType(PayActivity.this))
                             , Ears, "", "1", s, "",lipbaodanname,lipyanbaoname, "0", "0", "0");
                     databaseHelper.addLiPeiLocalData(liPeiLocalBean);
                     Log.d(TAG, "理赔信息校验接口，校验通过");
@@ -510,8 +510,8 @@ public class PayActivity extends BaseActivity {
                     finish();
                 } else if (("collect").equals(strfleg)) {
 
-                    PreferencesUtils.saveBooleanValue("isli", false, PayActivity.this);
-                    PreferencesUtils.saveBooleanValue(HttpUtils.offlineupdate, false, PayActivity.this);
+                    FarmerPreferencesUtils.saveBooleanValue("isli", false, PayActivity.this);
+                    FarmerPreferencesUtils.saveBooleanValue(HttpUtils.offlineupdate, false, PayActivity.this);
                     Intent infoCheckIntent = new Intent(PayActivity.this, FarmDetectorActivity.class);
                     startActivity(infoCheckIntent);
                     collectNumberHandler.sendEmptyMessage(2);

@@ -38,11 +38,11 @@ import com.farm.innovation.login.Utils;
 import com.farm.innovation.login.view.HomeActivity;
 import com.farm.innovation.utils.AVOSCloudUtils;
 import com.farm.innovation.utils.DeviceUtil;
+import com.farm.innovation.utils.FarmerPreferencesUtils;
 import com.farm.innovation.utils.FileUtils;
 import com.farm.innovation.utils.HttpUtils;
 import com.farm.innovation.utils.JsonHelper;
 import com.farm.innovation.utils.OkHttp3Util;
-import com.farm.innovation.utils.PreferencesUtils;
 import com.farm.innovation.utils.UploadUtils;
 import com.farm.mainaer.wjoklib.okhttp.upload.UploadTask;
 import com.farm.mainaer.wjoklib.okhttp.upload.UploadTaskListener;
@@ -255,8 +255,8 @@ public class LipeiLocalAdapter extends RecyclerView.Adapter<LipeiLocalAdapter.Vi
                         Intent intent = new Intent();
                         intent.putExtra("ToubaoTempNumber", liPeiLocalBeans.get(position).pbaodanNo);
                         intent.setClass(context, FarmDetectorActivity.class);
-                        PreferencesUtils.saveBooleanValue("isli", true, context);
-                        PreferencesUtils.saveKeyValue("lipeidate", liPeiLocalBeans.get(position).pinsureDate, context);
+                        FarmerPreferencesUtils.saveBooleanValue("isli", true, context);
+                        FarmerPreferencesUtils.saveKeyValue("lipeidate", liPeiLocalBeans.get(position).pinsureDate, context);
                         context.startActivity(intent);
                         collectNumberHandler.sendEmptyMessage(2);
                     } else {
@@ -267,8 +267,8 @@ public class LipeiLocalAdapter extends RecyclerView.Adapter<LipeiLocalAdapter.Vi
                                 Intent intent = new Intent();
                                 intent.putExtra("ToubaoTempNumber", liPeiLocalBeans.get(position).pbaodanNo);
                                 intent.setClass(context, FarmDetectorActivity.class);
-                                PreferencesUtils.saveBooleanValue("isli", true, context);
-                                PreferencesUtils.saveKeyValue("lipeidate", liPeiLocalBeans.get(position).pinsureDate, context);
+                                FarmerPreferencesUtils.saveBooleanValue("isli", true, context);
+                                FarmerPreferencesUtils.saveKeyValue("lipeidate", liPeiLocalBeans.get(position).pinsureDate, context);
                                 context.startActivity(intent);
                                 collectNumberHandler.sendEmptyMessage(2);
                             }
@@ -322,14 +322,14 @@ public class LipeiLocalAdapter extends RecyclerView.Adapter<LipeiLocalAdapter.Vi
                     AlertDialogManager.showDialog(context, "提示", "确定上传理赔单，进行理赔申请吗？", new AlertDialogManager.DiaInterface() {
                         @Override
                         public void onPositive() {
-                            PreferencesUtils.saveKeyValue("lipeidate", liPeiLocalBeans.get(position).pinsureDate, context);
-                            PreferencesUtils.saveBooleanValue(HttpUtils.offlineupdate, true, context);
+                            FarmerPreferencesUtils.saveKeyValue("lipeidate", liPeiLocalBeans.get(position).pinsureDate, context);
+                            FarmerPreferencesUtils.saveBooleanValue(HttpUtils.offlineupdate, true, context);
                             Log.i("==pzippath===", liPeiLocalBeans.get(position).pzippath);
                             Log.i("==panimalType===", liPeiLocalBeans.get(position).panimalType);
                             Log.i("==pVideozippath===", liPeiLocalBeans.get(position).pVideozippath);
-                            PreferencesUtils.saveKeyValue(HttpUtils.reason, liPeiLocalBeans.get(position).pinsureReason, context);
-                            PreferencesUtils.saveKeyValue("baodannum", liPeiLocalBeans.get(position).pbaodanNo, context);
-                            PreferencesUtils.saveKeyValue("cardnum", liPeiLocalBeans.get(position).pcardNo, context);
+                            FarmerPreferencesUtils.saveKeyValue(HttpUtils.reason, liPeiLocalBeans.get(position).pinsureReason, context);
+                            FarmerPreferencesUtils.saveKeyValue("baodannum", liPeiLocalBeans.get(position).pbaodanNo, context);
+                            FarmerPreferencesUtils.saveKeyValue("cardnum", liPeiLocalBeans.get(position).pcardNo, context);
 
                             File zipFile_video2 = new File(liPeiLocalBeans.get(position).pVideozippath);
                             int model = Model.VERIFY.value();
@@ -347,7 +347,7 @@ public class LipeiLocalAdapter extends RecyclerView.Adapter<LipeiLocalAdapter.Vi
                                 videoUpLoadBean.libNub = pbaodanNo;
                                 videoUpLoadBean.userId = userId + "";
                                 videoUpLoadBean.libEnvinfo = getEnvInfo(FarmAppConfig.getActivity(), FarmAppConfig.version);
-                                videoUpLoadBean.animalType = PreferencesUtils.getAnimalType(FarmAppConfig.getActivity()) + "";
+                                videoUpLoadBean.animalType = FarmerPreferencesUtils.getAnimalType(FarmAppConfig.getActivity()) + "";
                                 videoUpLoadBean.collectTimes = "99";
                                 videoUpLoadBean.timesFlag = timesFlag;
                                 videoUpLoadBean.collectTime = liPeiLocalBeans.get(position).during;
@@ -437,9 +437,9 @@ public class LipeiLocalAdapter extends RecyclerView.Adapter<LipeiLocalAdapter.Vi
             SharedPreferences pref_user = context.getSharedPreferences(Utils.USERINFO_SHAREFILE, Context.MODE_PRIVATE);
             int userId = pref_user.getInt("uid", 0);
             TreeMap<String, String> treeMapContrast = new TreeMap();
-            treeMapContrast.put("baodanNoReal", PreferencesUtils.getStringValue("baodannum", context));
-            treeMapContrast.put("reason", PreferencesUtils.getStringValue(HttpUtils.reason, context));
-            treeMapContrast.put("cardNo", PreferencesUtils.getStringValue("cardnum", context));
+            treeMapContrast.put("baodanNoReal", FarmerPreferencesUtils.getStringValue("baodannum", context));
+            treeMapContrast.put("reason", FarmerPreferencesUtils.getStringValue(HttpUtils.reason, context));
+            treeMapContrast.put("cardNo", FarmerPreferencesUtils.getStringValue("cardnum", context));
             treeMapContrast.put("yiji", yiji == null ? "" : yiji);
             treeMapContrast.put("erji", erji == null ? "" : erji);
             treeMapContrast.put("sanji", sanji == null ? "" : sanji);
@@ -633,9 +633,9 @@ public class LipeiLocalAdapter extends RecyclerView.Adapter<LipeiLocalAdapter.Vi
             Map<String, String> map = new HashMap<>();
             map.put("userId", uid + "");
             map.put("libEnvinfo", getEnvInfo(context, FarmAppConfig.version));
-            map.put("baodanNoReal", PreferencesUtils.getStringValue("baodannum", context));
-            map.put("cardNo", PreferencesUtils.getStringValue("cardnum", context));
-            map.put("reason", PreferencesUtils.getStringValue("reason", context));
+            map.put("baodanNoReal", FarmerPreferencesUtils.getStringValue("baodannum", context));
+            map.put("cardNo", FarmerPreferencesUtils.getStringValue("cardnum", context));
+            map.put("reason", FarmerPreferencesUtils.getStringValue("reason", context));
             map.put("yiji", getPayYiji == null ? "" : getPayYiji);
             map.put("erji", getPayErji == null ? "" : getPayErji);
             map.put("sanji", getPaySanji == null ? "" : getPaySanji);
@@ -684,7 +684,7 @@ public class LipeiLocalAdapter extends RecyclerView.Adapter<LipeiLocalAdapter.Vi
                         ResultBean resultPayZipImageBean = gson.fromJson(responsePayZipImageUpload, ResultBean.class);
                         if (resultPayZipImageBean.getStatus() == 1) {
 
-                            int lipeirecordernum = databaseHelper.updateLiPeiLocalFromrecordeText("3", PreferencesUtils.getStringValue("lipeidate", context));
+                            int lipeirecordernum = databaseHelper.updateLiPeiLocalFromrecordeText("3", FarmerPreferencesUtils.getStringValue("lipeidate", context));
                             Log.i("=lipeirecordernum===", lipeirecordernum + "");
                             liPeiLocalBeans.get(position).setPrecordeText("3");
 
@@ -762,7 +762,7 @@ public class LipeiLocalAdapter extends RecyclerView.Adapter<LipeiLocalAdapter.Vi
                         if (resultPayZipImageBean.getStatus() == 1) {
                             PayImageUploadResultBean payImageUploadResultBean = gson.fromJson(responsePayZipImageUpload, PayImageUploadResultBean.class);
                             // 2018/11/10 0:37 hedazhi commented start
-/*                            int lipeirecordernum = databaseHelper.updateLiPeiLocalFromrecordeText("3", PreferencesUtils.getStringValue("lipeidate", context));
+/*                            int lipeirecordernum = databaseHelper.updateLiPeiLocalFromrecordeText("3", FarmerPreferencesUtils.getStringValue("lipeidate", context));
                             Log.i("=lipeirecordernum===", lipeirecordernum + "");*/
                             // 2018/11/10 0:37 hedazhi commented end
                             //获取ib_id
@@ -917,7 +917,7 @@ public class LipeiLocalAdapter extends RecyclerView.Adapter<LipeiLocalAdapter.Vi
                     View.OnClickListener listener_ReCollect = v -> {
                         FarmAppConfig.during = 0;
                         // 离线时处理（放弃）
-                        if (PreferencesUtils.getBooleanValue(HttpUtils.offlineupdate, context)) {
+                        if (FarmerPreferencesUtils.getBooleanValue(HttpUtils.offlineupdate, context)) {
                             dialogLipeiResult.dismiss();
                         } else {
                             // 重新拍摄
@@ -934,7 +934,7 @@ public class LipeiLocalAdapter extends RecyclerView.Adapter<LipeiLocalAdapter.Vi
 
                     dialogLipeiResult.setTitle("验证结果");
                     dialogLipeiResult.setBtnGoApplication("直接申请", listener_new);
-                    if (PreferencesUtils.getBooleanValue(HttpUtils.offlineupdate, context)) {
+                    if (FarmerPreferencesUtils.getBooleanValue(HttpUtils.offlineupdate, context)) {
                         dialogLipeiResult.setBtnReCollect("放弃", listener_ReCollect);
                     } else {
                         dialogLipeiResult.setBtnReCollect("重新拍摄", listener_ReCollect);
@@ -968,7 +968,7 @@ public class LipeiLocalAdapter extends RecyclerView.Adapter<LipeiLocalAdapter.Vi
                                     @Override
                                     public void run() {
                                         if (resultBeanPayApply.getStatus() == 1) {
-                                            int lipeirecordernum = databaseHelper.updateLiPeiLocalFromrecordeText("3", PreferencesUtils.getStringValue("lipeidate", context));
+                                            int lipeirecordernum = databaseHelper.updateLiPeiLocalFromrecordeText("3", FarmerPreferencesUtils.getStringValue("lipeidate", context));
                                             Log.i("=lipeirecordernum===", lipeirecordernum + "");
                                             liPeiLocalBeans.get(positionfleg).setPrecordeText("3");
                                             notifyDataSetChanged();
@@ -1074,8 +1074,8 @@ public class LipeiLocalAdapter extends RecyclerView.Adapter<LipeiLocalAdapter.Vi
                     builder42.show();
                     break;
                 case 999: // 强制上传后提示拨打电话
-                    String customServ = PreferencesUtils.getStringValue(FarmAppConfig.customServ, FarmAppConfig.getActivity());
-                    String phone = PreferencesUtils.getStringValue(FarmAppConfig.phone, FarmAppConfig.getActivity());
+                    String customServ = FarmerPreferencesUtils.getStringValue(FarmAppConfig.customServ, FarmAppConfig.getActivity());
+                    String phone = FarmerPreferencesUtils.getStringValue(FarmAppConfig.phone, FarmAppConfig.getActivity());
 
                     AlertDialog.Builder builder999 = new AlertDialog.Builder(context)
                             .setIcon(R.drawable.farm_cowface)

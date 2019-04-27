@@ -15,8 +15,8 @@ import com.farm.innovation.bean.VideoUpLoadBean;
 import com.farm.innovation.bean.company_child;
 import com.farm.innovation.bean.company_total;
 import com.farm.innovation.login.model.LocalModelNongxian;
+import com.farm.innovation.utils.FarmerPreferencesUtils;
 import com.farm.innovation.utils.HttpUtils;
-import com.farm.innovation.utils.PreferencesUtils;
 import com.farm.innovation.utils.StorageUtils;
 import com.farm.innovation.utils.ZipUtil;
 
@@ -174,7 +174,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put("isforce", liPeiLocalBean.isForce);
         values.put("during", liPeiLocalBean.during);
 
-        values.put("userid", PreferencesUtils.getStringValue(HttpUtils.user_id, FarmAppConfig.getApplication()));
+        values.put("userid", FarmerPreferencesUtils.getStringValue(HttpUtils.user_id, FarmAppConfig.getApplication()));
 
         db.insert(TABLE_LIPEI, null, values);
         db.close();
@@ -460,7 +460,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "isforce", "during"};
         String selection = "userid=? and animalType=?";
 
-        String[] selectionArgs = {muserid, String.valueOf(PreferencesUtils.getAnimalType(context))};
+        String[] selectionArgs = {muserid, String.valueOf(FarmerPreferencesUtils.getAnimalType(context))};
 
         Cursor cursor = db.query(TABLE_LIPEI, columns, selection, selectionArgs,
                 null, null, null);
@@ -595,7 +595,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put("insureDate", localData.getInsureDate());
         values.put("animalType", localData.getType());
         values.put("yanBiaoName", localData.getYanBiaoName());
-        values.put("userid", PreferencesUtils.getStringValue(HttpUtils.user_id, FarmAppConfig.getApplication()));
+        values.put("userid", FarmerPreferencesUtils.getStringValue(HttpUtils.user_id, FarmAppConfig.getApplication()));
         values.put("baodanName", localData.getBaodanName());
         db.insert(TABLE_LOCAL, null, values);
         db.close();
@@ -646,7 +646,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         List<LocalModelNongxian> listLocalDatas = new ArrayList<LocalModelNongxian>();
         if (db.isOpen()) {
             String[] columns = {"baodanNo", "name", "cardNo", "insureDate", "yanBiaoName", "baodanName"};
-            Cursor cursor = db.query(TABLE_LOCAL, columns, "userid=? and animalType=?", new String[]{muserid, String.valueOf(PreferencesUtils.getAnimalType(context))}, null, null, null);
+            Cursor cursor = db.query(TABLE_LOCAL, columns, "userid=? and animalType=?", new String[]{muserid, String.valueOf(FarmerPreferencesUtils.getAnimalType(context))}, null, null, null);
             if (cursor != null && cursor.getCount() > 0) {
                 while (cursor.moveToNext()) {
                     String baodanNo = cursor.getString(cursor.getColumnIndex("baodanNo"));
@@ -655,7 +655,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     String insureDate = cursor.getString(cursor.getColumnIndex("insureDate"));
                     String yanBiaoName = cursor.getString(cursor.getColumnIndex("yanBiaoName"));
                     String baodanName = cursor.getString(cursor.getColumnIndex("baodanName"));
-                    LocalModelNongxian localData = new LocalModelNongxian(baodanNo, name, cardNo, insureDate, String.valueOf(PreferencesUtils.getAnimalType(context)), yanBiaoName, baodanName);
+                    LocalModelNongxian localData = new LocalModelNongxian(baodanNo, name, cardNo, insureDate, String.valueOf(FarmerPreferencesUtils.getAnimalType(context)), yanBiaoName, baodanName);
                     listLocalDatas.add(localData);
                 }
             }

@@ -38,7 +38,7 @@ public class GlobalDialogUtils {
         Map<String, String> mapBody = new HashMap<>();
         mapBody.put("appType", "1");
         mapBody.put("useCase", useCase);
-        mapBody.put("userId", PreferencesUtils.getStringValue(HttpUtils.user_id, FarmAppConfig.getActivity()));
+        mapBody.put("userId", FarmerPreferencesUtils.getStringValue(HttpUtils.user_id, FarmAppConfig.getActivity()));
         OkHttp3Util.doPost(HttpUtils.GET_NOTICE, mapBody, mapHeader, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {

@@ -81,7 +81,7 @@ public class ShowPollingActivity_new extends BaseActivity {
         });
         String companyname = PreferencesUtils.getStringValue(Constants.companyname, AppConfig.getAppContext(), "育肥猪农场");
         mshowpollingname.setText(companyname);
-//        PreferencesUtils.saveIntValue(Constants.deptId, mdeptid, ShowPollingActivity_new.this);
+//        FarmerPreferencesUtils.saveIntValue(Constants.deptId, mdeptid, ShowPollingActivity_new.this);
     }
 
     @Override

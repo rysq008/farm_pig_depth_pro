@@ -38,9 +38,9 @@ import com.farm.innovation.login.model.ToubaoLocalAdapter;
 import com.farm.innovation.login.model.ToubaoNetAdapter;
 import com.farm.innovation.login.presenter.TouBaoPresenter;
 import com.farm.innovation.utils.AVOSCloudUtils;
+import com.farm.innovation.utils.FarmerPreferencesUtils;
 import com.farm.innovation.utils.HttpUtils;
 import com.farm.innovation.utils.OkHttp3Util;
-import com.farm.innovation.utils.PreferencesUtils;
 import com.farm.innovation.utils.UIUtils;
 import com.google.gson.Gson;
 import com.innovation.pig.insurance.R;
@@ -254,7 +254,7 @@ public class ToubaoFragment extends BaseFragment implements ITouBao {
                                     String createtime = jsonObject1.optString("createtime");
                                     String collectAmount = jsonObject1.optString("collectAmount");
                                     int id = jsonObject1.getInt("id");
-                                    PreferencesUtils.saveKeyValue("animalType", animalType, getContext());
+                                    FarmerPreferencesUtils.saveKeyValue("animalType", animalType, getContext());
                                     String baodanName = jsonObject1.getString("baodanName");
                                     BaoDanNetBean baoDanNetBean = new BaoDanNetBean(baodanNo, yanBiaoName, name, cardNo, createtime, baodanName, collectAmount);
                                     baoDanNetBean.setBaodan_id(id + "");
@@ -272,7 +272,7 @@ public class ToubaoFragment extends BaseFragment implements ITouBao {
                                             public void isexist(boolean exist) {
                                                 if (exist) {
                                                     Toast.makeText(FarmAppConfig.getActivity(), "保单信息已添加到离线", Toast.LENGTH_SHORT).show();
-                                                    List<LocalModelNongxian> localModels = databaseHelper.queryLocalDatas(PreferencesUtils.getStringValue(HttpUtils.user_id, getContext()));
+                                                    List<LocalModelNongxian> localModels = databaseHelper.queryLocalDatas(FarmerPreferencesUtils.getStringValue(HttpUtils.user_id, getContext()));
                                                     if (null != localModels) {
                                                         showLocalDataBase(localModels);
                                                     }
@@ -347,7 +347,7 @@ public class ToubaoFragment extends BaseFragment implements ITouBao {
 
     private void initView() {
         //显示离线保单
-        List<LocalModelNongxian> localModels = databaseHelper.queryLocalDatas(PreferencesUtils.getStringValue(HttpUtils.user_id, getContext()));
+        List<LocalModelNongxian> localModels = databaseHelper.queryLocalDatas(FarmerPreferencesUtils.getStringValue(HttpUtils.user_id, getContext()));
         showLocalDataBase(localModels);
         doPostQuery();
     }
@@ -366,7 +366,7 @@ public class ToubaoFragment extends BaseFragment implements ITouBao {
                 @Override
                 public void isexist(boolean exist) {
                     if (exist) {
-                        List<LocalModelNongxian> localModels1 = databaseHelper.queryLocalDatas(PreferencesUtils.getStringValue(HttpUtils.user_id, getContext()));
+                        List<LocalModelNongxian> localModels1 = databaseHelper.queryLocalDatas(FarmerPreferencesUtils.getStringValue(HttpUtils.user_id, getContext()));
                         Log.i("====deleteanimalAfter", localModels1.size() + "");
                         showLocalDataBase(localModels1);
                         //showNetDataBase(beanList);
@@ -406,7 +406,7 @@ public class ToubaoFragment extends BaseFragment implements ITouBao {
         beanList.addAll(beanList_item);
         Log.i("===beanList===", beanList.size() + "");
         showNetDataBase(beanList);
-        List<LocalModelNongxian> localModels = databaseHelper.queryLocalDatas(PreferencesUtils.getStringValue(HttpUtils.user_id, getActivity()));
+        List<LocalModelNongxian> localModels = databaseHelper.queryLocalDatas(FarmerPreferencesUtils.getStringValue(HttpUtils.user_id, getActivity()));
         showLocalDataBase(localModels);*/
         Log.i("===beanstring===", string);
 
@@ -423,7 +423,7 @@ public class ToubaoFragment extends BaseFragment implements ITouBao {
                 String animalType = jsonObject1.optString("animalType");
                 String createtime = jsonObject1.optString("createtime");
                 int id = jsonObject1.getInt("id");
-                PreferencesUtils.saveKeyValue("animalType", animalType, getContext());
+                FarmerPreferencesUtils.saveKeyValue("animalType", animalType, getContext());
                 String baodanName = jsonObject1.getString("baodanName");
                 String collectAmount = jsonObject1.optString("collectAmount");
                 BaoDanNetBean baoDanNetBean = new BaoDanNetBean(baodanNo, yanBiaoName, name, cardNo, createtime, baodanName, collectAmount);
@@ -437,7 +437,7 @@ public class ToubaoFragment extends BaseFragment implements ITouBao {
                     public void isexist(boolean exist) {
                         if (exist) {
                             Toast.makeText(FarmAppConfig.getActivity(), "保单信息已添加到离线", Toast.LENGTH_SHORT).show();
-                            List<LocalModelNongxian> localModels = databaseHelper.queryLocalDatas(PreferencesUtils.getStringValue(HttpUtils.user_id, getContext()));
+                            List<LocalModelNongxian> localModels = databaseHelper.queryLocalDatas(FarmerPreferencesUtils.getStringValue(HttpUtils.user_id, getContext()));
                             if (null != localModels) {
                                 showLocalDataBase(localModels);
                             }

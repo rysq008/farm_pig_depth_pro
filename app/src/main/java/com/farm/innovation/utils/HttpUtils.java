@@ -87,6 +87,7 @@ public class HttpUtils {
     //登陆
     public static String PIC_LOGIN_URL = baseUrl + "app/login";
     public static String AAR_PIC_LOGIN_URL = baseUrl + "app/aarLogin";
+    public static String MERGE_LOGIN_URL = baseUrl + "app/mergeLogin";
 
     //获取公司
     public static String GET_ALL_COMPANY_URL = baseUrl + "app/queryAppDept";
@@ -225,7 +226,7 @@ public class HttpUtils {
      * @throws IOException
      */
     public static String post(String url, RequestBody body) throws Exception {
-        int animalType = PreferencesUtils.getAnimalType(FarmAppConfig.getApplication());
+        int animalType = FarmerPreferencesUtils.getAnimalType(FarmAppConfig.getApplication());
         if (ConstUtils.ANIMAL_TYPE_NONE == animalType
                 && !HttpUtils.PIC_LOGIN_URL.equals(url)
                 && !HttpUtils.GET_ALL_COMPANY_URL.equals(url)
@@ -235,6 +236,7 @@ public class HttpUtils {
                 && !HttpUtils.GET_UPDATE_URL.equals(url)
                 && !HttpUtils.QUERY_VIDEOFLAG_NEW.equals(url)
                 && !HttpUtils.GET_NOTICE.equals(url)
+                && !HttpUtils.MERGE_LOGIN_URL.equals(url)
                 ) {
             AlertDialogManager.showMessageDialogOne(FarmAppConfig.getActivity(), "提示", "您还未选择牲畜信息");
             return "";
@@ -274,7 +276,7 @@ public class HttpUtils {
     }
 
     public static String get(String url) throws IOException {
-        int animalType = PreferencesUtils.getAnimalType(FarmAppConfig.getApplication());
+        int animalType = FarmerPreferencesUtils.getAnimalType(FarmAppConfig.getApplication());
         if (ConstUtils.ANIMAL_TYPE_NONE == animalType
                 && !HttpUtils.PIC_LOGIN_URL.equals(url)
                 && !HttpUtils.GET_ALL_COMPANY_URL.equals(url)

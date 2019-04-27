@@ -20,6 +20,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.farm.innovation.bean.MergeLoginBean;
+import com.farm.innovation.biz.login.LoginMergeActivity;
+import com.farm.innovation.login.RespObject;
+import com.farm.innovation.login.view.HomeActivity;
+import com.farm.innovation.utils.FarmerShareUtils;
 import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
 import com.innovation.pig.insurance.netutils.Constants;
@@ -45,6 +50,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+import static com.farm.innovation.utils.FarmerShareUtils.MERGE_LOGIN_INFO;
 import static com.innovation.pig.insurance.AppConfig.needUpDate;
 
 public class CompanyActivity extends BaseActivity {
@@ -128,7 +134,7 @@ public class CompanyActivity extends BaseActivity {
         tvPopExit = popview.findViewById(R.id.tv_pop_exit);
         tvPopUpdate = popview.findViewById(R.id.tv_pop_update);
         ivPopUpdateSign = popview.findViewById(R.id.iv_pop_update_sign);
-
+        TextView enter_farmer = popview.findViewById(R.id.enter_farmer);
         if (needUpDate) {
             ivPopUpdateSign.setVisibility(View.VISIBLE);
             ivSign.setVisibility(View.VISIBLE);
@@ -136,6 +142,28 @@ public class CompanyActivity extends BaseActivity {
             ivPopUpdateSign.setVisibility(View.GONE);
             ivSign.setVisibility(View.GONE);
         }
+
+        MergeLoginBean bean = FarmerShareUtils.getData(MERGE_LOGIN_INFO);
+        if (bean != null) {
+            if (bean.data.nxData != null && !TextUtils.isEmpty(bean.data.nxData.token) && bean.data.nxData.status == RespObject.USER_STATUS_1) {
+                enter_farmer.setVisibility(View.VISIBLE);
+                enter_farmer.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (bean.data.ftnData != null) {
+                            Intent add_intent = new Intent(CompanyActivity.this, HomeActivity.class);
+                            startActivity(add_intent);
+                            finish();
+                        }
+                    }
+                });
+            } else {
+                enter_farmer.setVisibility(View.GONE);
+            }
+        }else{
+            enter_farmer.setVisibility(View.GONE);
+        }
+
 
         pop.setWidth(300);
         pop.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -228,7 +256,9 @@ public class CompanyActivity extends BaseActivity {
                                 public void onClick(DialogInterface dialog, int which) {
                                     //如果退出，清空保存的相关状态， 跳转到登录页
                                     PreferencesUtils.removeAllKey(CompanyActivity.this);
-                                    Intent addIntent = new Intent(CompanyActivity.this, LoginFamerActivity.class);
+                                    FarmerShareUtils.clearMergeLoginInfo();
+//                                    Intent addIntent = new Intent(CompanyActivity.this, LoginPigAarActivity.class);
+                                    Intent addIntent = new Intent(CompanyActivity.this, LoginMergeActivity.class);
                                     startActivity(addIntent);
                                     finish();
                                 }

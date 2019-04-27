@@ -190,7 +190,7 @@ public class OkHttp3Util {
         //版本
         request.addHeader("version",AppConfig.version);
 
-//        request.addHeader("token", PreferencesUtils.getIntValue(Constants.token, AppConfig.getAppContext())+"");
+//        request.addHeader("token", FarmerPreferencesUtils.getIntValue(Constants.token, AppConfig.getAppContext())+"");
 
         Request build = request.build();
         Call call = okHttpClient.newCall(build);
@@ -230,7 +230,7 @@ public class OkHttp3Util {
         request.addHeader("en_id", PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext()));
         request.addHeader("longitude", PreferencesUtils.getStringValue(Constants.longitude, AppConfig.getAppContext()));
         request.addHeader("latitude", PreferencesUtils.getStringValue(Constants.latitude, AppConfig.getAppContext()));
-//        request.addHeader("token", PreferencesUtils.getIntValue(Constants.token, AppConfig.getAppContext())+"");
+//        request.addHeader("token", FarmerPreferencesUtils.getIntValue(Constants.token, AppConfig.getAppContext())+"");
 
         Request build = request.build();
         Call call = okHttpClient.newCall(build);

@@ -13,7 +13,7 @@ import com.farm.innovation.bean.BaoDanBeanNew;
 import com.farm.innovation.biz.insurance.CreateYanActivity;
 import com.farm.innovation.biz.insurance.YanBiaoDanActivity;
 import com.farm.innovation.utils.HttpUtils;
-import com.farm.innovation.utils.PreferencesUtils;
+import com.farm.innovation.utils.FarmerPreferencesUtils;
 import com.innovation.pig.insurance.R;
 
 import java.util.List;
@@ -80,8 +80,8 @@ public class YanBiaoAdapter extends BaseAdapter {
         viewHolder.newInsured.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PreferencesUtils.saveKeyValue(HttpUtils.baodanType, baoDanBeanNews.get(position).baodanType + "", FarmAppConfig.getApplication());
-                PreferencesUtils.saveKeyValue(HttpUtils.id, baoDanBeanNews.get(position).id + "", FarmAppConfig.getApplication());
+                FarmerPreferencesUtils.saveKeyValue(HttpUtils.baodanType, baoDanBeanNews.get(position).baodanType + "", FarmAppConfig.getApplication());
+                FarmerPreferencesUtils.saveKeyValue(HttpUtils.id, baoDanBeanNews.get(position).id + "", FarmAppConfig.getApplication());
                 // activity.goToActivity(HomeActivity.class, null);
                 YanBiaoDanActivity yanBiaoDanActivity = (YanBiaoDanActivity) context;
                 yanBiaoDanActivity.goToActivity(CreateYanActivity.class, null);

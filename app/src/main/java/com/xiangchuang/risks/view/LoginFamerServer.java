@@ -109,7 +109,7 @@ public class LoginFamerServer extends Service {
 //                                @Override
 //                                public void hasPermission(List<String> granted, boolean isAll) {
 //                                    if (isAll) {
-//                                        // PreferencesUtils.saveBooleanValue("isallow", true, WelcomeActivity.this);
+//                                        // FarmerPreferencesUtils.saveBooleanValue("isallow", true, WelcomeActivity.this);
 //                                        // toastUtils.showLong(AppConfig.getAppContext(), "获取权限成功");
 //                                        if (Build.VERSION.SDK_INT > 9) {
 //                                            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -155,7 +155,7 @@ public class LoginFamerServer extends Service {
         }
         if (!HttpUtils.isOfficialHost())
             Toast.makeText(LoginFamerServer.this, ShareUtils.getHost("host"), Toast.LENGTH_LONG).show();
-//        ShareUtils.setUpGlobalHost(LoginFamerServer.this, passTv);
+//        FarmerShareUtils.setUpGlobalHost(LoginFamerServer.this, passTv);
     }
 
 
@@ -174,7 +174,7 @@ public class LoginFamerServer extends Service {
             @Override
             public void onFailure(Call call, IOException e) {
                 mProgressDialog.dismiss();
-                Log.i("LoginFamerActivity", e.toString());
+                Log.i("LoginPigAarActivity", e.toString());
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -188,7 +188,7 @@ public class LoginFamerServer extends Service {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String string = response.body().string();
-                Log.i("LoginFamerActivity", string);
+                Log.i("LoginPigAarActivity", string);
                 try {
                     JSONObject jsonObject = new JSONObject(string);
                     int status = jsonObject.getInt("status");
@@ -222,7 +222,7 @@ public class LoginFamerServer extends Service {
                                     data = jsonObject.getJSONObject("data");
                                     int type = data.getInt("type");
 //                                    int myToken = data.getInt("token");
-//                                    PreferencesUtils.saveKeyValue(Constants.token, myToken + "", AppConfig.getAppContext());
+//                                    FarmerPreferencesUtils.saveKeyValue(Constants.token, myToken + "", AppConfig.getAppContext());
                                     PreferencesUtils.saveKeyValue(Constants.companyfleg, type + "", AppConfig.getAppContext());
                                     PreferencesUtils.saveKeyValue(Constants.username, musername + "", AppConfig.getAppContext());
                                     PreferencesUtils.saveKeyValue(Constants.password, muserpass + "", AppConfig.getAppContext());

@@ -6,7 +6,7 @@
     android:layout_height="1px"
     android:layout_margin="16dp"
     android:id="@+id/nestedScrollView"
-    tools:context="com.farm.innovation.biz.login.LoginActivity">
+    tools:context="com.farm.innovation.biz.login.LoginFamerActivity">
 
     <android.support.v7.widget.LinearLayoutCompat
         android:layout_width="match_parent"

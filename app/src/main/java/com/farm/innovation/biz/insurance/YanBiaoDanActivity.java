@@ -16,7 +16,7 @@ import com.farm.innovation.biz.iterm.Model;
 import com.farm.innovation.utils.AVOSCloudUtils;
 import com.farm.innovation.utils.HttpUtils;
 import com.farm.innovation.utils.OkHttp3Util;
-import com.farm.innovation.utils.PreferencesUtils;
+import com.farm.innovation.utils.FarmerPreferencesUtils;
 import com.innovation.pig.insurance.R;
 
 import org.json.JSONArray;
@@ -82,7 +82,7 @@ public class YanBiaoDanActivity extends BaseActivity {
     @Override
     protected void initData() {
         tv_title.setText("保单列表");
-        deptId = PreferencesUtils.getIntValue(HttpUtils.deptId, FarmAppConfig.getApplication());
+        deptId = FarmerPreferencesUtils.getIntValue(HttpUtils.deptId, FarmAppConfig.getApplication());
         FarmGlobal.model = Model.BUILD.value();
         getDataFromNet();
         ivCancel.setVisibility(View.VISIBLE);
@@ -159,8 +159,8 @@ public class YanBiaoDanActivity extends BaseActivity {
                               /*  yanbiaodan_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                     @Override
                                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                        PreferencesUtils.saveKeyValue(HttpUtils.baodanType, baoDanBeanNewList.get(position).baodanType + "", FarmAppConfig.getApplication());
-                                        PreferencesUtils.saveKeyValue(HttpUtils.id, baoDanBeanNewList.get(position).id + "", FarmAppConfig.getApplication());
+                                        FarmerPreferencesUtils.saveKeyValue(HttpUtils.baodanType, baoDanBeanNewList.get(position).baodanType + "", FarmAppConfig.getApplication());
+                                        FarmerPreferencesUtils.saveKeyValue(HttpUtils.id, baoDanBeanNewList.get(position).id + "", FarmAppConfig.getApplication());
                                         // activity.goToActivity(HomeActivity.class, null);
                                         goToActivity(CreateYanActivity.class, null);
                                     }

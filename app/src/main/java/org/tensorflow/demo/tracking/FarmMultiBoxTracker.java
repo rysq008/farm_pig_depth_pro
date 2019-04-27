@@ -34,7 +34,7 @@ import android.widget.Toast;
 import com.farm.innovation.biz.iterm.PostureItem;
 import com.farm.innovation.biz.iterm.PredictRotationIterm;
 import com.farm.innovation.biz.iterm.TrackerItem;
-import com.farm.innovation.utils.PreferencesUtils;
+import com.farm.innovation.utils.FarmerPreferencesUtils;
 import com.farm.innovation.utils.ScreenUtil;
 
 import org.tensorflow.demo.FarmClassifier;
@@ -619,15 +619,15 @@ public class FarmMultiBoxTracker {
 
     public void getCurrentTypeList() {
 
-        listAngles_capture.add("左脸，数量：" + type1Sum + ((type1Sum < PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_LEFT, context)) ? "(不足)" : "(OK)"));
-        listAngles_capture.add("正脸，数量：" + type2Sum + ((type2Sum < PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_MIDDLE, context)) ? "(不足)" : "(OK)"));
-        listAngles_capture.add("右脸，数量：" + type3Sum + ((type3Sum < PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_RIGHT, context)) ? "(不足)" : "(OK)"));
+        listAngles_capture.add("左脸，数量：" + type1Sum + ((type1Sum < FarmerPreferencesUtils.getMaxPics(FarmerPreferencesUtils.FACE_ANGLE_MAX_LEFT, context)) ? "(不足)" : "(OK)"));
+        listAngles_capture.add("正脸，数量：" + type2Sum + ((type2Sum < FarmerPreferencesUtils.getMaxPics(FarmerPreferencesUtils.FACE_ANGLE_MAX_MIDDLE, context)) ? "(不足)" : "(OK)"));
+        listAngles_capture.add("右脸，数量：" + type3Sum + ((type3Sum < FarmerPreferencesUtils.getMaxPics(FarmerPreferencesUtils.FACE_ANGLE_MAX_RIGHT, context)) ? "(不足)" : "(OK)"));
     }
 
     public String getReminderMsgText() {
-        int maxLeft = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_LEFT, context);
-        int maxMiddle = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_MIDDLE, context);
-        int maxRight = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_RIGHT, context);
+        int maxLeft = FarmerPreferencesUtils.getMaxPics(FarmerPreferencesUtils.FACE_ANGLE_MAX_LEFT, context);
+        int maxMiddle = FarmerPreferencesUtils.getMaxPics(FarmerPreferencesUtils.FACE_ANGLE_MAX_MIDDLE, context);
+        int maxRight = FarmerPreferencesUtils.getMaxPics(FarmerPreferencesUtils.FACE_ANGLE_MAX_RIGHT, context);
         boolean b = false;
         if (type1Sum < maxLeft
                 && type2Sum < maxMiddle

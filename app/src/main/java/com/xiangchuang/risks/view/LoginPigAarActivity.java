@@ -13,22 +13,19 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.farm.innovation.base.FarmAppConfig;
 import com.farm.innovation.bean.ResultBean;
-import com.farm.innovation.biz.login.LoginFamerAarActivity;
-import com.farm.innovation.biz.welcome.WelcomeActivity;
 import com.farm.innovation.login.RespObject;
 import com.farm.innovation.login.ResponseProcessor;
 import com.farm.innovation.login.TokenResp;
 import com.farm.innovation.login.Utils;
 import com.farm.innovation.login.view.HomeActivity;
 import com.farm.innovation.utils.ConstUtils;
+import com.farm.innovation.utils.FarmerPreferencesUtils;
 import com.farm.innovation.utils.HttpUtils;
 import com.google.gson.Gson;
 import com.hjq.permissions.OnPermission;
@@ -67,7 +64,7 @@ import static com.farm.innovation.base.FarmAppConfig.USER_ID;
 /**
  * @author 56861
  */
-public class LoginFamerActivity extends BaseActivity {
+public class LoginPigAarActivity extends BaseActivity {
 
     Intent mIntent;
     boolean isRequest = false;
@@ -84,7 +81,7 @@ public class LoginFamerActivity extends BaseActivity {
     }
 
     public void requestPermission() {
-        XXPermissions.with(LoginFamerActivity.this)
+        XXPermissions.with(LoginPigAarActivity.this)
                 //.constantRequest() //可设置被拒绝后继续申请，直到用户授权或者永久拒绝
                 .permission(Permission.Group.LOCATION) //不指定权限则自动获取清单中的危险权限
                 .permission(Permission.READ_PHONE_STATE)
@@ -97,24 +94,24 @@ public class LoginFamerActivity extends BaseActivity {
                     @Override
                     public void hasPermission(List<String> granted, boolean isAll) {
                         if (isAll) {
-                            // PreferencesUtils.saveBooleanValue("isallow", true, WelcomeActivity.this);
+                            // FarmerPreferencesUtils.saveBooleanValue("isallow", true, WelcomeActivity.this);
                             // toastUtils.showLong(AppConfig.getAppContext(), "获取权限成功");
                             if (Build.VERSION.SDK_INT > 9) {
                                 StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                                 StrictMode.setThreadPolicy(policy);
                             }
 
-                            if (!NetworkUtil.isNetworkConnect(LoginFamerActivity.this)) {
-                                Toast.makeText(LoginFamerActivity.this, "断网了，请联网后重试。", Toast.LENGTH_LONG).show();
-                                LoginFamerActivity.this.finish();
+                            if (!NetworkUtil.isNetworkConnect(LoginPigAarActivity.this)) {
+                                Toast.makeText(LoginPigAarActivity.this, "断网了，请联网后重试。", Toast.LENGTH_LONG).show();
+                                LoginPigAarActivity.this.finish();
                                 return;
                             }
                             showTypeDialog();
 //                            getDataFromNet("15000000001", "123456");
 
                         } else {
-                            Toast.makeText(LoginFamerActivity.this, "is not all permission", Toast.LENGTH_LONG).show();
-                            LoginFamerActivity.this.finish();
+                            Toast.makeText(LoginPigAarActivity.this, "is not all permission", Toast.LENGTH_LONG).show();
+                            LoginPigAarActivity.this.finish();
                         }
                     }
 
@@ -124,13 +121,13 @@ public class LoginFamerActivity extends BaseActivity {
                             Toast.makeText(AppConfig.getAppContext(), "被永久拒绝授权，请手动授予权限", Toast.LENGTH_LONG).show();
                             //如果是被永久拒绝就跳转到应用权限系统设置页面
                             XXPermissions.gotoPermissionSettings(AppConfig.getAppContext());
-                            LoginFamerActivity.this.finish();
+                            LoginPigAarActivity.this.finish();
                         } else {
                             Toast.makeText(AppConfig.getAppContext(), "获取权限失败", Toast.LENGTH_LONG).show();
-//                                        AppManager.getAppManager().AppExit(LoginFamerActivity.this);
+//                                        AppManager.getAppManager().AppExit(LoginPigAarActivity.this);
                             //如果是被永久拒绝就跳转到应用权限系统设置页面
                             XXPermissions.gotoPermissionSettings(AppConfig.getAppContext());
-                            LoginFamerActivity.this.finish();
+                            LoginPigAarActivity.this.finish();
                         }
                     }
                 });
@@ -148,20 +145,20 @@ public class LoginFamerActivity extends BaseActivity {
 //        mIntent.putExtra(Constants.DEPARTMENT_ID, "28"/*"android_department"*/);
 //        mIntent.putExtra(Constants.IDENTITY_CARD, "android_identitry");
         startService(new Intent(this, UploadService.class));
-//        if (PreferencesUtils.getBooleanValue(Constants.ISLOGIN, AppConfig.getAppContext())) {
-//            String type = PreferencesUtils.getStringValue(Constants.companyfleg, AppConfig.getAppContext());
+//        if (FarmerPreferencesUtils.getBooleanValue(Constants.ISLOGIN, AppConfig.getAppContext())) {
+//            String type = FarmerPreferencesUtils.getStringValue(Constants.companyfleg, AppConfig.getAppContext());
 //            if (type.equals("1")) {
 //                goToActivity(CompanyActivity.class, null);
-//                LoginFamerActivity.this.finish();
+//                LoginPigAarActivity.this.finish();
 //            } else if (type.equals("2")) {
 //                goToActivity(SelectFunctionActivity_new.class, null);
-//                LoginFamerActivity.this.finish();
+//                LoginPigAarActivity.this.finish();
 //            }
 //            return;
 //        }
         if (mIntent == null) {
             Toast.makeText(this, "请传入intent数据", Toast.LENGTH_LONG).show();
-            LoginFamerActivity.this.finish();
+            LoginPigAarActivity.this.finish();
             return;
         }
 
@@ -170,18 +167,18 @@ public class LoginFamerActivity extends BaseActivity {
             if (intent != null) {
                 String action = intent.getAction();
                 if (intent.hasCategory(Intent.CATEGORY_LAUNCHER) && Intent.ACTION_MAIN.equals(action)) {
-                    LoginFamerActivity.this.finish();
+                    LoginPigAarActivity.this.finish();
                     return;
                 }
             }
         }
 
-        if (XXPermissions.isHasPermission(LoginFamerActivity.this, Permission.Group.LOCATION,
+        if (XXPermissions.isHasPermission(LoginPigAarActivity.this, Permission.Group.LOCATION,
                 Permission.Group.STORAGE,
                 new String[]{Permission.READ_PHONE_STATE})) {
             requestPermission();
         } else {
-            AlertDialogManager.showMessageDialog(LoginFamerActivity.this, "提示", getString(R.string.appwarning), new AlertDialogManager.DialogInterface() {
+            AlertDialogManager.showMessageDialog(LoginPigAarActivity.this, "提示", getString(R.string.appwarning), new AlertDialogManager.DialogInterface() {
                 @Override
                 public void onPositive() {
                     requestPermission();
@@ -189,7 +186,7 @@ public class LoginFamerActivity extends BaseActivity {
 
                 @Override
                 public void onNegative() {
-                    LoginFamerActivity.this.finish();
+                    LoginPigAarActivity.this.finish();
                 }
             });
         }
@@ -210,35 +207,35 @@ public class LoginFamerActivity extends BaseActivity {
         mMapbody.clear();
         if (TextUtils.isEmpty(mIntent.getStringExtra(Constants.TOKEY))) {
             Toast.makeText(this, "请传入token", Toast.LENGTH_LONG).show();
-            LoginFamerActivity.this.finish();
+            LoginPigAarActivity.this.finish();
             return;
         }
         mMapbody.put(Constants.TOKEY, mIntent.getStringExtra(Constants.TOKEY));
 
         if (TextUtils.isEmpty(mIntent.getStringExtra(Constants.DEPARTMENT_ID))) {
             Toast.makeText(this, "请传入国寿财系统部门id", Toast.LENGTH_LONG).show();
-            LoginFamerActivity.this.finish();
+            LoginPigAarActivity.this.finish();
             return;
         }
         mMapbody.put(Constants.DEPARTMENT_ID, mIntent.getStringExtra(Constants.DEPARTMENT_ID));//国寿财系统的部门id
 
         if (TextUtils.isEmpty(mIntent.getStringExtra(Constants.USER_ID))) {
             Toast.makeText(this, "请传入用户id", Toast.LENGTH_LONG).show();
-            LoginFamerActivity.this.finish();
+            LoginPigAarActivity.this.finish();
             return;
         }
         mMapbody.put(Constants.USER_ID, mIntent.getStringExtra(Constants.USER_ID));
 
         if (TextUtils.isEmpty(mIntent.getStringExtra(Constants.NAME))) {
             Toast.makeText(this, "请传入用户名", Toast.LENGTH_LONG).show();
-            LoginFamerActivity.this.finish();
+            LoginPigAarActivity.this.finish();
             return;
         }
         mMapbody.put(Constants.NAME, mIntent.getStringExtra(Constants.NAME));
 
         if (TextUtils.isEmpty(mIntent.getStringExtra(Constants.PHONE_NUMBER))) {
 //            Toast.makeText(this, "请传入电话号码", Toast.LENGTH_LONG).show();
-//            LoginFamerActivity.this.finish();
+//            LoginPigAarActivity.this.finish();
 //            return;
             String phone = mIntent.getStringExtra(Constants.USER_ID);
             mMapbody.put(Constants.PHONE_NUMBER, (phone.substring(phone.length() - 11)));
@@ -247,7 +244,7 @@ public class LoginFamerActivity extends BaseActivity {
 
         if (TextUtils.isEmpty(mIntent.getStringExtra(Constants.IDENTITY_CARD))) {
 //            Toast.makeText(this, "请传入身份证号", Toast.LENGTH_LONG).show();
-//            LoginFamerActivity.this.finish();
+//            LoginPigAarActivity.this.finish();
             mMapbody.put(Constants.IDENTITY_CARD, "");
         } else
             mMapbody.put(Constants.IDENTITY_CARD, mIntent.getStringExtra(Constants.IDENTITY_CARD));
@@ -266,21 +263,21 @@ public class LoginFamerActivity extends BaseActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 mProgressDialog.dismiss();
-                Log.i("LoginFamerActivity", e.toString());
+                Log.i("LoginPigAarActivity", e.toString());
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(LoginFamerActivity.this, "登录失败，请检查网络后重试。", Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoginPigAarActivity.this, "登录失败，请检查网络后重试。", Toast.LENGTH_LONG).show();
                     }
                 });
-                AVOSCloudUtils.saveErrorMessage(e, LoginFamerActivity.class.getSimpleName());
+                AVOSCloudUtils.saveErrorMessage(e, LoginPigAarActivity.class.getSimpleName());
                 isRequest = false;
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String string = response.body().string();
-                Log.i("LoginFamerActivity", string);
+                Log.i("LoginPigAarActivity", string);
                 try {
                     JSONObject jsonObject = new JSONObject(string);
                     int status = jsonObject.getInt("status");
@@ -290,15 +287,15 @@ public class LoginFamerActivity extends BaseActivity {
                             @Override
                             public void run() {
                                 mProgressDialog.dismiss();
-                                AlertDialogManager.showMessageDialog(LoginFamerActivity.this, "提示", msg, new AlertDialogManager.DialogInterface() {
+                                AlertDialogManager.showMessageDialog(LoginPigAarActivity.this, "提示", msg, new AlertDialogManager.DialogInterface() {
                                     @Override
                                     public void onPositive() {
-                                        LoginFamerActivity.this.finish();
+                                        LoginPigAarActivity.this.finish();
                                     }
 
                                     @Override
                                     public void onNegative() {
-                                        LoginFamerActivity.this.finish();
+                                        LoginPigAarActivity.this.finish();
                                     }
                                 });
                             }
@@ -314,7 +311,7 @@ public class LoginFamerActivity extends BaseActivity {
                                     data = jsonObject.getJSONObject("data");
                                     int type = data.getInt("type");
 //                                    int myToken = data.getInt("token");
-//                                    PreferencesUtils.saveKeyValue(Constants.token, myToken + "", AppConfig.getAppContext());
+//                                    FarmerPreferencesUtils.saveKeyValue(Constants.token, myToken + "", AppConfig.getAppContext());
                                     PreferencesUtils.saveKeyValue(Constants.companyfleg, type + "", AppConfig.getAppContext());
                                     PreferencesUtils.saveKeyValue(Constants.username, musername + "", AppConfig.getAppContext());
                                     PreferencesUtils.saveKeyValue(Constants.password, muserpass + "", AppConfig.getAppContext());
@@ -332,7 +329,7 @@ public class LoginFamerActivity extends BaseActivity {
                                         PreferencesUtils.saveKeyValue(Constants.deptId, deptId + "", AppConfig.getAppContext());
                                         PreferencesUtils.saveKeyValue(Constants.id, id + "", AppConfig.getAppContext());
                                         goToActivity(CompanyActivity.class, null);
-                                        LoginFamerActivity.this.finish();
+                                        LoginPigAarActivity.this.finish();
                                     } else {
                                         JSONObject enUser = data.getJSONObject("enUser");
                                         int enId = enUser.getInt("enId");
@@ -342,7 +339,7 @@ public class LoginFamerActivity extends BaseActivity {
                                         PreferencesUtils.saveKeyValue(Constants.companyname, enName, AppConfig.getAppContext());
                                         PreferencesUtils.saveIntValue(Constants.en_user_id, enUserId, AppConfig.getAppContext());
                                         goToActivity(SelectFunctionActivity_new.class, null);
-                                        LoginFamerActivity.this.finish();
+                                        LoginPigAarActivity.this.finish();
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -352,7 +349,7 @@ public class LoginFamerActivity extends BaseActivity {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    AVOSCloudUtils.saveErrorMessage(e, LoginFamerActivity.class.getSimpleName());
+                    AVOSCloudUtils.saveErrorMessage(e, LoginPigAarActivity.class.getSimpleName());
                 } finally {
                     isRequest = false;
                 }
@@ -364,8 +361,8 @@ public class LoginFamerActivity extends BaseActivity {
      * 选择险种dialog
      */
     private void showTypeDialog(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(LoginFamerActivity.this);
-        LayoutInflater inflater = LayoutInflater.from(LoginFamerActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(LoginPigAarActivity.this);
+        LayoutInflater inflater = LayoutInflater.from(LoginPigAarActivity.this);
         View v = inflater.inflate(R.layout.select_dialog_layout, null);
         Dialog dialog = builder.create();
         dialog.show();
@@ -381,7 +378,7 @@ public class LoginFamerActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Log.e("famer", "onClick: famer");
-                com.farm.innovation.utils.PreferencesUtils.setAnimalType(ConstUtils.ANIMAL_TYPE_CATTLE, LoginFamerActivity.this);
+                FarmerPreferencesUtils.setAnimalType(ConstUtils.ANIMAL_TYPE_CATTLE, LoginPigAarActivity.this);
                 getDataFarmFromNet("","");
             }
         });
@@ -389,7 +386,7 @@ public class LoginFamerActivity extends BaseActivity {
         donkey.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                com.farm.innovation.utils.PreferencesUtils.setAnimalType(ConstUtils.ANIMAL_TYPE_DONKEY, LoginFamerActivity.this);
+                FarmerPreferencesUtils.setAnimalType(ConstUtils.ANIMAL_TYPE_DONKEY, LoginPigAarActivity.this);
                 getDataFarmFromNet("","");
             }
         });
@@ -397,7 +394,7 @@ public class LoginFamerActivity extends BaseActivity {
         yak.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                com.farm.innovation.utils.PreferencesUtils.setAnimalType(ConstUtils.ANIMAL_TYPE_YAK, LoginFamerActivity.this);
+                FarmerPreferencesUtils.setAnimalType(ConstUtils.ANIMAL_TYPE_YAK, LoginPigAarActivity.this);
                 getDataFarmFromNet("","");
             }
         });
@@ -412,7 +409,7 @@ public class LoginFamerActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                LoginFamerActivity.this.finish();
+                LoginPigAarActivity.this.finish();
         }
         });
 
@@ -430,35 +427,35 @@ public class LoginFamerActivity extends BaseActivity {
         mMapbody.clear();
         if (TextUtils.isEmpty(mIntent.getStringExtra(TOKEY))) {
             Toast.makeText(this, "请传入token", Toast.LENGTH_LONG).show();
-            LoginFamerActivity.this.finish();
+            LoginPigAarActivity.this.finish();
             return;
         }
         mMapbody.put(TOKEY, mIntent.getStringExtra(TOKEY));
 
         if (TextUtils.isEmpty(mIntent.getStringExtra(DEPARTMENT_ID))) {
             Toast.makeText(this, "请传入国寿财系统部门id", Toast.LENGTH_LONG).show();
-            LoginFamerActivity.this.finish();
+            LoginPigAarActivity.this.finish();
             return;
         }
         mMapbody.put(DEPARTMENT_ID, mIntent.getStringExtra(DEPARTMENT_ID));//国寿财系统的部门id
 
         if (TextUtils.isEmpty(mIntent.getStringExtra(USER_ID))) {
             Toast.makeText(this, "请传入用户id", Toast.LENGTH_LONG).show();
-            LoginFamerActivity.this.finish();
+            LoginPigAarActivity.this.finish();
             return;
         }
         mMapbody.put(USER_ID, mIntent.getStringExtra(USER_ID));
 
         if (TextUtils.isEmpty(mIntent.getStringExtra(NAME))) {
             Toast.makeText(this, "请传入用户名", Toast.LENGTH_LONG).show();
-            LoginFamerActivity.this.finish();
+            LoginPigAarActivity.this.finish();
             return;
         }
         mMapbody.put(NAME, mIntent.getStringExtra(NAME));
 
         if (TextUtils.isEmpty(mIntent.getStringExtra(PHONE_NUMBER))) {
 //            Toast.makeText(this, "请传入电话号码", Toast.LENGTH_LONG).show();
-//            LoginFamerActivity.this.finish();
+//            LoginPigAarActivity.this.finish();
 //            return;
             String phone = mIntent.getStringExtra(USER_ID);
             mMapbody.put(PHONE_NUMBER, (phone.substring(phone.length() - 11)));
@@ -467,7 +464,7 @@ public class LoginFamerActivity extends BaseActivity {
 
         if (TextUtils.isEmpty(mIntent.getStringExtra(IDENTITY_CARD))) {
 //            Toast.makeText(this, "请传入身份证号", Toast.LENGTH_LONG).show();
-//            LoginFamerActivity.this.finish();
+//            LoginPigAarActivity.this.finish();
             mMapbody.put(IDENTITY_CARD, "");
         } else
             mMapbody.put(IDENTITY_CARD, mIntent.getStringExtra(IDENTITY_CARD));
@@ -487,23 +484,23 @@ public class LoginFamerActivity extends BaseActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 mProgressDialog.dismiss();
-                Log.i("LoginFamerActivity", e.toString());
+                Log.i("LoginPigAarActivity", e.toString());
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(LoginFamerActivity.this, "登录失败，请检查网络后重试。", Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoginPigAarActivity.this, "登录失败，请检查网络后重试。", Toast.LENGTH_LONG).show();
                         finish();
                         return;
                     }
                 });
-                com.farm.innovation.utils.AVOSCloudUtils.saveErrorMessage(e, LoginFamerActivity.class.getSimpleName());
+                com.farm.innovation.utils.AVOSCloudUtils.saveErrorMessage(e, LoginPigAarActivity.class.getSimpleName());
                 isRequest = false;
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String string = response.body().string();
-                Log.i("LoginFamerActivity", string);
+                Log.i("LoginPigAarActivity", string);
 
                 Gson gson = new Gson();
                 ResultBean resultBean = gson.fromJson(string, ResultBean.class);
@@ -512,15 +509,15 @@ public class LoginFamerActivity extends BaseActivity {
                         {
                             TokenResp tokenresp = (TokenResp) ResponseProcessor.processResp(string, Utils.LOGIN_GET_TOKEN_URL);
                             if (tokenresp == null || TextUtils.isEmpty(tokenresp.token) || tokenresp.user_status != RespObject.USER_STATUS_1) {
-                                Toast.makeText(LoginFamerActivity.this, "数据返回异常！", Toast.LENGTH_LONG).show();
-                                LoginFamerActivity.this.finish();
+                                Toast.makeText(LoginPigAarActivity.this, "数据返回异常！", Toast.LENGTH_LONG).show();
+                                LoginPigAarActivity.this.finish();
                                 return;
                             }
 
-                            if ((String.valueOf(tokenresp.uid)).equals(com.farm.innovation.utils.PreferencesUtils.getStringValue(HttpUtils.user_id, LoginFamerActivity.this))) {
-                                com.farm.innovation.utils.PreferencesUtils.saveBooleanValue("isone", true, LoginFamerActivity.this);
+                            if ((String.valueOf(tokenresp.uid)).equals(FarmerPreferencesUtils.getStringValue(HttpUtils.user_id, LoginPigAarActivity.this))) {
+                                FarmerPreferencesUtils.saveBooleanValue("isone", true, LoginPigAarActivity.this);
                             } else {
-                                com.farm.innovation.utils.PreferencesUtils.saveBooleanValue("isone", false, LoginFamerActivity.this);
+                                FarmerPreferencesUtils.saveBooleanValue("isone", false, LoginPigAarActivity.this);
                             }
 
                             //  存储用户信息
@@ -539,27 +536,27 @@ public class LoginFamerActivity extends BaseActivity {
                             //  editor.putInt("deptid", tokenresp.deptid);
                             editor.apply();
                             int i = tokenresp.deptid;
-                            com.farm.innovation.utils.PreferencesUtils.saveIntValue(HttpUtils.deptId, tokenresp.deptid, FarmAppConfig.getApplication());
-                            com.farm.innovation.utils.PreferencesUtils.saveKeyValue(HttpUtils.user_id, String.valueOf(tokenresp.uid), FarmAppConfig.getApplication());
+                            FarmerPreferencesUtils.saveIntValue(HttpUtils.deptId, tokenresp.deptid, FarmAppConfig.getApplication());
+                            FarmerPreferencesUtils.saveKeyValue(HttpUtils.user_id, String.valueOf(tokenresp.uid), FarmAppConfig.getApplication());
                             Log.i("===id==", tokenresp.uid + "");
                         }
-                        Intent add_intent = new Intent(LoginFamerActivity.this, HomeActivity.class);
+                        Intent add_intent = new Intent(LoginPigAarActivity.this, HomeActivity.class);
                         startActivity(add_intent);
-                        LoginFamerActivity.this.finish();
+                        LoginPigAarActivity.this.finish();
                         isRequest = false;
                         return;
                     } else {
 //                        mProgressHandler.sendEmptyMessage(44);
-                        Toast.makeText(LoginFamerActivity.this, resultBean.getMsg(), Toast.LENGTH_SHORT).show();
-                        LoginFamerActivity.this.finish();
+                        Toast.makeText(LoginPigAarActivity.this, resultBean.getMsg(), Toast.LENGTH_SHORT).show();
+                        LoginPigAarActivity.this.finish();
                         isRequest = false;
                         return;
                     }
 
                 } else {
 //                    Snackbar.make(nestedScrollView, "服务器错误，请稍后再试！", Snackbar.LENGTH_LONG).setText("服务器错误，请稍后再试！").show();
-                    Toast.makeText(LoginFamerActivity.this, "服务器错误，请稍后再试！", Toast.LENGTH_SHORT).show();
-                    LoginFamerActivity.this.finish();
+                    Toast.makeText(LoginPigAarActivity.this, "服务器错误，请稍后再试！", Toast.LENGTH_SHORT).show();
+                    LoginPigAarActivity.this.finish();
                     isRequest = false;
                     return;
 //                    mProgressHandler.sendEmptyMessage(41);

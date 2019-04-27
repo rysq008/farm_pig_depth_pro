@@ -10,22 +10,34 @@ import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
 import android.support.v7.widget.ListPopupWindow;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 
+import com.farm.innovation.bean.MergeLoginBean;
+import com.farm.innovation.login.RespObject;
 import com.innovation.pig.insurance.R;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class ShareUtils {
+import static android.util.Base64.DEFAULT;
+
+public class FarmerShareUtils {
 
     public static SharedPreferences preferences_farm;
+    public static String MERGE_LOGIN_INFO = "merge_login_info";
 
     public static final void init(Context context) {
 //        preferences_farm = PreferenceManager.getDefaultSharedPreferences(context);
@@ -34,7 +46,8 @@ public class ShareUtils {
     }
 
     public static final String getHost(String key) {
-        return null == preferences_farm ? "http://60.205.209.245:8081/nongxian2/" : preferences_farm.getString(key, "http://60.205.209.245:8081/nongxian2/");
+//        return null == preferences_farm ? "http://60.205.209.245:8081/nongxian2/" : preferences_farm.getString(key, "http://60.205.209.245:8081/nongxian2/");
+        return null == preferences_farm ? "http://47.92.167.61:8081/nongxian2/" : preferences_farm.getString(key, "http://47.92.167.61:8081/nongxian2/");
     }
 
     public static final boolean saveHost(String key, String val) {
@@ -77,6 +90,48 @@ public class ShareUtils {
         } catch (Exception e) {
         }
         return list;
+    }
+
+    public static final void saveData(String key, Object obj) {
+        if (obj instanceof Serializable) {
+            try {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                ObjectOutputStream oos = new ObjectOutputStream(baos);
+                oos.writeObject(obj);
+                String str = Base64.encodeToString(baos.toByteArray(), DEFAULT);
+                preferences_farm.edit().putString(key, str).commit();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static final void clearMergeLoginInfo() {
+        preferences_farm.edit().remove(MERGE_LOGIN_INFO).commit();
+    }
+
+    public static final <T> T getData(String key) {
+        try {
+            String str = preferences_farm.getString(key, "");
+            if (TextUtils.isEmpty(str)) return null;
+            byte[] bytes = Base64.decode(str.getBytes(), DEFAULT);
+            ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+            ObjectInputStream ois = new ObjectInputStream(bais);
+            return (T) ois.readObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static boolean isCommpayUser() {
+        MergeLoginBean bean = getData(MERGE_LOGIN_INFO);
+        if (bean.data.nxData != null && !TextUtils.isEmpty(bean.data.nxData.token) && bean.data.nxData.status == RespObject.USER_STATUS_1) {
+            return true;
+        }
+        return false;
     }
 
     public static final void setUpGlobalHost(Context ct, View view) {
@@ -125,7 +180,7 @@ public class ShareUtils {
                                         List<String> slist = new ArrayList<>();
                                         final String[] list = {"http://60.205.209.245:8081/nongxian2/", "http://47.92.167.61:8081/nongxian2/"};//要填充的数据
                                         slist.addAll(Arrays.asList(list));
-                                        slist.addAll(ShareUtils.getIPList());
+                                        slist.addAll(FarmerShareUtils.getIPList());
                                         AlertDialog enterDialog = new AlertDialog.Builder(ct).setTitle("提示").setMessage("请转入地址")
                                                 .setView(et).setCancelable(false).setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                                     @Override
@@ -134,9 +189,9 @@ public class ShareUtils {
                                                         String str = et.getText().toString().trim();
                                                         if (TextUtils.isEmpty(str)) return;
                                                         if (!slist.contains(str))
-                                                            ShareUtils.saveString(et.getText().toString().trim(), "ip");
-                                                        if (ShareUtils.saveHost("host", str)) {
-                                                            HttpUtils.resetIp(ShareUtils.getHost("host"));
+                                                            FarmerShareUtils.saveString(et.getText().toString().trim(), "ip");
+                                                        if (FarmerShareUtils.saveHost("host", str)) {
+                                                            HttpUtils.resetIp(FarmerShareUtils.getHost("host"));
                                                             ((Activity) ct).finish();
                                                             Intent it = ct.getPackageManager().getLaunchIntentForPackage(ct.getPackageName());
                                                             it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -172,8 +227,8 @@ public class ShareUtils {
                                                             et.setText(str);//把选择的选项内容展示在EditText上
                                                             listPopupWindow.dismiss();//如果已经选择了，隐藏起来
                                                             enterDialog.cancel();
-                                                            if (ShareUtils.saveHost("host", str)) {
-                                                                HttpUtils.resetIp(ShareUtils.getHost("host"));
+                                                            if (FarmerShareUtils.saveHost("host", str)) {
+                                                                HttpUtils.resetIp(FarmerShareUtils.getHost("host"));
                                                                 ((Activity) ct).finish();
                                                                 Intent it = ct.getPackageManager().getLaunchIntentForPackage(ct.getPackageName());
                                                                 it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);

@@ -6,7 +6,7 @@
     android:layout_height="1px"
     android:background="@drawable/bg"
     android:layout_gravity="center_horizontal"
-    tools:context="com.xiangchuang.risks.view.AlphaLoginFamerActivity">
+    tools:context="com.xiangchuang.risks.view.LoginPigActivity">
 
     <RelativeLayout
         android:id="@+id/image_title"

@@ -36,10 +36,10 @@ import com.farm.innovation.login.DatabaseHelper;
 import com.farm.innovation.login.RespObject;
 import com.farm.innovation.login.Utils;
 import com.farm.innovation.utils.AVOSCloudUtils;
+import com.farm.innovation.utils.FarmerPreferencesUtils;
 import com.farm.innovation.utils.FileUtils;
 import com.farm.innovation.utils.HttpRespObject;
 import com.farm.innovation.utils.HttpUtils;
-import com.farm.innovation.utils.PreferencesUtils;
 import com.farm.innovation.utils.UploadObject;
 import com.farm.innovation.utils.ZipUtil;
 import com.google.gson.Gson;
@@ -304,7 +304,7 @@ public class InsureDataProcessor {
 
         };
 
-        boolean isli = PreferencesUtils.getBooleanValue("isli", mContext);
+        boolean isli = FarmerPreferencesUtils.getBooleanValue("isli", mContext);
         Log.i("==isli====", "" + isli);
         if (isli) {
             // 离线理赔时的处理
@@ -583,14 +583,14 @@ public class InsureDataProcessor {
                             Log.i("file_video", file_video.getAbsolutePath() + "");
                             File zipFile_image = new File(file_current.getAbsolutePath(), FarmGlobal.ZipFileName + ".zip");
                             File zipFile_video = new File(file_video.getAbsolutePath(), FarmGlobal.ZipFileName + ".zip");
-                            if (PreferencesUtils.getBooleanValue("isli", mContext)) {
-                                String lipeidate = PreferencesUtils.getStringValue("lipeidate", mContext);
+                            if (FarmerPreferencesUtils.getBooleanValue("isli", mContext)) {
+                                String lipeidate = FarmerPreferencesUtils.getStringValue("lipeidate", mContext);
                                 int updatepathnum = databaseHelper.updateLiPeiLocalFromzipPath(zipFile_image.getAbsolutePath(), lipeidate);
                                 Log.i("updatepath", updatepathnum + "");
-                                int lipeirecordernum = databaseHelper.updateLiPeiLocalFromrecordeText("2", PreferencesUtils.getStringValue("lipeidate", mContext));
+                                int lipeirecordernum = databaseHelper.updateLiPeiLocalFromrecordeText("2", FarmerPreferencesUtils.getStringValue("lipeidate", mContext));
                                 Log.i("=lipeirecordernum===", lipeirecordernum + "");
                                 String insurename = "将覆盖已录入的理赔牲畜信息，确定重新录入？";
-                                int lipeirecordermsg = databaseHelper.updateLiPeiLocalFromrecordeMsg(insurename, PreferencesUtils.getStringValue("lipeidate", mContext));
+                                int lipeirecordermsg = databaseHelper.updateLiPeiLocalFromrecordeMsg(insurename, FarmerPreferencesUtils.getStringValue("lipeidate", mContext));
                                 Log.i("=lipeirecordernum===", lipeirecordermsg + "");
 
                                 Log.i("videopath", zipFile_video.getAbsolutePath());
@@ -681,8 +681,8 @@ public class InsureDataProcessor {
                 reInitCurrentDir();
                 return;
             }
-            String touBaoVieoFlag = PreferencesUtils.getStringValue(FarmAppConfig.touBaoVieoFlag, mContext);
-            String liPeiVieoFlag = PreferencesUtils.getStringValue(FarmAppConfig.liPeiVieoFlag, mContext);
+            String touBaoVieoFlag = FarmerPreferencesUtils.getStringValue(FarmAppConfig.touBaoVieoFlag, mContext);
+            String liPeiVieoFlag = FarmerPreferencesUtils.getStringValue(FarmAppConfig.liPeiVieoFlag, mContext);
             Log.i("imageFile==", zipFile_image.getAbsolutePath());
             // TODO: 2018/8/15 By:LuoLu  zip video
             //  if (FarmGlobal.UPLOAD_VIDEO_FLAG == true) {
@@ -786,7 +786,7 @@ public class InsureDataProcessor {
 
             // 是否传视频设置
             // if (FarmGlobal.UPLOAD_VIDEO_FLAG == true) {
-            String touBaoVieoFlag = PreferencesUtils.getStringValue(FarmAppConfig.touBaoVieoFlag, mContext);
+            String touBaoVieoFlag = FarmerPreferencesUtils.getStringValue(FarmAppConfig.touBaoVieoFlag, mContext);
             if ("1".equals(touBaoVieoFlag)) {
                 // 上传视频处理
                 // 投保建库上传视频包

@@ -28,9 +28,9 @@ import com.farm.innovation.login.view.HomeActivity;
 import com.farm.innovation.login.view.ISExist;
 import com.farm.innovation.utils.AVOSCloudUtils;
 import com.farm.innovation.utils.ConstUtils;
+import com.farm.innovation.utils.FarmerPreferencesUtils;
 import com.farm.innovation.utils.HttpRespObject;
 import com.farm.innovation.utils.HttpUtils;
-import com.farm.innovation.utils.PreferencesUtils;
 import com.innovation.pig.insurance.R;
 
 import org.tensorflow.demo.FarmDetectorActivity;
@@ -164,7 +164,7 @@ public class ToubaoNetAdapter extends RecyclerView.Adapter<ToubaoNetAdapter.View
             //  Log.i("====", newsBeanArrayList.size() + "");
             if (baoDanNetBeans.size() > 0) {
                 //点击离线缓存添加到数据库
-                int animalType = Integer.valueOf(PreferencesUtils.getStringValue("animalType", mContext));
+                int animalType = Integer.valueOf(FarmerPreferencesUtils.getStringValue("animalType", mContext));
                 if (animalType == ConstUtils.ANIMAL_TYPE_CATTLE) {
                     type = "牛";
                 } else if (animalType == ConstUtils.ANIMAL_TYPE_DONKEY) {
@@ -316,7 +316,7 @@ public class ToubaoNetAdapter extends RecyclerView.Adapter<ToubaoNetAdapter.View
                 if (!insurresp.ibaodanNoReal.equals("")) {
                     Toast.makeText(mContext, "保单已审核，不能继续录入", Toast.LENGTH_SHORT).show();
                 } else {
-                    PreferencesUtils.saveBooleanValue("isli", false, mContext);
+                    FarmerPreferencesUtils.saveBooleanValue("isli", false, mContext);
                     FarmGlobal.model = Model.BUILD.value();
                     Intent intent = new Intent();
                     intent.putExtra("ToubaoTempNumber", insurresp.ibaodanNo);

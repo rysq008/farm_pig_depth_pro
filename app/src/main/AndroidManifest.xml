@@ -49,19 +49,24 @@
 
     <!-- android:hardwareAccelerated="false" -->
     <!-- android:name="com.xiangchuangtec.luolu.animalcounter.AppConfig" -->
+
     <application
+        android:name=".MyApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
         android:largeHeap="true"
         android:launchMode="singleInstance"
         android:screenOrientation="portrait"
         android:supportsRtl="true"
-        tools:overrideLibrary="com.innovation.pig.insurance">
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
             android:name="com.innovation.pig.insurance.CounterActivity_new"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.xiangchuang.risks.view.LoginFamerActivity"
+            android:name="com.xiangchuang.risks.view.LoginPigAarActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
 <!--            <intent-filter>
@@ -187,10 +192,10 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             >
-            <!--            <intent-filter>
+                        <intent-filter>
                             <action android:name="android.intent.action.MAIN" />
                             <category android:name="android.intent.category.LAUNCHER" />
-                        </intent-filter>-->
+                        </intent-filter>
         </activity>
         <activity
             android:name="org.tensorflow.demo.FarmDetectorActivity"
@@ -198,7 +203,7 @@
             android:exported="true"
             android:screenOrientation="portrait"/>
         <activity
-            android:name="com.farm.innovation.biz.login.LoginActivity"
+            android:name="com.farm.innovation.biz.login.LoginFamerActivity"
             android:launchMode="singleTask"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
@@ -206,6 +211,13 @@
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
             android:name="com.farm.innovation.biz.login.LoginFamerAarActivity"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+        <activity
+            android:name="com.farm.innovation.biz.login.LoginMergeActivity"
             android:launchMode="singleTask"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"

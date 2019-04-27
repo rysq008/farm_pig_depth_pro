@@ -130,8 +130,8 @@ public class InsuredActivity extends BaseActivity {
     }
 
     private void getPigType() {
-//        String en_id = PreferencesUtils.getStringValue(Constants.en_id, InsuredActivity.this);
-//        String enUserId = PreferencesUtils.getIntValue(Constants.en_user_id, InsuredActivity.this) + "";
+//        String en_id = FarmerPreferencesUtils.getStringValue(Constants.en_id, InsuredActivity.this);
+//        String enUserId = FarmerPreferencesUtils.getIntValue(Constants.en_user_id, InsuredActivity.this) + "";
 //        if (en_id.isEmpty() || en_id == null) {
 //            Toast.makeText(this, "en_id is null", Toast.LENGTH_SHORT).show();
 //            return;
@@ -201,8 +201,8 @@ public class InsuredActivity extends BaseActivity {
     }
 
     private void submits() {
-//        String en_id = PreferencesUtils.getStringValue(Constants.en_id, InsuredActivity.this);
-//        String enUserId = PreferencesUtils.getIntValue(Constants.en_user_id, InsuredActivity.this) + "";
+//        String en_id = FarmerPreferencesUtils.getStringValue(Constants.en_id, InsuredActivity.this);
+//        String enUserId = FarmerPreferencesUtils.getIntValue(Constants.en_user_id, InsuredActivity.this) + "";
         String amount = headnumber.getText().toString().trim();
         String ratio = coefficient.getText().toString().trim();
         if (ratio != null && !"".equals(ratio)) {

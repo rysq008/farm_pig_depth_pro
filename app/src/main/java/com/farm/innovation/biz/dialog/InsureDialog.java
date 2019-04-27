@@ -13,7 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.farm.innovation.base.FarmAppConfig;
-import com.farm.innovation.utils.PreferencesUtils;
+import com.farm.innovation.utils.FarmerPreferencesUtils;
 import com.farm.innovation.utils.ScreenUtil;
 import com.innovation.pig.insurance.R;
 
@@ -114,9 +114,9 @@ public class InsureDialog extends Dialog {
     }
 
     private boolean getAngleMissData(Map<String, String> map) {
-        int maxLeft = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_LEFT, context);
-        int maxMiddle = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_MIDDLE, context);
-        int maxRight = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_RIGHT, context);
+        int maxLeft = FarmerPreferencesUtils.getMaxPics(FarmerPreferencesUtils.FACE_ANGLE_MAX_LEFT, context);
+        int maxMiddle = FarmerPreferencesUtils.getMaxPics(FarmerPreferencesUtils.FACE_ANGLE_MAX_MIDDLE, context);
+        int maxRight = FarmerPreferencesUtils.getMaxPics(FarmerPreferencesUtils.FACE_ANGLE_MAX_RIGHT, context);
         boolean angleok = true;
         missInfo = "";
         int count1 = 0;
@@ -221,7 +221,7 @@ public class InsureDialog extends Dialog {
         initView();
 
         if(FarmAppConfig.debugNub == 1){
-            int n = PreferencesUtils.getIntValue(FarmAppConfig.lipein, 120, FarmAppConfig.getActivity());
+            int n = FarmerPreferencesUtils.getIntValue(FarmAppConfig.lipein, 120, FarmAppConfig.getActivity());
 
             mTips.setText("系统检测到您的采集时间已超过"+ n +"秒，" +
                     "您可以继续采集理赔图像，也可以强制提交当前已采集的内容，系统进行人工复核。\n" +
@@ -236,8 +236,8 @@ public class InsureDialog extends Dialog {
             wancheng.setVisibility(View.GONE);
             caijiRetry.setVisibility(View.GONE);
         }else if(FarmAppConfig.debugNub == 2){
-            String  customServ = PreferencesUtils.getStringValue(FarmAppConfig.customServ, FarmAppConfig.getActivity());
-            int m = PreferencesUtils.getIntValue(FarmAppConfig.lipeim, 240, FarmAppConfig.getActivity());
+            String  customServ = FarmerPreferencesUtils.getStringValue(FarmAppConfig.customServ, FarmAppConfig.getActivity());
+            int m = FarmerPreferencesUtils.getIntValue(FarmAppConfig.lipeim, 240, FarmAppConfig.getActivity());
 
             mTips.setText("系统检测到您的采集时间已超过"+ m +"秒，" +
                     "建议您强制提交当前已采集的内容，系统将进行人工复核。强制提交后请用手机直接对着牲畜的左、中、右脸拍摄一段不少于2分钟视频，留存作为档案提交到"+ customServ +"处。\n" +

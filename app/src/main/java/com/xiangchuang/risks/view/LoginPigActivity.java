@@ -49,7 +49,7 @@ import okhttp3.Response;
 /**
  * @author 56861
  */
-public class AlphaLoginFamerActivity extends BaseActivity {
+public class LoginPigActivity extends BaseActivity {
 
 
     Button mloginfamerlogin;
@@ -121,10 +121,10 @@ public class AlphaLoginFamerActivity extends BaseActivity {
 
 
         if (!hasPermission2()) {
-            AlertDialogManager.showMessageDialog(AlphaLoginFamerActivity.this, "提示", getString(R.string.appwarning), new AlertDialogManager.DialogInterface() {
+            AlertDialogManager.showMessageDialog(LoginPigActivity.this, "提示", getString(R.string.appwarning), new AlertDialogManager.DialogInterface() {
                 @Override
                 public void onPositive() {
-                    XXPermissions.with(AlphaLoginFamerActivity.this)
+                    XXPermissions.with(LoginPigActivity.this)
                             //.constantRequest() //可设置被拒绝后继续申请，直到用户授权或者永久拒绝
                             .permission(Permission.Group.LOCATION) //不指定权限则自动获取清单中的危险权限
                             .permission(Permission.READ_PHONE_STATE)
@@ -132,7 +132,7 @@ public class AlphaLoginFamerActivity extends BaseActivity {
                                 @Override
                                 public void hasPermission(List<String> granted, boolean isAll) {
                                     if (isAll) {
-                                        // PreferencesUtils.saveBooleanValue("isallow", true, WelcomeActivity.this);
+                                        // FarmerPreferencesUtils.saveBooleanValue("isallow", true, WelcomeActivity.this);
                                         // toastUtils.showLong(AppConfig.getAppContext(), "获取权限成功");
                                         if (Build.VERSION.SDK_INT > 9) {
                                             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -150,7 +150,7 @@ public class AlphaLoginFamerActivity extends BaseActivity {
                                         finish();
                                     } else {
                                         Toast.makeText(InnApplication.getAppContext(), "获取权限失败", Toast.LENGTH_SHORT).show();
-                                        AppManager.getAppManager().AppExit(AlphaLoginFamerActivity.this);
+                                        AppManager.getAppManager().AppExit(LoginPigActivity.this);
                                     }
                                 }
                             });
@@ -176,15 +176,15 @@ public class AlphaLoginFamerActivity extends BaseActivity {
             }
         }
         if (!HttpUtils.isOfficialHost())
-            Toast.makeText(AlphaLoginFamerActivity.this, ShareUtils.getHost("host"), Toast.LENGTH_LONG).show();
-        ShareUtils.setUpGlobalHost(AlphaLoginFamerActivity.this, passTv);
+            Toast.makeText(LoginPigActivity.this, ShareUtils.getHost("host"), Toast.LENGTH_LONG).show();
+        ShareUtils.setUpGlobalHost(LoginPigActivity.this, passTv);
     }
 
 
     public void onClickView(View view) {
         int i = view.getId();
         if (i == R.id.loginfamer_login) {
-            if (!NetworkUtil.isNetworkConnect(AlphaLoginFamerActivity.this)) {
+            if (!NetworkUtil.isNetworkConnect(LoginPigActivity.this)) {
                 Toast.makeText(this, "断网了，请联网后重试。", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -197,14 +197,14 @@ public class AlphaLoginFamerActivity extends BaseActivity {
                 //                                          int[] grantResults)
                 // to handle the case where the user grants the permission. See the documentation
                 // for ActivityCompat#requestPermissions for more details.
-                XXPermissions.with(AlphaLoginFamerActivity.this)
+                XXPermissions.with(LoginPigActivity.this)
                         //.constantRequest() //可设置被拒绝后继续申请，直到用户授权或者永久拒绝
                         .permission(Permission.READ_PHONE_STATE)
                         .request(new OnPermission() {
                             @Override
                             public void hasPermission(List<String> granted, boolean isAll) {
                                 if (isAll) {
-                                    // PreferencesUtils.saveBooleanValue("isallow", true, WelcomeActivity.this);
+                                    // FarmerPreferencesUtils.saveBooleanValue("isallow", true, WelcomeActivity.this);
                                     // toastUtils.showLong(AppConfig.getAppContext(), "获取权限成功");
                                     if (Build.VERSION.SDK_INT > 9) {
                                         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -222,7 +222,7 @@ public class AlphaLoginFamerActivity extends BaseActivity {
                                     finish();
                                 } else {
                                     Toast.makeText(InnApplication.getAppContext(), "获取权限失败", Toast.LENGTH_SHORT).show();
-                                    AppManager.getAppManager().AppExit(AlphaLoginFamerActivity.this);
+                                    AppManager.getAppManager().AppExit(LoginPigActivity.this);
                                 }
                             }
                         });
@@ -270,20 +270,20 @@ public class AlphaLoginFamerActivity extends BaseActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 mProgressDialog.dismiss();
-                Log.i("LoginFamerActivity", e.toString());
+                Log.i("LoginPigAarActivity", e.toString());
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(AlphaLoginFamerActivity.this, "登录失败，请检查网络后重试。", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginPigActivity.this, "登录失败，请检查网络后重试。", Toast.LENGTH_SHORT).show();
                     }
                 });
-                AVOSCloudUtils.saveErrorMessage(e, AlphaLoginFamerActivity.class.getSimpleName());
+                AVOSCloudUtils.saveErrorMessage(e, LoginPigActivity.class.getSimpleName());
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String string = response.body().string();
-                Log.i("LoginFamerActivity", string);
+                Log.i("LoginPigAarActivity", string);
                 try {
                     JSONObject jsonObject = new JSONObject(string);
                     int status = jsonObject.getInt("status");
@@ -293,7 +293,7 @@ public class AlphaLoginFamerActivity extends BaseActivity {
                             @Override
                             public void run() {
                                 mProgressDialog.dismiss();
-                                AlertDialogManager.showMessageDialog(AlphaLoginFamerActivity.this, "提示", msg, new AlertDialogManager.DialogInterface() {
+                                AlertDialogManager.showMessageDialog(LoginPigActivity.this, "提示", msg, new AlertDialogManager.DialogInterface() {
                                     @Override
                                     public void onPositive() {
 
@@ -317,7 +317,7 @@ public class AlphaLoginFamerActivity extends BaseActivity {
                                     data = jsonObject.getJSONObject("data");
                                     int type = data.getInt("type");
 //                                    int myToken = data.getInt("token");
-//                                    PreferencesUtils.saveKeyValue(Constants.token, myToken + "", AppConfig.getAppContext());
+//                                    FarmerPreferencesUtils.saveKeyValue(Constants.token, myToken + "", AppConfig.getAppContext());
                                     PreferencesUtils.saveKeyValue(Constants.companyfleg, type + "", AppConfig.getAppContext());
                                     PreferencesUtils.saveKeyValue(Constants.username, musername + "", AppConfig.getAppContext());
                                     PreferencesUtils.saveKeyValue(Constants.password, muserpass + "", AppConfig.getAppContext());
@@ -358,7 +358,7 @@ public class AlphaLoginFamerActivity extends BaseActivity {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    AVOSCloudUtils.saveErrorMessage(e, AlphaLoginFamerActivity.class.getSimpleName());
+                    AVOSCloudUtils.saveErrorMessage(e, LoginPigActivity.class.getSimpleName());
                 }
 
 

@@ -39,11 +39,12 @@ import android.widget.Toast;
 import com.farm.innovation.base.BaseActivity;
 import com.farm.innovation.base.FarmAppConfig;
 import com.farm.innovation.bean.LiPeiLocalBean;
+import com.farm.innovation.bean.MergeLoginBean;
 import com.farm.innovation.bean.QueryVideoFlagDataBean;
 import com.farm.innovation.bean.ResultBean;
 import com.farm.innovation.biz.iterm.MediaPayItem;
 import com.farm.innovation.biz.iterm.Model;
-import com.farm.innovation.biz.login.LoginActivity;
+import com.farm.innovation.biz.login.LoginMergeActivity;
 import com.farm.innovation.login.DatabaseHelper;
 import com.farm.innovation.login.FixedSpeedScroller;
 import com.farm.innovation.login.MyFragmentPagerAdapter;
@@ -53,12 +54,16 @@ import com.farm.innovation.update.UpdateInformation;
 import com.farm.innovation.update.UploadService;
 import com.farm.innovation.utils.AVOSCloudUtils;
 import com.farm.innovation.utils.ConstUtils;
+import com.farm.innovation.utils.FarmerPreferencesUtils;
+import com.farm.innovation.utils.FarmerShareUtils;
 import com.farm.innovation.utils.FileUtils;
 import com.farm.innovation.utils.HttpUtils;
-import com.farm.innovation.utils.PreferencesUtils;
 import com.farm.innovation.view.CustomViewPager;
 import com.google.gson.Gson;
+import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
+import com.xiangchuang.risks.view.CompanyActivity;
+import com.xiangchuang.risks.view.SelectFunctionActivity_new;
 
 import org.tensorflow.demo.FarmGlobal;
 import org.tensorflow.demo.env.Logger;
@@ -74,6 +79,7 @@ import okhttp3.RequestBody;
 import static com.farm.innovation.base.FarmAppConfig.needUpDate;
 import static com.farm.innovation.utils.ConstUtils.ANIMAL_TYPE_NONE;
 import static com.farm.innovation.utils.ConstUtils.getInsureAnimalTypeName;
+import static com.farm.innovation.utils.FarmerShareUtils.MERGE_LOGIN_INFO;
 
 
 //add by xuly 2018-06-12
@@ -135,7 +141,8 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
         TextView select_type = popview.findViewById(R.id.select_type);
         TextView login_exit = popview.findViewById(R.id.login_exit);
         TextView tvPopUpdate = popview.findViewById(R.id.tv_pop_update);
-        if (!FarmAppConfig.isOriginApk()) {
+        TextView enter_pig = popview.findViewById(R.id.enter_pig);
+        if (!FarmAppConfig.isOriginApk() && !AppConfig.isOriginApk()) {
             login_exit.setVisibility(View.GONE);
             tvPopUpdate.setVisibility(View.GONE);
             popview.findViewById(R.id.rl_pop_updata).setVisibility(View.GONE);
@@ -143,13 +150,36 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
         ivPopUpdateSign = popview.findViewById(R.id.iv_pop_update_sign);
 
         if (needUpDate) {
-            if (FarmAppConfig.isOriginApk()) {
+            if (FarmAppConfig.isOriginApk() || AppConfig.isOriginApk()) {
                 ivPopUpdateSign.setVisibility(View.VISIBLE);
                 ivSign.setVisibility(View.VISIBLE);
             }
         } else {
             ivPopUpdateSign.setVisibility(View.GONE);
             ivSign.setVisibility(View.GONE);
+        }
+
+        MergeLoginBean bean = FarmerShareUtils.getData(MERGE_LOGIN_INFO);
+        if (bean != null) {
+            if (bean.data.ftnData != null) {
+                enter_pig.setVisibility(View.VISIBLE);
+                enter_pig.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (bean.data.ftnData.type == 1) {
+                            goToActivity(CompanyActivity.class, null);
+                            finish();
+                        } else if (bean.data.ftnData.type == 2) {
+                            goToActivity(SelectFunctionActivity_new.class, null);
+                            finish();
+                        }
+                    }
+                });
+            } else {
+                enter_pig.setVisibility(View.GONE);
+            }
+        } else {
+            enter_pig.setVisibility(View.GONE);
         }
 
         pop.setWidth(300);
@@ -233,7 +263,9 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
                                         SharedPreferences.Editor editor = pref.edit();
                                         editor.clear();
                                         editor.commit();
-                                        Intent add_intent = new Intent(HomeActivity.this, LoginActivity.class);
+                                        FarmerShareUtils.clearMergeLoginInfo();
+//                                        Intent add_intent = new Intent(HomeActivity.this, LoginFamerActivity.class);
+                                        Intent add_intent = new Intent(HomeActivity.this, LoginMergeActivity.class);
                                         startActivity(add_intent);
                                         HomeActivity.this.finish();
                                     }
@@ -284,16 +316,16 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
         okButton.setOnClickListener(okButtonClickListener);
         animalTypeRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId == R.id.cowRadioButton) {
-                PreferencesUtils.setAnimalType(ConstUtils.ANIMAL_TYPE_CATTLE, HomeActivity.this);
+                FarmerPreferencesUtils.setAnimalType(ConstUtils.ANIMAL_TYPE_CATTLE, HomeActivity.this);
 
             } else if (checkedId == R.id.donkeyRadioButton) {
-                PreferencesUtils.setAnimalType(ConstUtils.ANIMAL_TYPE_DONKEY, HomeActivity.this);
+                FarmerPreferencesUtils.setAnimalType(ConstUtils.ANIMAL_TYPE_DONKEY, HomeActivity.this);
 
             } else if (checkedId == R.id.pigRadioButton) {
-                PreferencesUtils.setAnimalType(ConstUtils.ANIMAL_TYPE_PIG, HomeActivity.this);
+                FarmerPreferencesUtils.setAnimalType(ConstUtils.ANIMAL_TYPE_PIG, HomeActivity.this);
 
             } else if (checkedId == R.id.yakRadioButton) {
-                PreferencesUtils.setAnimalType(ConstUtils.ANIMAL_TYPE_YAK, HomeActivity.this);
+                FarmerPreferencesUtils.setAnimalType(ConstUtils.ANIMAL_TYPE_YAK, HomeActivity.this);
 
             } else {
             }
@@ -319,24 +351,24 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
                 queryVideoFlagResultBean = gson.fromJson(queryVideoFlagResponse, ResultBean.class);
                 if (queryVideoFlagResultBean.getStatus() == 1) {
                     QueryVideoFlagDataBean queryVideoFlagData = gson.fromJson(queryVideoFlagResponse, QueryVideoFlagDataBean.class);
-                    PreferencesUtils.saveKeyValue(FarmAppConfig.touBaoVieoFlag, queryVideoFlagData.getData().getToubaoVideoFlag(), HomeActivity.this);
-                    //  PreferencesUtils.saveKeyValue(FarmAppConfig.touBaoVieoFlag, 1 + "", HomeActivity.this);
-                    PreferencesUtils.saveKeyValue(FarmAppConfig.liPeiVieoFlag, queryVideoFlagData.getData().getLipeiVideoFlag(), HomeActivity.this);
+                    FarmerPreferencesUtils.saveKeyValue(FarmAppConfig.touBaoVieoFlag, queryVideoFlagData.getData().getToubaoVideoFlag(), HomeActivity.this);
+                    //  FarmerPreferencesUtils.saveKeyValue(FarmAppConfig.touBaoVieoFlag, 1 + "", HomeActivity.this);
+                    FarmerPreferencesUtils.saveKeyValue(FarmAppConfig.liPeiVieoFlag, queryVideoFlagData.getData().getLipeiVideoFlag(), HomeActivity.this);
 
                     QueryVideoFlagDataBean.thresholdList thresholdList = gson.fromJson(queryVideoFlagData.getData().getThreshold(), QueryVideoFlagDataBean.thresholdList.class);
 
                     Log.e(TAG, "queryVideoFlag thresholdList: " + thresholdList.toString());
 
                     //存储理赔的时间条件信息
-                    PreferencesUtils.saveIntValue(FarmAppConfig.lipeia, Integer.parseInt(thresholdList.getLipeiA()), HomeActivity.this);
-                    PreferencesUtils.saveIntValue(FarmAppConfig.lipeib, Integer.parseInt(thresholdList.getLipeiB()), HomeActivity.this);
-                    PreferencesUtils.saveIntValue(FarmAppConfig.lipein, Integer.parseInt(thresholdList.getLipeiN()), HomeActivity.this);
-                    PreferencesUtils.saveIntValue(FarmAppConfig.lipeim, Integer.parseInt(thresholdList.getLipeiM()), HomeActivity.this);
+                    FarmerPreferencesUtils.saveIntValue(FarmAppConfig.lipeia, Integer.parseInt(thresholdList.getLipeiA()), HomeActivity.this);
+                    FarmerPreferencesUtils.saveIntValue(FarmAppConfig.lipeib, Integer.parseInt(thresholdList.getLipeiB()), HomeActivity.this);
+                    FarmerPreferencesUtils.saveIntValue(FarmAppConfig.lipein, Integer.parseInt(thresholdList.getLipeiN()), HomeActivity.this);
+                    FarmerPreferencesUtils.saveIntValue(FarmAppConfig.lipeim, Integer.parseInt(thresholdList.getLipeiM()), HomeActivity.this);
 
-                    PreferencesUtils.saveKeyValue(FarmAppConfig.phone, queryVideoFlagData.getData().getServiceTelephone(), HomeActivity.this);
-                    PreferencesUtils.saveKeyValue(FarmAppConfig.customServ, thresholdList.getCustomServ(), HomeActivity.this);
+                    FarmerPreferencesUtils.saveKeyValue(FarmAppConfig.phone, queryVideoFlagData.getData().getServiceTelephone(), HomeActivity.this);
+                    FarmerPreferencesUtils.saveKeyValue(FarmAppConfig.customServ, thresholdList.getCustomServ(), HomeActivity.this);
 
-                    PreferencesUtils.saveKeyValue(FarmAppConfig.THRESHOLD_LIST, queryVideoFlagData.getData().getThreshold(), HomeActivity.this);
+                    FarmerPreferencesUtils.saveKeyValue(FarmAppConfig.THRESHOLD_LIST, queryVideoFlagData.getData().getThreshold(), HomeActivity.this);
                     if (null != queryVideoFlagData.getData() && !"".equals(queryVideoFlagData.getData())) {
                         String left = (queryVideoFlagData.getData().getLeftNum() == null) ? "8" : queryVideoFlagData.getData().getLeftNum();
                         String middleNum = (queryVideoFlagData.getData().getLeftNum() == null) ? "8" : queryVideoFlagData.getData().getMiddleNum();
@@ -344,9 +376,9 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
                         logger.e("\nleft:\n" + left);
                         logger.e("\nmiddleNum:\n" + middleNum);
                         logger.e("\nrightNum:\n" + rightNum);
-                        PreferencesUtils.saveKeyValue(PreferencesUtils.FACE_ANGLE_MAX_LEFT, left, HomeActivity.this);
-                        PreferencesUtils.saveKeyValue(PreferencesUtils.FACE_ANGLE_MAX_MIDDLE, middleNum, HomeActivity.this);
-                        PreferencesUtils.saveKeyValue(PreferencesUtils.FACE_ANGLE_MAX_RIGHT, rightNum, HomeActivity.this);
+                        FarmerPreferencesUtils.saveKeyValue(FarmerPreferencesUtils.FACE_ANGLE_MAX_LEFT, left, HomeActivity.this);
+                        FarmerPreferencesUtils.saveKeyValue(FarmerPreferencesUtils.FACE_ANGLE_MAX_MIDDLE, middleNum, HomeActivity.this);
+                        FarmerPreferencesUtils.saveKeyValue(FarmerPreferencesUtils.FACE_ANGLE_MAX_RIGHT, rightNum, HomeActivity.this);
 
                     }
                 } else if (queryVideoFlagResultBean.getStatus() == 0) {
@@ -368,7 +400,7 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
         @SuppressLint("ResourceAsColor")
         @Override
         public void onClick(View v) {
-            if (PreferencesUtils.getAnimalType(HomeActivity.this) == ANIMAL_TYPE_NONE) {
+            if (FarmerPreferencesUtils.getAnimalType(HomeActivity.this) == ANIMAL_TYPE_NONE) {
                 Toast.makeText(HomeActivity.this, "必须选择其中一个农险！！", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -424,7 +456,7 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
         myviewpager.setAdapter(adapter);
 
 
-        int animalType = PreferencesUtils.getAnimalType(HomeActivity.this);
+        int animalType = FarmerPreferencesUtils.getAnimalType(HomeActivity.this);
         if (btn_first.isChecked()) {
             myviewpager.setCurrentItem(0);
             btn_first.setBackgroundResource(R.drawable.farm_toubao02);
@@ -489,7 +521,7 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
         //isChecked上面的参数代表的状态是否选中
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            int animalType = PreferencesUtils.getAnimalType(HomeActivity.this);
+            int animalType = FarmerPreferencesUtils.getAnimalType(HomeActivity.this);
             int i = buttonView.getId();
             if (i == R.id.btn_first) {//单选按钮通过参数isChecked去得到当前到底是选中还是未选中
                 if (isChecked) {
@@ -583,7 +615,7 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
     @Override
     protected void onResume() {
         super.onResume();
-        if (PreferencesUtils.getAnimalType(HomeActivity.this) == ANIMAL_TYPE_NONE) {
+        if (FarmerPreferencesUtils.getAnimalType(HomeActivity.this) == ANIMAL_TYPE_NONE) {
             showTypeDialog();
         } else {
             initView();
@@ -691,8 +723,8 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
     private void moveFlie() {
         DatabaseHelper databaseHelper = DatabaseHelper.getInstance(HomeActivity.this);
         liPeiLocalBeans.clear();
-        if (null != databaseHelper.queryLocalDataFromLiPei(PreferencesUtils.getStringValue(HttpUtils.user_id, HomeActivity.this))) {
-            liPeiLocalBeans.addAll(databaseHelper.queryLocalDataFromLiPei(PreferencesUtils.getStringValue(HttpUtils.user_id, HomeActivity.this)));
+        if (null != databaseHelper.queryLocalDataFromLiPei(FarmerPreferencesUtils.getStringValue(HttpUtils.user_id, HomeActivity.this))) {
+            liPeiLocalBeans.addAll(databaseHelper.queryLocalDataFromLiPei(FarmerPreferencesUtils.getStringValue(HttpUtils.user_id, HomeActivity.this)));
         }
         if (FarmGlobal.mediaPayItem == null) {
             FarmGlobal.mediaPayItem = new MediaPayItem(HomeActivity.this);
@@ -732,7 +764,7 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
 
     @Override
     public void onBackPressed() {
-        if (FarmAppConfig.isOriginApk()) {
+        if (FarmAppConfig.isOriginApk() || AppConfig.isOriginApk()) {
             long secondTime = System.currentTimeMillis();
             if (secondTime - firstTime > 2000) {
                 Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();

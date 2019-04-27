@@ -164,7 +164,7 @@ public class OkHttp3Util {
                 builder.add(key, params.get(key));
             }
         }
-        int animalType = PreferencesUtils.getAnimalType(FarmAppConfig.getApplication());
+        int animalType = FarmerPreferencesUtils.getAnimalType(FarmAppConfig.getApplication());
         if (ConstUtils.ANIMAL_TYPE_NONE == animalType
                 && !HttpUtils.PIC_LOGIN_URL.equals(url)
                 && !HttpUtils.GET_ALL_COMPANY_URL.equals(url)
@@ -229,7 +229,7 @@ public class OkHttp3Util {
                 request.addHeader(key, headerParams.get(key));
             }
         }
-        int animalType = PreferencesUtils.getAnimalType(FarmAppConfig.getApplication());
+        int animalType = FarmerPreferencesUtils.getAnimalType(FarmAppConfig.getApplication());
         request.addHeader("animalType", String.valueOf(animalType));
         //得到Call
         Call call = okHttpClient.newCall(request.build());

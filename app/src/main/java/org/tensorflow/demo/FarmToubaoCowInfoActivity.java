@@ -62,7 +62,7 @@ import com.farm.innovation.utils.FileUtils;
 import com.farm.innovation.utils.HttpRespObject;
 import com.farm.innovation.utils.HttpUtils;
 import com.farm.innovation.utils.JsonHelper;
-import com.farm.innovation.utils.PreferencesUtils;
+import com.farm.innovation.utils.FarmerPreferencesUtils;
 import com.farm.innovation.utils.ZipUtil;
 
 import java.io.File;
@@ -283,7 +283,7 @@ public class FarmToubaoCowInfoActivity extends BaseActivity {
         spinnerInsuranceType = findViewById(R.id.spinnerInsuranceType);
 
         et_baodan_cowtype = findViewById(R.id.et_baodan_cowtype);
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, ConstUtils.geInsureTypeCaptions(PreferencesUtils.getAnimalType(FarmToubaoCowInfoActivity.this)));
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, ConstUtils.geInsureTypeCaptions(FarmerPreferencesUtils.getAnimalType(FarmToubaoCowInfoActivity.this)));
         spinnerInsuranceType.setAdapter(adapter);
 
         // TODO: 2018/8/5

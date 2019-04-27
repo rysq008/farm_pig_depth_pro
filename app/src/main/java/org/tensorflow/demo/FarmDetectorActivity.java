@@ -50,8 +50,8 @@ import com.farm.innovation.biz.classifier.YakRotationPrediction;
 import com.farm.innovation.biz.iterm.Model;
 import com.farm.innovation.login.Utils;
 import com.farm.innovation.utils.ConstUtils;
+import com.farm.innovation.utils.FarmerPreferencesUtils;
 import com.farm.innovation.utils.FileUtils;
-import com.farm.innovation.utils.PreferencesUtils;
 import com.innovation.pig.insurance.R;
 
 import org.greenrobot.eventbus.EventBus;
@@ -232,7 +232,7 @@ public class FarmDetectorActivity extends FarmCameraActivity implements OnImageA
         tracker = new FarmMultiBoxTracker(this);
 
         try {
-            int animalType = PreferencesUtils.getAnimalType(FarmDetectorActivity.this);
+            int animalType = FarmerPreferencesUtils.getAnimalType(FarmDetectorActivity.this);
             if (animalType == ConstUtils.ANIMAL_TYPE_PIG) {
                 pigTFliteDetector =
                         PigFaceDetectTFlite.create(
@@ -310,7 +310,7 @@ public class FarmDetectorActivity extends FarmCameraActivity implements OnImageA
                 new OverlayView.DrawCallback() {
                     @Override
                     public void drawCallback(final Canvas canvas) {
-                        tracker.draw(canvas, PreferencesUtils.getAnimalType(FarmDetectorActivity.this));
+                        tracker.draw(canvas, FarmerPreferencesUtils.getAnimalType(FarmDetectorActivity.this));
                         if (isDebug()) {
                             tracker.drawDebug(canvas);
                         }
@@ -374,7 +374,7 @@ public class FarmDetectorActivity extends FarmCameraActivity implements OnImageA
         ++timestamp;
         final long currTimestamp = timestamp;
 
-        //CowFaceDetectTFlite.MIN_CONFIDENCE = Float.parseFloat(PreferencesUtils.getStringValue(THRESHOLD_COWLIPEI1, FarmAppConfig.getActivity()));
+        //CowFaceDetectTFlite.MIN_CONFIDENCE = Float.parseFloat(FarmerPreferencesUtils.getStringValue(THRESHOLD_COWLIPEI1, FarmAppConfig.getActivity()));
 
         try {
             image = reader.acquireLatestImage();
@@ -485,10 +485,10 @@ public class FarmDetectorActivity extends FarmCameraActivity implements OnImageA
 //            int b = 30;
 //            int n = 120;
 //            int m = 240;
-            int a = PreferencesUtils.getIntValue(FarmAppConfig.lipeia, 30, FarmAppConfig.getActivity());
-            int b = PreferencesUtils.getIntValue(FarmAppConfig.lipeib, 30, FarmAppConfig.getActivity());
-            int n = PreferencesUtils.getIntValue(FarmAppConfig.lipein, 120, FarmAppConfig.getActivity());
-            int m = PreferencesUtils.getIntValue(FarmAppConfig.lipeim, 240, FarmAppConfig.getActivity());
+            int a = FarmerPreferencesUtils.getIntValue(FarmAppConfig.lipeia, 30, FarmAppConfig.getActivity());
+            int b = FarmerPreferencesUtils.getIntValue(FarmAppConfig.lipeib, 30, FarmAppConfig.getActivity());
+            int n = FarmerPreferencesUtils.getIntValue(FarmAppConfig.lipein, 120, FarmAppConfig.getActivity());
+            int m = FarmerPreferencesUtils.getIntValue(FarmAppConfig.lipeim, 240, FarmAppConfig.getActivity());
 
             int pastSeconds = 5;
             //获取当前时间戳
@@ -547,7 +547,7 @@ public class FarmDetectorActivity extends FarmCameraActivity implements OnImageA
         }
 
         dTime = System.currentTimeMillis();
-        int animalType = PreferencesUtils.getAnimalType(FarmDetectorActivity.this);
+        int animalType = FarmerPreferencesUtils.getAnimalType(FarmDetectorActivity.this);
         if (animalType == ConstUtils.ANIMAL_TYPE_PIG) {
             Log.d(TAG, "猪脸分类器");
             pigTFliteDetector.pigRecognitionAndPostureItemTFlite(padBitmap, rotateBitmap);
@@ -762,7 +762,7 @@ public class FarmDetectorActivity extends FarmCameraActivity implements OnImageA
 
     @Override
     public void onSetDebug(final boolean debug) {
-        int animalType = PreferencesUtils.getAnimalType(FarmDetectorActivity.this);
+        int animalType = FarmerPreferencesUtils.getAnimalType(FarmDetectorActivity.this);
         if (animalType == ConstUtils.ANIMAL_TYPE_PIG) {
             pigTFliteDetector.enableStatLogging(debug);
         } else if (animalType == ConstUtils.ANIMAL_TYPE_DONKEY) {

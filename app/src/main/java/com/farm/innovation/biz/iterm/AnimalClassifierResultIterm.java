@@ -13,8 +13,8 @@ import com.farm.innovation.biz.classifier.PigKeyPointsDetectTFlite;
 import com.farm.innovation.biz.classifier.PigRotationPrediction;
 import com.farm.innovation.biz.classifier.YakKeyPointsDetectTFlite;
 import com.farm.innovation.biz.classifier.YakRotationPrediction;
+import com.farm.innovation.utils.FarmerPreferencesUtils;
 import com.farm.innovation.utils.FileUtils;
-import com.farm.innovation.utils.PreferencesUtils;
 import com.farm.innovation.utils.Rot2AngleType;
 
 import org.tensorflow.demo.FarmCameraConnectionFragment;
@@ -47,9 +47,9 @@ public class AnimalClassifierResultIterm {
 
     public static void donkeyAngleCalculateTFlite(PostureItem postureItem) {
         int type;
-        int maxLeft = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_LEFT, FarmAppConfig.getApplication());
-        int maxMiddle = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_MIDDLE, FarmAppConfig.getApplication());
-        int maxRight = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_RIGHT, FarmAppConfig.getApplication());
+        int maxLeft = FarmerPreferencesUtils.getMaxPics(FarmerPreferencesUtils.FACE_ANGLE_MAX_LEFT, FarmAppConfig.getApplication());
+        int maxMiddle = FarmerPreferencesUtils.getMaxPics(FarmerPreferencesUtils.FACE_ANGLE_MAX_MIDDLE, FarmAppConfig.getApplication());
+        int maxRight = FarmerPreferencesUtils.getMaxPics(FarmerPreferencesUtils.FACE_ANGLE_MAX_RIGHT, FarmAppConfig.getApplication());
         FarmDetectorActivity.AngleTrackType = 10;
         DonkeyFaceKeyPointsItem donkeyFaceKeyPointsItem = DonkeyFaceKeyPointsItem.getInstance();
         type = Rot2AngleType.getDonkeyAngleType((float) postureItem.rot_x, (float) postureItem.rot_y);
@@ -219,9 +219,9 @@ public class AnimalClassifierResultIterm {
 
     public static void pigAngleCalculateTFlite(PostureItem postureItem) {
         int type;
-        int maxLeft = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_LEFT, FarmAppConfig.getApplication());
-        int maxMiddle = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_MIDDLE, FarmAppConfig.getApplication());
-        int maxRight = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_RIGHT, FarmAppConfig.getApplication());
+        int maxLeft = FarmerPreferencesUtils.getMaxPics(FarmerPreferencesUtils.FACE_ANGLE_MAX_LEFT, FarmAppConfig.getApplication());
+        int maxMiddle = FarmerPreferencesUtils.getMaxPics(FarmerPreferencesUtils.FACE_ANGLE_MAX_MIDDLE, FarmAppConfig.getApplication());
+        int maxRight = FarmerPreferencesUtils.getMaxPics(FarmerPreferencesUtils.FACE_ANGLE_MAX_RIGHT, FarmAppConfig.getApplication());
         FarmDetectorActivity.AngleTrackType = 10;
         PigFaceKeyPointsItem pigFaceKeyPointsItem = PigFaceKeyPointsItem.getInstance();
         type = Rot2AngleType.getPigAngleType((float) postureItem.rot_x, (float) postureItem.rot_y);
@@ -400,9 +400,9 @@ public class AnimalClassifierResultIterm {
     public static void cowAngleCalculateTFlite(PostureItem postureItem) {
 
         int type;
-        int maxLeft = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_LEFT, FarmAppConfig.getApplication());
-        int maxMiddle = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_MIDDLE, FarmAppConfig.getApplication());
-        int maxRight = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_RIGHT, FarmAppConfig.getApplication());
+        int maxLeft = FarmerPreferencesUtils.getMaxPics(FarmerPreferencesUtils.FACE_ANGLE_MAX_LEFT, FarmAppConfig.getApplication());
+        int maxMiddle = FarmerPreferencesUtils.getMaxPics(FarmerPreferencesUtils.FACE_ANGLE_MAX_MIDDLE, FarmAppConfig.getApplication());
+        int maxRight = FarmerPreferencesUtils.getMaxPics(FarmerPreferencesUtils.FACE_ANGLE_MAX_RIGHT, FarmAppConfig.getApplication());
         FarmDetectorActivity.AngleTrackType = 10;
         CowFaceKeyPointsItem cowFaceKeyPointsItem = CowFaceKeyPointsItem.getInstance();
         type = Rot2AngleType.getCowAngleType((float) postureItem.rot_x, (float) postureItem.rot_y);
@@ -579,9 +579,9 @@ public class AnimalClassifierResultIterm {
     public static void yakAngleCalculateTFlite(PostureItem postureItem) {
 
         int type;
-        int maxLeft = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_LEFT, FarmAppConfig.getApplication());
-        int maxMiddle = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_MIDDLE, FarmAppConfig.getApplication());
-        int maxRight = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_RIGHT, FarmAppConfig.getApplication());
+        int maxLeft = FarmerPreferencesUtils.getMaxPics(FarmerPreferencesUtils.FACE_ANGLE_MAX_LEFT, FarmAppConfig.getApplication());
+        int maxMiddle = FarmerPreferencesUtils.getMaxPics(FarmerPreferencesUtils.FACE_ANGLE_MAX_MIDDLE, FarmAppConfig.getApplication());
+        int maxRight = FarmerPreferencesUtils.getMaxPics(FarmerPreferencesUtils.FACE_ANGLE_MAX_RIGHT, FarmAppConfig.getApplication());
         FarmDetectorActivity.AngleTrackType = 10;
         YakFaceKeyPointsItem yakFaceKeyPointsItem = YakFaceKeyPointsItem.getInstance();
         type = Rot2AngleType.getYakAngleType((float) postureItem.rot_y);
@@ -611,7 +611,7 @@ public class AnimalClassifierResultIterm {
         // 关键点模型无效标志  true为无效  反之有效
         boolean KEYPOINT_JUDGE_SKIP_FLG = true;
 
-        int animalType = PreferencesUtils.getAnimalType(FarmAppConfig.getApplication());
+        int animalType = FarmerPreferencesUtils.getAnimalType(FarmAppConfig.getApplication());
 
         boolean isLiPei = false;
         //牦牛只判断角度

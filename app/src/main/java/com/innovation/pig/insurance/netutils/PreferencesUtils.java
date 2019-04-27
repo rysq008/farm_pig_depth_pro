@@ -2,11 +2,8 @@ package com.innovation.pig.insurance.netutils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
-import android.util.Log;
 
-import static com.farm.innovation.utils.ShareUtils.preferences_farm;
 import static com.xiangchuang.risks.utils.ShareUtils.preferences_pig;
 
 /**

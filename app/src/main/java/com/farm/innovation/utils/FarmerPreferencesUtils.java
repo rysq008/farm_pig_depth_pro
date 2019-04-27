@@ -2,17 +2,16 @@ package com.farm.innovation.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import com.farm.innovation.base.FarmAppConfig;
 
-import static com.farm.innovation.utils.ShareUtils.preferences_farm;
+import static com.farm.innovation.utils.FarmerShareUtils.preferences_farm;
 
 /**
  * Created by Administrator on 2018/8/3.
  */
 
-public class PreferencesUtils {
+public class FarmerPreferencesUtils {
 
     static SharedPreferences sp = preferences_farm;
     /*static SharedPreferences sp;

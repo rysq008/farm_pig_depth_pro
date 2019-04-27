@@ -24,9 +24,9 @@ import com.farm.innovation.login.DatabaseHelper;
 import com.farm.innovation.login.LipeiAdapter;
 import com.farm.innovation.login.model.LipeiLocalAdapter;
 import com.farm.innovation.utils.AVOSCloudUtils;
+import com.farm.innovation.utils.FarmerPreferencesUtils;
 import com.farm.innovation.utils.HttpRespObject;
 import com.farm.innovation.utils.HttpUtils;
-import com.farm.innovation.utils.PreferencesUtils;
 import com.innovation.pig.insurance.R;
 
 import org.tensorflow.demo.FarmGlobal;
@@ -160,8 +160,8 @@ public class LipeiFragment extends Fragment {
         Log.i("==resume===", "resume");
         Log.i("==resume===", "isFleg" + isFleg);
         liPeiLocalBeans.clear();
-        if (null != databaseHelper.queryLocalDataFromLiPei(PreferencesUtils.getStringValue(HttpUtils.user_id, getContext()))) {
-            liPeiLocalBeans.addAll(databaseHelper.queryLocalDataFromLiPei(PreferencesUtils.getStringValue(HttpUtils.user_id, getContext())));
+        if (null != databaseHelper.queryLocalDataFromLiPei(FarmerPreferencesUtils.getStringValue(HttpUtils.user_id, getContext()))) {
+            liPeiLocalBeans.addAll(databaseHelper.queryLocalDataFromLiPei(FarmerPreferencesUtils.getStringValue(HttpUtils.user_id, getContext())));
         }
         Log.e(TAG, "liPeiLocalBeans: "+ liPeiLocalBeans.toString() );
         if (null != liPeiLocalBeans) {

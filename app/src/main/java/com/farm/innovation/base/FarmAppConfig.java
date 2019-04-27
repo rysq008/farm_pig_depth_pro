@@ -29,11 +29,11 @@ import com.farm.innovation.login.view.HomeActivity;
 import com.farm.innovation.network_status.NetworkChangedReceiver;
 import com.farm.innovation.update.UpdateReceiver;
 import com.farm.innovation.utils.ConstUtils;
+import com.farm.innovation.utils.FarmerShareUtils;
 import com.farm.innovation.utils.GlobalDialogUtils;
 import com.farm.innovation.utils.HttpRespObject;
 import com.farm.innovation.utils.HttpUtils;
 import com.farm.innovation.utils.ImageLoaderUtils;
-import com.farm.innovation.utils.ShareUtils;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import org.opencv.android.OpenCVLoader;
@@ -124,7 +124,7 @@ public class FarmAppConfig {
         mApp = app;
         CrashHandler.getInstance().init(mApp);
         ImageLoaderUtils.initImageLoader(mApp);
-        ShareUtils.init(mApp);
+        FarmerShareUtils.init(mApp);
 
         // init OpenCV
         if (!OpenCVLoader.initDebug()) {
@@ -132,7 +132,7 @@ public class FarmAppConfig {
         }
 
         if (FarmAppConfig.isOriginApk()) {
-            HttpUtils.baseUrl = ShareUtils.getHost("host");
+            HttpUtils.baseUrl = FarmerShareUtils.getHost("host");
             HttpUtils.resetIp(HttpUtils.baseUrl);
             // TODO: 2018/8/13 By:LuoLu 农险 4a5d85637e
             CrashReport.initCrashReport(mApp, "99f24e923f", false);//4a5d85637e
