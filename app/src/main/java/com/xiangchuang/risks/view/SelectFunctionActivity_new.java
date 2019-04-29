@@ -8,6 +8,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Process;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -43,9 +44,10 @@ import com.xiangchuang.risks.model.bean.StartBean;
 import com.xiangchuang.risks.model.bean.UncompletedBean;
 import com.xiangchuang.risks.model.bean.WaitNumber;
 import com.xiangchuang.risks.update.AppUpgradeService;
-import com.xiangchuang.risks.update.UpdateInformation;
+import com.xiangchuang.risks.update.UpdateInfoModel;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
+import com.xiangchuang.risks.utils.AppUpdateUtils;
 
 import org.json.JSONObject;
 import org.tensorflow.demo.DetectorActivity;
@@ -101,6 +103,8 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
     private int payNum;
 
     private UncompletedBean.currentStep currentStep;
+    private boolean isUpdate;
+    private UpdateInfoModel mUpdateInfoModel;
 
     public SelectFunctionActivity_new() {
     }
@@ -164,21 +168,14 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
             this.relLipei.setVisibility(View.VISIBLE);
         }
 
-
         this.queryVideoFlag();
         this.pop = new PopupWindow(this);
         View popview = this.getLayoutInflater().inflate(layout.item_setting, (ViewGroup) null);
         this.tvPopExit = (TextView) popview.findViewById(id.tv_pop_exit);
         this.tvPopUpdate = (TextView) popview.findViewById(id.tv_pop_update);
         this.ivPopUpdateSign = (ImageView) popview.findViewById(id.iv_pop_update_sign);
+
         TextView enter_farmer = popview.findViewById(R.id.enter_farmer);
-        if (AppConfig.needUpDate) {
-            this.ivPopUpdateSign.setVisibility(View.VISIBLE);
-            this.ivSign.setVisibility(View.VISIBLE);
-        } else {
-            this.ivPopUpdateSign.setVisibility(View.GONE);
-            this.ivSign.setVisibility(View.GONE);
-        }
 
         MergeLoginBean bean = FarmerShareUtils.getData(MERGE_LOGIN_INFO);
         if (bean != null) {
@@ -212,15 +209,25 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
         getDisposeStep();
     }
 
-    public void setSign() {
-        if (AppConfig.needUpDate) {
-            this.ivPopUpdateSign.setVisibility(View.VISIBLE);
-            this.ivSign.setVisibility(View.VISIBLE);
-        } else {
-            this.ivPopUpdateSign.setVisibility(View.GONE);
-            this.ivSign.setVisibility(View.GONE);
-        }
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        onEventMain(AppConfig.getUpdateInfoModel());
+    }
 
+    @Override
+    public void onEventMain(UpdateInfoModel bean) {
+        if(bean == null)return;
+        SelectFunctionActivity_new.this.isUpdate = bean.isUpdate();
+        SelectFunctionActivity_new.this.mUpdateInfoModel = bean;
+        if(ivPopUpdateSign == null || ivSign == null)return;
+        if (isUpdate && AppConfig.isOriginApk()) {
+            ivPopUpdateSign.setVisibility(View.VISIBLE);
+            ivSign.setVisibility(View.VISIBLE);
+        } else {
+            ivPopUpdateSign.setVisibility(View.GONE);
+            ivSign.setVisibility(View.GONE);
+        }
     }
 
     private void queryVideoFlag() {
@@ -272,7 +279,6 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
                         }
                     });
                 }
-
             }
         });
     }
@@ -321,7 +327,6 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
                                     }
                                 });
                             }
-
                         }
                     });
                 } else {
@@ -333,7 +338,6 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
                         }
                     });
                 }
-
             }
         });
     }
@@ -395,7 +399,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
                 public void onClick(View v) {
                     SelectFunctionActivity_new.this.pop.dismiss();
                     AlertDialog.Builder mDialog;
-                    if (AppConfig.needUpDate) {
+                    if (isUpdate) {
                         if (SelectFunctionActivity_new.this.ivSign.getVisibility() == View.VISIBLE) {
                             SelectFunctionActivity_new.this.ivSign.setVisibility(View.GONE);
                         }
@@ -403,7 +407,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
                         mDialog = new AlertDialog.Builder(SelectFunctionActivity_new.this);
                         mDialog.setIcon(drawable.cowface);
                         mDialog.setTitle("版本更新");
-                        mDialog.setMessage(UpdateInformation.upgradeinfo);
+                        mDialog.setMessage(mUpdateInfoModel.getUpgradeinfo());
                         mDialog.setCancelable(false);
                         mDialog.setPositiveButton("马上升级", new android.content.DialogInterface.OnClickListener() {
                             @Override
@@ -411,8 +415,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
                                 SelectFunctionActivity_new.this.ivPopUpdateSign.setVisibility(View.GONE);
                                 Intent mIntent = new Intent(SelectFunctionActivity_new.this, AppUpgradeService.class);
                                 mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                mIntent.putExtra("mDownloadUrl", UpdateInformation.updateurl);
-                                mIntent.putExtra("appname", UpdateInformation.appname);
+                                mIntent.putExtra("data", mUpdateInfoModel);
                                 SelectFunctionActivity_new.this.startService(mIntent);
                             }
                         }).setNegativeButton("稍后再说", new android.content.DialogInterface.OnClickListener() {
@@ -434,7 +437,6 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
                             }
                         }).create().show();
                     }
-
                 }
             });
         } else if (i == id.tv_innocent_treatment) {
@@ -578,8 +580,6 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-
             }
         });
     }

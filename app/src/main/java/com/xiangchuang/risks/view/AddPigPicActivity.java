@@ -429,7 +429,9 @@ public class AddPigPicActivity extends BaseActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                mProgressDialog.dismiss();
+                                if(mProgressDialog != null){
+                                    mProgressDialog.dismiss();
+                                }
                                 Toast.makeText(AddPigPicActivity.this, "图片上传失败，请检查您的网络。", Toast.LENGTH_SHORT).show();
                             }
                         });

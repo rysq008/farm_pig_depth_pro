@@ -1,6 +1,5 @@
 package com.farm.innovation.login.view;
 
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -49,7 +48,6 @@ import com.farm.innovation.login.DatabaseHelper;
 import com.farm.innovation.login.FixedSpeedScroller;
 import com.farm.innovation.login.MyFragmentPagerAdapter;
 import com.farm.innovation.login.Utils;
-import com.farm.innovation.update.AppUpgradeService;
 import com.farm.innovation.update.UpdateInformation;
 import com.farm.innovation.update.UploadService;
 import com.farm.innovation.utils.AVOSCloudUtils;
@@ -62,6 +60,8 @@ import com.farm.innovation.view.CustomViewPager;
 import com.google.gson.Gson;
 import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
+import com.xiangchuang.risks.update.AppUpgradeService;
+import com.xiangchuang.risks.update.UpdateInfoModel;
 import com.xiangchuang.risks.view.CompanyActivity;
 import com.xiangchuang.risks.view.SelectFunctionActivity_new;
 
@@ -80,7 +80,6 @@ import static com.farm.innovation.base.FarmAppConfig.needUpDate;
 import static com.farm.innovation.utils.ConstUtils.ANIMAL_TYPE_NONE;
 import static com.farm.innovation.utils.ConstUtils.getInsureAnimalTypeName;
 import static com.farm.innovation.utils.FarmerShareUtils.MERGE_LOGIN_INFO;
-
 
 //add by xuly 2018-06-12
 public class HomeActivity extends BaseActivity implements ViewPager.OnPageChangeListener {
@@ -108,13 +107,11 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
     private Dialog dialog;
     private TextView versionName;
 
-
     private TextView tv_title;
     private ImageView iv_cancel;
     private static final Logger logger = new Logger();
     private Gson gson;
     private ResultBean queryVideoFlagResultBean;
-
 
 //    private DatabaseHelper databaseHelper;
 
@@ -123,6 +120,7 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
     private RelativeLayout rl_edit;
     public ImageView ivSign;
     private ImageView ivPopUpdateSign;
+    private UpdateInfoModel mUpdateInfoModel;
 
 
     @Override
@@ -149,15 +147,7 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
         }
         ivPopUpdateSign = popview.findViewById(R.id.iv_pop_update_sign);
 
-        if (needUpDate) {
-            if (FarmAppConfig.isOriginApk() || AppConfig.isOriginApk()) {
-                ivPopUpdateSign.setVisibility(View.VISIBLE);
-                ivSign.setVisibility(View.VISIBLE);
-            }
-        } else {
-            ivPopUpdateSign.setVisibility(View.GONE);
-            ivSign.setVisibility(View.GONE);
-        }
+        setSign();
 
         MergeLoginBean bean = FarmerShareUtils.getData(MERGE_LOGIN_INFO);
         if (bean != null) {
@@ -211,7 +201,7 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
                             }
 
                             AlertDialog.Builder mDialog = new AlertDialog.Builder(HomeActivity.this);
-                            mDialog.setIcon(R.drawable.farm_cowface);
+                            mDialog.setIcon(R.drawable.cowface);//farm_cowface
                             mDialog.setTitle("版本更新");
                             mDialog.setMessage(UpdateInformation.upgradeinfo);
                             mDialog.setCancelable(false);
@@ -219,12 +209,17 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     ivPopUpdateSign.setVisibility(View.GONE);
+//                                    Intent mIntent = new Intent(HomeActivity.this, FarmerAppUpgradeService.class);
+//                                    mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                                    //传递数据
+//                                    //mIntent.putExtra("appname", UpdateInformation.appname);
+//                                    mIntent.putExtra("mDownloadUrl", UpdateInformation.updateurl);
+//                                    mIntent.putExtra("appname", UpdateInformation.appname);
+//                                    HomeActivity.this.startService(mIntent);
                                     Intent mIntent = new Intent(HomeActivity.this, AppUpgradeService.class);
                                     mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     //传递数据
-                                    //mIntent.putExtra("appname", UpdateInformation.appname);
-                                    mIntent.putExtra("mDownloadUrl", UpdateInformation.updateurl);
-                                    mIntent.putExtra("appname", UpdateInformation.appname);
+                                    mIntent.putExtra("data", mUpdateInfoModel);
                                     HomeActivity.this.startService(mIntent);
                                 }
                             }).setNegativeButton("稍后再说", new DialogInterface.OnClickListener() {
@@ -235,7 +230,7 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
                             }).create().show();
                         } else {
                             AlertDialog.Builder mDialog = new AlertDialog.Builder(HomeActivity.this);
-                            mDialog.setIcon(R.drawable.farm_cowface);
+                            mDialog.setIcon(R.drawable.cowface);//farm_cowface
                             mDialog.setTitle("提示");
                             mDialog.setMessage("当前已是最新版本");
                             mDialog.setCancelable(false);
@@ -287,18 +282,37 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
-
         startService(new Intent(this, UploadService.class));
     }
 
     public void setSign() {
+//        if (needUpDate) {
+//            ivPopUpdateSign.setVisibility(View.VISIBLE);
+//            ivSign.setVisibility(View.VISIBLE);
+//        } else {
+//            ivPopUpdateSign.setVisibility(View.GONE);
+//            ivSign.setVisibility(View.GONE);
+//        }
+        if (ivPopUpdateSign == null || ivSign == null) return;
+        if (AppConfig.getUpdateInfoModel() != null)
+            needUpDate = AppConfig.getUpdateInfoModel().isUpdate();
         if (needUpDate) {
-            ivPopUpdateSign.setVisibility(View.VISIBLE);
-            ivSign.setVisibility(View.VISIBLE);
+            if (FarmAppConfig.isOriginApk() || AppConfig.isOriginApk()) {
+                ivPopUpdateSign.setVisibility(View.VISIBLE);
+                ivSign.setVisibility(View.VISIBLE);
+            }
         } else {
             ivPopUpdateSign.setVisibility(View.GONE);
             ivSign.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onEventMain(UpdateInfoModel bean) {
+        super.onEventMain(bean);
+        needUpDate = bean.isUpdate();
+        mUpdateInfoModel = bean;
+        setSign();
     }
 
     /**

@@ -4,7 +4,7 @@ import com.farm.innovation.utils.HttpRespObject;
 
 import org.json.JSONObject;
 
-public class UpdateInfoModel extends HttpRespObject {
+public class FarmerUpdateInfoModel extends HttpRespObject {
     //app名字
     private String appname;
     //服务器版本

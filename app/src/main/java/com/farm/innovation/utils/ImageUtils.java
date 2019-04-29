@@ -10,6 +10,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.os.Environment;
+import android.text.Html;
 import android.util.Log;
 import android.util.TypedValue;
 
@@ -89,6 +90,76 @@ public class ImageUtils {
         return blur < 20;
     }
 
+    public static boolean isBlurByOpenCV_YXS(Bitmap image) {
+        System.out.println("image.w=" + image.getWidth() + ",image.h=" + image.getHeight());
+        int l = CvType.CV_8UC1; //8-bit grey scale image
+        Mat matImage = new Mat();
+        Utils.bitmapToMat(image, matImage);
+        Mat matImageGrey = new Mat();
+        Imgproc.cvtColor(matImage, matImageGrey, Imgproc.COLOR_BGR2GRAY); // 图像灰度化
+
+        Bitmap destImage;
+        destImage = Bitmap.createBitmap(image);
+        Mat dst2 = new Mat();
+        Utils.bitmapToMat(destImage, dst2);
+        Mat laplacianImage = new Mat();
+        dst2.convertTo(laplacianImage, l);
+        Imgproc.Laplacian(matImageGrey, laplacianImage, CvType.CV_8U); // 拉普拉斯变换
+        Mat laplacianImage8bit = new Mat();
+        laplacianImage.convertTo(laplacianImage8bit, l);
+
+        Bitmap bmp = Bitmap.createBitmap(laplacianImage8bit.cols(), laplacianImage8bit.rows(), Bitmap.Config.ARGB_8888);
+        Utils.matToBitmap(laplacianImage8bit, bmp);
+        int[] pixels = new int[bmp.getHeight() * bmp.getWidth()];
+        bmp.getPixels(pixels, 0, bmp.getWidth(), 0, 0, bmp.getWidth(), bmp.getHeight()); // bmp为轮廓图
+
+        int maxLap = -16777216;
+        for (int pixel : pixels) {
+            if (pixel > maxLap)
+                maxLap = pixel;
+        }
+        int userOffset = -3881250;
+        int soglia = -6118750 + userOffset;
+        System.out.println("maxLap=" + maxLap);
+        if (maxLap <= soglia) {
+            System.out.println("这是一张模糊图片");
+        }
+        System.out.println("==============================================\n");
+        soglia += 6118750 + userOffset;
+        maxLap += 6118750 + userOffset;
+
+        Log.d("FarmerImageUtils", "opencvanswers..result：image.w=" + image.getWidth() + ", image.h=" + image.getHeight()
+                + "\nmaxLap= " + maxLap + "(清晰范围:0~" + (6118750 + userOffset) + ")"
+                + "\n" + Html.fromHtml("<font color='#eb5151'><b>" + (maxLap <= soglia ? "模糊" : "清晰") + "</b></font>"));
+        return maxLap <= soglia;
+    }
+
+    public static boolean isBlurByOpenCV_YXS(String picFilePath) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inDither = true;
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        Bitmap image = decodeSampledBitmapFromFile(picFilePath, options, 2000, 2000);
+        return isBlurByOpenCV(image);
+    }
+
+    public static Bitmap decodeSampledBitmapFromFile_YXS(String imgPath, BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(imgPath, options);
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeFile(imgPath, options);
+    }
+
+    public static int calculateInSampleSize_YXS(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+        while ((height / inSampleSize) > reqHeight || (width / inSampleSize) > reqWidth) {
+            inSampleSize *= 2;
+        }
+        System.out.println("inSampleSize=" + inSampleSize);
+        return inSampleSize;
+    }
 
     public static boolean isBlurredImage(Bitmap image) {
         try {
@@ -544,11 +615,15 @@ public class ImageUtils {
         // Matrix类进行图片处理（缩小或者旋转）
         Matrix matrix = new Matrix();
         // 根据指定高度宽度缩放
-        matrix.postScale(0.05f, 0.05f);
+        matrix.postScale(0.1f, 0.1f);
         // 生成新的图片
         try {
             Bitmap dstbmp = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
                     bitmap.getHeight(), matrix, true);
+//            Bitmap dstbmp = Bitmap.createBitmap(bitmap.getWidth() / 10, bitmap.getHeight() / 10, Bitmap.Config.ARGB_8888);
+//            Canvas canvas = new Canvas(dstbmp);
+//            canvas.drawBitmap(dstbmp, matrix, new Paint(Paint.ANTI_ALIAS_FLAG));
+
             if (dstbmp != null) {
                 return dstbmp;
             }
@@ -581,7 +656,7 @@ public class ImageUtils {
     }
 
     //检测亮度
-    public static int checkImageBright(Bitmap bitmap) {
+    public static Object[] checkImageBright(Bitmap bitmap) {
         //对图像进行模糊度，明暗度判断
         //先缩放再获得亮度
         Bitmap checkBitmap = ImageUtils.getPostScaleBitmap(bitmap);
@@ -589,7 +664,7 @@ public class ImageUtils {
         int bitBright = ImageUtils.getImageBright(checkBitmap);
         long time1 = System.currentTimeMillis();
         Log.d(TAG, "图像imgae----bitBright===" + bitBright + "--spent time ====" + (time1 - time0));
-        return bitBright;
+        return new Object[]{bitBright, checkBitmap};
     }
 
     /*

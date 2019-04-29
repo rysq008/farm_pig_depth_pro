@@ -125,7 +125,9 @@ public class WaitDisposeActivity extends BaseActivity implements View.OnClickLis
                 WaitDisposeActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        WaitDisposeActivity.this.mProgressDialog.dismiss();
+                        if(mProgressDialog != null) {
+                            WaitDisposeActivity.this.mProgressDialog.dismiss();
+                        }
                     }
                 });
                 AVOSCloudUtils.saveErrorMessage(e, WaitDisposeActivity.class.getSimpleName());

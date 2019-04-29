@@ -101,6 +101,7 @@ dependencies {
     implementation 'junit:junit:4.12'
     implementation 'com.android.support.test:runner:1.0.1'
     implementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    implementation 'com.android.support:cardview-v7:27.1.1'
 
     //    luolu
     implementation 'com.android.support:support-v4:27.1.1'
@@ -189,10 +190,10 @@ apply plugin: 'maven'
 
 ext {
     // 从Github上clone下来的项目的本地地址
-    GITHUB_REPO_PATH = "C:\\insurance\\farm_pig_insurance\\farm_pig_insurance"/*"C:\\pig_farmer_aar"*/
+    GITHUB_REPO_PATH = "C:\\farmer_pig_insurance";//"C:\\insurance\\farm_pig_insurance\\farm_pig_insurance"/*"C:\\pig_farmer_aar"*/
     // api 'com.audient:super_library:1.0.0'
     PUBLISH_GROUP_ID = 'com.innovation.aar'
-    PUBLISH_ARTIFACT_ID = 'pig_farm_Insurance'
+    PUBLISH_ARTIFACT_ID = 'farmer_pig_Insurance'
     PUBLISH_VERSION = android.defaultConfig.versionName/*'1.5.3'*/
 }
 

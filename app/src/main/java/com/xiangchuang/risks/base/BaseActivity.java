@@ -16,7 +16,12 @@ import android.widget.TextView;
 
 import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
+import com.xiangchuang.risks.update.UpdateInfoModel;
 import com.xiangchuang.risks.utils.ToastUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -59,14 +64,15 @@ public abstract class BaseActivity extends AppCompatActivity {
         toastUtils = new ToastUtils();
         AppConfig.verifyStoragePermissions(this);
         showProgressDialog(this);
-        if(getLayoutId() != 0){
+        if (getLayoutId() != 0) {
             this.setContentView(this.getLayoutId());//缺少这一行
             // setContentView(getLayoutId());
             ButterKnife.bind(this);
             initView();
             initData();
         }
-     }
+        EventBus.getDefault().register(this);
+    }
 
     public void initView() {
 
@@ -91,6 +97,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (isPause) {
             initData();
         }
+        if (null != AppConfig.getUpdateInfoModel())
+            EventBus.getDefault().post(AppConfig.getUpdateInfoModel());
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMain(UpdateInfoModel bean) {
+        if (bean == null) return;
     }
 
     /**
@@ -118,6 +131,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         toastUtils = null;
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     public void showProgressDialog(Activity activity) {

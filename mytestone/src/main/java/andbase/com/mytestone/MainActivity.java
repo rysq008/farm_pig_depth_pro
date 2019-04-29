@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.innovation.pig.insurance.AppConfig;
-import com.xiangchuang.risks.view.LoginFamerActivity;
+import com.xiangchuang.risks.view.LoginPigAarActivity;
 
 import static android.widget.LinearLayout.VERTICAL;
 
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
                         PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putString("pid", pid).apply();
                     }
                     Toast.makeText(MainActivity.this, "nb", Toast.LENGTH_LONG).show();
-                    Intent mIntent = new Intent(MainActivity.this, LoginFamerActivity.class);
+                    Intent mIntent = new Intent(MainActivity.this, LoginPigAarActivity.class);
                     mIntent.putExtra(AppConfig.TOKEY, "android_token");
                     mIntent.putExtra(AppConfig.USER_ID, userid/*"android_userid3"*/);
                     mIntent.putExtra(AppConfig.PHONE_NUMBER, phone);

@@ -16,6 +16,7 @@
 
 package org.tensorflow.demo;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -127,7 +128,15 @@ public class BreedingDetectorActivityBreeding extends BreedingCameraActivity imp
     public static int offsetY;
 
     private static long last_toast_time = 0;
-
+    private static long internalTime;
+    public static void start(Activity context) {
+        //延时2s，防止重复启动页面
+        if(System.currentTimeMillis() - internalTime > 2000){
+            Intent intent = new Intent(context, BreedingDetectorActivityBreeding.class);
+            context.startActivity(intent);
+        }
+        internalTime = System.currentTimeMillis();
+    }
     @Override
     public synchronized void onResume() {
         if(!dilogIsShowing){

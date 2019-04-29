@@ -57,9 +57,14 @@ public class CameraPicActivity extends BaseActivity implements ViewTreeObserver.
     private int mOrientation;
     private boolean mSafeToTakePicture = true, mGrantedCameraRequested;
 
+    private static long internalTime;
     public static void start(Activity context) {
-        Intent intent = new Intent(context, CameraPicActivity.class);
-        context.startActivityForResult(intent, 1);
+        //延时2s，防止重复启动页面
+        if(System.currentTimeMillis() - internalTime > 2000){
+            Intent intent = new Intent(context, CameraPicActivity.class);
+            context.startActivityForResult(intent, 1);
+        }
+        internalTime = System.currentTimeMillis();
     }
 
     @Override

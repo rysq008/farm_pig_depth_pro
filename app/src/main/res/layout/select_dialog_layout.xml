@@ -1,85 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="5dp"
-    android:background="@drawable/transparent_rect">
+    android:orientation="vertical">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="20dp"
+        android:background="@android:color/white"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/tv_famer_select"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:layout_gravity="center"
             android:gravity="center"
-            android:background="@android:color/white"
-            android:orientation="vertical"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp">
+            android:minHeight="45dp"
+            android:text="牛险"
+            android:textColor="#333"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginLeft="15dp"
+            android:background="#ccc" />
+
+        <TextView
+            android:id="@+id/tv_donkey_select"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:minHeight="45dp"
+            android:text="驴险"
+            android:textColor="#333"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginLeft="15dp"
+            android:background="#ccc" />
+
+        <TextView
+            android:id="@+id/tv_yak_select"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:minHeight="45dp"
+            android:text="牦牛险"
+            android:textColor="#333"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginLeft="15dp"
+            android:background="#ccc" />
+
+        <TextView
+            android:id="@+id/tv_pig_select"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:minHeight="45dp"
+            android:text="猪险"
+            android:textColor="#333"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp_10"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardview_farmer"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_margin="@dimen/dp_10"
+            android:layout_weight="1"
+            android:background="@color/app_color"
+            app:cardBackgroundColor="@color/cardview_dark_background"
+            app:cardCornerRadius="@dimen/dp_10"
+            app:cardElevation="@dimen/dp_10"
+            app:cardMaxElevation="@dimen/dp_10"
+            app:cardPreventCornerOverlap="false"
+            app:cardUseCompatPadding="true">
 
             <TextView
-                android:id="@+id/tv_famer_select"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:minHeight="45dp"
-                android:gravity="center"
-                android:textColor="#333"
-                android:textSize="18sp"
-                android:text="牛险"/>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginLeft="15dp"
-                android:background="#ccc" />
-            <TextView
-                android:id="@+id/tv_donkey_select"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="45dp"
-                android:gravity="center"
-                android:textColor="#333"
-                android:textSize="18sp"
-                android:text="驴险"/>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginLeft="15dp"
-                android:background="#ccc" />
-            <TextView
-                android:id="@+id/tv_yak_select"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="45dp"
-                android:gravity="center"
-                android:textColor="#333"
-                android:textSize="18sp"
-                android:text="牦牛险"/>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginLeft="15dp"
-                android:background="#ccc" />
+                android:layout_gravity="center"
+                android:text="农险业务" />
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardview_pig"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_margin="@dimen/dp_10"
+            android:layout_weight="1"
+            android:background="@color/app_color"
+            app:cardBackgroundColor="@color/cardview_dark_background"
+            app:cardCornerRadius="@dimen/dp_10"
+            app:cardElevation="@dimen/dp_10">
 
             <TextView
-                android:id="@+id/tv_pig_select"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:minHeight="45dp"
-                android:gravity="center"
-                android:textColor="#333"
-                android:textSize="18sp"
-                android:text="猪险"/>
-        </LinearLayout>
+                android:layout_gravity="center"
+                android:text="育肥业务" />
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
 
-        <ImageView
-            android:id="@+id/iv_close"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@mipmap/iv_close"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"/>
-    </RelativeLayout>
-</LinearLayout>
+    <ImageView
+        android:id="@+id/iv_close"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:background="@mipmap/iv_close" />
+</RelativeLayout>

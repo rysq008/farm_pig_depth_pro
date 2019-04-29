@@ -234,7 +234,6 @@ public class FarmAppConfig {
                 Log.e("设备信息", "\nkey:" + key + "==========value:" + value);
             }
 
-
             mUpdateTask = new GetUpDateTask(HttpUtils.GET_UPDATE_URL, query);
             mUpdateTask.execute((Void) null);
         }
@@ -293,7 +292,6 @@ public class FarmAppConfig {
                 return false;
             }
             //  register the new account here.
-
         }
 
         @Override
@@ -307,8 +305,6 @@ public class FarmAppConfig {
 
                 //发送广播
                 mApp.sendBroadcast(intent);
-
-
             } else if (!success) {
                 Toast.makeText(activity, "网络接口请求异常！", Toast.LENGTH_SHORT).show();
             }

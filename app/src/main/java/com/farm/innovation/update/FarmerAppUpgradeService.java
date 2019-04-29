@@ -27,7 +27,7 @@ import com.innovation.pig.insurance.R;
 import java.io.File;
 
 
-public class AppUpgradeService extends Service {
+public class FarmerAppUpgradeService extends Service {
     private NotificationManager mNotificationManager = null;
     private Notification mNotification = null;
     private PendingIntent mPendingIntent = null;
@@ -92,7 +92,7 @@ public class AppUpgradeService extends Service {
         completingIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         completingIntent.setClass(getApplicationContext(), HomeActivity.class);
         // 创建Notifcation对象，设置图标，提示文字,策略
-        mPendingIntent = PendingIntent.getActivity(AppUpgradeService.this, R.string.app_name, completingIntent,
+        mPendingIntent = PendingIntent.getActivity(FarmerAppUpgradeService.this, R.string.app_name, completingIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
         mNotification.icon = R.drawable.farm_ic_launcher;
         mNotification.tickerText = "开始下载";

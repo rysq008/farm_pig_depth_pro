@@ -3,50 +3,38 @@ package com.innovation.pig.insurance;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Application;
-import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.telephony.TelephonyManager;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.avos.avoscloud.AVOSCloud;
 import com.farm.innovation.base.FarmAppConfig;
-import com.innovation.pig.insurance.netutils.Constants;
-import com.innovation.pig.insurance.netutils.PreferencesUtils;
+import com.farm.innovation.biz.welcome.WelcomeActivity;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.xiangchuang.risks.base.BaseActivity;
-import com.xiangchuang.risks.update.UpdateReceiver;
+import com.xiangchuang.risks.update.UpdateInfoModel;
+import com.xiangchuang.risks.utils.AppUpdateUtils;
 import com.xiangchuang.risks.utils.ShareUtils;
 import com.xiangchuang.risks.view.LoginPigAarActivity;
 
 import net.gotev.uploadservice.UploadService;
 import net.gotev.uploadservice.okhttp.OkHttpStack;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import org.greenrobot.eventbus.EventBus;
 
 import innovation.crash.CrashHandler;
 import innovation.database.MyObjectBox;
-import innovation.entry.UpdateBean;
 import innovation.location.LocationManager_new;
 import innovation.network_status.NetworkChangedReceiver;
 import innovation.utils.GlobalDialogUtils;
-import innovation.utils.HttpRespObject;
 import innovation.utils.HttpUtils;
 import innovation.utils.ImageLoaderUtils;
 import io.objectbox.BoxStore;
-import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
 
 public class AppConfig {
     private static final String TAG = "MyApplication";
@@ -92,15 +80,11 @@ public class AppConfig {
 
     public static String version;
 
-    public static boolean needUpDate = false;
+    public static UpdateInfoModel getUpdateInfoModel() {
+        return updateInfoModel;
+    }
 
-    public UpdateReceiver mUpdateReceiver;
-    private IntentFilter mIntentFilter;
-    private GetUpDateTask mUpdateTask;
-    private UpdateBean insurresp_company;
-    private String errStr_company;
-
-    private int isFirst = 0;
+    private static UpdateInfoModel updateInfoModel;
 
     public void onCreate(Application application) {
         app = application;
@@ -139,8 +123,6 @@ public class AppConfig {
 
         version = getVersionName();
 
-        registerBroadcast();
-
         app.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
@@ -151,16 +133,19 @@ public class AppConfig {
 //                    Toast.makeText(activity, "------->>"+HttpUtils.baseUrl, Toast.LENGTH_LONG).show();
 //                }
                 AppConfig.activity = activity;
-                if(activity instanceof BaseActivity){
+                if (activity instanceof BaseActivity) {
                     if (activity != null && !(activity instanceof LoginPigAarActivity)) {
                         GlobalDialogUtils.getNotice(activity.getClass().getCanonicalName(), activity);
                     }
-
-                    if (!(activity instanceof LoginPigAarActivity)) {
-                        isFirst++;
-                        if (AppConfig.isOriginApk())
-                            doUpDateTask();
-                    }
+                }
+                if (activity instanceof WelcomeActivity && AppConfig.isOriginApk()) {
+                    AppUpdateUtils.newInstance().appVersionCheck(activity, new AppUpdateUtils.UpdateResultListener() {
+                        @Override
+                        public void update(boolean isUpdate, UpdateInfoModel bean) {
+                            updateInfoModel = bean.setUpdate(isUpdate);
+                            EventBus.getDefault().post(updateInfoModel);
+                        }
+                    });
                 }
             }
 
@@ -207,140 +192,6 @@ public class AppConfig {
             return (info.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
         } catch (Exception e) {
             return false;
-        }
-    }
-
-    private void doUpDateTask() {
-        if (isFirst == 1) {
-            if (activity.getIntent().getFlags() != Intent.FLAG_ACTIVITY_SINGLE_TOP) {
-                if (AppConfig.isApkInDebug()) {
-                    Toast.makeText(activity, "getFlags==" + activity.getIntent().getFlags(), Toast.LENGTH_SHORT).show();
-                }
-
-                Map<String, String> query = new HashMap<>();
-
-                String type = PreferencesUtils.getStringValue(Constants.companyfleg, app);
-                if (("1").equals(type)) {
-                    query.put("uid", PreferencesUtils.getStringValue(Constants.id, app));
-                } else {
-                    query.put("uid", PreferencesUtils.getIntValue(Constants.en_user_id, app) + "");
-                }
-                query.put("enId", PreferencesUtils.getStringValue(Constants.en_id, app));
-                query.put("longitude", PreferencesUtils.getStringValue(Constants.longitude, app));
-                query.put("latitude", PreferencesUtils.getStringValue(Constants.latitude, app));
-                query.put("phoneModel", android.os.Build.MODEL);
-                query.put("timestamp", System.currentTimeMillis() + "");
-
-                TelephonyManager phone = (TelephonyManager) app.getSystemService(Context.TELEPHONY_SERVICE);
-                //IMEI
-                if (ActivityCompat.checkSelfPermission(app, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    query.put("phoneImei", "");
-                } else {
-                    query.put("phoneImei", phone.getDeviceId() + "");
-                }
-                query.put("version", version);
-
-                Set set = query.keySet();
-                for (Object aSet : set) {
-                    String key = (String) aSet;
-                    String value = query.get(key);
-                    Log.e("设备信息", "\nkey:" + key + "==========value:" + value);
-                }
-
-
-                mUpdateTask = new GetUpDateTask(HttpUtils.GET_UPDATE_URL, query);
-                mUpdateTask.execute((Void) null);
-            }
-        }
-    }
-
-    private void registerBroadcast() {
-        mUpdateReceiver = new UpdateReceiver(false);
-        mIntentFilter = new IntentFilter(UpdateReceiver.UPDATE_ACTION);
-        app.registerReceiver(mUpdateReceiver, mIntentFilter);
-    }
-
-
-    private class GetUpDateTask extends AsyncTask<Void, Void, Boolean> {
-
-        private final String mUrl;
-        private final Map<String, String> mQueryMap;
-
-        GetUpDateTask(String url, Map map) {
-            mUrl = url;
-            mQueryMap = map;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            try {
-
-                FormBody.Builder builder = new FormBody.Builder();
-                // Add Params to Builder
-                for (Map.Entry<String, String> entry : mQueryMap.entrySet()) {
-                    builder.add(entry.getKey(), entry.getValue());
-                }
-                // Create RequestBody
-                RequestBody formBody = builder.build();
-
-                String response = HttpUtils.post(mUrl, formBody);
-                if (response == null) {
-                    return false;
-                }
-                Log.d("MyApplication", mUrl + "\nresponse:\n" + response);
-
-                if (HttpUtils.GET_UPDATE_URL.equalsIgnoreCase(mUrl)) {
-                    insurresp_company = (UpdateBean) HttpUtils.processResp_update(response);
-
-                    Log.e("MyApplication", "insurresp_company: " + insurresp_company.toString());
-
-                    if (insurresp_company == null) {
-                        errStr_company = "请求错误！";
-                        return false;
-                    }
-                    if (insurresp_company.status != HttpRespObject.STATUS_OK) {
-                        errStr_company = insurresp_company.msg;
-                        return false;
-                    }
-                }
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
-                errStr_company = "服务器错误！";
-                return false;
-            }
-            //  register the new account here.
-
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mUpdateTask = null;
-
-            if (success & HttpUtils.GET_UPDATE_URL.equalsIgnoreCase(mUrl)) {
-                Intent intent = new Intent();
-                intent.setAction(UpdateReceiver.UPDATE_ACTION);
-                intent.putExtra("result_json", String.valueOf(insurresp_company.data));
-
-                //发送广播
-                app.sendBroadcast(intent);
-
-
-            } else if (!success) {
-                Toast.makeText(activity, "网络接口请求异常！", Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mUpdateTask = null;
         }
     }
 

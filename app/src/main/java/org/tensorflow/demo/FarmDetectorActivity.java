@@ -665,7 +665,8 @@ public class FarmDetectorActivity extends FarmCameraActivity implements OnImageA
     //检测图片质量
     private void checkImageQuality(Bitmap bitmap) {
         //检测图片质量
-        int bright = com.farm.innovation.utils.ImageUtils.checkImageBright(bitmap);
+        Object[] objs = com.farm.innovation.utils.ImageUtils.checkImageBright(bitmap);
+        int bright = (int) objs[0];
         boolean ifDark = false;
         boolean ifBright = false;
         boolean isBlur = false;
@@ -681,8 +682,7 @@ public class FarmDetectorActivity extends FarmCameraActivity implements OnImageA
             Log.d(TAG, "图像过暗，请重新选择" + "--bright ===" + bright);
             imageErrMsg += "图像过暗！" + "--intensityValue ===" + bright;
         } else {
-
-            isBlur = com.farm.innovation.utils.ImageUtils.isBlurByOpenCV_new(bitmap);
+            isBlur = com.farm.innovation.utils.ImageUtils.isBlurByOpenCV_YXS((Bitmap) objs[1]);
             if (isBlur) {
                 imageBlurCounter++;
                 Log.d(TAG, "图像模糊，请重新选择" + "--isblur ===" + imageBlurCounter);

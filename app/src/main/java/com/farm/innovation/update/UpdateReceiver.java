@@ -41,7 +41,7 @@ public class UpdateReceiver extends BroadcastReceiver {
         JSONObject object = null;
         try {
             object = new JSONObject(result_json);
-            UpdateInfoModel model = new UpdateInfoModel();
+            FarmerUpdateInfoModel model = new FarmerUpdateInfoModel();
             model.setAppname(object.getString("appname"));
             model.setLastForce(object.getString("lastForce"));
             model.setServerFlag(object.getString("serverFlag"));
@@ -53,7 +53,7 @@ public class UpdateReceiver extends BroadcastReceiver {
             e.printStackTrace();
         }
 
-        UpdateInfoModel model = (UpdateInfoModel) tempMap
+        FarmerUpdateInfoModel model = (FarmerUpdateInfoModel) tempMap
                 //就是一个标志
                 .get("app_update");
         try {
@@ -178,7 +178,7 @@ public class UpdateReceiver extends BroadcastReceiver {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                Intent mIntent = new Intent(context, AppUpgradeService.class);
+                Intent mIntent = new Intent(context, FarmerAppUpgradeService.class);
                 mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 //传递数据
 //                mIntent.putExtra("appname", UpdateInformation.appname);
@@ -220,7 +220,7 @@ public class UpdateReceiver extends BroadcastReceiver {
 //            public void onClickView(DialogInterface dialog, int which) {
 //
 //
-//                Intent mIntent = new Intent(context, AppUpgradeService.class);
+//                Intent mIntent = new Intent(context, FarmerAppUpgradeService.class);
 //                mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //                //传递数据
 ////                mIntent.putExtra("appname", UpdateInformation.appname);

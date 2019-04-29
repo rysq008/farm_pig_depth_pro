@@ -60,7 +60,7 @@ public class ShowPollingActivity_new extends BaseActivity {
     private String no;
     List<SheListBean.DataOffLineBaodanBean> mSheBeans;
     final PermissionsDelegate permissionsDelegate = new PermissionsDelegate(this);
-
+    private static long internalTime;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_show_polling_new;
@@ -137,11 +137,36 @@ public class ShowPollingActivity_new extends BaseActivity {
                                             if (isOPen(ShowPollingActivity_new.this)) {
                                                 //判断如果是能繁母猪点数进入新的点数逻辑界面
                                                 if (mSheBeans.get(position).getPigType().equals("102")) {
-                                                    intent = new Intent(ShowPollingActivity_new.this, BreedingDetectorActivityBreeding.class);
+                                                    //延时3s，防止重复启动页面
+                                                    if(System.currentTimeMillis() - internalTime > 2000){
+                                                        intent = new Intent(ShowPollingActivity_new.this, BreedingDetectorActivityBreeding.class);
+                                                        intent.putExtra("recodetitle", recodetitle);
+                                                        intent.putExtra("recodenumber", recodenumber);
+                                                        intent.putExtra("no", no);
+                                                        intent.putExtra("pigcount", String.valueOf(mSheBeans.get(position).getCount()));
+                                                        intent.putExtra("duration", mSheBeans.get(position).getTimeLength());
+                                                        intent.putExtra("autocount", String.valueOf(mSheBeans.get(position).getAutoCount()));
+                                                        intent.putExtra("sheid", String.valueOf(mSheBeans.get(position).getSheId()));
+                                                        intent.putExtra("shename", mSheBeans.get(position).getSheName());
+                                                        intent.putExtra("juancnt", mSheBeans.get(position).getJuanCnt());
+                                                        startActivity(intent);
+                                                    }
+                                                    internalTime = System.currentTimeMillis();
+
                                                 } else {
                                                     if (deviceHashMap.size() > 0) {
                                                         //摄像头页面
                                                         intent = new Intent(ShowPollingActivity_new.this, USBCameraActivity_newUsb.class);
+                                                        intent.putExtra("recodetitle", recodetitle);
+                                                        intent.putExtra("recodenumber", recodenumber);
+                                                        intent.putExtra("no", no);
+                                                        intent.putExtra("pigcount", String.valueOf(mSheBeans.get(position).getCount()));
+                                                        intent.putExtra("duration", mSheBeans.get(position).getTimeLength());
+                                                        intent.putExtra("autocount", String.valueOf(mSheBeans.get(position).getAutoCount()));
+                                                        intent.putExtra("sheid", String.valueOf(mSheBeans.get(position).getSheId()));
+                                                        intent.putExtra("shename", mSheBeans.get(position).getSheName());
+                                                        intent.putExtra("juancnt", mSheBeans.get(position).getJuanCnt());
+                                                        startActivity(intent);
                                                     } else {
                                                         Toast.makeText(ShowPollingActivity_new.this, "请连接外接摄像头。", Toast.LENGTH_LONG).show();
                                                         return;
@@ -153,17 +178,6 @@ public class ShowPollingActivity_new extends BaseActivity {
                                                     }*/
                                                     }
                                                 }
-
-                                                intent.putExtra("recodetitle", recodetitle);
-                                                intent.putExtra("recodenumber", recodenumber);
-                                                intent.putExtra("no", no);
-                                                intent.putExtra("pigcount", String.valueOf(mSheBeans.get(position).getCount()));
-                                                intent.putExtra("duration", mSheBeans.get(position).getTimeLength());
-                                                intent.putExtra("autocount", String.valueOf(mSheBeans.get(position).getAutoCount()));
-                                                intent.putExtra("sheid", String.valueOf(mSheBeans.get(position).getSheId()));
-                                                intent.putExtra("shename", mSheBeans.get(position).getSheName());
-                                                intent.putExtra("juancnt", mSheBeans.get(position).getJuanCnt());
-                                                startActivity(intent);
                                             } else {
                                                 AlertDialogManager.showMessageDialog(ShowPollingActivity_new.this, "提示", getString(R.string.locationwarning), new AlertDialogManager.DialogInterface() {
                                                     @Override

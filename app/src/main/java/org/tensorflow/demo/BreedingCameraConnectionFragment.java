@@ -1605,7 +1605,7 @@ public class BreedingCameraConnectionFragment extends Fragment implements View.O
                 synchronized (activity) {
                     resultDialog.dismiss();
                     dilogIsShowing = false;
-                    activity.startActivity(new Intent(activity, BreedingDetectorActivityBreeding.class));
+                    BreedingDetectorActivityBreeding.start(activity);
                     //删除视频zip文件
                     Global.mediaInsureItem.zipVideoNameDel();
                     //删除视频文件

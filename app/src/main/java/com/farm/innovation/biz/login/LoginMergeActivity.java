@@ -43,6 +43,7 @@ import com.farm.innovation.utils.FarmerPreferencesUtils;
 import com.farm.innovation.utils.FarmerShareUtils;
 import com.farm.innovation.utils.HttpUtils;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
 import com.innovation.pig.insurance.netutils.Constants;
@@ -134,7 +135,7 @@ public class LoginMergeActivity extends BaseActivity implements ILoginView {
 
         MergeLoginBean bean = FarmerShareUtils.getData(MERGE_LOGIN_INFO);
         if (bean != null) {
-            if (bean.data.nxData != null) {
+            if (bean.data.nxData != null && !TextUtils.isEmpty(bean.data.nxData.token) && bean.data.nxData.status == RespObject.USER_STATUS_1) {
                 showTypeDialog(bean);
             } else {
                 if (bean.data.ftnData != null) {
@@ -274,86 +275,90 @@ public class LoginMergeActivity extends BaseActivity implements ILoginView {
             gson = new Gson();
 
             if (success) {
-                resultBean = gson.fromJson(responseUserLoginTask, MergeLoginBean.class);
-                FarmerShareUtils.saveData(MERGE_LOGIN_INFO, resultBean);
-                if (resultBean != null) {
-                    Log.d(TAG, mUrl + "\nresponseUserLoginTask:" + responseUserLoginTask);
-                    if (resultBean.isSuccess()) {
-                        MergeLoginBean.FarmerLoginBean fbean = resultBean.data.nxData;
-                        MergeLoginBean.PigLoginBean pbean = resultBean.data.ftnData;
-                        if (pbean != null) {
-                            PreferencesUtils.saveKeyValue(Constants.companyfleg, pbean.type + "", AppConfig.getAppContext());
-                            PreferencesUtils.saveKeyValue(Constants.username, textInputEditPhoneNumber.getText().toString().trim(), AppConfig.getAppContext());
-                            PreferencesUtils.saveKeyValue(Constants.password, textInputEditPassword.getText().toString().trim(), AppConfig.getAppContext());
-                            PreferencesUtils.saveBooleanValue(Constants.ISLOGIN, true, AppConfig.getAppContext());
+                try {
+                    resultBean = gson.fromJson(responseUserLoginTask, MergeLoginBean.class);
+                    FarmerShareUtils.saveData(MERGE_LOGIN_INFO, resultBean);
+                    if (resultBean != null) {
+                        Log.d(TAG, mUrl + "\nresponseUserLoginTask:" + responseUserLoginTask);
+                        if (resultBean.isSuccess()) {
+                            MergeLoginBean.FarmerLoginBean fbean = resultBean.data.nxData;
+                            MergeLoginBean.PigLoginBean pbean = resultBean.data.ftnData;
+                            if (pbean != null) {
+                                PreferencesUtils.saveKeyValue(Constants.companyfleg, pbean.type + "", AppConfig.getAppContext());
+                                PreferencesUtils.saveKeyValue(Constants.username, textInputEditPhoneNumber.getText().toString().trim(), AppConfig.getAppContext());
+                                PreferencesUtils.saveKeyValue(Constants.password, textInputEditPassword.getText().toString().trim(), AppConfig.getAppContext());
+                                PreferencesUtils.saveBooleanValue(Constants.ISLOGIN, true, AppConfig.getAppContext());
 
-                            //1 保险公司  2 猪场企业
-                            if (pbean.type == 1) {
-                                String deptName = pbean.adminUser.deptName;// adminUser.getString("deptName");
-                                String name = pbean.adminUser.name;// adminUser.getString("name");
-                                int deptId = pbean.adminUser.deptId;// adminUser.getInt("deptId");
-                                int id = pbean.adminUser.id;// adminUser.getInt("id");
-                                PreferencesUtils.saveKeyValue(Constants.companyuser, name, AppConfig.getAppContext());
-                                PreferencesUtils.saveKeyValue(Constants.insurecompany, deptName, AppConfig.getAppContext());
-                                PreferencesUtils.saveKeyValue(Constants.deptId, deptId + "", AppConfig.getAppContext());
-                                PreferencesUtils.saveKeyValue(Constants.id, id + "", AppConfig.getAppContext());
+                                //1 保险公司  2 猪场企业
+                                if (pbean.type == 1) {
+                                    String deptName = pbean.adminUser.deptName;// adminUser.getString("deptName");
+                                    String name = pbean.adminUser.name;// adminUser.getString("name");
+                                    int deptId = pbean.adminUser.deptId;// adminUser.getInt("deptId");
+                                    int id = pbean.adminUser.id;// adminUser.getInt("id");
+                                    PreferencesUtils.saveKeyValue(Constants.companyuser, name, AppConfig.getAppContext());
+                                    PreferencesUtils.saveKeyValue(Constants.insurecompany, deptName, AppConfig.getAppContext());
+                                    PreferencesUtils.saveKeyValue(Constants.deptId, deptId + "", AppConfig.getAppContext());
+                                    PreferencesUtils.saveKeyValue(Constants.id, id + "", AppConfig.getAppContext());
 
-                                if (fbean == null) {
-                                    goToActivity(CompanyActivity.class, null);
-                                    finish();
-                                }
-                            } else {
-                                int enId = pbean.enUser.enId;// enUser.getInt("enId");
-                                int enUserId = pbean.enUser.enUserId;// enUser.getInt("enUserId");
-                                String enName = pbean.enUser.enName;// enUser.getString("enName");
-                                PreferencesUtils.saveKeyValue(Constants.en_id, enId + "", AppConfig.getAppContext());
-                                PreferencesUtils.saveKeyValue(Constants.companyname, enName, AppConfig.getAppContext());
-                                PreferencesUtils.saveIntValue(Constants.en_user_id, enUserId, AppConfig.getAppContext());
-                                if (fbean == null) {
-                                    goToActivity(SelectFunctionActivity_new.class, null);
-                                    finish();
+                                    if (TextUtils.isEmpty(fbean.token) || fbean.status != RespObject.USER_STATUS_1) {
+                                        goToActivity(CompanyActivity.class, null);
+                                        finish();
+                                    }
+                                } else {
+                                    int enId = pbean.enUser.enId;// enUser.getInt("enId");
+                                    int enUserId = pbean.enUser.enUserId;// enUser.getInt("enUserId");
+                                    String enName = pbean.enUser.enName;// enUser.getString("enName");
+                                    PreferencesUtils.saveKeyValue(Constants.en_id, enId + "", AppConfig.getAppContext());
+                                    PreferencesUtils.saveKeyValue(Constants.companyname, enName, AppConfig.getAppContext());
+                                    PreferencesUtils.saveIntValue(Constants.en_user_id, enUserId, AppConfig.getAppContext());
+                                    if (TextUtils.isEmpty(fbean.token) || fbean.status != RespObject.USER_STATUS_1) {
+                                        goToActivity(SelectFunctionActivity_new.class, null);
+                                        finish();
+                                    }
                                 }
                             }
-                        }
-                        if (fbean == null || TextUtils.isEmpty(fbean.token) || fbean.status != RespObject.USER_STATUS_1) {
+                            if (fbean == null || TextUtils.isEmpty(fbean.token) || fbean.status != RespObject.USER_STATUS_1) {
 //                            return;
-                            Snackbar.make(nestedScrollView, "服务器错误，请稍后再试！", Snackbar.LENGTH_LONG).setText("服务器错误，请稍后再试！").show();
-                        } else {
-                            //  存储用户信息
-                            SharedPreferences userinfo = getApplicationContext().getSharedPreferences(Utils.USERINFO_SHAREFILE, Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = userinfo.edit();
-                            editor.putString("token", fbean.token);
-                            //  int 类型的可能需要修�?
-                            //  验证码的有效期，应该在获取验证码的时候返回才�?
-                            editor.putInt("tokendate", fbean.tokendate);
-                            editor.putInt("uid", fbean.uid);
-                            editor.putString("username", fbean.username);
-                            editor.putString("fullname", fbean.fullname);
-                            editor.putString("codedate", String.valueOf(fbean.codedate));
-                            //用户创建时间
-                            editor.putString("createtime", fbean.createtime);
-                            //  editor.putInt("deptid", tokenresp.deptid);
-                            editor.apply();
-                            int i = fbean.deptid;
-                            FarmerPreferencesUtils.saveIntValue(HttpUtils.deptId, fbean.deptid, FarmAppConfig.getApplication());
-                            FarmerPreferencesUtils.saveKeyValue(HttpUtils.user_id, String.valueOf(fbean.uid), FarmAppConfig.getApplication());
-                            Log.i("===id==", fbean.uid + "");
+                                Snackbar.make(nestedScrollView, "服务器错误，请稍后再试！", Snackbar.LENGTH_LONG).setText("服务器错误，请稍后再试！").show();
+                            } else {
+                                //  存储用户信息
+                                SharedPreferences userinfo = getApplicationContext().getSharedPreferences(Utils.USERINFO_SHAREFILE, Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = userinfo.edit();
+                                editor.putString("token", fbean.token);
+                                //  int 类型的可能需要修�?
+                                //  验证码的有效期，应该在获取验证码的时候返回才�?
+                                editor.putInt("tokendate", fbean.tokendate);
+                                editor.putInt("uid", fbean.uid);
+                                editor.putString("username", fbean.username);
+                                editor.putString("fullname", fbean.fullname);
+                                editor.putString("codedate", String.valueOf(fbean.codedate));
+                                //用户创建时间
+                                editor.putString("createtime", fbean.createtime);
+                                //  editor.putInt("deptid", tokenresp.deptid);
+                                editor.apply();
+                                int i = fbean.deptid;
+                                FarmerPreferencesUtils.saveIntValue(HttpUtils.deptId, fbean.deptid, FarmAppConfig.getApplication());
+                                FarmerPreferencesUtils.saveKeyValue(HttpUtils.user_id, String.valueOf(fbean.uid), FarmAppConfig.getApplication());
+                                Log.i("===id==", fbean.uid + "");
 
-                            showTypeDialog(resultBean);
+                                showTypeDialog(resultBean);
+                            }
+
+                        } else if (resultBean.status == 0) {
+                            Snackbar.make(nestedScrollView, resultBean.msg, Snackbar.LENGTH_SHORT).setText(resultBean.msg).show();
+                            return;
+                        } else {
+                            Snackbar.make(nestedScrollView, resultBean.msg, Snackbar.LENGTH_SHORT).setText(resultBean.msg).show();
+                            return;
                         }
 
-                    } else if (resultBean.status == 0) {
-                        Snackbar.make(nestedScrollView, resultBean.msg, Snackbar.LENGTH_SHORT).setText(resultBean.msg).show();
-                        return;
                     } else {
-                        Snackbar.make(nestedScrollView, resultBean.msg, Snackbar.LENGTH_SHORT).setText(resultBean.msg).show();
-                        return;
+                        Snackbar.make(nestedScrollView, "服务器错误，请稍后再试！", Snackbar.LENGTH_LONG).setText("服务器错误，请稍后再试！").show();
                     }
-
-                } else {
-                    Snackbar.make(nestedScrollView, "服务器错误，请稍后再试！", Snackbar.LENGTH_LONG).setText("服务器错误，请稍后再试！").show();
+                } catch (JsonSyntaxException e) {
+                    Toast.makeText(activity, "登录数据解析异常", Toast.LENGTH_SHORT).show();
                 }
-
+                ;
             } else if (!success) {
                 // 显示失败
                 Snackbar.make(nestedScrollView, errString, Snackbar.LENGTH_LONG).show();
