@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -16,6 +17,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -383,15 +385,19 @@ public class LoginMergeActivity extends BaseActivity implements ILoginView {
         TextView donkey = v.findViewById(R.id.tv_donkey_select);
         TextView yak = v.findViewById(R.id.tv_yak_select);
         TextView pig = v.findViewById(R.id.tv_pig_select);
+        CardView card_farmer = v.findViewById(R.id.cardview_farmer);
+        CardView card_pig = v.findViewById(R.id.cardview_pig);
         ImageView close = v.findViewById(R.id.iv_close);
 
         famer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog.dismiss();
                 Log.e("famer", "onClick: famer");
                 FarmerPreferencesUtils.setAnimalType(ConstUtils.ANIMAL_TYPE_CATTLE, LoginMergeActivity.this);
                 Intent add_intent = new Intent(LoginMergeActivity.this, HomeActivity.class);
                 startActivity(add_intent);
+                bean.enterByStatus = 1;
                 finish();
             }
         });
@@ -399,9 +405,11 @@ public class LoginMergeActivity extends BaseActivity implements ILoginView {
         donkey.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog.dismiss();
                 FarmerPreferencesUtils.setAnimalType(ConstUtils.ANIMAL_TYPE_DONKEY, LoginMergeActivity.this);
                 Intent add_intent = new Intent(LoginMergeActivity.this, HomeActivity.class);
                 startActivity(add_intent);
+                bean.enterByStatus = 1;
                 finish();
             }
         });
@@ -409,16 +417,43 @@ public class LoginMergeActivity extends BaseActivity implements ILoginView {
         yak.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog.dismiss();
                 FarmerPreferencesUtils.setAnimalType(ConstUtils.ANIMAL_TYPE_YAK, LoginMergeActivity.this);
                 Intent add_intent = new Intent(LoginMergeActivity.this, HomeActivity.class);
                 startActivity(add_intent);
+                bean.enterByStatus = 1;
                 finish();
             }
         });
-
+        card_farmer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                Intent add_intent = new Intent(LoginMergeActivity.this, HomeActivity.class);
+                startActivity(add_intent);
+                bean.enterByStatus = 1;
+                finish();
+            }
+        });
         pig.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog.dismiss();
+                bean.enterByStatus = 2;
+                if (bean.data.ftnData.type == 1) {
+                    goToActivity(CompanyActivity.class, null);
+                    finish();
+                } else if (bean.data.ftnData.type == 2) {
+                    goToActivity(SelectFunctionActivity_new.class, null);
+                    finish();
+                }
+            }
+        });
+        card_pig.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                bean.enterByStatus = 2;
                 if (bean.data.ftnData.type == 1) {
                     goToActivity(CompanyActivity.class, null);
                     finish();
@@ -437,7 +472,17 @@ public class LoginMergeActivity extends BaseActivity implements ILoginView {
                 System.exit(0);
             }
         });
-
+        if (bean.enterByStatus == 1) {
+            card_farmer.performClick();
+        } else if (bean.enterByStatus == 2) {
+            card_pig.performClick();
+        }
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                FarmerShareUtils.saveData(MERGE_LOGIN_INFO,bean);
+            }
+        });
         dialog.getWindow().setGravity(Gravity.CENTER);
         dialog.setCancelable(false);
     }

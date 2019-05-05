@@ -156,6 +156,8 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
                 enter_pig.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        bean.enterByStatus = 2;
+                        FarmerShareUtils.saveData(MERGE_LOGIN_INFO,bean);
                         if (bean.data.ftnData.type == 1) {
                             goToActivity(CompanyActivity.class, null);
                             finish();
@@ -310,6 +312,7 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
     @Override
     public void onEventMain(UpdateInfoModel bean) {
         super.onEventMain(bean);
+        if(bean == null)return;
         needUpDate = bean.isUpdate();
         mUpdateInfoModel = bean;
         setSign();
@@ -418,12 +421,19 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
                 Toast.makeText(HomeActivity.this, "必须选择其中一个农险！！", Toast.LENGTH_SHORT).show();
                 return;
             }
-            initView();
-            dialog.dismiss();
+            initViews();
+            while(dialog != null && dialog.isShowing())
+            dialog.getOwnerActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    dialog.dismiss();
+                    dialog = null;
+                }
+            });
         }
     };
 
-    public void initView() {
+    public void initViews() {
         tv_title = (TextView) findViewById(R.id.tv_title);
         rl_edit = (RelativeLayout) findViewById(R.id.rl_edit);
         tv_exit = (TextView) findViewById(R.id.tv_exit);
@@ -632,7 +642,7 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
         if (FarmerPreferencesUtils.getAnimalType(HomeActivity.this) == ANIMAL_TYPE_NONE) {
             showTypeDialog();
         } else {
-            initView();
+            initViews();
         }
 
     }

@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class MergeLoginBean extends BaseBean<MergeLoginBean.MergeLoginBodyBean> {
-
+    public int enterByStatus;//用于辅助判断首次进入哪个入口0：首次判断弹窗入口1：首次进入农险2：首次进入猪险
     public static class MergeLoginBodyBean implements Serializable {
         @SerializedName("ftnData")
         public PigLoginBean ftnData;

@@ -148,6 +148,8 @@ public class CompanyActivity extends BaseActivity {
                     @Override
                     public void onClick(View v) {
                         if (bean.data.ftnData != null) {
+                            bean.enterByStatus = 1;
+                            FarmerShareUtils.saveData(MERGE_LOGIN_INFO,bean);
                             Intent add_intent = new Intent(CompanyActivity.this, HomeActivity.class);
                             startActivity(add_intent);
                             finish();
