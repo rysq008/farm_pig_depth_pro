@@ -106,8 +106,8 @@ public class CameraPicActivity extends BaseActivity implements ViewTreeObserver.
         mFileDirectory = PathUtils.weightcollect;
         mFilePath = mFileDirectory + "/" + System.currentTimeMillis() + ".jpg";
         framelayout.getViewTreeObserver().addOnGlobalLayoutListener(this);
-        CameraUtils.setPreviewHeight(UIUtils.getHeightPixels(this));
         CameraUtils.setPreviewWidth(UIUtils.getWidthPixels(this));
+        CameraUtils.setPreviewHeight((int)(UIUtils.getWidthPixels(this) * 4.0f / 3 ));
     }
 
     @Override
@@ -127,6 +127,10 @@ public class CameraPicActivity extends BaseActivity implements ViewTreeObserver.
     private void initCamera() {
         camera_surfaceview = new CameraSurfaceView(CameraPicActivity.this);
         framelayout.addView(camera_surfaceview);
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) camera_surfaceview.getLayoutParams();
+        params.width = UIUtils.getWidthPixels(this);
+        params.height = (int) (4.0 / 3 * UIUtils.getWidthPixels(this));
+        camera_surfaceview.setLayoutParams(params);
         camera_surfaceview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
