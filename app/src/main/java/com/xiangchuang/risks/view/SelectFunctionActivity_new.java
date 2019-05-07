@@ -185,21 +185,23 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AppUpdateUtils appUpdateUtils = new AppUpdateUtils();
-        appUpdateUtils.appVersionCheck(SelectFunctionActivity_new.this, new AppUpdateUtils.UpdateResultListener(){
-            @Override
-            public void update(boolean isUpdate, UpdateInfoModel bean) {
-                SelectFunctionActivity_new.this.isUpdate = isUpdate;
-                SelectFunctionActivity_new.this.mUpdateInfoModel = bean;
-                if (isUpdate) {
-                    ivPopUpdateSign.setVisibility(View.VISIBLE);
-                    ivSign.setVisibility(View.VISIBLE);
-                } else {
-                    ivPopUpdateSign.setVisibility(View.GONE);
-                    ivSign.setVisibility(View.GONE);
+        if ("2".equals(this.companyfleg)){
+            AppUpdateUtils appUpdateUtils = new AppUpdateUtils();
+            appUpdateUtils.appVersionCheck(SelectFunctionActivity_new.this, new AppUpdateUtils.UpdateResultListener(){
+                @Override
+                public void update(boolean isUpdate, UpdateInfoModel bean) {
+                    SelectFunctionActivity_new.this.isUpdate = isUpdate;
+                    SelectFunctionActivity_new.this.mUpdateInfoModel = bean;
+                    if (isUpdate) {
+                        ivPopUpdateSign.setVisibility(View.VISIBLE);
+                        ivSign.setVisibility(View.VISIBLE);
+                    } else {
+                        ivPopUpdateSign.setVisibility(View.GONE);
+                        ivSign.setVisibility(View.GONE);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     private void queryVideoFlag() {
