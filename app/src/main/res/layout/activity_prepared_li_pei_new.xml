@@ -17,8 +17,8 @@
         android:layout_margin="20dp"
         android:gravity="center"
         android:textStyle="bold"
-        android:text=""
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:textColor="#333"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -43,7 +43,8 @@
             android:layout_marginLeft="85dp"
             android:layout_marginTop="10dp"
             android:text="保单号:"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textColor="#777"/>
         <TextView
             android:id="@+id/chuxian_num"
             android:layout_width="180dp"
@@ -51,7 +52,8 @@
             android:layout_marginLeft="20dp"
             android:layout_marginTop="10dp"
             android:hint="请输入保单号"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textColor="#333"/>
     </LinearLayout>
 
     <LinearLayout
@@ -64,7 +66,8 @@
             android:layout_marginLeft="85dp"
             android:layout_marginTop="10dp"
             android:text="出险原因:"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textColor="#777"/>
         <Spinner
             android:layout_gravity="center_vertical"
             android:id="@+id/pre_zhujuan_chuxian"
@@ -104,6 +107,7 @@
             android:layout_centerInParent="true"
             android:background="@drawable/begin_btn_bg"
             android:gravity="center"
+            android:textColor="#ffffff"
             android:text="申请理赔" />
     </RelativeLayout>
 </LinearLayout>

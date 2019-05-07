@@ -681,9 +681,11 @@ public class MediaProcessor {
                                         @Override
                                         public void run() {
                                             if (status == -1) {
-                                                showErrorDialog(mymsg);
-                                            } else if (0 == status) {
+                                                //上传过程中有异常终止了，此时用户需要重试
                                                 showTimeOutDialog();
+                                            } else if (0 == status) {
+                                                //模型返回图片质量不合格，用户需要重新采集
+                                                showErrorDialog(mymsg);
                                             } else {
                                                 CommitLiBean bean = GsonUtils.getBean(s, CommitLiBean.class);
                                                 Log.e("lipeicommit", "SimilarFlg--" + bean.getData().getSimilarFlg() + "");

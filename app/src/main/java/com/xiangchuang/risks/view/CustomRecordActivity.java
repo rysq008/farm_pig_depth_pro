@@ -189,7 +189,7 @@ public class CustomRecordActivity extends BaseActivity implements View.OnClickLi
         // 设置Surface不需要维护自己的缓冲区
         mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         // 设置分辨率
-        mSurfaceHolder.setFixedSize(320, 280);
+        mSurfaceHolder.setFixedSize(640, 480);
         // 设置该组件不会让屏幕自动关闭
         mSurfaceHolder.setKeepScreenOn(true);
         //回调接口
@@ -278,10 +278,10 @@ public class CustomRecordActivity extends BaseActivity implements View.OnClickLi
             params.setVideoStabilization(true);
         mCamera.setParameters(params);
         try {
-            setPreviewSize(mCamera, UIUtils.getWidthPixels(this), UIUtils.getHeightPixels(this));
-            setPictureSize(mCamera, UIUtils.getWidthPixels(this), UIUtils.getHeightPixels(this));
+            setPreviewSize(mCamera, UIUtils.getWidthPixels(this), UIUtils.getWidthPixels(this) * 4 / 3);
+            setPictureSize(mCamera, UIUtils.getWidthPixels(this), UIUtils.getWidthPixels(this) * 4 / 3);
             Camera.Parameters parameters = mCamera.getParameters();
-            mVideoSize = getBestSize(UIUtils.getWidthPixels(this), UIUtils.getHeightPixels(this), parameters.getSupportedVideoSizes(), VIDEO_SIZE);
+            mVideoSize = getBestSize(UIUtils.getWidthPixels(this), UIUtils.getWidthPixels(this) * 4 / 3, parameters.getSupportedVideoSizes(), VIDEO_SIZE);
             mCamera.setParameters(parameters);
         } catch (Exception e) {
             e.printStackTrace();
@@ -594,7 +594,7 @@ public class CustomRecordActivity extends BaseActivity implements View.OnClickLi
         //设置选择角度，顺时针方向，因为默认是逆向90度的，这样图像就是正常显示了,这里设置的是观看保存后的视频的角度
         mediaRecorder.setOrientationHint(90);
         //设置录像的分辨率
-        mediaRecorder.setVideoSize(mVideoSize.width, mVideoSize.height);
+        mediaRecorder.setVideoSize(640, 480);
         //设置录像视频输出地址
         mediaRecorder.setOutputFile(currentVideoFilePath);
     }

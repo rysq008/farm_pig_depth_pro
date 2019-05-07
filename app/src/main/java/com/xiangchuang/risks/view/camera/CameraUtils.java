@@ -39,7 +39,7 @@ public class CameraUtils {
      */
     public static void openFrontalCamera(int expectFps) {
         if (mCamera != null) {
-            throw new RuntimeException("camera already initialized!");
+            releaseCamera();
         }
         Camera.CameraInfo info = new Camera.CameraInfo();
         int numCameras = Camera.getNumberOfCameras();
@@ -63,7 +63,6 @@ public class CameraUtils {
 
         Camera.Parameters parameters = mCamera.getParameters();
         mCameraPreviewFps = CameraUtils.chooseFixedPreviewFps(parameters, expectFps * 1000);
-        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
         parameters.setRecordingHint(true);
         if (isSupportedFocusMode(parameters.getSupportedFocusModes(), Camera.Parameters.FOCUS_MODE_AUTO)) {
             parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);

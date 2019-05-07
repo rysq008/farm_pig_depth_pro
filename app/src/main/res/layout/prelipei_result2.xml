@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_margin="20dp"
-        android:text="预理赔处理成功" />
+        android:text="预理赔处理成功"
+        android:textColor="#333"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,7 +25,8 @@
             android:layout_height="50dp"
             android:background="@drawable/preborder"
             android:gravity="center"
-            android:text="完成" />
+            android:text="完成"
+            android:textColor="#fff"/>
 
     </LinearLayout>
 </LinearLayout>

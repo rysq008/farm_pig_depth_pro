@@ -9,7 +9,8 @@
         android:layout_margin="20dp"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:text="提示" />
+        android:text="提示"
+        android:textColor="#777"/>
 
 
     <TextView
@@ -19,7 +20,8 @@
         android:layout_margin="20dp"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:text="连接超时，请检查网络后重试。" />
+        android:text="连接超时，请检查网络后重试。"
+        android:textColor="#777"/>
 
     <LinearLayout
         android:layout_marginTop="10dp"
@@ -38,7 +40,8 @@
             android:layout_marginRight="20dp"
             android:background="@drawable/button_unclick"
             android:gravity="center"
-            android:text="取消" />
+            android:text="取消"
+            android:textColor="#fff"/>
 
         <TextView
             android:id="@+id/timeout_resert"
@@ -47,6 +50,7 @@
             android:layout_weight="1"
             android:background="@drawable/begin_btn_bg"
             android:gravity="center"
-            android:text="重试" />
+            android:text="重试"
+            android:textColor="#fff"/>
     </LinearLayout>
 </LinearLayout>
