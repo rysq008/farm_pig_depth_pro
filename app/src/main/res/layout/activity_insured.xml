@@ -17,14 +17,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="投保企业："
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            android:textColor="#777"/>
         <TextView
             android:id="@+id/companyname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="aa"
             android:textSize="16sp"
-            android:layout_marginLeft="10dp"/>
+            android:layout_marginLeft="10dp"
+            android:textColor="#777"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,7 +39,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="投保种类："
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            android:textColor="#777"/>
         <Spinner
             android:id="@+id/type_spinner"
             android:layout_width="150dp"
@@ -57,14 +60,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="点        数："
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            android:textColor="#777"/>
         <TextView
             android:id="@+id/num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="未点数"
             android:textSize="16sp"
-            android:layout_marginLeft="10dp"/>
+            android:layout_marginLeft="10dp"
+            android:textColor="#777"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -78,7 +83,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="投保头数："
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            android:textColor="#777"/>
         <EditText
             android:id="@+id/headnumber"
             android:inputType="number"
@@ -87,7 +93,8 @@
             android:hint="输入投保头数"
             android:maxLength="5"
             android:textSize="16sp"
-            android:layout_marginLeft="10dp"/>
+            android:layout_marginLeft="10dp"
+            android:textColor="#777"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -101,7 +108,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="投保系数："
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            android:textColor="#777"/>
         <EditText
             android:inputType="number|numberDecimal"
             android:id="@+id/coefficient"
@@ -109,7 +117,8 @@
             android:layout_height="wrap_content"
             android:hint="输入投保系数"
             android:textSize="16sp"
-            android:layout_marginLeft="10dp"/>
+            android:layout_marginLeft="10dp"
+            android:textColor="#777"/>
     </LinearLayout>
     <TextView
         android:id="@+id/submit"
@@ -148,7 +157,8 @@
                 android:text="状    态"
                 android:paddingLeft="4dp"
                 android:paddingRight="4dp"
-                android:layout_marginLeft="10dp"/>
+                android:layout_marginLeft="10dp"
+                android:textColor="#777"/>
 
 
             <TextView
@@ -158,7 +168,8 @@
                 android:text="种类"
                 android:gravity="center"
                 android:layout_marginLeft="10dp"
-                android:layout_weight="4"/>
+                android:layout_weight="4"
+                android:textColor="#777"/>
 
             <TextView
                 android:id="@+id/heardnum"
@@ -167,7 +178,8 @@
                 android:text="头数"
                 android:gravity="right"
                 android:layout_marginLeft="10dp"
-                android:layout_weight="3"/>
+                android:layout_weight="3"
+                android:textColor="#777"/>
 
             <TextView
 
@@ -176,7 +188,8 @@
                 android:text="系数"
                 android:gravity="right"
                 android:layout_marginLeft="10dp"
-                android:layout_weight="3"/>
+                android:layout_weight="3"
+                android:textColor="#777"/>
 
             <TextView
                 android:id="@+id/time"
@@ -186,7 +199,8 @@
                 android:gravity="center"
                 android:layout_marginLeft="20dp"
                 android:paddingRight="10dp"
-                android:layout_weight="5"/>
+                android:layout_weight="5"
+                android:textColor="#777"/>
 
         </LinearLayout>
         <View
@@ -209,6 +223,7 @@
             android:layout_height="match_parent"
             android:text="暂无投保信息"
             android:textSize="20sp"
+            android:textColor="#777"
             android:layout_gravity="center_horizontal"
             android:gravity="center"
             android:visibility="gone"/>

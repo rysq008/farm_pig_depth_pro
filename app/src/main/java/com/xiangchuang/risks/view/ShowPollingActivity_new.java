@@ -1,5 +1,7 @@
 package com.xiangchuang.risks.view;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.usb.UsbDevice;
@@ -7,7 +9,10 @@ import android.hardware.usb.UsbManager;
 import android.location.LocationManager;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -60,7 +65,7 @@ public class ShowPollingActivity_new extends BaseActivity {
     private String no;
     List<SheListBean.DataOffLineBaodanBean> mSheBeans;
     final PermissionsDelegate permissionsDelegate = new PermissionsDelegate(this);
-    private static long internalTime;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_show_polling_new;
@@ -132,31 +137,78 @@ public class ShowPollingActivity_new extends BaseActivity {
                                         public void onClick(int position) {
                                             HashMap<String, UsbDevice> deviceHashMap = ((UsbManager) getSystemService(USB_SERVICE)).getDeviceList();
                                             //Toast.makeText(this, deviceHashMap.size() + "", Toast.LENGTH_LONG).show();
-                                            Intent intent = null;
                                             CounterHelper.number = 1;
                                             if (isOPen(ShowPollingActivity_new.this)) {
                                                 //判断如果是能繁母猪点数进入新的点数逻辑界面
                                                 if (mSheBeans.get(position).getPigType().equals("102")) {
-                                                    //延时3s，防止重复启动页面
-                                                    if(System.currentTimeMillis() - internalTime > 2000){
-                                                        intent = new Intent(ShowPollingActivity_new.this, BreedingDetectorActivityBreeding.class);
-                                                        intent.putExtra("recodetitle", recodetitle);
-                                                        intent.putExtra("recodenumber", recodenumber);
-                                                        intent.putExtra("no", no);
-                                                        intent.putExtra("pigcount", String.valueOf(mSheBeans.get(position).getCount()));
-                                                        intent.putExtra("duration", mSheBeans.get(position).getTimeLength());
-                                                        intent.putExtra("autocount", String.valueOf(mSheBeans.get(position).getAutoCount()));
-                                                        intent.putExtra("sheid", String.valueOf(mSheBeans.get(position).getSheId()));
-                                                        intent.putExtra("shename", mSheBeans.get(position).getSheName());
-                                                        intent.putExtra("juancnt", mSheBeans.get(position).getJuanCnt());
-                                                        startActivity(intent);
-                                                    }
-                                                    internalTime = System.currentTimeMillis();
+
+                                                    AlertDialog.Builder builder = new AlertDialog.Builder(ShowPollingActivity_new.this);
+                                                    LayoutInflater inflater = LayoutInflater.from(ShowPollingActivity_new.this);
+                                                    View v = inflater.inflate(R.layout.breeding_select_dialog_layout, null);
+                                                    Dialog dialog = builder.create();
+                                                    dialog.show();
+                                                    dialog.getWindow().setContentView(v);
+
+                                                    TextView location = v.findViewById(R.id.tv_location_select);
+                                                    TextView captivity = v.findViewById(R.id.tv_captivity_select);
+
+                                                    ImageView close = v.findViewById(R.id.iv_close);
+                                                    //定位栏  能繁
+                                                    location.setOnClickListener(new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View v) {
+                                                            dialog.dismiss();
+                                                            Intent intent = new Intent(ShowPollingActivity_new.this, BreedingDetectorActivityBreeding.class);
+                                                            intent.putExtra("recodetitle", recodetitle);
+                                                            intent.putExtra("recodenumber", recodenumber);
+                                                            intent.putExtra("no", no);
+                                                            intent.putExtra("pigcount", String.valueOf(mSheBeans.get(position).getCount()));
+                                                            intent.putExtra("duration", mSheBeans.get(position).getTimeLength());
+                                                            intent.putExtra("autocount", String.valueOf(mSheBeans.get(position).getAutoCount()));
+                                                            intent.putExtra("sheid", String.valueOf(mSheBeans.get(position).getSheId()));
+                                                            intent.putExtra("shename", mSheBeans.get(position).getSheName());
+                                                            intent.putExtra("juancnt", mSheBeans.get(position).getJuanCnt());
+                                                            startActivity(intent);
+                                                        }
+                                                    });
+                                                    //圈养
+                                                    captivity.setOnClickListener(new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View v) {
+                                                            if (deviceHashMap.size() > 0) {
+                                                                dialog.dismiss();
+                                                                //摄像头页面
+                                                                Intent intent = new Intent(ShowPollingActivity_new.this, USBCameraActivity_newUsb.class);
+                                                                intent.putExtra("recodetitle", recodetitle);
+                                                                intent.putExtra("recodenumber", recodenumber);
+                                                                intent.putExtra("no", no);
+                                                                intent.putExtra("pigcount", String.valueOf(mSheBeans.get(position).getCount()));
+                                                                intent.putExtra("duration", mSheBeans.get(position).getTimeLength());
+                                                                intent.putExtra("autocount", String.valueOf(mSheBeans.get(position).getAutoCount()));
+                                                                intent.putExtra("sheid", String.valueOf(mSheBeans.get(position).getSheId()));
+                                                                intent.putExtra("shename", mSheBeans.get(position).getSheName());
+                                                                intent.putExtra("juancnt", mSheBeans.get(position).getJuanCnt());
+                                                                startActivity(intent);
+                                                            } else {
+                                                                Toast.makeText(ShowPollingActivity_new.this, "请连接外接摄像头。", Toast.LENGTH_LONG).show();
+                                                                return;
+                                                            }
+                                                        }
+                                                    });
+                                                    close.setOnClickListener(new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View v) {
+                                                            dialog.dismiss();
+                                                        }
+                                                    });
+
+                                                    dialog.getWindow().setGravity(Gravity.CENTER);
+                                                    dialog.setCancelable(false);
 
                                                 } else {
                                                     if (deviceHashMap.size() > 0) {
                                                         //摄像头页面
-                                                        intent = new Intent(ShowPollingActivity_new.this, USBCameraActivity_newUsb.class);
+                                                        Intent intent = new Intent(ShowPollingActivity_new.this, USBCameraActivity_newUsb.class);
                                                         intent.putExtra("recodetitle", recodetitle);
                                                         intent.putExtra("recodenumber", recodenumber);
                                                         intent.putExtra("no", no);
@@ -170,12 +222,6 @@ public class ShowPollingActivity_new extends BaseActivity {
                                                     } else {
                                                         Toast.makeText(ShowPollingActivity_new.this, "请连接外接摄像头。", Toast.LENGTH_LONG).show();
                                                         return;
-                                                    /*if (!permissionsDelegate.hasCameraPermission()) {
-                                                        permissionsDelegate.requestCameraPermission();
-                                                        return;
-                                                    } else {
-                                                        intent = new Intent(ShowPollingActivity_new.this, CounterActivity_new.class);
-                                                    }*/
                                                     }
                                                 }
                                             } else {

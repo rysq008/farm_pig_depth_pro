@@ -36,12 +36,13 @@
                 android:layout_marginRight="26dp"/>
 
 
-            <TextView
-            android:id="@+id/tv_baodan_number"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:layout_marginRight="15dp" />
+                <TextView
+                    android:id="@+id/tv_baodan_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="15dp"
+                    android:gravity="center_vertical"
+                    android:textColor="@android:color/black" />
 
 
         </LinearLayout>
@@ -95,12 +96,13 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="26dp"/>
 
-            <TextView
-                android:id="@+id/tv_baodan_people"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:layout_marginRight="15dp" />
+                <TextView
+                    android:id="@+id/tv_baodan_people"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="15dp"
+                    android:gravity="center_vertical"
+                    android:textColor="@android:color/black"/>
 
 
         </LinearLayout>
@@ -124,12 +126,13 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="26dp"/>
 
-            <TextView
-                android:id="@+id/tv_baodan_idcard"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:layout_marginRight="15dp" />
+                <TextView
+                    android:id="@+id/tv_baodan_idcard"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="15dp"
+                    android:gravity="center_vertical"
+                    android:textColor="@android:color/black"/>
 
 
         </LinearLayout>
@@ -154,12 +157,13 @@
                 android:layout_marginRight="26dp"/>
 
 
-            <TextView
-                android:id="@+id/tv_baodan_openbank"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:layout_marginRight="15dp" />
+                <TextView
+                    android:id="@+id/tv_baodan_openbank"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="15dp"
+                    android:gravity="center_vertical"
+                    android:textColor="@android:color/black"/>
 
 
         </LinearLayout>
@@ -185,12 +189,13 @@
                 android:layout_marginRight="26dp"/>
 
 
-            <TextView
-                android:id="@+id/tv_baodan_bank_num"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:layout_marginRight="15dp" />
+                <TextView
+                    android:id="@+id/tv_baodan_bank_num"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="15dp"
+                    android:gravity="center_vertical"
+                    android:textColor="@android:color/black"/>
 
 
         </LinearLayout>
@@ -253,13 +258,14 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="26dp"/>
 
-            <TextView
-                android:id="@+id/tv_baodan_date"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:layout_marginRight="15dp"
-                android:hint="请输入验标时间" />
+                <TextView
+                    android:id="@+id/tv_baodan_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="15dp"
+                    android:gravity="center_vertical"
+                    android:hint="请输入验标时间"
+                    android:textColor="@android:color/black"/>
 
 
         </LinearLayout>

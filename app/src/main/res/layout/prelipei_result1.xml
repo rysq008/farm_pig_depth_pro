@@ -9,7 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_margin="20dp"
-        android:text="预理赔库中已有相似度90%对象，是否取消本次预理赔" />
+        android:text="预理赔库中已有相似度90%对象，是否取消本次预理赔"
+        android:textColor="#777"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -47,7 +48,8 @@
             android:layout_weight="1"
             android:background="@drawable/preborder"
             android:gravity="center"
-            android:text="取消" />
+            android:text="取消"
+            android:textColor="#fff"/>
 
         <TextView
             android:id="@+id/result_goon"
@@ -56,6 +58,7 @@
             android:layout_weight="1"
             android:background="@drawable/preborder"
             android:gravity="center"
-            android:text="继续" />
+            android:text="继续"
+            android:textColor="#fff"/>
     </LinearLayout>
 </LinearLayout>

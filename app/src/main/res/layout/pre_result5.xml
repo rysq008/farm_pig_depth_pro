@@ -11,7 +11,8 @@
         android:gravity="center"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:text="验证结果" />
+        android:text="验证结果"
+        android:textColor="#777"/>
 
     <TextView
         android:id="@+id/xs"
@@ -60,7 +61,8 @@
             android:layout_marginRight="20dp"
             android:background="@drawable/button_unclick"
             android:gravity="center"
-            android:text="取消" />
+            android:text="取消"
+            android:textColor="#fff"/>
 
         <TextView
             android:id="@+id/result5_goon"
@@ -70,6 +72,7 @@
             android:layout_marginRight="20dp"
             android:background="@drawable/begin_btn_bg"
             android:gravity="center"
-            android:text="继续" />
+            android:text="继续"
+            android:textColor="#fff"/>
     </LinearLayout>
 </LinearLayout>

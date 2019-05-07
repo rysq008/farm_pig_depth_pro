@@ -11,7 +11,8 @@
         android:gravity="center"
         android:text="验证结果"
         android:textSize="20sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textColor="#777"/>
 
     <TextView
         android:id="@+id/have_msg"
@@ -20,7 +21,8 @@
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
         android:text="预理赔库找到如下相似对象！"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:textColor="#777"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -39,7 +41,8 @@
                 android:layout_marginLeft="20dp"
                 android:gravity="left"
                 android:text="相似度："
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="#777"/>
 
             <TextView
                 android:id="@+id/xiangsi"
@@ -48,7 +51,8 @@
                 android:layout_marginLeft="20dp"
                 android:gravity="center"
                 android:text="30%"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="#777"/>
         </LinearLayout>
 
         <LinearLayout
@@ -63,7 +67,8 @@
                 android:layout_marginLeft="20dp"
                 android:gravity="left"
                 android:text="猪舍名："
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="#777"/>
 
             <TextView
                 android:id="@+id/pigfleg"
@@ -72,7 +77,8 @@
                 android:layout_marginLeft="20dp"
                 android:gravity="left"
                 android:text="猪舍-猪圈"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="#777"/>
         </LinearLayout>
 
         <LinearLayout
@@ -87,7 +93,8 @@
                 android:layout_marginLeft="20dp"
                 android:gravity="left"
                 android:text="预理赔时间："
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="#777"/>
 
             <TextView
                 android:id="@+id/baodantime"
@@ -95,7 +102,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:gravity="center"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="#777"/>
         </LinearLayout>
 
         <LinearLayout
@@ -111,7 +119,8 @@
                 android:layout_marginLeft="20dp"
                 android:gravity="left"
                 android:text="理赔时间："
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="#777"/>
 
             <TextView
                 android:id="@+id/tv_compensatetime"
@@ -119,7 +128,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:gravity="center"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="#777"/>
         </LinearLayout>
 
         <LinearLayout
@@ -134,7 +144,8 @@
                 android:layout_marginLeft="20dp"
                 android:gravity="left"
                 android:text="保单号："
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="#777"/>
 
             <TextView
                 android:id="@+id/baodannum"
@@ -142,7 +153,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:gravity="center"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="#777"/>
         </LinearLayout>
 
         <LinearLayout
@@ -158,7 +170,8 @@
                 android:layout_marginLeft="20dp"
                 android:gravity="left"
                 android:text="标的识别码："
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="#777"/>
 
             <TextView
                 android:id="@+id/tv_seqNo"
@@ -167,7 +180,8 @@
                 android:layout_marginLeft="20dp"
                 android:gravity="center"
                 android:text=""
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="#777"/>
         </LinearLayout>
 
     </LinearLayout>
@@ -210,7 +224,8 @@
             android:layout_weight="1"
             android:background="@drawable/button_unclick"
             android:gravity="center"
-            android:text="重新拍摄" />
+            android:text="重新拍摄"
+            android:textColor="#fff"/>
 
         <TextView
             android:id="@+id/result5_goon"
@@ -220,6 +235,7 @@
             android:layout_weight="1"
             android:background="@drawable/begin_btn_bg"
             android:gravity="center"
-            android:text="继续申请" />
+            android:text="继续申请"
+            android:textColor="#fff"/>
     </LinearLayout>
 </LinearLayout>
