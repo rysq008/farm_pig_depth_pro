@@ -130,6 +130,10 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
         gson = new Gson();
         queryVideoFlag();
 
+        tv_title = (TextView) findViewById(R.id.tv_title);
+        rl_edit = (RelativeLayout) findViewById(R.id.rl_edit);
+        tv_exit = (TextView) findViewById(R.id.tv_exit);
+        ivSign = (ImageView) findViewById(R.id.iv_sign);
         rl_edit.setVisibility(View.VISIBLE);
 
         moveFlie();
@@ -157,7 +161,7 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
                     @Override
                     public void onClick(View v) {
                         bean.enterByStatus = 2;
-                        FarmerShareUtils.saveData(MERGE_LOGIN_INFO,bean);
+                        FarmerShareUtils.saveData(MERGE_LOGIN_INFO, bean);
                         if (bean.data.ftnData.type == 1) {
                             goToActivity(CompanyActivity.class, null);
                             finish();
@@ -312,7 +316,7 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
     @Override
     public void onEventMain(UpdateInfoModel bean) {
         super.onEventMain(bean);
-        if(bean == null)return;
+        if (bean == null) return;
         needUpDate = bean.isUpdate();
         mUpdateInfoModel = bean;
         setSign();
@@ -422,22 +426,23 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
                 return;
             }
             initViews();
-            while(dialog != null && dialog.isShowing())
-            dialog.getOwnerActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    dialog.dismiss();
-                    dialog = null;
-                }
-            });
+            while (dialog != null && dialog.isShowing())
+//                dialog.getCurrentFocus().post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        if (dialog != null)
+                            dialog.dismiss();
+//                        dialog = null;
+//                    }
+//                });
         }
     };
 
     public void initViews() {
-        tv_title = (TextView) findViewById(R.id.tv_title);
-        rl_edit = (RelativeLayout) findViewById(R.id.rl_edit);
-        tv_exit = (TextView) findViewById(R.id.tv_exit);
-        ivSign = (ImageView) findViewById(R.id.iv_sign);
+//        tv_title = (TextView) findViewById(R.id.tv_title);
+//        rl_edit = (RelativeLayout) findViewById(R.id.rl_edit);
+//        tv_exit = (TextView) findViewById(R.id.tv_exit);
+//        ivSign = (ImageView) findViewById(R.id.iv_sign);
 
         myviewpager = (CustomViewPager) this.findViewById(R.id.myviewpager);
         //禁止滑动
