@@ -135,7 +135,7 @@ public class ShowPollingActivity_new extends BaseActivity {
                                     resultAdapter.setListener(new PollingResultAdapter_new.OnDetailitemClickListener() {
                                         @Override
                                         public void onClick(int position) {
-                                            HashMap<String, UsbDevice> deviceHashMap = ((UsbManager) getSystemService(USB_SERVICE)).getDeviceList();
+
                                             //Toast.makeText(this, deviceHashMap.size() + "", Toast.LENGTH_LONG).show();
                                             CounterHelper.number = 1;
                                             if (isOPen(ShowPollingActivity_new.this)) {
@@ -175,6 +175,7 @@ public class ShowPollingActivity_new extends BaseActivity {
                                                     captivity.setOnClickListener(new View.OnClickListener() {
                                                         @Override
                                                         public void onClick(View v) {
+                                                            HashMap<String, UsbDevice> deviceHashMap = ((UsbManager) getSystemService(USB_SERVICE)).getDeviceList();
                                                             if (deviceHashMap.size() > 0) {
                                                                 dialog.dismiss();
                                                                 //摄像头页面
@@ -206,6 +207,7 @@ public class ShowPollingActivity_new extends BaseActivity {
                                                     dialog.setCancelable(false);
 
                                                 } else {
+                                                    HashMap<String, UsbDevice> deviceHashMap = ((UsbManager) getSystemService(USB_SERVICE)).getDeviceList();
                                                     if (deviceHashMap.size() > 0) {
                                                         //摄像头页面
                                                         Intent intent = new Intent(ShowPollingActivity_new.this, USBCameraActivity_newUsb.class);
