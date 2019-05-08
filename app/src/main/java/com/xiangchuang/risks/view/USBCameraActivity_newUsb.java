@@ -578,8 +578,12 @@ public final class USBCameraActivity_newUsb extends UsbBaseActivity implements C
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                showPop();
-                upResult();
+                if (mRecognitionResults.size() > 0) {
+                    showPop();
+                    upResult();
+                } else {
+                    Toast.makeText(USBCameraActivity_newUsb.this, "您还未清点猪舍", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
