@@ -28,10 +28,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
-import com.innovation.pig.insurance.R.drawable;
-import com.innovation.pig.insurance.R.id;
-import com.innovation.pig.insurance.R.layout;
-import com.innovation.pig.insurance.R.string;
 import com.innovation.pig.insurance.netutils.Constants;
 import com.innovation.pig.insurance.netutils.GsonUtils;
 import com.innovation.pig.insurance.netutils.OkHttp3Util;
@@ -112,30 +108,30 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
     @Override
     public void initView() {
         super.initView();
-        this.iv_cancel = (ImageView) this.findViewById(id.iv_cancel);
+        this.iv_cancel = (ImageView) this.findViewById(R.id.iv_cancel);
         this.iv_cancel.setOnClickListener(this);
-        this.mselectname = (TextView) this.findViewById(id.select_name);
-        this.mselecttoubao = (TextView) this.findViewById(id.select_toubao);
+        this.mselectname = (TextView) this.findViewById(R.id.select_name);
+        this.mselecttoubao = (TextView) this.findViewById(R.id.select_toubao);
         this.mselecttoubao.setOnClickListener(this);
-        this.rel_toubao = (RelativeLayout) this.findViewById(id.rel_toubao);
-        this.mselectxunjiandianshu = (TextView) this.findViewById(id.select_xunjiandianshu);
+        this.rel_toubao = (RelativeLayout) this.findViewById(R.id.rel_toubao);
+        this.mselectxunjiandianshu = (TextView) this.findViewById(R.id.select_xunjiandianshu);
         this.mselectxunjiandianshu.setOnClickListener(this);
-        this.selectYulipei = (TextView) this.findViewById(id.select_yulipei);
+        this.selectYulipei = (TextView) this.findViewById(R.id.select_yulipei);
         this.selectYulipei.setOnClickListener(this);
-        this.mselectlipei = (TextView) this.findViewById(id.select_lipei);
+        this.mselectlipei = (TextView) this.findViewById(R.id.select_lipei);
         this.mselectlipei.setOnClickListener(this);
-        this.relLipei = (RelativeLayout) this.findViewById(id.rel_lipei);
-        this.selectWebview = (TextView) this.findViewById(id.select_webview);
+        this.relLipei = (RelativeLayout) this.findViewById(R.id.rel_lipei);
+        this.selectWebview = (TextView) this.findViewById(R.id.select_webview);
         this.selectWebview.setOnClickListener(this);
-        this.tvExit = (TextView) this.findViewById(id.tv_exit);
+        this.tvExit = (TextView) this.findViewById(R.id.tv_exit);
         this.tvExit.setOnClickListener(this);
-        this.rlBack = (RelativeLayout) this.findViewById(id.rl_back);
-        this.rlEdit = (RelativeLayout) this.findViewById(id.rl_edit);
-        this.ivSign = (ImageView) this.findViewById(id.iv_sign);
-        this.tvInnocentTreatment = (TextView) this.findViewById(id.tv_innocent_treatment);
+        this.rlBack = (RelativeLayout) this.findViewById(R.id.rl_back);
+        this.rlEdit = (RelativeLayout) this.findViewById(R.id.rl_edit);
+        this.ivSign = (ImageView) this.findViewById(R.id.iv_sign);
+        this.tvInnocentTreatment = (TextView) this.findViewById(R.id.tv_innocent_treatment);
         this.tvInnocentTreatment.setOnClickListener(this);
-        this.rlCount = (RelativeLayout) this.findViewById(id.rl_count);
-        this.tvCount = (TextView) this.findViewById(id.tv_count);
+        this.rlCount = (RelativeLayout) this.findViewById(R.id.rl_count);
+        this.tvCount = (TextView) this.findViewById(R.id.tv_count);
 
     }
 
@@ -170,10 +166,10 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
 
         this.queryVideoFlag();
         this.pop = new PopupWindow(this);
-        View popview = this.getLayoutInflater().inflate(layout.item_setting, (ViewGroup) null);
-        this.tvPopExit = (TextView) popview.findViewById(id.tv_pop_exit);
-        this.tvPopUpdate = (TextView) popview.findViewById(id.tv_pop_update);
-        this.ivPopUpdateSign = (ImageView) popview.findViewById(id.iv_pop_update_sign);
+        View popview = this.getLayoutInflater().inflate(R.layout.item_setting, (ViewGroup) null);
+        this.tvPopExit = (TextView) popview.findViewById(R.id.tv_pop_exit);
+        this.tvPopUpdate = (TextView) popview.findViewById(R.id.tv_pop_update);
+        this.ivPopUpdateSign = (ImageView) popview.findViewById(R.id.iv_pop_update_sign);
 
         TextView enter_farmer = popview.findViewById(R.id.enter_farmer);
 
@@ -271,7 +267,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
                     SelectFunctionActivity_new.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            (new AlertDialog.Builder(SelectFunctionActivity_new.this)).setIcon(drawable.cowface).setTitle("提示").setMessage(queryVideoFlagData.getMsg()).setPositiveButton("退出", new android.content.DialogInterface.OnClickListener() {
+                            (new AlertDialog.Builder(SelectFunctionActivity_new.this)).setIcon(R.drawable.cowface).setTitle("提示").setMessage(queryVideoFlagData.getMsg()).setPositiveButton("退出", new android.content.DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
@@ -347,36 +343,36 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
     @Override
     public void onClick(View view) {
         int i = view.getId();
-        if (i == id.select_toubao) {
+        if (i == R.id.select_toubao) {
             this.goToActivity(InsuredActivity.class, (Bundle) null);
-        } else if (i == id.select_lipei) {
+        } else if (i == R.id.select_lipei) {
             this.isLiPei = true;
             if (!isOPen(this)) {
                 this.openGPS1(this);
             } else {
                 this.checkBaoDan();
             }
-        } else if (i == id.select_xunjiandianshu) {
+        } else if (i == R.id.select_xunjiandianshu) {
             this.goToActivity(ShowPollingActivity_new.class, (Bundle) null);
-        } else if (i == id.iv_cancel) {
+        } else if (i == R.id.iv_cancel) {
             this.finish();
-        } else if (i == id.select_yulipei) {
+        } else if (i == R.id.select_yulipei) {
             this.isLiPei = false;
             if (!isOPen(this)) {
                 this.openGPS1(this);
             } else {
                 this.checkBaoDan();
             }
-        } else if (i == id.select_webview) {
+        } else if (i == R.id.select_webview) {
             this.startActivity(new Intent(this, MonitoringActivity.class));
-        } else if (i == id.tv_exit) {
+        } else if (i == R.id.tv_exit) {
             this.ivSign.setVisibility(View.GONE);
             this.pop.showAsDropDown(this.rlEdit);
             this.tvPopExit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     SelectFunctionActivity_new.this.pop.dismiss();
-                    AlertDialog.Builder builder = (new AlertDialog.Builder(SelectFunctionActivity_new.this)).setIcon(drawable.cowface).setTitle("提示").setMessage("退出登录").setPositiveButton("确认", new android.content.DialogInterface.OnClickListener() {
+                    AlertDialog.Builder builder = (new AlertDialog.Builder(SelectFunctionActivity_new.this)).setIcon(R.drawable.cowface).setTitle("提示").setMessage("退出登录").setPositiveButton("确认", new android.content.DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             PreferencesUtils.removeAllKey(SelectFunctionActivity_new.this);
@@ -407,7 +403,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
                         }
 
                         mDialog = new AlertDialog.Builder(SelectFunctionActivity_new.this);
-                        mDialog.setIcon(drawable.cowface);
+                        mDialog.setIcon(R.drawable.cowface);
                         mDialog.setTitle("版本更新");
                         mDialog.setMessage(mUpdateInfoModel.getUpgradeinfo());
                         mDialog.setCancelable(false);
@@ -428,7 +424,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
                         }).create().show();
                     } else {
                         mDialog = new AlertDialog.Builder(SelectFunctionActivity_new.this);
-                        mDialog.setIcon(drawable.cowface);
+                        mDialog.setIcon(R.drawable.cowface);
                         mDialog.setTitle("提示");
                         mDialog.setMessage("当前已是最新版本");
                         mDialog.setCancelable(false);
@@ -441,13 +437,13 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
                     }
                 }
             });
-        } else if (i == id.tv_innocent_treatment) {
+        } else if (i == R.id.tv_innocent_treatment) {
             getUnfinish();
         }
     }
 
     /**
-     * 生成无害化处理信息
+     * 获取未完成的生成无害化处理信息
      */
     private void getUnfinish() {
         this.mProgressDialog.show();
@@ -636,7 +632,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
     }
 
     private void openGPS1(Context mContext) {
-        AlertDialogManager.showMessageDialog(mContext, "提示", this.getString(string.locationwarning), new com.xiangchuang.risks.utils.AlertDialogManager.DialogInterface() {
+        AlertDialogManager.showMessageDialog(mContext, "提示", this.getString(R.string.locationwarning), new com.xiangchuang.risks.utils.AlertDialogManager.DialogInterface() {
             @Override
             public void onPositive() {
                 Intent intent = new Intent();
