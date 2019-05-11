@@ -655,60 +655,55 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 mProgressDialog.dismiss();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (response.isSuccessful()) {
-                            String s = null;
-                            try {
-                                s = response.body().string();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            Log.e("uploadImage:", s);
-                            try {
-                                JSONObject jsonObject = new JSONObject(s);
-                                int status = jsonObject.getInt("status");
-                                String msg = jsonObject.getString("msg");
-                                if (status != 1) {
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            showDialogError(msg);
-                                        }
-                                    });
-                                } else {
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            toastUtils.showLong(AddCompanyActivity.this, msg);
-                                            try {
-                                                String data = jsonObject.getString("data");
-
-                                                Drawable drawable = new BitmapDrawable(null, BitmapFactory.decodeFile(fileURLPath.getAbsolutePath()));
-                                                if (imageType.contains("idcard_zheng")) {
-                                                    str_idcard_zheng = data;
-                                                    btnIdcardZhengUpload.setImageDrawable(drawable);
-                                                } else if (imageType.contains("idcard_fan")) {
-                                                    str_idcard_fan = data;
-                                                    btnIdcardFanUpload.setImageDrawable(drawable);
-                                                } else if (imageType.contains("bank")) {
-                                                    str_bank = data;
-                                                    btnBankUpload.setImageDrawable(drawable);
-                                                }
-                                            } catch (JSONException e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    });
-                                }
-                            } catch (Exception e) {
-                                AVOSCloudUtils.saveErrorMessage(e,AddCompanyActivity.class.getSimpleName());
-                                e.printStackTrace();
-                            }
-                        }
+                if (response.isSuccessful()) {
+                    String s = null;
+                    try {
+                        s = response.body().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                });
+                    Log.e("uploadImage:", s);
+                    try {
+                        JSONObject jsonObject = new JSONObject(s);
+                        int status = jsonObject.getInt("status");
+                        String msg = jsonObject.getString("msg");
+                        if (status != 1) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    showDialogError(msg);
+                                }
+                            });
+                        } else {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    toastUtils.showLong(AddCompanyActivity.this, msg);
+                                    try {
+                                        String data = jsonObject.getString("data");
+
+                                        Drawable drawable = new BitmapDrawable(null, BitmapFactory.decodeFile(fileURLPath.getAbsolutePath()));
+                                        if (imageType.contains("idcard_zheng")) {
+                                            str_idcard_zheng = data;
+                                            btnIdcardZhengUpload.setImageDrawable(drawable);
+                                        } else if (imageType.contains("idcard_fan")) {
+                                            str_idcard_fan = data;
+                                            btnIdcardFanUpload.setImageDrawable(drawable);
+                                        } else if (imageType.contains("bank")) {
+                                            str_bank = data;
+                                            btnBankUpload.setImageDrawable(drawable);
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+                        }
+                    } catch (Exception e) {
+                        AVOSCloudUtils.saveErrorMessage(e,AddCompanyActivity.class.getSimpleName());
+                        e.printStackTrace();
+                    }
+                }
             }
         });
     }

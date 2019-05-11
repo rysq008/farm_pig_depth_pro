@@ -722,12 +722,12 @@ public class AddPigPicActivity extends BaseActivity {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
+                    String s = response.body().string();
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             JSONObject jsonObject = null;
                             try {
-                                String s = response.body().string();
                                 Log.e("goonPre", "--" + s);
                                 jsonObject = new JSONObject(s);
                                 int status = jsonObject.getInt("status");

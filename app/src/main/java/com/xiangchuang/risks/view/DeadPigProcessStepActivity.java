@@ -533,13 +533,13 @@ public class DeadPigProcessStepActivity extends BaseActivity implements View.OnC
         @Override
         public void onResponse(Call call, Response response) throws IOException {
             if (response.isSuccessful()) {
+                String string = response.body().string();
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         mProgressDialog.dismiss();
                         JSONObject jsonObject = null;
                         try {
-                            String string = response.body().string();
                             Log.e("deadPigProcessing", "--" + string);
                             jsonObject = new JSONObject(string);
                             int status = jsonObject.getInt("status");

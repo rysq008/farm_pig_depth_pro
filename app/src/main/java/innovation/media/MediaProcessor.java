@@ -1286,6 +1286,7 @@ public class MediaProcessor {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
+                    String s = response.body().string();
                     Activity appContext = (Activity) mActivity;
                     appContext.runOnUiThread(new Runnable() {
                         @Override
@@ -1293,7 +1294,7 @@ public class MediaProcessor {
                             mProgressDialog.dismiss();
                             JSONObject jsonObject = null;
                             try {
-                                String s = response.body().string();
+
                                 Log.e("end1", "--" + s);
                                 jsonObject = new JSONObject(s);
                                 int status = jsonObject.getInt("status");
@@ -1342,13 +1343,14 @@ public class MediaProcessor {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
+                    String s = response.body().string();
                     Activity appContext = (Activity) mActivity;
                     appContext.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             JSONObject jsonObject = null;
                             try {
-                                String s = response.body().string();
+
                                 Log.e("goonPre", "--" + s);
                                 jsonObject = new JSONObject(s);
                                 int status = jsonObject.getInt("status");
