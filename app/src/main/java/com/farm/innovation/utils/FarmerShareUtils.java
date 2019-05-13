@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.os.Process;
 import android.os.SystemClock;
 import android.support.v7.widget.ListPopupWindow;
 import android.text.TextUtils;
@@ -17,9 +18,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 
+import com.farm.innovation.base.FarmAppConfig;
 import com.farm.innovation.bean.MergeLoginBean;
 import com.farm.innovation.login.RespObject;
 import com.innovation.pig.insurance.R;
+import com.xiangchuang.risks.utils.ShareUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -33,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 import static android.util.Base64.DEFAULT;
+import static com.xiangchuang.risks.utils.ShareUtils.preferences_pig;
 
 public class FarmerShareUtils {
 
@@ -51,6 +55,11 @@ public class FarmerShareUtils {
     }
 
     public static final boolean saveHost(String key, String val) {
+        if(!FarmAppConfig.isOriginApk()){
+            if(ShareUtils.saveHost(key,val)){
+                return preferences_farm.edit().putString(key, val).commit();
+            }
+        }
         return preferences_farm.edit().putString(key, val).commit();
     }
 
@@ -192,10 +201,13 @@ public class FarmerShareUtils {
                                                             FarmerShareUtils.saveString(et.getText().toString().trim(), "ip");
                                                         if (FarmerShareUtils.saveHost("host", str)) {
                                                             HttpUtils.resetIp(FarmerShareUtils.getHost("host"));
+                                                            innovation.utils.HttpUtils.resetIp(str);
                                                             ((Activity) ct).finish();
                                                             Intent it = ct.getPackageManager().getLaunchIntentForPackage(ct.getPackageName());
                                                             it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
                                                             ct.startActivity(it);
+                                                            Process.killProcess(Process.myPid());
+                                                            System.exit(0);
                                                         }
                                                     }
                                                 }).setNegativeButton("取消", null).show();
@@ -229,10 +241,13 @@ public class FarmerShareUtils {
                                                             enterDialog.cancel();
                                                             if (FarmerShareUtils.saveHost("host", str)) {
                                                                 HttpUtils.resetIp(FarmerShareUtils.getHost("host"));
+                                                                innovation.utils.HttpUtils.resetIp(str);
                                                                 ((Activity) ct).finish();
                                                                 Intent it = ct.getPackageManager().getLaunchIntentForPackage(ct.getPackageName());
                                                                 it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
                                                                 ct.startActivity(it);
+                                                                Process.killProcess(Process.myPid());
+                                                                System.exit(0);
                                                             }
                                                         }
                                                     });

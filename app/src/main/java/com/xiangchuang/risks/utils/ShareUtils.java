@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.os.Process;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.MotionEvent;
@@ -143,6 +144,8 @@ public class ShareUtils {
                                                             Intent it = ct.getPackageManager().getLaunchIntentForPackage(ct.getPackageName());
                                                             it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
                                                             ct.startActivity(it);
+                                                            Process.killProcess(Process.myPid());
+                                                            System.exit(0);
                                                         }
                                                     }
                                                 }).setNegativeButton("取消", null).show();
@@ -180,6 +183,8 @@ public class ShareUtils {
                                                                 Intent it = ct.getPackageManager().getLaunchIntentForPackage(ct.getPackageName());
                                                                 it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
                                                                 ct.startActivity(it);
+                                                                Process.killProcess(Process.myPid());
+                                                                System.exit(0);
                                                             }
                                                         }
                                                     });

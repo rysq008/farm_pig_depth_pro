@@ -178,6 +178,7 @@ public class HttpUtils {
         USERINFO_SHAREFILE = "userinfo_sharefile";
         //登陆
         PIC_LOGIN_URL = baseUrl + "app/login";
+        MERGE_LOGIN_URL = baseUrl+ "app/mergeLogin";
         //获取公司
         GET_ALL_COMPANY_URL = baseUrl + "app/queryAppDept";
         //获取版本更新json

@@ -90,6 +90,7 @@ public class HttpUtils {
     public static String GET_UPDATE_URL = baseUrl + "app/appVersion/zxupdate";
 
     public static void resetIp(String baseUrl) {
+        com.farm.innovation.utils.HttpUtils.resetIp(baseUrl);
         HttpUtils.baseUrl = baseUrl;
         Constants.resetBaseIp(baseUrl);
         //新增投保保单接口
