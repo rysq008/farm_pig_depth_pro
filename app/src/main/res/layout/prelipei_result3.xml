@@ -11,6 +11,7 @@
         android:layout_height="30dp"
         android:layout_margin="20dp"
         android:text="错误信息"
+        android:textColor="#333"
         />
 
     <LinearLayout
@@ -25,7 +26,8 @@
             android:layout_height="50dp"
             android:background="@drawable/preborder"
             android:gravity="center"
-            android:text="重新预理赔" />
+            android:text="重新预理赔"
+            android:textColor="#fff"/>
 
     </LinearLayout>
 </LinearLayout>

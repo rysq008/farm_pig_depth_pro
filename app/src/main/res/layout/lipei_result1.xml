@@ -7,9 +7,10 @@
     <TextView
         android:id="@+id/tv_no_lipei"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:text="预理赔库中没有相似对象" />
+        android:text="预理赔库中没有相似对象"
+        android:textColor="#777"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,7 +26,8 @@
             android:layout_marginRight="20dp"
             android:background="@drawable/button_unclick"
             android:gravity="center"
-            android:text="重新拍摄" />
+            android:text="重新拍摄"
+            android:textColor="#fff"/>
 
         <TextView
             android:id="@+id/liresult1_goon"
@@ -35,6 +37,7 @@
             android:layout_marginRight="20dp"
             android:background="@drawable/begin_btn_bg"
             android:gravity="center"
-            android:text="结束采集" />
+            android:text="结束采集"
+            android:textColor="#fff"/>
     </LinearLayout>
 </LinearLayout>

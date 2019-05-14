@@ -149,7 +149,7 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
         reasons.add("中毒");
         reasons.add("扑杀");
         reasons.add("意外事故");
-        reasons.add("难产");
+//        reasons.add("难产");
         outreson = reasons.get(0);
         initReasonSpinner();
     }

@@ -140,19 +140,27 @@ public class HogDetailActivity_new extends BaseActivity {
                                     picpaths = data.getPics();
                                     Log.i("size", picpaths.size() + "" + picpaths.toString());
 
-                                    if(pigType.equals("102")){
+                                    boolean isVideo = false;
+                                    if(picpaths != null && picpaths.size() > 0){
+                                        isVideo = picpaths.get(0).contains("mp4");
+                                    }else{
+                                        Toast.makeText(HogDetailActivity_new.this, "无点数详情信息。", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    if(isVideo){
                                         if(picpaths != null && picpaths.size() > 0){
-                                            vvSow.setVisibility(View.VISIBLE);
-                                            gridview_pic.setVisibility(View.GONE);
                                             for (int i = 0; i <  picpaths.size(); i++){
                                                 paths.add(picpaths.get(i));
                                             }
+                                            vvSow.setVisibility(View.VISIBLE);
+                                            gridview_pic.setVisibility(View.GONE);
+
                                             cIndex = paths.size()-1;
                                             playeVideo(paths.get(cIndex));
                                         }else{
                                             handler.postDelayed(runnable,0);
                                             mProgressBar.setVisibility(View.GONE);
-                                            Toast.makeText(HogDetailActivity_new.this, "当前无可播放视频。", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(HogDetailActivity_new.this, "无点数详情信息。", Toast.LENGTH_SHORT).show();
                                         }
                                     }else{
                                         vvSow.setVisibility(View.GONE);

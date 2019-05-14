@@ -9,14 +9,16 @@
         android:layout_height="20dp"
         android:layout_margin="20dp"
         android:gravity="center"
-        android:text="验证结果" />
+        android:text="验证结果"
+        android:textColor="#777"/>
 
     <TextView
         android:id="@+id/jin_msg"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_margin="20dp"
-        android:text="预理赔库中没有相似对象,系统推荐如下最相似的对象！" />
+        android:text="预理赔库中没有相似对象,系统推荐如下最相似的对象！"
+        android:textColor="#777"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,7 +31,8 @@
             android:layout_height="50dp"
             android:layout_marginLeft="20dp"
             android:gravity="center"
-            android:text="猪舍-猪圈" />
+            android:text="猪舍-猪圈"
+            android:textColor="#777"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -41,7 +44,8 @@
                 android:layout_height="50dp"
                 android:layout_marginLeft="20dp"
                 android:gravity="center"
-                android:text="预理赔时间：" />
+                android:text="预理赔时间："
+                android:textColor="#777"/>
 
             <TextView
                 android:id="@+id/baodantime"
@@ -49,7 +53,8 @@
                 android:layout_height="50dp"
                 android:layout_marginLeft="20dp"
                 android:gravity="center"
-                android:text="2018-09-11" />
+                android:text="2018-09-11"
+                android:textColor="#777"/>
         </LinearLayout>
 
         <LinearLayout
@@ -62,7 +67,8 @@
                 android:layout_height="50dp"
                 android:layout_marginLeft="20dp"
                 android:gravity="center"
-                android:text="保单号：" />
+                android:text="保单号："
+                android:textColor="#777"/>
 
             <TextView
                 android:id="@+id/baodannum"
@@ -70,7 +76,8 @@
                 android:layout_height="50dp"
                 android:layout_marginLeft="45dp"
                 android:gravity="center"
-                android:text="123456" />
+                android:text="123456"
+                android:textColor="#777"/>
         </LinearLayout>
 
     </LinearLayout>
@@ -143,7 +150,8 @@
             android:layout_marginRight="20dp"
             android:background="@drawable/button_unclick"
             android:gravity="center"
-            android:text="重新拍摄" />
+            android:text="重新拍摄"
+            android:textColor="#fff"/>
 
         <TextView
             android:id="@+id/result2_goon"
@@ -153,6 +161,7 @@
             android:layout_marginRight="20dp"
             android:background="@drawable/begin_btn_bg"
             android:gravity="center"
-            android:text="继续申请" />
+            android:text="继续申请"
+            android:textColor="#fff"/>
     </LinearLayout>
 </LinearLayout>
