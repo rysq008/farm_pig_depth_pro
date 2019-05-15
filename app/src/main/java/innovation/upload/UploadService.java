@@ -1,5 +1,6 @@
 package innovation.upload;
 
+import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
@@ -25,6 +26,7 @@ public class UploadService extends Service implements UploadTaskListener {
     @Override
     public void onCreate() {
         super.onCreate();
+        startForeground(1, new Notification());
     }
 
     @Override

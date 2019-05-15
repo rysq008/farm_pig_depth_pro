@@ -3,6 +3,8 @@ package com.xiangchuang.risks.utils;
 import android.util.Base64;
 import android.util.Log;
 
+import com.orhanobut.logger.Logger;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,7 +34,7 @@ public class Img2Base64 {
             e.printStackTrace();
         }
         String base64Str = Base64.encodeToString(data, Base64.DEFAULT);
-        Log.i("base64Str", base64Str);
+        Logger.i("base64Str" + base64Str);
         return base64Str;
     }
 }

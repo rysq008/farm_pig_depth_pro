@@ -44,11 +44,13 @@ public class FileUtils {
         }
         if (file.isDirectory()) {
             File files[] = file.listFiles();
-            for (File f : files) {
-                if (f.isDirectory()) {
-                    deleteFile(f);
-                } else {
-                    f.delete();
+            if(files != null && files.length >= 0){
+                for (File f : files) {
+                    if (f.isDirectory()) {
+                        deleteFile(f);
+                    } else {
+                        f.delete();
+                    }
                 }
             }
             boolean ok = file.delete();
@@ -65,11 +67,13 @@ public class FileUtils {
         }
         if (file.isDirectory()) {
             File files[] = file.listFiles();
-            for (File f : files) {
-                if (f.isDirectory()) {
-                    deleteFile(f);
-                } else {
-                    f.delete();
+            if(files != null && files.length >= 0){
+                for (File f : files) {
+                    if (f.isDirectory()) {
+                        deleteFile(f);
+                    } else {
+                        f.delete();
+                    }
                 }
             }
             file.delete();

@@ -12,9 +12,11 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import com.avos.avoscloud.AVOSCloud;
 import com.farm.innovation.base.FarmAppConfig;
+import com.orhanobut.logger.AndroidLogAdapter;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.utils.ShareUtils;
@@ -40,6 +42,7 @@ import io.objectbox.BoxStore;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
+import com.orhanobut.logger.Logger;
 
 public class AppConfig {
     private static final String TAG = "MyApplication";
@@ -92,6 +95,14 @@ public class AppConfig {
         mCrashHandler.init(app);
         ShareUtils.init(app);
         boxStore = MyObjectBox.builder().androidContext(app).build();
+        //初始化日志库
+        Logger.addLogAdapter(new AndroidLogAdapter(){
+            @Override
+            public boolean isLoggable(int priority, @Nullable String tag) {
+                return BuildConfig.DEBUG;
+            }
+        });
+
 //        if (AppConfig.isApkInDebug())
 //            new AndroidObjectBrowser(boxStore).start(app);
 

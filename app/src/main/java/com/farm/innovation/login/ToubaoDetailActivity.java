@@ -18,6 +18,7 @@ import com.farm.innovation.utils.HttpRespObject;
 import com.farm.innovation.utils.HttpUtils;
 import com.innovation.pig.insurance.R;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.orhanobut.logger.Logger;
 
 import org.tensorflow.demo.FarmDetectorActivity;
 import org.tensorflow.demo.FarmGlobal;
@@ -248,7 +249,7 @@ public class ToubaoDetailActivity extends BaseActivity {
 
             } else if (!success) {
                 //  显示失败
-                Log.d(TAG, errStr);
+                Logger.d(errStr);
 //                tv_info.setText(errStr);
             }
         }

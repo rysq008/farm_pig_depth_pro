@@ -57,7 +57,12 @@ public class LoginFamerServer extends Service {
 
     protected void initData() {
 
-        startService(new Intent(this, UploadService.class));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(new Intent(this, UploadService.class));
+        } else {
+            startService(new Intent(this, UploadService.class));
+        }
+
 
 
 //        Box<VideoUploadTable> box = AppConfig.getBoxStore().boxFor(VideoUploadTable.class);

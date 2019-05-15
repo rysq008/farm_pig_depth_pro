@@ -327,7 +327,7 @@ public class RegisterActivity extends BaseActivity implements LoaderManager.Load
         OkHttp3Util.doPost(HttpUtils.vertify_URL, mapbody, map, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.i("RegisterActivity", e.toString());
+                com.orhanobut.logger.Logger.i(e.toString());
                 AVOSCloudUtils.saveErrorMessage(e, RegisterActivity.class.getSimpleName());
             }
 
@@ -745,12 +745,12 @@ public class RegisterActivity extends BaseActivity implements LoaderManager.Load
         protected void onPostExecute(final Boolean success) {
             mGetVerifyCodeTask = null;
             if (success & HttpUtils.GET_SMSCODE_URL.equalsIgnoreCase(mUrl)) {
-                Log.d(TAG, errStr);
-                Log.d(TAG, insurresp.msg);
+                com.orhanobut.logger.Logger.d(errStr);
+                com.orhanobut.logger.Logger.d(insurresp.msg);
 
             } else if (!success) {
                 //  显示失败
-                Log.d(TAG, errStr);
+                com.orhanobut.logger.Logger.d(errStr);
 //                tv_info.setText(errStr);
             }
         }
