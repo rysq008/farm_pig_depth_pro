@@ -9,7 +9,7 @@ import java.util.Hashtable;
  */
 
 public class IDCardValidate {
-    public static final String[] ValCodeArr = { "1", "0", "x", "9", "8", "7", "6", "5", "4", "3", "2" };
+    public static final String[] ValCodeArr = { "1", "0", "X", "9", "8", "7", "6", "5", "4", "3", "2" };
     public static final String[] Wi = { "7", "9", "10", "5", "8", "4", "2", "1", "6", "3", "7", "9", "10", "5", "8", "4", "2" };
     // 身份证的最小出生日期,1900年1月1日
     private final static Date MINIMAL_BIRTH_DATE = new Date(-2209017600000L);
