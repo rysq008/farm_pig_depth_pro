@@ -89,12 +89,14 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
     private TextView tvPopUpdate;
     private ImageView ivPopUpdateSign;
     private long firstTime = 0L;
+    //无害化处理按钮布局
+    private RelativeLayout rlInnocentTreatment;
     //无害化处理按钮
-    TextView tvInnocentTreatment;
+    private TextView tvInnocentTreatment;
     //待处理数量布局
-    RelativeLayout rlCount;
+    private RelativeLayout rlCount;
     //待处理数量
-    TextView tvCount;
+    private TextView tvCount;
 
     private int payNum;
 
@@ -132,6 +134,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
         this.tvInnocentTreatment.setOnClickListener(this);
         this.rlCount = (RelativeLayout) this.findViewById(R.id.rl_count);
         this.tvCount = (TextView) this.findViewById(R.id.tv_count);
+        this.rlInnocentTreatment = findViewById(R.id.rl_innocent_treatment);
 
     }
 
@@ -571,7 +574,17 @@ public class SelectFunctionActivity_new extends BaseActivity implements View.OnC
                     result = gson.fromJson(string, type);
 
                     if (null != result) {
-                        currentStep = result.getData();
+                        SelectFunctionActivity_new.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(0 == result.getStatus()){
+                                    rlInnocentTreatment.setVisibility(View.GONE);
+                                }else if(1 == result.getStatus()){
+                                    currentStep = result.getData();
+                                    rlInnocentTreatment.setVisibility(View.VISIBLE);
+                                }
+                            }
+                        });
                     } else {
 
                     }
