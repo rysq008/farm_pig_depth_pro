@@ -113,9 +113,9 @@ public abstract class FarmCameraActivity extends BaseActivity implements OnImage
                 String phone = FarmerPreferencesUtils.getStringValue(FarmAppConfig.phone, FarmAppConfig.getActivity());
                 new AlertDialog.Builder(this)
                         .setIcon(R.drawable.farm_cowface)
-                        .setTitle("��ʾ")
-                        .setMessage("�����ֻ��洢�ռ����ز��㣬��������ٽ��вɼ�¼�ơ�����������޷��ɼ�¼�ƣ�����ϵ�˹��ͷ����绰��"+phone+"��")
-                        .setPositiveButton("ȷ��", new DialogInterface.OnClickListener() {
+                        .setTitle("提示")
+                        .setMessage("您的手机存储空间严重不足，请清理后再进行采集录制。如清理后仍无法采集录制，请联系人工客服，电话："+phone+"。")
+                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();

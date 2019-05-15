@@ -21,6 +21,7 @@ import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.FileProvider;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -751,6 +752,7 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
         // 同时使用网络定位和GPS定位,优先返回最高精度的定位结果,以及对应的地址描述信息
         mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
         mLocationOption.setOnceLocation(true);
+        mLocationOption.setOnceLocationLatest(true);
         //设置定位间隔,单位毫秒,默认为2000ms，最低1000ms。默认连续定位 切最低时间间隔为1000ms
         mLocationOption.setInterval(3500);
         mLocationClient.setLocationOption(mLocationOption);
@@ -758,18 +760,25 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
         mLocationClient.startLocation();
     }
 
-    AMapLocation amapLocation;
-    private final AMapLocationListener mLocationListener = new AMapLocationListener() {
-        @Override
+    //    AMapLocation amapLocation;
+    private AMapLocationListener mLocationListener = new AMapLocationListener() {
+
+    @Override
         public void onLocationChanged(AMapLocation amapLocation) {
             if (amapLocation != null) {
                 if (amapLocation.getErrorCode() == 0) {
                     //定位成功回调信息，设置相关消息
-                    amapLocation.getLocationType();//获取当前定位结果来源，如网络定位结果，详见定位类型表
-                    amapLocation = amapLocation;
+//                    amapLocation.getLocationType();//获取当前定位结果来源，如网络定位结果，详见定位类型表
+//                    amapLocation = amapLocation;
                     String str_address = amapLocation.getAddress();
+                    if(TextUtils.isEmpty(str_address)){
+                        if (mLocationClient != null) {
+                            mLocationClient.startLocation(); // 启动定位
+                        }
+                    }else
                     tvBaodanAddress.setText(str_address);
-                    amapLocation.getAccuracy();//获取精度信息
+                    Toast.makeText(AddCompanyActivity.this, "---->"+str_address, Toast.LENGTH_LONG).show();
+//                    amapLocation.getAccuracy();//获取精度信息
                 } else {
                     //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
                     Log.e("AmapError", "location Error, ErrCode:"
@@ -791,11 +800,15 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
     protected void onDestroy() {
         super.onDestroy();
         mLocationClient.stopLocation();
+        mLocationListener = null;
+        mLocationClient.setLocationListener(null);
+        mLocationClient.setLocationListener(null);
+        mLocationClient.onDestroy();
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
         if (mLocationClient != null) {
             mLocationClient.startLocation(); // 启动定位
         }

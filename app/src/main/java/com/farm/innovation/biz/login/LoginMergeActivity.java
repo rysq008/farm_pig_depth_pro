@@ -306,7 +306,7 @@ public class LoginMergeActivity extends BaseActivity implements ILoginView {
                                         goToActivity(CompanyActivity.class, null);
                                         finish();
                                     }
-                                } else {
+                                } else if(pbean.type == 2){
                                     int enId = pbean.enUser.enId;// enUser.getInt("enId");
                                     int enUserId = pbean.enUser.enUserId;// enUser.getInt("enUserId");
                                     String enName = pbean.enUser.enName;// enUser.getString("enName");
@@ -317,6 +317,10 @@ public class LoginMergeActivity extends BaseActivity implements ILoginView {
                                         goToActivity(SelectFunctionActivity_new.class, null);
                                         finish();
                                     }
+                                }else{
+                                    FarmerShareUtils.clearMergeLoginInfo();
+                                    Snackbar.make(nestedScrollView, "服务器错误，无法识别用户身份！！", Snackbar.LENGTH_LONG).setText("服务器错误，无法识别用户身份！").show();
+                                    return;
                                 }
                             }
                             if (fbean == null || TextUtils.isEmpty(fbean.token) || fbean.status != RespObject.USER_STATUS_1) {
