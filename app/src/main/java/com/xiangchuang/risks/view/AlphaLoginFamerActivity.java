@@ -106,13 +106,8 @@ public class AlphaLoginFamerActivity extends BaseActivity {
     @Override
     protected void initData() {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            mActivity.startForegroundService(new Intent(mActivity, UploadService.class));
-        } else {
-            mActivity.startService(new Intent(mActivity, UploadService.class));
-        }
 
-
+        mActivity.startService(new Intent(mActivity, UploadService.class));
         if (!this.isTaskRoot()) {
             Intent intent = getIntent();
             if (intent != null) {

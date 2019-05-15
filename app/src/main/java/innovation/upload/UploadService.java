@@ -26,7 +26,6 @@ public class UploadService extends Service implements UploadTaskListener {
     @Override
     public void onCreate() {
         super.onCreate();
-        startForeground(1, new Notification());
     }
 
     @Override
