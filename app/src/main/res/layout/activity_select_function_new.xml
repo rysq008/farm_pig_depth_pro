@@ -171,24 +171,6 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/rel_webview"
-                android:layout_width="match_parent"
-                android:layout_height="60dp">
-
-                <TextView
-                    android:id="@+id/select_webview"
-                    android:layout_width="150dp"
-                    android:layout_height="40dp"
-                    android:layout_centerInParent="true"
-                    android:background="@drawable/begin_btn_bg"
-                    android:gravity="center"
-                    android:text="猪舍监控"
-                    android:textColor="#FFFFFF"
-                    android:textSize="16sp" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
                 android:id="@+id/rl_innocent_treatment"
                 android:layout_width="170dp"
                 android:layout_height="60dp"
@@ -228,6 +210,24 @@
                         android:text="99+"
                         android:textColor="@color/WHITE" />
                 </RelativeLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rel_webview"
+                android:layout_width="match_parent"
+                android:layout_height="60dp">
+
+                <TextView
+                    android:id="@+id/select_webview"
+                    android:layout_width="150dp"
+                    android:layout_height="40dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/begin_btn_bg"
+                    android:gravity="center"
+                    android:text="猪舍监控"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp" />
+
             </RelativeLayout>
 
             <View
