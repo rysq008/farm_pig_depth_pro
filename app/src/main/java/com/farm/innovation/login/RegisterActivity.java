@@ -45,7 +45,6 @@ import com.farm.innovation.bean.MultiBaodanBean;
 import com.farm.innovation.bean.ResultBean;
 import com.farm.innovation.bean.company_child;
 import com.farm.innovation.bean.company_total;
-import com.farm.innovation.biz.login.LoginFamerActivity;
 import com.farm.innovation.biz.login.LoginMergeActivity;
 import com.farm.innovation.utils.AVOSCloudUtils;
 import com.farm.innovation.utils.FarmerShareUtils;
@@ -667,10 +666,11 @@ public class RegisterActivity extends BaseActivity implements LoaderManager.Load
                     if (resultBean.getStatus() == 1) {
                         Toast.makeText(RegisterActivity.this, resultBean.getMsg(), Toast.LENGTH_SHORT).show();
 //                        Intent add_intent = new Intent(RegisterActivity.this, LoginFamerActivity.class);
-                        Intent add_intent = new Intent(RegisterActivity.this, LoginMergeActivity.class);
-                        startActivity(add_intent);
-                        finish();
-                        FarmerShareUtils.clearMergeLoginInfo();
+                        if (FarmerShareUtils.clearMergeLoginInfo()) {
+                            Intent add_intent = new Intent(RegisterActivity.this, LoginMergeActivity.class);
+                            startActivity(add_intent);
+                            finish();
+                        }
                         return;
                     } else if (resultBean.getStatus() == 0) {
                         Snackbar.make(nestedScrollView, resultBean.getMsg(), Snackbar.LENGTH_LONG).show();

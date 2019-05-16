@@ -115,8 +115,8 @@ public class FarmerShareUtils {
         }
     }
 
-    public static final void clearMergeLoginInfo() {
-        preferences_farm.edit().remove(MERGE_LOGIN_INFO).commit();
+    public static final boolean clearMergeLoginInfo() {
+        return preferences_farm.edit().remove(MERGE_LOGIN_INFO).commit();
     }
 
     public static final <T> T getData(String key) {

@@ -264,11 +264,12 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
                                         SharedPreferences.Editor editor = pref.edit();
                                         editor.clear();
                                         editor.commit();
-                                        FarmerShareUtils.clearMergeLoginInfo();
 //                                        Intent add_intent = new Intent(HomeActivity.this, LoginFamerActivity.class);
-                                        Intent add_intent = new Intent(HomeActivity.this, LoginMergeActivity.class);
-                                        startActivity(add_intent);
-                                        HomeActivity.this.finish();
+                                        if (FarmerShareUtils.clearMergeLoginInfo()) {
+                                            Intent add_intent = new Intent(HomeActivity.this, LoginMergeActivity.class);
+                                            startActivity(add_intent);
+                                            HomeActivity.this.finish();
+                                        }
                                     }
                                 })
                                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -431,7 +432,7 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
 //                    @Override
 //                    public void run() {
 //                        if (dialog != null)
-                            dialog.dismiss();
+                dialog.dismiss();
 //                        dialog = null;
 //                    }
 //                });
