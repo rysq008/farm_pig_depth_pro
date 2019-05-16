@@ -12,6 +12,7 @@ import android.util.Log;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.orhanobut.logger.Logger;
 import com.xiangchuang.risks.model.bean.RecognitionResult;
 import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
@@ -341,9 +342,9 @@ public final class CounterHelper {
                 int bottom = (int) (y + h / 2);
 
 
-                Log.i("xyaywidthheight", width + "," + height);
-                Log.i("xyay", xyArray.toString());
-                Log.i("xyayleftbottom", left + "," + top + "," + right + "," + bottom);
+                Logger.i("xyaywidthheight"+width + "," + height);
+                Logger.i("xyay"+ xyArray.toString());
+                Logger.i("xyayleftbottom"+ left + "," + top + "," + right + "," + bottom);
 
                 //canvas.drawRect(left, top, right, bottom, rectPaint);
                 canvas.drawCircle((float) x, (float) y, UIUtils.dp2px(context, 10f), pointPaint);
@@ -424,7 +425,7 @@ public final class CounterHelper {
             e.printStackTrace();
         }
         String base64Str = Base64.encodeToString(data, Base64.DEFAULT);
-        Log.i("base64Str", base64Str);
+        Logger.i("base64Str"+  base64Str);
         return base64Str;
     }
 

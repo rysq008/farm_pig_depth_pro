@@ -38,11 +38,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     public ProgressDialog mProgressDialog;
     private boolean isPause = false;
     public ToastUtils toastUtils;
+    protected Activity mActivity;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mActivity = this;
       /*  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WindowManager.LayoutParams localLayoutParams = getWindow().getAttributes();
             localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
@@ -135,6 +137,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void showProgressDialog(Activity activity) {
+        if(activity == null || activity.isFinishing()) return;
         mProgressDialog = new ProgressDialog(activity);
         mProgressDialog.setTitle(R.string.dialog_title);
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -152,6 +155,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void showDialogError(String s) {
+        if(mActivity == null || mActivity.isFinishing()) return;
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         View inflate = View.inflate(AppConfig.getAppContext(), R.layout.error_nomal, null);
         TextView error_msg = inflate.findViewById(R.id.error_msg);

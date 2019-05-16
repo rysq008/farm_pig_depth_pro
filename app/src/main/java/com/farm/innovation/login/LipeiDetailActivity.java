@@ -16,6 +16,7 @@ import com.farm.innovation.utils.AVOSCloudUtils;
 import com.farm.innovation.utils.HttpRespObject;
 import com.farm.innovation.utils.HttpUtils;
 import com.innovation.pig.insurance.R;
+import com.orhanobut.logger.Logger;
 
 import org.tensorflow.demo.FarmGlobal;
 
@@ -190,7 +191,7 @@ public class LipeiDetailActivity extends BaseActivity {
 
             } else if (!success) {
                 //  显示失败
-                Log.d(TAG, errStr);
+                Logger.d(errStr);
 //                tv_info.setText(errStr);
             }
         }

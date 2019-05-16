@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.orhanobut.logger.Logger;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 import com.zhy.http.okhttp.callback.FileCallBack;
@@ -61,13 +62,13 @@ public class OkHttpRequestUtils {
         @Override
         public void onError(Call call, Exception e, int id) {
             e.printStackTrace();
-            Log.e("TAG", e.getMessage());
+            Logger.e(e.getMessage());
 
         }
 
         @Override
         public void onResponse(String response, int id) {
-            Log.e("TAG", response);
+            Logger.e( response);
         }
     }
 

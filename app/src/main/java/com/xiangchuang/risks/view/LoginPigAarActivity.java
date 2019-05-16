@@ -147,6 +147,9 @@ public class LoginPigAarActivity extends BaseActivity {
         startService(new Intent(this, UploadService.class));
 //        if (FarmerPreferencesUtils.getBooleanValue(Constants.ISLOGIN, AppConfig.getAppContext())) {
 //            String type = FarmerPreferencesUtils.getStringValue(Constants.companyfleg, AppConfig.getAppContext());
+
+//        if (PreferencesUtils.getBooleanValue(Constants.ISLOGIN, AppConfig.getAppContext())) {
+//            String type = PreferencesUtils.getStringValue(Constants.companyfleg, AppConfig.getAppContext());
 //            if (type.equals("1")) {
 //                goToActivity(CompanyActivity.class, null);
 //                LoginPigAarActivity.this.finish();

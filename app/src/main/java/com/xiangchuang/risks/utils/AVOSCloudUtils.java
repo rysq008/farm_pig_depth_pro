@@ -22,6 +22,7 @@ public class AVOSCloudUtils {
 
     public static void saveErrorMessage(Exception e, String className) {
         if(!AppConfig.isOriginApk())return;
+        if(e == null)return;
 //         测试 SDK 是否正常工作的代码
         AVObject avObject = new AVObject("Android_phone");
 //        avObject.put("Cookie", SharedPreUtil.getSessionId());

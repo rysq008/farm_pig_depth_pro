@@ -240,7 +240,7 @@ public class LipeiFragment extends Fragment {
 
             } else if (!success) {
                 //  显示失败
-                Log.d(TAG, errStr);
+                com.orhanobut.logger.Logger.d( errStr);
             }
         }
 

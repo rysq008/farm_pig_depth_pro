@@ -106,8 +106,8 @@ public class LoginPigActivity extends BaseActivity {
     @Override
     protected void initData() {
 
-        startService(new Intent(this, UploadService.class));
 
+        mActivity.startService(new Intent(mActivity, UploadService.class));
         if (!this.isTaskRoot()) {
             Intent intent = getIntent();
             if (intent != null) {

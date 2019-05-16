@@ -781,7 +781,7 @@ public class AddAnimalActivity extends BaseActivity {
 
             } else if (!success) {
                 //  显示失败
-                Log.d(TAG, errStr);
+                com.orhanobut.logger.Logger.d(errStr);
                 Toast.makeText(getApplicationContext(), "onPostExecute:" + errStr, Toast.LENGTH_SHORT).show();
             }
         }
