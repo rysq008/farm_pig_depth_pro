@@ -11,6 +11,7 @@ import com.farm.innovation.biz.iterm.Model;
 import com.farm.innovation.utils.ConstUtils;
 import com.farm.innovation.utils.PreferencesUtils;
 import com.google.gson.Gson;
+import com.orhanobut.logger.Logger;
 
 import org.tensorflow.demo.FarmDetectorActivity;
 import org.tensorflow.demo.FarmGlobal;
@@ -183,7 +184,7 @@ public class Utils {
     public static void getThreshold(){
         String  tlist = PreferencesUtils.getStringValue(FarmAppConfig.THRESHOLD_LIST, FarmAppConfig.getActivity());
         QueryVideoFlagDataBean.thresholdList thresholdList = new Gson().fromJson(tlist, QueryVideoFlagDataBean.thresholdList.class);
-        Log.e("getThreshold", thresholdList.toString());
+        com.orhanobut.logger.Logger.e("getThreshold"+ thresholdList.toString());
 
         int animalType = PreferencesUtils.getAnimalType(FarmAppConfig.getActivity());
         if (FarmGlobal.model == Model.BUILD.value()) {
@@ -210,7 +211,7 @@ public class Utils {
     public static void setLowThreshold(){
         String  tlist = PreferencesUtils.getStringValue(FarmAppConfig.THRESHOLD_LIST, FarmAppConfig.getActivity());
         QueryVideoFlagDataBean.thresholdList thresholdList = new Gson().fromJson(tlist, QueryVideoFlagDataBean.thresholdList.class);
-        Log.e("getLowThreshold", thresholdList.toString() );
+        Logger.e("getLowThreshold"+ thresholdList.toString() );
 
         int animalType = PreferencesUtils.getAnimalType(FarmAppConfig.getActivity());
          if(FarmGlobal.model == Model.VERIFY.value()){

@@ -1104,8 +1104,8 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
         } else if (Global.model == Model.VERIFY.value()) {
             Global.VideoFileName = Global.mediaPayItem.getVideoFileName();
         }
-        Log.i("Global.model:", Global.model + "");
-        Log.i("VideoFileName:", Global.VideoFileName);
+        com.orhanobut.logger.Logger.i("Global.model:"+Global.model + "");
+        com.orhanobut.logger.Logger.i("VideoFileName:"+ Global.VideoFileName);
         mMediaRecorder.setOutputFile(Global.VideoFileName);
         mMediaRecorder.setVideoEncodingBitRate(600000);
         mMediaRecorder.setVideoFrameRate(30);
@@ -1558,7 +1558,7 @@ public class CameraConnectionFragment extends Fragment implements View.OnClickLi
                             e.printStackTrace();
                         }
                     } catch (Exception e) {
-                        Log.i("tv_ 停止视频录制", e.toString());
+                        com.orhanobut.logger.Logger.i("tv_ 停止视频录制"+ e.toString());
                     }
                     MediaProcessor.getInstance(activity).handleMediaResource_build(activity);
                     MediaProcessor.getInstance(activity).showInsureDialog();

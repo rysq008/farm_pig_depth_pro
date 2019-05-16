@@ -147,7 +147,8 @@ public class LoginFamerActivity extends BaseActivity {
 //        mIntent.putExtra(Constants.NAME, "android_name");
 //        mIntent.putExtra(Constants.DEPARTMENT_ID, "28"/*"android_department"*/);
 //        mIntent.putExtra(Constants.IDENTITY_CARD, "android_identitry");
-        startService(new Intent(this, UploadService.class));
+
+        mActivity.startService(new Intent(mActivity, UploadService.class));
 //        if (PreferencesUtils.getBooleanValue(Constants.ISLOGIN, AppConfig.getAppContext())) {
 //            String type = PreferencesUtils.getStringValue(Constants.companyfleg, AppConfig.getAppContext());
 //            if (type.equals("1")) {

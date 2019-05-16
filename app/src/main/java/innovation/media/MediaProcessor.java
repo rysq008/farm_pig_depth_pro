@@ -482,7 +482,7 @@ public class MediaProcessor {
             OkHttp3Util.doPost(Constants.PRESTOP, mapbody, map, new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    Log.e("editRecoed", e.getLocalizedMessage());
+                    com.orhanobut.logger.Logger.e("editRecoed"+ e.getLocalizedMessage());
                     AVOSCloudUtils.saveErrorMessage(e, MediaProcessor.class.getSimpleName());
                 }
 
@@ -503,9 +503,9 @@ public class MediaProcessor {
         mapbody.put(Constants.address, str_address);
         mapbody.put(Constants.timesFlag, timesFlag);
 
-        Log.e("precommit:zipimage2", zipFile.getAbsolutePath());
+        com.orhanobut.logger.Logger.e("precommit:zipimage2"+ zipFile.getAbsolutePath());
 
-        Log.e("precommit:mapbody", mapbody.toString());
+        com.orhanobut.logger.Logger.e("precommit:mapbody"+  mapbody.toString());
 
         try {
             String currenUrl = Constants.PRECOMMIT;
@@ -655,7 +655,7 @@ public class MediaProcessor {
             OkHttp3Util.uploadPreFile(Constants.LICOMMIT, zipFile, "a.zip", mapbody, null, new Callback() {
                         @Override
                         public void onFailure(Call call, IOException e) {
-                            Log.e("lipeiprecommit", e.getLocalizedMessage());
+                            com.orhanobut.logger.Logger.e("lipeiprecommit"+ e.getLocalizedMessage());
                             mProgressDialog.dismiss();
                             appContext.runOnUiThread(new Runnable() {
                                 @Override
@@ -833,7 +833,7 @@ public class MediaProcessor {
         ImageView result1_image = inflate.findViewById(R.id.image_one);
         TextView xs = inflate.findViewById(R.id.xs);
         // xs.setText("预理赔库已有相似度"++"对象，是否取消本次预理赔？");
-        Log.e("similarImgUrl", similarImgUrl);
+        com.orhanobut.logger.Logger.e("similarImgUrl"+ similarImgUrl);
         if (!"".equals(similarImgUrl)) {
             Glide.with(mContext).load(similarImgUrl).into(result1_image);
         }
@@ -946,7 +946,7 @@ public class MediaProcessor {
         baodannum.setText(minsureNo);
         have_msg.setText(showmsg);
         ImageView result1_image = inflate.findViewById(R.id.image_one);
-        Log.e("similarImgUrl", similarImgUrl);
+        com.orhanobut.logger.Logger.e("similarImgUrl"+ similarImgUrl);
         if (!"".equals(similarImgUrl)) {
             Glide.with(mContext).load(similarImgUrl).into(result1_image);
         }
@@ -1272,7 +1272,7 @@ public class MediaProcessor {
         OkHttp3Util.doPost(Constants.LIEDD1, mapbody, null, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.e("end1", e.getLocalizedMessage());
+                com.orhanobut.logger.Logger.e("end1"+ e.getLocalizedMessage());
                 dialogcreate.dismiss();
                 mActivity.runOnUiThread(new Runnable() {
                     @Override
@@ -1329,7 +1329,7 @@ public class MediaProcessor {
         OkHttp3Util.doPost(Constants.PREJIXU, mapbody, null, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.e("pregoon", e.getLocalizedMessage());
+                com.orhanobut.logger.Logger.e("pregoon"+ e.getLocalizedMessage());
                 dialogcreate.dismiss();
                 mActivity.runOnUiThread(new Runnable() {
                     @Override
@@ -1986,11 +1986,11 @@ public class MediaProcessor {
                 // TODO: 2018/8/16 By:LuoLu  投保建库上传图片包和视频包
                 String zipImageDir = Global.mediaInsureItem.getZipImageDir();
                 String zipVideoDir = Global.mediaInsureItem.getZipVideoDir();
-                Log.i("zipVideoDir:", zipVideoDir);
+                com.orhanobut.logger.Logger.i("zipVideoDir:"+ zipVideoDir);
                 File file_zip = new File(zipImageDir);
                 File file_zipVideo = new File(zipVideoDir);
                 String fname_image = Global.ZipFileName + ".zip";
-                Log.i("fname_video:", fname_image);
+                com.orhanobut.logger.Logger.i("fname_video:"+ fname_image);
                 File zipFile_image2 = new File(file_zip, fname_image); //要上传的文件
                 File zipFile_video2 = new File(file_zipVideo, fname_image); //要上传的视频文件
                 if (!zipFile_image2.exists()) {
@@ -2072,7 +2072,7 @@ public class MediaProcessor {
                 String zipImageDir = Global.mediaInsureItem.getZipImageDir();
                 File file_zip = new File(zipImageDir);
                 String fname_image = Global.ZipFileName + ".zip";
-                Log.i("fname_video:", fname_image);
+                com.orhanobut.logger.Logger.i("fname_video:"+ fname_image);
                 File zipFile_image2 = new File(file_zip, fname_image); //要上传的文件
                 if (!zipFile_image2.exists()) {
                     Log.i("zipFile_image2:", "压缩图片文件夹不存在！！");
@@ -2254,11 +2254,11 @@ public class MediaProcessor {
 
         /* 处理视频文件 start */
         String zipVideoDir = Global.mediaPayItem.getZipVideoDir();
-        Log.i("zipVideoDir:", zipVideoDir);
+        com.orhanobut.logger.Logger.i("zipVideoDir:" +  zipVideoDir);
         File fileZipVideo = new File(zipVideoDir);
         String fnameVideo = Global.ZipFileName + ".zip";
         File zipFileVideo2 = new File(fileZipVideo, fnameVideo); //要上传的视频ZIP文件
-        Log.i("zipVideo=====:", zipFileVideo2.getAbsolutePath());
+        com.orhanobut.logger.Logger.i("zipVideo=====:" +  zipFileVideo2.getAbsolutePath());
         /* 处理视频文件 end */
 
         //如果图片文件不存在直接返回
@@ -2460,9 +2460,9 @@ public class MediaProcessor {
                                 str_address = str_address.equals("") ? "未知位置" : str_address;
 //                                pigBuildResp2 = HttpUtils.upload_build(String.valueOf(Model.VERIFY.value()), cow_libid, mcowear_number.getText().toString(), mNumberEdit.getText().toString(), mContext);
 
-                                Log.i("Mplipei cow_libid:", cow_libid);
-                                Log.i("Mlipei getCowEarNumber:", getCowEarNumber);
-                                Log.i("lp getlipeiTempNumber:", getlipeiTempNumber);
+                                com.orhanobut.logger.Logger.i("Mplipei cow_libid:"+ cow_libid);
+                                com.orhanobut.logger.Logger.i("Mlipei getCowEarNumber:"+ getCowEarNumber);
+                                com.orhanobut.logger.Logger.i("lp getlipeiTempNumber:"+ getlipeiTempNumber);
                                 pigBuildResp2 = HttpUtils.upload_build(String.valueOf(Model.VERIFY.value()), cow_libid, getCowEarNumber, getlipeiTempNumber, mContext);
                                 mHandler.sendEmptyMessage(2);
                             } catch (JSONException e) {
@@ -2644,7 +2644,7 @@ public class MediaProcessor {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0:
-                    Log.i("理赔库查询pigBuildRespResult", String.valueOf(pigBuildRespResult));
+                    com.orhanobut.logger.Logger.i("理赔库查询pigBuildRespResult"+ String.valueOf(pigBuildRespResult));
                     if (pigBuildRespResult != null) {
                         if (pigBuildRespResult.status == 1) {
 
@@ -3148,7 +3148,7 @@ public class MediaProcessor {
                         if (pigBuildResp2.status == 1) {
                             if (pigBuildResp2.buildStatus == 1) {
 
-                                Log.i("投保库查询获得的pid", pigBuildResp2.build_result_pid);
+                                com.orhanobut.logger.Logger.i("投保库查询获得的pid"+ pigBuildResp2.build_result_pid);
                                 verification_status = pigBuildResp2.buildVertificaton;
 
                                 //-->2.5新增猪/牛的信息 /pigInfo/addApp.
@@ -3206,13 +3206,13 @@ public class MediaProcessor {
                                     bean = gson.fromJson(response, GsonBean.class);
 
 
-                                    Log.i("transerPayData s:", getPayYiji);
-                                    Log.i("transerPayData s1:", getPayErji);
-                                    Log.i("transerPayData s2:", getPaySanji);
+                                    com.orhanobut.logger.Logger.i("transerPayData s:"+ getPayYiji);
+                                    com.orhanobut.logger.Logger.i("transerPayData s1:"+ getPayErji);
+                                    com.orhanobut.logger.Logger.i("transerPayData s2:"+ getPaySanji);
 
 
-                                    Log.i("GsonBeen getStatus:", String.valueOf(bean.getStatus()));
-                                    Log.i(HttpUtils.INSUR_ADDPIG_URL + "\n新增牲畜response:\n", response);
+                                    com.orhanobut.logger.Logger.i("GsonBeen getStatus:"+ String.valueOf(bean.getStatus()));
+                                    com.orhanobut.logger.Logger.i(HttpUtils.INSUR_ADDPIG_URL + "\n新增牲畜response:\n"+ response);
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }

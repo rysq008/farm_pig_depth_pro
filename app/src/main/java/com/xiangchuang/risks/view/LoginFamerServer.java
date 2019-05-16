@@ -59,7 +59,6 @@ public class LoginFamerServer extends Service {
 
         startService(new Intent(this, UploadService.class));
 
-
 //        Box<VideoUploadTable> box = AppConfig.getBoxStore().boxFor(VideoUploadTable.class);
 //        box.removeAll();
 //        List<VideoUploadTable> list = new ArrayList<>();
