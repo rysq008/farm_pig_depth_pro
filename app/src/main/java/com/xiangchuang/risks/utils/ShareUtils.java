@@ -37,7 +37,7 @@ public class ShareUtils {
     }
 
     public static final String getHost(String key) {
-        return null == preferences_pig ? "http://47.92.167.61:8081/nongxian2/" : preferences_pig.getString(key, "http://47.92.167.61:8081/nongxian2/");
+        return null == preferences_pig ? "http://test1.innovationai.cn:8081/nongxian2/" : preferences_pig.getString(key, "http://test1.innovationai.cn:8081/nongxian2/");
     }
 
     public static final boolean saveHost(String key, String val) {
@@ -126,7 +126,7 @@ public class ShareUtils {
                                         Drawable drawable = ct.getResources().getDrawable(R.drawable.bg_tel);
                                         et.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
                                         List<String> slist = new ArrayList<>();
-                                        final String[] list = {"http://60.205.209.245:8081/nongxian2/", "http://47.92.167.61:8081/nongxian2/"};//要填充的数据
+                                        final String[] list = {"http://60.205.209.245:8081/nongxian2/", "http://test1.innovationai.cn:8081/nongxian2/"};//要填充的数据
                                         slist.addAll(Arrays.asList(list));
                                         slist.addAll(ShareUtils.getIPList());
                                         AlertDialog enterDialog = new AlertDialog.Builder(ct).setTitle("提示").setMessage("请转入地址")

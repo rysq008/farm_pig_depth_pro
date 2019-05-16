@@ -53,7 +53,7 @@ public class HttpUtils {
     // TODO: 2018/8/17 By:LuoLu
 //    正式地址：60.205.209.245:8081;   测试地址：47.92.167.61:8081
 //    public static final String baseUrl = "http://60.205.209.245:8081/nongxian2/";
-    public static String baseUrl = "http://47.92.167.61:8081/nongxian2/";
+    public static String baseUrl = "http://test1.innovationai.cn:8081/nongxian2/";
     //新增投保保单接口
     public static String INSUR_NEW_URL = baseUrl + "baodan/addApp";
     //新增投保保单接口

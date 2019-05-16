@@ -238,7 +238,7 @@ public class LoginFamerAarActivity extends BaseActivity {
         mProgressDialog.show();
 //        String url = "http://192.168.1.175:8081/app/ftnAarLogin";
 //        String url = "http://47.92.167.61:8081/nongxian2/app/ftnAarLogin";
-        String url = "http://47.92.167.61:8081/nongxian2/app/aarLogin";
+        String url = "http://test1.innovationai.cn:8081/nongxian2/app/aarLogin";
         OkHttp3Util.doPost(/*AAR_LOGINURLNEW*/url, mapbody, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {

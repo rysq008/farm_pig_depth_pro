@@ -56,7 +56,7 @@ public class HttpUtils {
 //    60.205.209.245:8081;   47.92.167.61:8081
     //  http://47.92.167.61:8081/nongxian2/
     //  TODO: 备注查看监控信息的链接地址 需要修改
-    public static String baseUrl = "http://47.92.167.61:8081/nongxian2/";
+    public static String baseUrl = "http://test1.innovationai.cn:8081/nongxian2/";
     //新增投保保单接口
     public static String INSUR_NEW_URL = baseUrl + "baodan/addApp";
     //新增投保保单接口

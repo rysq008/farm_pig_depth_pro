@@ -49,7 +49,7 @@ public class MonitoringActivity extends BaseActivity {
         en_id = PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0");
         Log.e("en_id", "en_id: "+en_id);
 
-        url = "http://47.92.167.61:8007/list.html?enId="+en_id+"&url="+ HttpUtils.baseUrl;
+        url = "http://test1.innovationai.cn:8007/list.html?enId="+en_id+"&url="+ HttpUtils.baseUrl;
         Log.e("en_id", "url====="+url);
 //        webView.loadUrl("http://www.baidu.com");
         webView.loadUrl(url);
