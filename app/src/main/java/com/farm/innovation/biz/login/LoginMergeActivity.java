@@ -385,12 +385,14 @@ public class LoginMergeActivity extends BaseActivity implements ILoginView {
         dialog.show();
         dialog.getWindow().setContentView(v);
 
+        v.findViewById(R.id.merge_select_layout).setVisibility(View.VISIBLE);
+        v.findViewById(R.id.pig_select_layout).setVisibility(View.GONE);
         TextView famer = v.findViewById(R.id.tv_famer_select);
         TextView donkey = v.findViewById(R.id.tv_donkey_select);
         TextView yak = v.findViewById(R.id.tv_yak_select);
         TextView pig = v.findViewById(R.id.tv_pig_select);
-        CardView card_farmer = v.findViewById(R.id.cardview_farmer);
-        CardView card_pig = v.findViewById(R.id.cardview_pig);
+        View card_farmer = v.findViewById(R.id.cardview_farmer);
+        View card_pig = v.findViewById(R.id.cardview_pig);
         ImageView close = v.findViewById(R.id.iv_close);
 
         famer.setOnClickListener(new View.OnClickListener() {

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="andbase.com.mytestone">
+    package="andbase.com.mytesttwo">
 
     <application
-        android:name=".MyApp"
+        android:name="andbase.com.mytesttwo.MyApp"
         tools:replace="@android:allowBackup"
         android:allowBackup="true"
         android:supportsRtl="true"
         android:label="猪险宿主工程"
         android:icon="@drawable/ic_launcher"
         android:theme="@style/AppTheme">
-        <activity android:name="andbase.com.mytestone.MainActivity">
+        <activity android:name="andbase.com.mytesttwo.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -1,21 +1,5 @@
 apply plugin: 'com.android.application'
 //apply plugin: 'com.android.library'
-//apply plugin: 'maven'
-//uploadArchives {
-//    configuration = configurations.archives
-//    repositories {
-//        mavenDeployer {
-//            repository(url: "file://localhost/"+"Users/luolu/Desktop")
-//            pom.project {
-//                version '1.0.0'
-//                artifactId 'mcdnb'
-//                groupId 'com.xiangchuangtec.luolu.animalcounter'
-//                packaging 'aar'
-//                description 'mcdnb'
-//            }
-//        }
-//    }
-//}
 
 android {
     compileSdkVersion 27
@@ -190,10 +174,10 @@ apply plugin: 'maven'
 
 ext {
     // 从Github上clone下来的项目的本地地址
-    GITHUB_REPO_PATH = "C:\\farmer_pig_insurance";//"C:\\insurance\\farm_pig_insurance\\farm_pig_insurance"/*"C:\\pig_farmer_aar"*/
+    GITHUB_REPO_PATH = "C:\\farmer_pig_aar";//"C:\\insurance\\farm_pig_insurance\\farm_pig_insurance"/*"C:\\pig_farmer_aar"*/
     // api 'com.audient:super_library:1.0.0'
-    PUBLISH_GROUP_ID = 'com.innovation.aar'
-    PUBLISH_ARTIFACT_ID = 'farmer_pig_Insurance'
+    PUBLISH_GROUP_ID = 'com.innovation.ai'
+    PUBLISH_ARTIFACT_ID = 'farmer_pig_aar'
     PUBLISH_VERSION = android.defaultConfig.versionName/*'1.5.3'*/
 }
 

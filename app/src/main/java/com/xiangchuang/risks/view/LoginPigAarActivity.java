@@ -371,6 +371,8 @@ public class LoginPigAarActivity extends BaseActivity {
         dialog.show();
         dialog.getWindow().setContentView(v);
 
+        v.findViewById(R.id.pig_select_layout).setVisibility(View.VISIBLE);
+        v.findViewById(R.id.merge_select_layout).setVisibility(View.GONE);
         TextView famer = v.findViewById(R.id.tv_famer_select);
         TextView donkey = v.findViewById(R.id.tv_donkey_select);
         TextView yak = v.findViewById(R.id.tv_yak_select);
