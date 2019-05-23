@@ -21,8 +21,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="18dp"
-                android:layout_marginRight="18dp"
-                android:layout_marginTop="20dp">
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="18dp">
 
                 <TextView
                     android:id="@+id/tv_process_pig_num"
@@ -40,9 +40,9 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_gravity="right"
-                    android:tint="#01B0F1"
                     android:padding="10dp"
-                    android:src="@mipmap/iv_questionmark" />
+                    android:src="@mipmap/iv_questionmark"
+                    android:tint="#01B0F1" />
 
             </RelativeLayout>
 
@@ -54,6 +54,7 @@
                 android:background="@drawable/edit_bg_shape"
                 android:minHeight="150dp"
                 android:padding="10dp">
+
                 <TextView
                     android:id="@+id/tv_step_position"
                     android:layout_width="wrap_content"
@@ -62,15 +63,16 @@
                     android:paddingRight="5dp"
                     android:textColor="@color/black"
                     android:textSize="18dp" />
+
                 <TextView
                     android:id="@+id/tv_step_detail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
+                    android:layout_below="@+id/tv_step_position"
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="5dp"
-                    android:layout_below="@+id/tv_step_position"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
                     android:textColor="@color/black"
                     android:textSize="16dp" />
 
@@ -79,10 +81,10 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
                 android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
                 android:layout_marginTop="15dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="15dp"
                 android:background="@drawable/linedash_black_bg"
                 android:minHeight="150dp">
 
@@ -127,7 +129,17 @@
                         android:src="@mipmap/video_dufault" />
 
                     <include layout="@layout/layout_listvideo_layer" />
+
                 </RelativeLayout>
+
+                <ImageView
+                    android:id="@+id/sign_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:visibility="gone"
+                    android:src="@drawable/icon_xuanze" />
             </RelativeLayout>
 
             <LinearLayout
@@ -135,9 +147,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginLeft="40dp"
+                android:layout_marginTop="40dp"
                 android:layout_marginRight="40dp"
-                android:layout_marginBottom="20dp"
-                android:layout_marginTop="40dp">
+                android:layout_marginBottom="20dp">
 
                 <Button
                     android:id="@+id/btn_process_pre_step"
@@ -167,9 +179,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginLeft="40dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginRight="40dp"
                 android:layout_marginBottom="20dp"
-                android:layout_marginTop="10dp"
                 android:visibility="gone">
 
                 <Button

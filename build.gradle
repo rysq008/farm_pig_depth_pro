@@ -12,7 +12,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.1'
+        classpath 'com.android.tools.build:gradle:3.4.1'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
         classpath "io.objectbox:objectbox-gradle-plugin:$objectboxVersion"
@@ -30,8 +30,8 @@ allprojects {
 //        maven { url  "https://dl.bintray.com/blazei/maven" }
 //        maven {url "http://github.com/innovationaiaar/farm_pig_insurance/raw/master"}
 //        maven {url "http://github.com/innovationaiaar/farmer_aar/raw/master"}
-        maven { url 'http://github.com/innovationaiaar/farmer_pig_aar/raw/master' }
-//        maven { url 'http://github.com/innovationaiaar/farmer_pig_insurance/raw/master' }
+//        maven { url 'http://github.com/innovationaiaar/farmer_pig_aar/raw/master' }
+        maven { url 'http://github.com/innovationaiaar/farmer_pig_insurance/raw/master' }
 //        maven { url "https://raw.githubusercontent.com/rysq008/repos/master" }
 //        maven{url "https://raw.gitlabusercontent.com/androidapp/ScheduleApp/tree/master/raw/com/innovation/aar/pigInsurance"}
     }

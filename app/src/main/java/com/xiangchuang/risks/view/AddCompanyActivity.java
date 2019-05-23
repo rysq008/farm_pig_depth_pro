@@ -777,7 +777,7 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
                         }
                     }else
                     tvBaodanAddress.setText(str_address);
-                    Toast.makeText(AddCompanyActivity.this, "---->"+str_address, Toast.LENGTH_LONG).show();
+//                    Toast.makeText(AddCompanyActivity.this, "---->"+str_address, Toast.LENGTH_LONG).show();
 //                    amapLocation.getAccuracy();//获取精度信息
                 } else {
                     //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。

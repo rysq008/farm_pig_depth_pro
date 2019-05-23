@@ -1,12 +1,15 @@
 package com.xiangchuang.risks.view;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -32,19 +35,25 @@ import com.xiangchuang.risks.utils.ToastUtils;
 
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executors;
 
 import innovation.location.LocationManager_new;
 import innovation.utils.FileUtils;
 import innovation.utils.UIUtils;
 import innovation.view.ProcessPigInfoDialog;
+import innovation.view.WritePadDialog;
 import innovation.view.dialog.DialogHelper;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
+
+import static android.os.Environment.DIRECTORY_PICTURES;
 
 
 /**
@@ -58,7 +67,7 @@ public class DeadPigProcessStepActivity extends BaseActivity implements View.OnC
     LinearLayout ll_process_pre, ll_processing;
     TextView tvTitle, tv_step_position, tv_step_detail, tv_process_pig_num;
     DiyVideoView vv_video;
-    ImageView back_img, iv_questionmark;
+    ImageView back_img, iv_questionmark, sign_img;
     RelativeLayout video_contral_layer;
     RelativeLayout rl_content;
     ProgressBar progressBar;
@@ -107,6 +116,7 @@ public class DeadPigProcessStepActivity extends BaseActivity implements View.OnC
         btn_play_video = findViewById(R.id.btn_play_video);
         btn_collect_info = findViewById(R.id.btn_collect_info);
         btn_process_next_step = findViewById(R.id.btn_process_next_step);
+        sign_img = findViewById(R.id.sign_iv);
         ll_process_pre = findViewById(R.id.ll_process_pre);
         ll_processing = findViewById(R.id.ll_processing);
         tv_step_position = findViewById(R.id.tv_step_position);
@@ -159,10 +169,12 @@ public class DeadPigProcessStepActivity extends BaseActivity implements View.OnC
             }
             if (mCurrentStep == processStepBean.getCurrentStep().getCurrentStepInfoList().size()) {
                 btn_process_next_step.setText("提交");
+//                btn_process_next_step.setText("签名提交");
                 btn_process_skip_step.setVisibility(View.GONE);
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) btn_process_pre_step.getLayoutParams();
                 params.rightMargin = 0;
                 btn_process_pre_step.setLayoutParams(params);
+
 
             }
             int pigNum = 0;
@@ -204,7 +216,53 @@ public class DeadPigProcessStepActivity extends BaseActivity implements View.OnC
             DialogHelper.deadPigProcessExitTip(DeadPigProcessStepActivity.this, listener, PROCESS_SKIP_STEP, getResources().getString(R.string.deadpig_process_skip_tip));
         } else if (i == R.id.btn_process_next_step) {
 //            DialogHelper.deadPigProcessExitTip(DeadPigProcessStepActivity.this, listener, PROCESS_NEXT_STEP);
-            completeStep(0);
+            if ("签名提交".equals(btn_process_next_step.getText())) {
+                WritePadDialog mWritePadDialog = new WritePadDialog(DeadPigProcessStepActivity.this, new WritePadDialog.WriteDialogListener() {
+
+                    @Override
+                    public void onPaintDone(Object object) {
+                        Bitmap mSignBitmap = (Bitmap) object;
+
+                        ImageView imageView = new ImageView(DeadPigProcessStepActivity.this);
+                        imageView.setImageBitmap(mSignBitmap);
+//                        Toast.makeText(mActivity, mSignBitmap.getWidth() + " , " + mSignBitmap.getHeight(), Toast.LENGTH_LONG).show();
+                        new AlertDialog.Builder(DeadPigProcessStepActivity.this).setTitle("请确认签名字迹").setView(imageView).setPositiveButton("提交", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                                final File[] file = {null};
+                                if (mProgressDialog != null && !mProgressDialog.isShowing())
+                                    mProgressDialog.show();
+                                Executors.newSingleThreadExecutor().submit(() -> {
+                                    try {
+                                        file[0] = createSignFile(mSignBitmap);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    } finally {
+                                        btn_process_next_step.postDelayed(() -> {
+                                            if (file[0] != null) {
+                                                completeStep(0, file[0]);
+                                            }
+                                            completeStep(0);
+                                        }, 100);
+                                    }
+                                });
+
+                            }
+                        }).setNegativeButton("重签", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                                btn_process_next_step.performClick();
+                            }
+                        }).show();
+                    }
+                });
+
+                mWritePadDialog.show();
+            } else {
+                completeStep(0);
+            }
         } else if (i == R.id.btn_collect_info) {
             if (infoBean.getDealType() == DEAL_TYPE_PICTURE) {
                 CameraPicActivity.start(DeadPigProcessStepActivity.this);
@@ -215,7 +273,7 @@ public class DeadPigProcessStepActivity extends BaseActivity implements View.OnC
         } else if (i == R.id.btn_play_video) {
             playOrPause(mVideoPath);
 
-        }  else if (i == R.id.iv_questionmark) {
+        } else if (i == R.id.iv_questionmark) {
             ProcessPigInfoDialog pigInfoDialog = new ProcessPigInfoDialog(DeadPigProcessStepActivity.this);
             pigInfoDialog.setData(processStepBean);
             pigInfoDialog.show();
@@ -492,8 +550,10 @@ public class DeadPigProcessStepActivity extends BaseActivity implements View.OnC
         }
     }
 
-    private void completeStep(int skip) {
-        mProgressDialog.show();
+
+    private void completeStep(int skip, File file) {
+        if (mProgressDialog != null && !mProgressDialog.isShowing())
+            mProgressDialog.show();
         Map<String, String> mapbody = new HashMap<>();
         mapbody.put("innocuousId", processStepBean.getInnocuousId());//那个订单
         mapbody.put("innocuousStepId", infoBean.getStepId());//步骤 id
@@ -506,17 +566,26 @@ public class DeadPigProcessStepActivity extends BaseActivity implements View.OnC
             mapbody.put("over", String.valueOf(0));//是否结束
         }
         if (skip == 0) {
-            if (infoBean.getDealType() == DEAL_TYPE_PICTURE) {
-                fileName = mImgPath.substring(mImgPath.lastIndexOf("/"));
-                filePath = mImgPath;
-            } else if (infoBean.getDealType() == DEAL_TYPE_VIDEO) {
-                fileName = mVideoPath.substring(mVideoPath.lastIndexOf("/"));
-                filePath = mVideoPath;
+            if (file == null) {
+                if (infoBean.getDealType() == DEAL_TYPE_PICTURE) {
+                    fileName = mImgPath.substring(mImgPath.lastIndexOf("/"));
+                    filePath = mImgPath;
+                } else if (infoBean.getDealType() == DEAL_TYPE_VIDEO) {
+                    fileName = mVideoPath.substring(mVideoPath.lastIndexOf("/"));
+                    filePath = mVideoPath;
+                }
+            } else {
+                fileName = file.getName();
+                filePath = file.getAbsolutePath();
             }
             OkHttp3Util.uploadPreFile(Constants.DEADPIG_PROCESS_STEP_COMMIT, new File(filePath), fileName, mapbody, null, callback);
         } else {
             OkHttp3Util.doPost(Constants.DEADPIG_PROCESS_STEP_COMMIT, mapbody, null, callback);
         }
+    }
+
+    private void completeStep(int skip) {
+        completeStep(skip, null);
     }
 
     Callback callback = new Callback() {
@@ -594,5 +663,39 @@ public class DeadPigProcessStepActivity extends BaseActivity implements View.OnC
     private void clearCache() {
         FileUtils.deleteFile(mVideoPath);
         FileUtils.deleteFile(mImgPath);
+    }
+
+    //创建签名文件
+    private File createSignFile(Bitmap mSignBitmap) throws IOException {
+        ByteArrayOutputStream baos = null;
+        FileOutputStream fos = null;
+        String path = null;
+        File file = null;
+//        try {
+        path = getExternalFilesDir(DIRECTORY_PICTURES).getCanonicalPath() + File.separator + System.currentTimeMillis() + "_sign.jpg";
+        file = new File(path);
+        fos = new FileOutputStream(file);
+//            baos = new ByteArrayOutputStream();
+        //如果设置成Bitmap.compress(CompressFormat.JPEG, 100, fos) 图片的背景都是黑色的
+        mSignBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+////            byte[] b = baos.toByteArray();
+////            if (b != null) {
+////                fos.write(b);
+////            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } finally {
+//            try {
+        if (fos != null) {
+            fos.close();
+        }
+//                if (baos != null) {
+//                    baos.close();
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+        return file;
     }
 }
