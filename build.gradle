@@ -34,6 +34,7 @@ allprojects {
         maven { url 'http://github.com/innovationaiaar/farmer_pig_insurance/raw/master' }
 //        maven { url "https://raw.githubusercontent.com/rysq008/repos/master" }
 //        maven{url "https://raw.gitlabusercontent.com/androidapp/ScheduleApp/tree/master/raw/com/innovation/aar/pigInsurance"}
+        maven {url "http://github.com/Lucas1012/pig_insurance_aar/raw/master"}
     }
 }
 

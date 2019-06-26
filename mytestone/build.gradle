@@ -60,23 +60,30 @@ android {
         exclude 'META-INF/NOTICE.txt'
     }
 }
-//configurations.all {
-//    resolutionStrategy {
-//        force 'com.squareup.okhttp3:okhttp:3.11.0'
-//        force 'com.squareup.okio:okio:1.14.0'
-//        force 'com.android.support.constraint:constraint-layout:1.1.1'
-//        force 'com.google.code.gson:gson:2.8.5'
-//        force 'com.android.support:appcompat-v7:27.1.1'
-//        force 'com.android.support:support-annotations:27.1.1'
-//        force 'com.android.support:support-compat:27.1.1'
-//        force 'com.android.support:support-v4:27.1.1'
-//        force 'com.android.support:recyclerview-v7:27.1.1'
-//        force 'com.google.code.findbugs:jsr305:3.0.2'
-//        force 'com.amap.api:3dmap:latest.integration'
-//        force 'com.amap.api:location:latest.integration'
-//        force 'com.amap.api:search:latest.integration'
-//    }
-//}
+configurations.all {
+    resolutionStrategy {
+        force 'com.squareup.okhttp3:okhttp:3.11.0'
+        force 'com.squareup.okio:okio:1.14.0'
+        force 'com.android.support.constraint:constraint-layout:1.1.1'
+        force 'com.google.code.gson:gson:2.8.5'
+        force 'com.android.support:appcompat-v7:27.1.1'
+        force 'com.android.support:support-annotations:27.1.1'
+        force 'com.android.support:support-compat:27.1.1'
+        force 'com.android.support:support-v4:27.1.1'
+        force 'com.android.support:recyclerview-v7:27.1.1'
+        force 'com.google.code.findbugs:jsr305:3.0.2'
+        force 'com.amap.api:3dmap:latest.integration'
+        force 'com.amap.api:location:latest.integration'
+        force 'com.amap.api:search:latest.integration'
+        force 'com.squareup.okhttp3:logging-interceptor:3.8.1'
+        force 'io.reactivex.rxjava2:rxjava:2.2.6'
+    }
+}
+configurations.all {
+    resolutionStrategy {
+        failOnVersionConflict()
+    }
+}
 //configurations {
 //    all*.exclude group: 'com.google.android', module: 'support-v4'
 //    //或者粗暴点，就没有上面的坑了  all*.exclude module: 'support-v4'
@@ -127,86 +134,9 @@ android {
 //}
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-//    //noinspection GradleCompatible
-//    implementation 'com.android.support:appcompat-v7:27.1.1'
-//    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-//    testImplementation 'junit:junit:4.12'
-//    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-//    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-////    implementation(name: 'app-release-merge7', ext: 'aar')
-////        implementation(name: 'pigInsurance-0409', ext: 'aar')
-////    compile ('com.audient:super_library:1.112'){transitive =true }
 //    implementation ('com.innovation.ai:farmer_pig_aar:1.113'){transitive =true }
-    implementation ('com.innovation.aar:farmer_pig_Insurance:1.117')
-            {transitive =true }
-//    implementation ('com.innovation.aar:farm_Insurance:1.962'){transitive =true }
-
-//    implementation 'com.android.support:support-v4:27.1.1'
-//    implementation 'org.tensorflow:tensorflow-android:1.6.0'
-//    implementation 'io.fotoapparat.fotoapparat:library:2.2.0'
-//    implementation 'com.android.support:design:27.1.1'
-//    implementation 'com.squareup.okhttp3:okhttp:3.9.1'
-//    implementation 'com.google.code.gson:gson:2.3'
-//    implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
-//    implementation 'com.android.support:multidex:1.0.3'
-//    implementation "net.gotev:uploadservice:3.4.2"
-//    implementation "net.gotev:uploadservice-okhttp:3.4.2"
-//    implementation 'com.jakewharton:butterknife:8.8.1'
-//    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-//    implementation 'com.github.bumptech.glide:glide:3.7.0'
-//    implementation 'com.tencent.bugly:crashreport:2.8.6'
-//    implementation 'com.tencent.bugly:nativecrashreport:3.6.0.1'
-//    implementation 'com.github.GrenderG:Toasty:1.3.0'
-//    implementation 'com.hjq:xxpermissions:5.0'
-//    implementation 'com.android.support:support-v13:27.1.1'
-//    implementation 'com.zhy:okhttputils:2.6.2'
-//    debugImplementation "io.objectbox:objectbox-android-objectbrowser:$objectboxVersion"
-//    releaseImplementation "io.objectbox:objectbox-android:$objectboxVersion"
-//    implementation 'cn.leancloud.android:avoscloud-sdk:4.7.9'
-//    implementation 'com.squareup.okhttp3:logging-interceptor:3.0.1'
-//    implementation 'com.android.support:support-annotations:27.1.1'
-//
-//    //RV adapter
-//    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.18'
-//    implementation 'com.yanzhenjie:recyclerview-swipe:1.1.2'
-//
-//    //Banner libs files
-//    implementation 'cn.bingoogolapple:bga-banner:2.0.9'
-//
-//    //======================================================
-////    implementation 'com.felipecsl:gifimageview:2.2.0'
-////    implementation 'at.wirecube:additive_animations:1.6.2'
-//    implementation 'com.github.GrenderG:Prefs:1.3'
-//    implementation 'org.greenrobot:eventbus:3.0.0'
-//    implementation 'com.android.support:exifinterface:27.1.1'
-//
-//    //======================================================
-//
-//
-//    implementation('com.serenegiant:common:1.5.20') {
-//        exclude module: 'support-v4'
-//    }
-//    configurations {
-//        all*.exclude group: 'com.google.code.gson'
-//    }
-
-////    configurations {
-////        all*.exclude group: 'org.opencv'
-////    }
-//    implementation ('com.android.support.test:runner:1.0.1'){
-//        exclude module: 'support-annotations'
-//    }
-//    implementation('com.android.support.test.espresso:espresso-core:3.0.1'){
-//        exclude group: 'com.google.code.findbugs'
-//    }
-//    implementation ('io.fotoapparat.fotoapparat:library:2.2.0'){
-//        exclude module: 'support-annotations'
-//    }
-//    implementation ('com.squareup.okhttp3:okhttp:3.11.0'){
-////        exclude group: 'com.squareup.okhttp3'
-////        exclude module: 'okhttp'
-//        exclude group: "com.squareup.okhttp3",module: "okhttp"
-//    }
-
+    implementation('com.innovation.aar:farmer_pig_Insurance:1.118')
+            { transitive = true }
+    implementation('com.innovationai.pigweight:pig_insurance_weight:1.0.8') { transitive = true }
 }
 //apply plugin: 'io.objectbox'

@@ -14,6 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.innovation.pig.insurance.AppConfig;
+import com.innovationai.pigweight.Constants;
+import com.innovationai.pigweight.activitys.SplashActivity;
 import com.xiangchuang.risks.view.LoginPigAarActivity;
 
 import static android.widget.LinearLayout.VERTICAL;
@@ -85,44 +87,48 @@ public class MainActivity extends AppCompatActivity {
                 }
             }).show();
         } else if (view.getId() == R.id.farm_tv) {
+            Bundle bundle = new Bundle();
+            bundle.putString(Constants.ACTION_APPID,"oL-mw59d4mEgDxG49-nQVM2hIha4");
+            bundle.putString(Constants.ACTION_TOKEN,"android_token");
+            SplashActivity.start(this,bundle);
 
-            EditText et = new EditText(this);
-            et.setInputType(InputType.TYPE_CLASS_PHONE);
-            et.setHint("请输入手机号码");
-            EditText uet = new EditText(this);
-            uet.setHint("请输入用户名");
-            LinearLayout linearLayout = new LinearLayout(this);
-            linearLayout.setOrientation(VERTICAL);
-            linearLayout.addView(uet);
-            linearLayout.addView(et);
-            new AlertDialog.Builder(this).setTitle("请输入用户名和手机号码").setView(linearLayout).setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    String phone = et.getText().toString().trim();
-                    String userid = uet.getText().toString().trim();
-                    if (TextUtils.isEmpty(phone)) {
-                        phone = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("phone", "19000000003");
-                    } else {
-                        PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putString("phone", phone).apply();
-                    }
-                    if (TextUtils.isEmpty(userid)) {
-                        userid = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("userid", "android_userid6");
-                    } else {
-                        PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putString("userid", userid).apply();
-                    }
-                    Toast.makeText(MainActivity.this, "nb", Toast.LENGTH_LONG).show();
-//                    Intent mIntent = new Intent(MainActivity.this, LoginFamerAarActivity.class);
-//                    mIntent.putExtra(FarmAppConfig.TOKEY, "android_token");
-//                    mIntent.putExtra(FarmAppConfig.USER_ID, userid);
-//                    mIntent.putExtra(FarmAppConfig.PHONE_NUMBER, phone);
-//                    mIntent.putExtra(FarmAppConfig.NAME, "android_name");
-//                    mIntent.putExtra(FarmAppConfig.DEPARTMENT_ID, "14079900"/*"android_department"*/);
-//                    mIntent.putExtra(FarmAppConfig.IDENTITY_CARD, "android_identitry");
-//                    startActivity(mIntent);
-                    dialog.dismiss();
-
-                }
-            }).show();
+//            EditText et = new EditText(this);
+//            et.setInputType(InputType.TYPE_CLASS_PHONE);
+//            et.setHint("请输入手机号码");
+//            EditText uet = new EditText(this);
+//            uet.setHint("请输入用户名");
+//            LinearLayout linearLayout = new LinearLayout(this);
+//            linearLayout.setOrientation(VERTICAL);
+//            linearLayout.addView(uet);
+//            linearLayout.addView(et);
+//            new AlertDialog.Builder(this).setTitle("请输入用户名和手机号码").setView(linearLayout).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    String phone = et.getText().toString().trim();
+//                    String userid = uet.getText().toString().trim();
+//                    if (TextUtils.isEmpty(phone)) {
+//                        phone = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("phone", "19000000003");
+//                    } else {
+//                        PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putString("phone", phone).apply();
+//                    }
+//                    if (TextUtils.isEmpty(userid)) {
+//                        userid = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("userid", "android_userid6");
+//                    } else {
+//                        PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putString("userid", userid).apply();
+//                    }
+//                    Toast.makeText(MainActivity.this, "nb", Toast.LENGTH_LONG).show();
+////                    Intent mIntent = new Intent(MainActivity.this, LoginFamerAarActivity.class);
+////                    mIntent.putExtra(FarmAppConfig.TOKEY, "android_token");
+////                    mIntent.putExtra(FarmAppConfig.USER_ID, userid);
+////                    mIntent.putExtra(FarmAppConfig.PHONE_NUMBER, phone);
+////                    mIntent.putExtra(FarmAppConfig.NAME, "android_name");
+////                    mIntent.putExtra(FarmAppConfig.DEPARTMENT_ID, "14079900"/*"android_department"*/);
+////                    mIntent.putExtra(FarmAppConfig.IDENTITY_CARD, "android_identitry");
+////                    startActivity(mIntent);
+//                    dialog.dismiss();
+//
+//                }
+//            }).show();
 
         }
 

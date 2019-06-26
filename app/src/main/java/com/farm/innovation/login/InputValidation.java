@@ -128,7 +128,7 @@ public class InputValidation {
         boolean isreturn_AutoCard = false;
         String value = validateIDcardNumber(textInputEditText.getText().toString().trim(), true);
         logger.i("validateIDcardNumber value: " + value);
-        if (value == "身份证长度必须为15或者18位！") {
+        if (("身份证长度必须为15或者18位！").equals(value))  {
             textInputLayout.setError(message);
             hideKeyboardFrom(textInputEditText);
             return false;
