@@ -45,6 +45,7 @@ import android.widget.Toast;
 
 import com.farm.innovation.base.BaseActivity;
 import com.farm.innovation.base.FarmAppConfig;
+import com.farm.innovation.bean.CattleBean;
 import com.farm.innovation.bean.InsureAddAnimalBean;
 import com.farm.innovation.bean.ResultBean;
 import com.farm.innovation.bean.UploadImageObject;
@@ -73,6 +74,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
 
+import innovation.utils.EventManager;
 import okhttp3.FormBody;
 import okhttp3.RequestBody;
 
@@ -684,6 +686,11 @@ public class AddAnimalActivity extends BaseActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
+                                CattleBean bean = new CattleBean();
+                                bean.zipPath = uuidFileName;
+                                bean.address = "";
+
+                                EventManager.getInstance().postEventEvent(bean);
                                 Intent intent = new Intent(AddAnimalActivity.this, HomeActivity.class);
                                 intent.putExtra("ToubaoTempNumber", FarmAppConfig.offLineInsuredNo);
                                 startActivity(intent);

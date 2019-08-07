@@ -378,6 +378,9 @@ public class LoginPigAarActivity extends BaseActivity {
         TextView yak = v.findViewById(R.id.tv_yak_select);
         TextView pig = v.findViewById(R.id.tv_pig_select);
         ImageView close = v.findViewById(R.id.iv_close);
+        donkey.setVisibility(View.GONE);
+        yak.setVisibility(View.GONE);
+        pig.setVisibility(View.GONE);
 
         famer.setOnClickListener(new View.OnClickListener() {
             @Override

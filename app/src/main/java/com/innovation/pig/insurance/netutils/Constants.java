@@ -208,6 +208,14 @@ public class Constants {
     public static String PHONE_NUMBER = "phoneNumber";
     public static String IDENTITY_CARD = "identityCard";
 
+    public static final String ACTION_APPID = "appId";
+    public static final String ACTION_TOKEN = "token";
+    public static final String ACTION_IMGWIDTH = "imgWidth";
+    public static final String ACTION_IMGHEIGHT = "imgHeight";
+    public static final String ACTION_BUNDLE = "bundle";
+    public static final String ACTION_IMG_RATIO = "imgRatio";
+
+
 
     public static void resetBaseIp(String host) {
         HttpUtils.baseUrl = host;
