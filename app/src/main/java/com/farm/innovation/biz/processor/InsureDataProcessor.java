@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.farm.innovation.base.FarmAppConfig;
+import com.farm.innovation.bean.CattleBean;
 import com.farm.innovation.bean.ResultBean;
 import com.farm.innovation.bean.ToubaoUploadBean;
 import com.farm.innovation.biz.Insured.AddAnimalActivity;
@@ -43,6 +44,7 @@ import com.farm.innovation.utils.HttpUtils;
 import com.farm.innovation.utils.UploadObject;
 import com.farm.innovation.utils.ZipUtil;
 import com.google.gson.Gson;
+import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
 
 import org.json.JSONException;
@@ -58,6 +60,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import innovation.utils.InnovationAiOpen;
 import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -284,7 +287,7 @@ public class InsureDataProcessor {
                 showProgressDialog(activity);
                 dialogProcessUploadOneImage();
             } else {
-                if(!FarmAppConfig.isNetConnected){
+                if (!FarmAppConfig.isNetConnected) {
                     Toast.makeText(activity, "断网了，请联网后重试", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -431,8 +434,9 @@ public class InsureDataProcessor {
     private int testFileHaveCount(String filePath) {
         File file_parent = new File(filePath);
         List<String> list_all = FileUtils.GetFiles(filePath, FarmGlobal.IMAGE_JPEG, true);
-        if (list_all == null){
-            return 0;}
+        if (list_all == null) {
+            return 0;
+        }
         if (!file_parent.exists()) {
             return 0;
         }
@@ -445,10 +449,12 @@ public class InsureDataProcessor {
         Map<String, String> showMap = new TreeMap<>();//TreeMap方式创建可以对map进行升序排序
         //获取图片文件
         String imageDri = "";
-        if (FarmGlobal.model == Model.BUILD.value()){
-            imageDri = FarmGlobal.mediaInsureItem.getImageDir();}///storage/emulated/0/innovation/animal/投保/Current/图片
-        else if (FarmGlobal.model == Model.VERIFY.value()){
-            imageDri = FarmGlobal.mediaPayItem.getImageDir();}///storage/emulated/0/innovation/animal/理赔/Current/图片
+        if (FarmGlobal.model == Model.BUILD.value()) {
+            imageDri = FarmGlobal.mediaInsureItem.getImageDir();
+        }///storage/emulated/0/innovation/animal/投保/Current/图片
+        else if (FarmGlobal.model == Model.VERIFY.value()) {
+            imageDri = FarmGlobal.mediaPayItem.getImageDir();
+        }///storage/emulated/0/innovation/animal/理赔/Current/图片
         File imageDir_new = new File(imageDri);//图片目录下的文件
         File[] files_image = imageDir_new.listFiles();
         if (!imageDir_new.exists() || files_image.length == 0) {
@@ -597,7 +603,22 @@ public class InsureDataProcessor {
                                 int videocount = databaseHelper.updateLiPeiLocalFromVideozipPath(zipFile_video.getAbsolutePath(), lipeidate);
                                 Log.i("upvideocount", videocount + "条");
 
-
+//                                CattleBean bean = new CattleBean();
+//                                bean.zipPath = FarmGlobal.mediaInsureItem.getZipImageDir()+FarmGlobal.ZipFileName + ".zip";
+//                                bean.address = addressAddAnimal;
+//                                bean.latitude = locationManager.currentLat;
+//                                bean.longitude = locationManager.currentLon;
+//                                bean.time = System.currentTimeMillis();
+//                                InnovationAiOpen.getInstance().postEventEvent(bean);
+                               if(FarmAppConfig.FARMER_DEPTH_JOIN){
+                                   CattleBean bean = new CattleBean();
+                                   bean.zipPath = FarmGlobal.mediaInsureItem.getZipImageDir()+FarmGlobal.ZipFileName + ".zip";
+                                   bean.address = LocationManager.getInstance(mActivity).str_address;
+                                   bean.latitude = LocationManager.getInstance(mActivity).currentLat;
+                                   bean.longitude = LocationManager.getInstance(mActivity).currentLon;
+                                   bean.time = System.currentTimeMillis();
+                                   InnovationAiOpen.getInstance().postEventEvent(bean);
+                               }
                                 FarmDetectorActivity detectorActivity = (FarmDetectorActivity) mActivity;
                                 detectorActivity.finish();
                             } else {
@@ -611,7 +632,7 @@ public class InsureDataProcessor {
                     break;
                 case MSG_PROCESSOR_TEST:
                     break;
-                    default:
+                default:
             }
         }
 
@@ -731,8 +752,9 @@ public class InsureDataProcessor {
 
             reInitCurrentDir();
             if (FarmGlobal.model == Model.BUILD.value()) {
-                if (ifCloseDialog){
-                    mProgressDialog.dismiss();}
+                if (ifCloseDialog) {
+                    mProgressDialog.dismiss();
+                }
             }
         }
 
@@ -831,7 +853,7 @@ public class InsureDataProcessor {
                 treeMap.put(Utils.UploadNew.TYPE, model + "");
                 treeMap.put(Utils.UploadNew.LIBD_SOURCE, 1 + "");
                 treeMap.put(Utils.UploadNew.LIB_ENVINFO, getEnvInfo(mActivity, gps));
-                treeMap.put(Utils.UploadNew.COLLECT_TIME, FarmAppConfig.during/1000+"");
+                treeMap.put(Utils.UploadNew.COLLECT_TIME, FarmAppConfig.during / 1000 + "");
 
                 MultipartBody.Builder requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM);
                 FormBody.Builder builder = new FormBody.Builder();
@@ -855,7 +877,8 @@ public class InsureDataProcessor {
                         toubaoUploadBean = gson.fromJson(responseInsureImageUpload, ToubaoUploadBean.class);
                         mLogger.i("投保图片 libID:" + toubaoUploadBean.getData().getLibId());
                         AddAnimalActivity.addAnimalLibID = String.valueOf(toubaoUploadBean.getData().getLibId());
-                        insuranceDataHandler.sendEmptyMessage(18);
+                        Message msg = insuranceDataHandler.obtainMessage(18,zipFile_image.getAbsolutePath());
+                        insuranceDataHandler.sendMessage(msg);
                     } else if (resultBean.getStatus() == 0) {
                         //上传图片模糊等异常处理
                         insuranceDataHandler.sendEmptyMessage(19);
@@ -1108,6 +1131,17 @@ public class InsureDataProcessor {
             switch (msg.what) {
                 case 18:
                     closeMProgressDialog();
+                    if (FarmAppConfig.FARMER_DEPTH_JOIN) {
+                        CattleBean bean = new CattleBean();
+                        bean.zipPath = (String) msg.obj;
+                        bean.address = LocationManager.getInstance(mActivity).str_address;
+                        bean.latitude = LocationManager.getInstance(mActivity).currentLat;
+                        bean.longitude = LocationManager.getInstance(mActivity).currentLon;
+                        bean.time = System.currentTimeMillis();
+                        InnovationAiOpen.getInstance().postEventEvent(bean);
+                        mActivity.finish();
+                        return;
+                    }
                     if (toubaoUploadBean.getData().getResultFlag() == 1) {
                         final ToubaoResultDialog dialogToubaoUploadResult = new ToubaoResultDialog(mActivity);
                         View.OnClickListener listenerBtnContinue = v -> {
@@ -1159,7 +1193,7 @@ public class InsureDataProcessor {
                     AlertDialog.Builder builder34 = new AlertDialog.Builder(mActivity)
                             .setIcon(R.drawable.farm_cowface)
                             .setTitle("提示")
-                            .setMessage((resultBean == null?"网络异常上传失败，请重试。":resultBean.getMsg())+"\n如果网络状况较差，建议使用离线模式。")
+                            .setMessage((resultBean == null ? "网络异常上传失败，请重试。" : resultBean.getMsg()) + "\n如果网络状况较差，建议使用离线模式。")
                             .setNegativeButton("退出", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {

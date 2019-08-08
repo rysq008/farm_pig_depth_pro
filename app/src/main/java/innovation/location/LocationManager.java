@@ -2,11 +2,17 @@ package innovation.location;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.text.TextUtils;
+import android.util.Log;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.farm.innovation.utils.FarmerPreferencesUtils;
+import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.netutils.Constants;
+import com.innovation.pig.insurance.netutils.PreferencesUtils;
 
 
 import innovation.env.Logger;
@@ -69,6 +75,17 @@ public class LocationManager {
                 return;
             }
             if (aMapLocation.getErrorCode() == 0) {
+                String currentLat = String.valueOf(aMapLocation.getLatitude());//获取纬度
+                String currentLon = String.valueOf(aMapLocation.getLongitude());//获取经度
+                String str_address = aMapLocation.getAddress();
+                if(TextUtils.isEmpty(str_address)){
+                    str_address = mLocationClient.getLastKnownLocation().getAddress();
+                }
+                Log.i("===str_address====", "str_address" + str_address);
+                PreferencesUtils.saveKeyValue(Constants.longitude, currentLon+"", AppConfig.getAppContext());
+                PreferencesUtils.saveKeyValue(Constants.latitude, currentLat+"", AppConfig.getAppContext());
+                PreferencesUtils.saveKeyValue(Constants.address, str_address, AppConfig.getAppContext());
+
                 if (Utils.getMD5(DeviceUtil.getImei(mContext)).equalsIgnoreCase("6b9e3b1ee1042312a18464c407b424dc")) {
                     mLocationStr = aMapLocation.getCity() + aMapLocation.getDistrict();
                 } else {

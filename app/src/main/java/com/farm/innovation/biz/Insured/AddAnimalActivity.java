@@ -64,6 +64,7 @@ import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
 
 import org.tensorflow.demo.FarmDetectorActivity;
+import org.tensorflow.demo.FarmGlobal;
 import org.tensorflow.demo.env.Logger;
 
 import java.io.File;
@@ -74,7 +75,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
 
-import innovation.utils.EventManager;
+import innovation.utils.InnovationAiOpen;
 import okhttp3.FormBody;
 import okhttp3.RequestBody;
 
@@ -415,9 +416,7 @@ public class AddAnimalActivity extends BaseActivity {
 
     String zipFilePaht = "";
 
-    private BitmapFactory.Options getBitmapOption(int inSampleSize)
-
-    {
+    private BitmapFactory.Options getBitmapOption(int inSampleSize) {
         System.gc();
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPurgeable = true;
@@ -553,7 +552,6 @@ public class AddAnimalActivity extends BaseActivity {
     }
 
 
-
     public void onViewClicked(View view) {
         int i = view.getId();
         if (i == R.id.btnPersonAndAnimal) {
@@ -686,11 +684,16 @@ public class AddAnimalActivity extends BaseActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
-                                CattleBean bean = new CattleBean();
-                                bean.zipPath = uuidFileName;
-                                bean.address = "";
-
-                                EventManager.getInstance().postEventEvent(bean);
+                                if (FarmAppConfig.FARMER_DEPTH_JOIN) {
+                                    CattleBean bean = new CattleBean();
+                                    bean.zipPath = uuidFileName;
+                                    bean.address = addressAddAnimal;
+                                    bean.latitude = locationManager.currentLat;
+                                    bean.longitude = locationManager.currentLon;
+                                    bean.time = System.currentTimeMillis();
+                                    InnovationAiOpen.getInstance().postEventEvent(bean);
+                                    return;
+                                }
                                 Intent intent = new Intent(AddAnimalActivity.this, HomeActivity.class);
                                 intent.putExtra("ToubaoTempNumber", FarmAppConfig.offLineInsuredNo);
                                 startActivity(intent);
@@ -860,6 +863,17 @@ public class AddAnimalActivity extends BaseActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
+                                    if (FarmAppConfig.FARMER_DEPTH_JOIN) {
+                                        CattleBean bean = new CattleBean();
+                                        bean.zipPath = FarmGlobal.mediaInsureItem.getZipImageDir() + FarmGlobal.ZipFileName + ".zip";
+                                        bean.address = addressAddAnimal;
+                                        bean.latitude = locationManager.currentLat;
+                                        bean.longitude = locationManager.currentLon;
+                                        bean.time = System.currentTimeMillis();
+                                        InnovationAiOpen.getInstance().postEventEvent(bean);
+                                        finish();
+                                        return;
+                                    }
                                     Intent intent = new Intent(AddAnimalActivity.this, HomeActivity.class);
                                     startActivity(intent);
                                     finish();
@@ -914,6 +928,16 @@ public class AddAnimalActivity extends BaseActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
+                                    if (FarmAppConfig.FARMER_DEPTH_JOIN) {
+                                        CattleBean bean = new CattleBean();
+                                        bean.zipPath = FarmGlobal.mediaInsureItem.getZipImageDir() + FarmGlobal.ZipFileName + ".zip";
+                                        bean.address = addressAddAnimal;
+                                        bean.latitude = locationManager.currentLat;
+                                        bean.longitude = locationManager.currentLon;
+                                        bean.time = System.currentTimeMillis();
+                                        InnovationAiOpen.getInstance().postEventEvent(bean);
+                                        finish();
+                                    }
                                     finish();
 
                                 }

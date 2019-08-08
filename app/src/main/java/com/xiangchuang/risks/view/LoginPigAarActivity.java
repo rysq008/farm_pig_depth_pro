@@ -42,6 +42,7 @@ import com.xiangchuang.risks.utils.AlertDialogManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.tensorflow.demo.FarmDetectorActivity;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -363,7 +364,7 @@ public class LoginPigAarActivity extends BaseActivity {
     /**
      * 选择险种dialog
      */
-    private void showTypeDialog(){
+    private void showTypeDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(LoginPigAarActivity.this);
         LayoutInflater inflater = LayoutInflater.from(LoginPigAarActivity.this);
         View v = inflater.inflate(R.layout.select_dialog_layout, null);
@@ -377,17 +378,15 @@ public class LoginPigAarActivity extends BaseActivity {
         TextView donkey = v.findViewById(R.id.tv_donkey_select);
         TextView yak = v.findViewById(R.id.tv_yak_select);
         TextView pig = v.findViewById(R.id.tv_pig_select);
-        ImageView close = v.findViewById(R.id.iv_close);
-        donkey.setVisibility(View.GONE);
-        yak.setVisibility(View.GONE);
         pig.setVisibility(View.GONE);
+        ImageView close = v.findViewById(R.id.iv_close);
 
         famer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.e("famer", "onClick: famer");
                 FarmerPreferencesUtils.setAnimalType(ConstUtils.ANIMAL_TYPE_CATTLE, LoginPigAarActivity.this);
-                getDataFarmFromNet("","");
+                getDataFarmFromNet("", "");
             }
         });
 
@@ -395,7 +394,7 @@ public class LoginPigAarActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 FarmerPreferencesUtils.setAnimalType(ConstUtils.ANIMAL_TYPE_DONKEY, LoginPigAarActivity.this);
-                getDataFarmFromNet("","");
+                getDataFarmFromNet("", "");
             }
         });
 
@@ -403,14 +402,14 @@ public class LoginPigAarActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 FarmerPreferencesUtils.setAnimalType(ConstUtils.ANIMAL_TYPE_YAK, LoginPigAarActivity.this);
-                getDataFarmFromNet("","");
+                getDataFarmFromNet("", "");
             }
         });
 
         pig.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getDataFromNet("","");
+                getDataFromNet("", "");
             }
         });
         close.setOnClickListener(new View.OnClickListener() {
@@ -418,7 +417,7 @@ public class LoginPigAarActivity extends BaseActivity {
             public void onClick(View v) {
                 dialog.dismiss();
                 LoginPigAarActivity.this.finish();
-        }
+            }
         });
 
         dialog.getWindow().setGravity(Gravity.CENTER);
@@ -549,6 +548,10 @@ public class LoginPigAarActivity extends BaseActivity {
                             Log.i("===id==", tokenresp.uid + "");
                         }
                         Intent add_intent = new Intent(LoginPigAarActivity.this, HomeActivity.class);
+                        if(FarmAppConfig.FARMER_DEPTH_JOIN){
+                            add_intent = mIntent;
+                            add_intent.setClass(LoginPigAarActivity.this, FarmDetectorActivity.class);
+                        }
                         startActivity(add_intent);
                         LoginPigAarActivity.this.finish();
                         isRequest = false;

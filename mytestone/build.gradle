@@ -22,31 +22,11 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-
     }
-//    sourceSets {
-//        main {
-//            java.srcDirs = ['src/main/java', 'src/main/java/2']
-//            //  manifest.srcFile 'AndroidManifest.xml'
-//            /*  java.srcDirs = ['src']
-//            resources.srcDirs = ['src']
-//            aidl.srcDirs = ['src']
-//            renderscript.srcDirs = ['src']
-//            res.srcDirs = ['res']
-//            assets.srcDirs = ['assets']*/
-//            jniLibs.srcDirs = ['libs']
-//
-////            jniLibs.srcDir 'src/main/libs'
-////            jni.srcDirs = []
-//        }
-//    }
     compileOptions {
         targetCompatibility JavaVersion.VERSION_1_8
         sourceCompatibility JavaVersion.VERSION_1_8
     }
-//    configurations {
-//        all*.exclude  module: 'org.opencv'  //ȥ���ظ�������
-//    }
     repositories {
         flatDir {
             dirs 'libs'
@@ -134,9 +114,10 @@ configurations.all {
 //}
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+//    implementation('com.innovation.aar:farmer_depth_join:1.119'){transitive = true}
 //    implementation ('com.innovation.ai:farmer_pig_aar:1.113'){transitive =true }
-    implementation('com.innovation.aar:farmer_pig_Insurance:1.118')
-            { transitive = true }
-    implementation('com.innovationai.pigweight:pig_insurance_weight:1.0.8') { transitive = true }
+//    implementation('com.innovation.aar:farmer_pig_Insurance:1.118')
+//            { transitive = true }
+//    implementation('com.innovationai.pigweight:pig_insurance_weight:1.0.8') { transitive = true }
 }
 //apply plugin: 'io.objectbox'

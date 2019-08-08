@@ -2,6 +2,7 @@ package innovation.location;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.amap.api.location.AMapLocationClient;
@@ -101,10 +102,13 @@ public class LocationManager_new {
                 currentLat = amapLocation.getLatitude();//获取纬度
                 currentLon = amapLocation.getLongitude();//获取经度
                 str_address = amapLocation.getAddress();
-                str_address = mLocationClient.getLastKnownLocation().getAddress();
+                if(TextUtils.isEmpty(str_address)){
+                    str_address = mLocationClient.getLastKnownLocation().getAddress();
+                }
                 Log.i("===str_address====", "str_address" + str_address);
                 PreferencesUtils.saveKeyValue(Constants.longitude, currentLon+"", AppConfig.getAppContext());
                 PreferencesUtils.saveKeyValue(Constants.latitude, currentLat+"", AppConfig.getAppContext());
+                PreferencesUtils.saveKeyValue(Constants.address, str_address, AppConfig.getAppContext());
                 getAddress.getaddress(str_address);
                 amapLocation.getAccuracy();//获取精度信息
             } else {

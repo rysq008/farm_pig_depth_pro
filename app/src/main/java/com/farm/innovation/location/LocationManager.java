@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.amap.api.location.AMapLocationClient;
@@ -16,8 +17,15 @@ import com.amap.api.services.geocoder.RegeocodeAddress;
 import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.farm.innovation.base.FarmAppConfig;
+import com.farm.innovation.utils.FarmerPreferencesUtils;
+import com.innovation.pig.insurance.AppConfig;
+import com.innovation.pig.insurance.netutils.Constants;
+import com.innovation.pig.insurance.netutils.PreferencesUtils;
 
+import org.tensorflow.demo.FarmGlobal;
 import org.tensorflow.demo.env.Logger;
+
+import java.util.prefs.Preferences;
 
 /**
  * @author wbs on 11/30/17.
@@ -107,7 +115,14 @@ public class LocationManager {
                 currentLat = amapLocation.getLatitude();//获取纬度
                 currentLon = amapLocation.getLongitude();//获取经度
                 str_address = amapLocation.getAddress();
-                str_address = mLocationClient.getLastKnownLocation().getAddress();
+                if(TextUtils.isEmpty(str_address)){
+                    str_address = mLocationClient.getLastKnownLocation().getAddress();
+                }
+                Log.i("===str_address====", "str_address" + str_address);
+                FarmerPreferencesUtils.saveKeyValue(Constants.longitude, currentLon+"", AppConfig.getAppContext());
+                FarmerPreferencesUtils.saveKeyValue(Constants.latitude, currentLat+"", AppConfig.getAppContext());
+                FarmerPreferencesUtils.saveKeyValue(Constants.address, str_address, AppConfig.getAppContext());
+
 //                Log.i("=======", "str_address" + str_address);
                 getAddress.getaddress(str_address);
                 // baodanApplyAddress.setText(str_address);

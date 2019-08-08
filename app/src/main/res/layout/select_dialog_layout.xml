@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -83,7 +84,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_10"
         android:orientation="horizontal"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <android.support.v7.widget.CardView
             android:id="@+id/cardview_farmer"
@@ -99,9 +100,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:text="投保业务"
                 android:textColor="@color/BLACK"
-                android:textSize="18sp"
-                android:text="农险业务" />
+                android:textSize="18sp" />
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
@@ -118,10 +119,53 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:text="理培业务"
                 android:textColor="@color/BLACK"
-                android:textSize="18sp"
-                android:text="育肥业务" />
+                android:textSize="18sp" />
         </android.support.v7.widget.CardView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/dialog_input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="gone">
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/toubao_rbtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="投保" />
+
+            <RadioButton
+                android:id="@+id/lipei_rbtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="理培" />
+        </RadioGroup>
+
+        <EditText
+            android:id="@+id/input_number_et"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_40"
+            android:background="@android:color/transparent"
+            android:hint="请输入任务采集号或者保单号" />
+
+        <Button
+            android:id="@+id/submit_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="确定" />
     </LinearLayout>
 
     <ImageView

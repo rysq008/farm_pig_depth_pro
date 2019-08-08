@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.farm.innovation.base.FarmAppConfig;
+import com.farm.innovation.bean.CattleBean;
 import com.farm.innovation.bean.PayApplyResultBean;
 import com.farm.innovation.bean.PayImageUploadResultBean;
 import com.farm.innovation.bean.PayInfoContrastResultBean;
@@ -61,6 +62,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import innovation.utils.InnovationAiOpen;
 import okhttp3.Call;
 import okhttp3.FormBody;
 import okhttp3.MediaType;
@@ -889,6 +891,16 @@ public class PayDataProcessor {
                         Toast.makeText(mContext, "========================================>离线,有视频,保存成功!", Toast.LENGTH_LONG).show();
 //                    FarmDetectorActivity detectorActivity = (FarmDetectorActivity) context;
 //                    detectorActivity.finish();
+                    if (FarmAppConfig.FARMER_DEPTH_JOIN) {
+                        CattleBean bean = new CattleBean();
+                        bean.zipPath = FarmGlobal.mediaInsureItem.getZipImageDir() + FarmGlobal.ZipFileName + ".zip";
+                        bean.address = caddress;
+                        bean.latitude = currentLat;
+                        bean.longitude = currentLon;
+                        bean.time = System.currentTimeMillis();
+                        InnovationAiOpen.getInstance().postEventEvent(bean);
+                        mActivity.finish();
+                    }
                     EventBus.getDefault().post("finish");
                 }
             } else {
@@ -972,6 +984,16 @@ public class PayDataProcessor {
                         Toast.makeText(mContext, "========================================>离线,无视频,保存成功!", Toast.LENGTH_SHORT).show();
 //                    FarmDetectorActivity detectorActivity = (FarmDetectorActivity) context;
 //                    detectorActivity.finish();
+                    if (FarmAppConfig.FARMER_DEPTH_JOIN) {
+                        CattleBean bean = new CattleBean();
+                        bean.zipPath = FarmGlobal.mediaInsureItem.getZipImageDir() + FarmGlobal.ZipFileName + ".zip";
+                        bean.address = caddress;
+                        bean.latitude = currentLat;
+                        bean.longitude = currentLon;
+                        bean.time = System.currentTimeMillis();
+                        InnovationAiOpen.getInstance().postEventEvent(bean);
+                        mActivity.finish();
+                    }
                     EventBus.getDefault().post("finish");
                 }
             }
@@ -1030,7 +1052,17 @@ public class PayDataProcessor {
                     resultPayZipImageBean = gson.fromJson(responsePayZipImageUpload, ResultBean.class);
                     if (resultPayZipImageBean.getStatus() == 1) {
                         mProgressDialog.dismiss();
-                        payInfoHandler.sendEmptyMessage(999);
+                        if(FarmAppConfig.FARMER_DEPTH_JOIN){
+                            CattleBean bean = new CattleBean();
+                            bean.zipPath = zipFileImage.getAbsolutePath();
+                            bean.address = caddress;
+                            bean.latitude = currentLat;
+                            bean.longitude = currentLon;
+                            bean.time = System.currentTimeMillis();
+                            InnovationAiOpen.getInstance().postEventEvent(bean);
+                            mActivity.finish();
+                        }
+//                        payInfoHandler.sendEmptyMessage(999);
                     } else if (resultPayZipImageBean.getStatus() == 0) {
                         //  图像质量不好
                         Log.e("uploadZipImage", "uploadZipImage:  图像质量不好");
@@ -1126,7 +1158,8 @@ public class PayDataProcessor {
                             comparerListener.onComparer(lipeiUploadGetLibId);
                         }
                         if (strfleg.equals("liUpload")) {
-                            payInfoHandler.sendEmptyMessage(17);
+                            Message msg = payInfoHandler.obtainMessage(17,zipFileImage.getAbsolutePath());
+                            payInfoHandler.sendMessage(msg);
                         }
                     } else if (resultPayZipImageBean.getStatus() == 0) {
                         //  图像质量不好
@@ -1465,6 +1498,17 @@ public class PayDataProcessor {
                         ResultBean resultBeanPayInfoContrast = gson.fromJson(responsePayInfoContrast, ResultBean.class);
                         if (resultBeanPayInfoContrast.getStatus() == 1) {
                             //   展示比对结果
+                            if(FarmAppConfig.FARMER_DEPTH_JOIN){
+                                CattleBean bean = new CattleBean();
+                                bean.zipPath = (String) msg.obj;
+                                bean.address = caddress;
+                                bean.latitude = currentLat;
+                                bean.longitude = currentLon;
+                                bean.time = System.currentTimeMillis();
+                                InnovationAiOpen.getInstance().postEventEvent(bean);
+                                mActivity.finish();
+                                return;
+                            }
                             payInfoHandler.sendEmptyMessage(18);
                         } else if (resultBeanPayInfoContrast.getStatus() == 0) {
                             Log.e("理赔", resultBeanPayInfoContrast.getMsg());

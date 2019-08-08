@@ -1,11 +1,11 @@
 package andbase.com.mytesttwo;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
@@ -13,14 +13,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.innovation.pig.insurance.AppConfig;
-import com.innovationai.pigweight.Constants;
-import com.innovationai.pigweight.activitys.SplashActivity;
 import com.xiangchuang.risks.view.LoginPigAarActivity;
 
 import static android.widget.LinearLayout.VERTICAL;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,21 +73,21 @@ public class MainActivity extends AppCompatActivity {
                     }
                     Toast.makeText(MainActivity.this, "nb", Toast.LENGTH_LONG).show();
                     Intent mIntent = new Intent(MainActivity.this, LoginPigAarActivity.class);
-                    mIntent.putExtra(AppConfig.TOKEY, "android_token");
-                    mIntent.putExtra(AppConfig.USER_ID, userid/*"android_userid3"*/);
-                    mIntent.putExtra(AppConfig.PHONE_NUMBER, phone);
-                    mIntent.putExtra(AppConfig.NAME, "android_name");
-                    mIntent.putExtra(AppConfig.DEPARTMENT_ID, pid/*"14079900"*//*"android_department"*/);
-                    mIntent.putExtra(AppConfig.IDENTITY_CARD, "android_identitry");
-                    startActivity(mIntent);
+//                    mIntent.putExtra(AppConfig.TOKEY, "android_token");
+//                    mIntent.putExtra(AppConfig.USER_ID, userid/*"android_userid3"*/);
+//                    mIntent.putExtra(AppConfig.PHONE_NUMBER, phone);
+//                    mIntent.putExtra(AppConfig.NAME, "android_name");
+//                    mIntent.putExtra(AppConfig.DEPARTMENT_ID, pid/*"14079900"*//*"android_department"*/);
+//                    mIntent.putExtra(AppConfig.IDENTITY_CARD, "android_identitry");
+//                    startActivity(mIntent);
                     dialog.dismiss();
                 }
             }).show();
         } else if (view.getId() == R.id.farm_tv) {
-            Bundle bundle = new Bundle();
-            bundle.putString(Constants.ACTION_APPID,"oL-mw59d4mEgDxG49-nQVM2hIha4");
-            bundle.putString(Constants.ACTION_TOKEN,"android_token");
-            SplashActivity.start(this,bundle);
+//            Bundle bundle = new Bundle();
+//            bundle.putString(Constants.ACTION_APPID,"oL-mw59d4mEgDxG49-nQVM2hIha4");
+//            bundle.putString(Constants.ACTION_TOKEN,"android_token");
+//            SplashActivity.start(this,bundle);
 
 //            EditText et = new EditText(this);
 //            et.setInputType(InputType.TYPE_CLASS_PHONE);

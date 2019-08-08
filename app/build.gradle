@@ -1,12 +1,12 @@
-apply plugin: 'com.android.application'
-//apply plugin: 'com.android.library'
+//apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 27
     buildToolsVersion '27.0.3'
     //    luolucode
     defaultConfig {
-        applicationId "com.xiangchuangtec.luolu.animalcounter"
+//        applicationId "com.xiangchuangtec.luolu.animalcounter"
         minSdkVersion 21
         targetSdkVersion 27
         //release versionCode 1100
@@ -177,10 +177,10 @@ apply plugin: 'maven'
 
 ext {
     // 从Github上clone下来的项目的本地地址
-    GITHUB_REPO_PATH = "C:\\farmer_pig_insurance";//"C:\\insurance\\farm_pig_insurance\\farm_pig_insurance"/*"C:\\pig_farmer_aar"*/
+    GITHUB_REPO_PATH = "C:\\farmer_depth_join";//"C:\\insurance\\farm_pig_insurance\\farm_pig_insurance"/*"C:\\pig_farmer_aar"*/
     // api 'com.audient:super_library:1.0.0'
     PUBLISH_GROUP_ID = 'com.innovation.aar'
-    PUBLISH_ARTIFACT_ID = 'farmer_pig_Insurance'
+    PUBLISH_ARTIFACT_ID = 'farmer_depth_join'
     PUBLISH_VERSION = android.defaultConfig.versionName/*'1.5.3'*/
 }
 

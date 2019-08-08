@@ -680,50 +680,6 @@ public class FarmCameraConnectionFragment extends Fragment implements View.OnCli
 
             }
         });
-
-
-//        mainlayout = view.findViewById(R.id.mainlayout);
-//        mainlayout.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View view, MotionEvent event) {
-//                // TODO Auto-generated method stub
-//                switch (event.getAction()) {
-//
-//                    case MotionEvent.ACTION_DOWN:
-//                        mPosX = event.getX();
-//                        mPosY = event.getY();
-//                        break;
-//                    case MotionEvent.ACTION_MOVE:
-//                        mCurPosX = event.getX();
-//                        mCurPosY = event.getY();
-//
-//                        break;
-//                    case MotionEvent.ACTION_UP:
-//                        if (mCurPosY - mPosY > 0
-//                                && (Math.abs(mCurPosY - mPosY) > 15)) {
-//                            if (exposureCompensation > minExposureCompensation)
-//                                exposureCompensation--;
-//                            updatePreview();
-//                            //向下滑動
-//                            break;
-//
-//                        } else if (mCurPosY - mPosY < 0
-//                                && (Math.abs(mCurPosY - mPosY) > 15)) {
-//                            if (exposureCompensation < maxExposureCompensation)
-//                                exposureCompensation++;
-//                            updatePreview();
-//                            //向上滑动
-//                            break;
-//                        }
-//
-//
-//                }
-//                return true;
-//
-//
-//            }
-//
-//        });
     }
 
 
@@ -821,14 +777,6 @@ public class FarmCameraConnectionFragment extends Fragment implements View.OnCli
                 //Toast.makeText(activity, FarmAppConfig.during+"", Toast.LENGTH_SHORT).show();
                 stopRecordingVideo(false);
                 FarmGlobal.VIDEO_PROCESS = false;
-////                    FarmDetectorActivity.starVideoTime = 0;
-//
-////                    try {
-////                        captureSession.stopRepeating();
-////                        captureSession.abortCaptures();
-////                    } catch (CameraAccessException e) {
-////                        e.printStackTrace();
-////                    }
                 try {
                     TimerTask timerTask = new TimerTask() {
                         @Override
@@ -855,13 +803,6 @@ public class FarmCameraConnectionFragment extends Fragment implements View.OnCli
                     Log.e("-----停止视频录制-----------", "---->>>>>>>>>" + e);
                     e.printStackTrace();
                 }
-
-//                    try {
-//                        mMediaRecorder.resetParameter();
-////                          mMediaRecorder.release();
-//                    } catch (Exception e) {
-//                        Log.i("停止视频录制", e.toString());
-//                    }
             } else {
                 // 录制按钮点击时
                 try {
@@ -981,23 +922,6 @@ public class FarmCameraConnectionFragment extends Fragment implements View.OnCli
                 }
 
                 FarmCameraConnectionFragment.this.cameraId = cameraId;
-
-//                // TODO: 2018/10/15 By:LuoLu
-//                Range<Integer> range2 = characteristics.get(CameraCharacteristics.SENSOR_INFO_SENSITIVITY_RANGE);
-//                int max1 = range2.getUpper();//10000
-//                int min1 = range2.getLower();//100
-////                int iso = ((progress * (max1 - min1)) / 100 + min1);
-////                mPreviewBuilder.set(CaptureRequest.SENSOR_SENSITIVITY, iso);
-//                LOGGER.i("range2 max�?+ max1);
-//                LOGGER.i("range2 min�?+ min1);
-//
-//                Range<Long> range = characteristics.get(CameraCharacteristics.SENSOR_INFO_EXPOSURE_TIME_RANGE);
-//                long max = range.getUpper();
-//                long min = range.getLower();
-//                long ae = (((max - min)) / 100 + min);
-//                previewRequestBuilder.set(CaptureRequest.SENSOR_EXPOSURE_TIME, ae);
-//                textSensorExposureTime.setText("曝光时间�? + ae);
-
                 cameraConnectionCallback.onPreviewSizeChosen(previewSize, 0);
                 return;
             }
@@ -1027,13 +951,6 @@ public class FarmCameraConnectionFragment extends Fragment implements View.OnCli
                 throw new RuntimeException("Time out waiting to lock camera opening.");
             }
             if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                //  Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
                 return;
             }
             manager.openCamera(cameraId, stateCallback, null);
@@ -1192,16 +1109,6 @@ public class FarmCameraConnectionFragment extends Fragment implements View.OnCli
             // Finally, we start displaying the camera preview.
             previewRequest = previewRequestBuilder.build();
             captureSession.stopRepeating();
-//            // TODO: 2018/10/16 By:LuoLu
-//            Range<Long> range = characteristics.get(CameraCharacteristics.SENSOR_INFO_EXPOSURE_TIME_RANGE);
-//            long max = range.getUpper();
-//            long min = range.getLower();
-//            long ae = (((max - min)) / 100 + min);
-//            previewRequestBuilder.set(CaptureRequest.SENSOR_EXPOSURE_TIME, ae);
-//            textSensorExposureTime.setText("曝光时间�? + ae);
-//            valueAETime = ae;
-
-
             captureSession.setRepeatingRequest(previewRequest, captureCallback, backgroundHandler);
 
         } catch (CameraAccessException e) {
@@ -1354,20 +1261,6 @@ public class FarmCameraConnectionFragment extends Fragment implements View.OnCli
                             } else {
                                 tvBtnRight.setVisibility(View.VISIBLE);
                             }
-
-//                            if (animalType == ConstUtils.ANIMAL_TYPE_PIG) {//猪
-////                                tvBtnLeft.setVisibility(View.VISIBLE);
-////                                tvBtnRight.setVisibility(View.VISIBLE);
-//                            } else if (animalType == ConstUtils.ANIMAL_TYPE_CATTLE) {//牛
-//
-//
-//
-//                            } else if (animalType == ConstUtils.ANIMAL_TYPE_DONKEY) {//驴
-////                                tvBtnLeft.setVisibility(View.VISIBLE);
-////                                tvBtnRight.setVisibility(View.VISIBLE);
-//                            } else {
-//
-//                            }
 
                             if (touBaoVieoFlag.equals("1") || liPeiVieoFlag.equals("1")) {
                                 //  if (touBaoVieoFlag.equals("1")|| liPeiVieoFlag.equals("1")) {

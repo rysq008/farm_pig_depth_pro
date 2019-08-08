@@ -22,7 +22,7 @@ allprojects {
     repositories {
         google()
         jcenter()
-        maven { url 'http://raw.github.com/saki4510t/libcommon/master/repository/' }
+        maven { url 'http://github.com/saki4510t/libcommon/raw/master/repository/' }
         maven { url 'https://jitpack.io' }
         maven { url "http://mvn.aliyun.cn/nexus/content/groups/public" }
         //这里是 LeanCloud 的包仓库
@@ -35,6 +35,7 @@ allprojects {
 //        maven { url "https://raw.githubusercontent.com/rysq008/repos/master" }
 //        maven{url "https://raw.gitlabusercontent.com/androidapp/ScheduleApp/tree/master/raw/com/innovation/aar/pigInsurance"}
         maven {url "http://github.com/Lucas1012/pig_insurance_aar/raw/master"}
+        maven {url 'http://github.com/innovationaiaar/farmer_depth_join/raw/master'}
     }
 }
 

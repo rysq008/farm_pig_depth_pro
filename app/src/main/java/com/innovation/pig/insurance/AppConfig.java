@@ -278,4 +278,5 @@ public class AppConfig {
     public static String NAME = "name";
     public static String PHONE_NUMBER = "phoneNumber";
     public static String IDENTITY_CARD = "identityCard";
+    public static String ACTION_ID = "actionId";
 }

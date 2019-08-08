@@ -9,76 +9,46 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import com.farm.innovation.biz.iterm.Model;
 import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.netutils.Constants;
 import com.xiangchuang.risks.view.LoginPigAarActivity;
 
+import org.tensorflow.demo.FarmGlobal;
+
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @Author: Lucas.Cui
- * 时   间：2019/5/22
- * 简   述：<功能简述>
- */
-public class EventManager {
+public class InnovationAiOpen {
+    public static final int INSURE = 0;
+    public static final int PAY = 1;
 
-    private static EventManager eventManager;
-//    private Map<OnEventListener, Object> mEventList = new HashMap<>();
+    private static InnovationAiOpen innovationAiOpen;
     private Map<Object, Handler> mHandlerMap = new HashMap<>();
 
     public static class Holder {
-        public static EventManager instance = new EventManager();
+        public static InnovationAiOpen instance = new InnovationAiOpen();
     }
 
-    public static EventManager getInstance() {
+    public static InnovationAiOpen getInstance() {
         return Holder.instance;
     }
-
-//    public boolean addEvent(Object object, OnEventListener listener) {
-//        if (listener == null) return false;
-//        mEventList.put(listener, object);
-//        return true;
-//    }
 
     public boolean addEvent(Object object, Handler.Callback callback) {
         mHandlerMap.put(object, new Handler(callback));
         return true;
     }
 
-    public boolean removeHandler(Object object) {
-        mHandlerMap.remove(object);
-        return true;
-    }
-
-//    public boolean removeEvent(OnEventListener listener) {
-//        if (listener == null) return false;
-//        mEventList.remove(listener);
-//        return true;
-//    }
-
     public boolean removeEvent(Object object) {
-//        Iterator<Map.Entry<OnEventListener, Object>> it = mEventList.entrySet().iterator();
-//        while (it.hasNext()) {
-//            if (it.next().getValue().equals(object))
-//                it.remove();
-//        }
         mHandlerMap.remove(object);
         return true;
     }
 
     public void clearEvent() {
-//        mEventList.clear();
         mHandlerMap.clear();
     }
 
-//    public void postEventEvent(Map<String, Object> map) {
-//        for (Map.Entry<OnEventListener, Object> listener : mEventList.entrySet()) {
-//            listener.getKey().onReceive(listener.getValue(), map);
-//        }
-//    }
-
-    public <T>void postEventEvent(T map) {
+    public <T> void postEventEvent(T map) {
         Message msg = Message.obtain();
         msg.obj = map;
         for (Map.Entry<Object, Handler> entry : mHandlerMap.entrySet()) {
@@ -94,26 +64,34 @@ public class EventManager {
             addEvent(context, callback);
     }
 
-    public void requestWeightApi(Context context, String appid, String token, Handler.Callback callback) {
-        requestWeightApi(context, "","","", callback);
+    public void requestInnovationApi(Context context, String actionId, String userid, String pid, int type, Handler.Callback callback) {
+        requestInnovationApi(context, actionId, "", "", "", type, callback);
     }
 
-    public void requestWeightApi(Context context, String phone, String userid, String pid, Handler.Callback callback) {
+    public void requestInnovationApi(Context context, String actionId, String userid, String phone, String pid, int type, Handler.Callback callback) {
+        if (type != 0 && type != 1) {
+            Toast.makeText(context, "无效业务类型", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (TextUtils.isEmpty(userid)) {
+            Toast.makeText(context, "用户id不能为空", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (TextUtils.isEmpty(actionId)) {
+            Toast.makeText(context, type == 0 ? "缺少任务id号" : "缺少保单号", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (TextUtils.isEmpty(phone)) {
             phone = PreferenceManager.getDefaultSharedPreferences(context).getString("phone", "19000000001");
         } else {
             PreferenceManager.getDefaultSharedPreferences(context).edit().putString("phone", phone).apply();
-        }
-        if (TextUtils.isEmpty(userid)) {
-            userid = PreferenceManager.getDefaultSharedPreferences(context).getString("userid", "android_userid6");
-        } else {
-            PreferenceManager.getDefaultSharedPreferences(context).edit().putString("userid", userid).apply();
         }
         if (TextUtils.isEmpty(pid)) {
             pid = PreferenceManager.getDefaultSharedPreferences(context).getString("pid", "28");
         } else {
             PreferenceManager.getDefaultSharedPreferences(context).edit().putString("pid", pid).apply();
         }
+        FarmGlobal.model = (type == 1 ? Model.VERIFY.value() : Model.BUILD.value());
         Toast.makeText(context, "nb", Toast.LENGTH_LONG).show();
         Intent mIntent = new Intent(context, LoginPigAarActivity.class);
         mIntent.putExtra(AppConfig.TOKEY, "android_token");
@@ -122,6 +100,7 @@ public class EventManager {
         mIntent.putExtra(AppConfig.NAME, "android_name");
         mIntent.putExtra(AppConfig.DEPARTMENT_ID, pid/*"14079900"*//*"android_department"*/);
         mIntent.putExtra(AppConfig.IDENTITY_CARD, "android_identitry");
+        mIntent.putExtra(AppConfig.ACTION_ID, actionId);
         context.startActivity(mIntent);
         if (callback != null)
             addEvent(context, callback);
