@@ -39,6 +39,7 @@ import com.innovation.pig.insurance.netutils.PreferencesUtils;
 import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
+import com.xiangchuang.risks.utils.IDCard;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,12 +56,23 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+import static com.farm.innovation.base.FarmAppConfig.ACTION_ID;
 import static com.farm.innovation.base.FarmAppConfig.DEPARTMENT_ID;
 import static com.farm.innovation.base.FarmAppConfig.IDENTITY_CARD;
+import static com.farm.innovation.base.FarmAppConfig.ID_CARD;
 import static com.farm.innovation.base.FarmAppConfig.NAME;
+import static com.farm.innovation.base.FarmAppConfig.OFFICE_CODE;
+import static com.farm.innovation.base.FarmAppConfig.OFFICE_LEVEL;
+import static com.farm.innovation.base.FarmAppConfig.OFFICE_NAME;
+import static com.farm.innovation.base.FarmAppConfig.PARENT_CODE;
+import static com.farm.innovation.base.FarmAppConfig.PARENT_OFFICE_CODES;
+import static com.farm.innovation.base.FarmAppConfig.PARENT_OFFICE_NAMES;
+import static com.farm.innovation.base.FarmAppConfig.PHONE;
 import static com.farm.innovation.base.FarmAppConfig.PHONE_NUMBER;
 import static com.farm.innovation.base.FarmAppConfig.TOKEY;
+import static com.farm.innovation.base.FarmAppConfig.TYPE;
 import static com.farm.innovation.base.FarmAppConfig.USER_ID;
+import static com.farm.innovation.base.FarmAppConfig.USER_NAME;
 
 /**
  * @author 56861
@@ -432,50 +444,65 @@ public class LoginPigAarActivity extends BaseActivity {
 //        mapbody.put(account, musername);
 //        mapbody.put(password, muserpass);
         mMapbody.clear();
-        if (TextUtils.isEmpty(mIntent.getStringExtra(TOKEY))) {
-            Toast.makeText(this, "请传入token", Toast.LENGTH_LONG).show();
-            LoginPigAarActivity.this.finish();
-            return;
-        }
-        mMapbody.put(TOKEY, mIntent.getStringExtra(TOKEY));
+        if(!FarmAppConfig.FARMER_DEPTH_JOIN){
+            if (TextUtils.isEmpty(mIntent.getStringExtra(TOKEY))) {
+                Toast.makeText(this, "请传入token", Toast.LENGTH_LONG).show();
+                LoginPigAarActivity.this.finish();
+                return;
+            }
+            mMapbody.put(TOKEY, mIntent.getStringExtra(TOKEY));
 
-        if (TextUtils.isEmpty(mIntent.getStringExtra(DEPARTMENT_ID))) {
-            Toast.makeText(this, "请传入国寿财系统部门id", Toast.LENGTH_LONG).show();
-            LoginPigAarActivity.this.finish();
-            return;
-        }
-        mMapbody.put(DEPARTMENT_ID, mIntent.getStringExtra(DEPARTMENT_ID));//国寿财系统的部门id
+            if (TextUtils.isEmpty(mIntent.getStringExtra(DEPARTMENT_ID))) {
+                Toast.makeText(this, "请传入国寿财系统部门id", Toast.LENGTH_LONG).show();
+                LoginPigAarActivity.this.finish();
+                return;
+            }
+            mMapbody.put(DEPARTMENT_ID, mIntent.getStringExtra(DEPARTMENT_ID));//国寿财系统的部门id
 
-        if (TextUtils.isEmpty(mIntent.getStringExtra(USER_ID))) {
-            Toast.makeText(this, "请传入用户id", Toast.LENGTH_LONG).show();
-            LoginPigAarActivity.this.finish();
-            return;
-        }
-        mMapbody.put(USER_ID, mIntent.getStringExtra(USER_ID));
+            if (TextUtils.isEmpty(mIntent.getStringExtra(USER_ID))) {
+                Toast.makeText(this, "请传入用户id", Toast.LENGTH_LONG).show();
+                LoginPigAarActivity.this.finish();
+                return;
+            }
+            mMapbody.put(USER_ID, mIntent.getStringExtra(USER_ID));
 
-        if (TextUtils.isEmpty(mIntent.getStringExtra(NAME))) {
-            Toast.makeText(this, "请传入用户名", Toast.LENGTH_LONG).show();
-            LoginPigAarActivity.this.finish();
-            return;
-        }
-        mMapbody.put(NAME, mIntent.getStringExtra(NAME));
+            if (TextUtils.isEmpty(mIntent.getStringExtra(NAME))) {
+                Toast.makeText(this, "请传入用户名", Toast.LENGTH_LONG).show();
+                LoginPigAarActivity.this.finish();
+                return;
+            }
+            mMapbody.put(NAME, mIntent.getStringExtra(NAME));
 
-        if (TextUtils.isEmpty(mIntent.getStringExtra(PHONE_NUMBER))) {
+            if (TextUtils.isEmpty(mIntent.getStringExtra(PHONE_NUMBER))) {
 //            Toast.makeText(this, "请传入电话号码", Toast.LENGTH_LONG).show();
 //            LoginPigAarActivity.this.finish();
 //            return;
-            String phone = mIntent.getStringExtra(USER_ID);
-            mMapbody.put(PHONE_NUMBER, (phone.substring(phone.length() - 11)));
-        } else
-            mMapbody.put(PHONE_NUMBER, mIntent.getStringExtra(PHONE_NUMBER));
+                String phone = mIntent.getStringExtra(USER_ID);
+                mMapbody.put(PHONE_NUMBER, (phone.substring(phone.length() - 11)));
+            } else
+                mMapbody.put(PHONE_NUMBER, mIntent.getStringExtra(PHONE_NUMBER));
 
-        if (TextUtils.isEmpty(mIntent.getStringExtra(IDENTITY_CARD))) {
+            if (TextUtils.isEmpty(mIntent.getStringExtra(IDENTITY_CARD))) {
 //            Toast.makeText(this, "请传入身份证号", Toast.LENGTH_LONG).show();
 //            LoginPigAarActivity.this.finish();
-            mMapbody.put(IDENTITY_CARD, "");
-        } else
-            mMapbody.put(IDENTITY_CARD, mIntent.getStringExtra(IDENTITY_CARD));
-
+                mMapbody.put(IDENTITY_CARD, "");
+            } else
+                mMapbody.put(IDENTITY_CARD, mIntent.getStringExtra(IDENTITY_CARD));
+        }else{
+            mMapbody.put(TOKEY, mIntent.getStringExtra(TOKEY));
+            mMapbody.put(ACTION_ID, mIntent.getStringExtra(ACTION_ID));
+            mMapbody.put(USER_ID, mIntent.getStringExtra(USER_ID));
+            mMapbody.put(OFFICE_CODE, mIntent.getStringExtra(OFFICE_CODE));
+            mMapbody.put(OFFICE_NAME, mIntent.getStringExtra(OFFICE_NAME));
+            mMapbody.put(OFFICE_LEVEL, mIntent.getStringExtra(OFFICE_LEVEL));
+            mMapbody.put(PARENT_CODE, mIntent.getStringExtra(PARENT_CODE));
+            mMapbody.put(PARENT_OFFICE_NAMES, mIntent.getStringExtra(PARENT_OFFICE_NAMES));
+            mMapbody.put(PARENT_OFFICE_CODES, mIntent.getStringExtra(PARENT_OFFICE_CODES));
+            mMapbody.put(TYPE, mIntent.getStringExtra(TYPE));
+            mMapbody.put(PHONE, mIntent.getStringExtra(PHONE));
+            mMapbody.put(ID_CARD, mIntent.getStringExtra(ID_CARD));
+            mMapbody.put(USER_NAME, mIntent.getStringExtra(USER_NAME));
+        }
         mapbody.putAll(mMapbody);
 //        mapbody.put(TOKEY, mIntent.getStringExtra(TOKEY));
 //        mapbody.put(DEPARTMENT_ID, mIntent.getStringExtra(DEPARTMENT_ID));//国寿财系统的部门id

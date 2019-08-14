@@ -274,9 +274,12 @@ public class AppConfig {
 
     public static String TOKEY = "token";
     public static String DEPARTMENT_ID = "departmentId";
+    public static String DEPARTMENT_NAME = "departmentName";
+    public static String DEPARTMENT_STRUCT = "departmentStruct";
     public static String USER_ID = "userId";
-    public static String NAME = "name";
+    public static String NAME = "userName";
     public static String PHONE_NUMBER = "phoneNumber";
-    public static String IDENTITY_CARD = "identityCard";
+    public static String IDENTITY_CARD = "idCard";
     public static String ACTION_ID = "actionId";
+
 }

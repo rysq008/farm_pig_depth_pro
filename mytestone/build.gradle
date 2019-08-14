@@ -114,10 +114,12 @@ configurations.all {
 //}
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-//    implementation('com.innovation.aar:farmer_depth_join:1.119'){transitive = true}
+    implementation('com.innovation.ai:farmer_depth_pro:1.118'){transitive = true}
+//    implementation('com.innovation.aar:farmer_depth_pro:1.118'){transitive = true}
 //    implementation ('com.innovation.ai:farmer_pig_aar:1.113'){transitive =true }
 //    implementation('com.innovation.aar:farmer_pig_Insurance:1.118')
 //            { transitive = true }
 //    implementation('com.innovationai.pigweight:pig_insurance_weight:1.0.8') { transitive = true }
+//    implementation('com.innovationai.pigweight:pig_insurance_weight:1.1.0') { transitive = true }
 }
 //apply plugin: 'io.objectbox'

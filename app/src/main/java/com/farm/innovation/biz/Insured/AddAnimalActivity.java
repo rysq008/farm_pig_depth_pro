@@ -692,6 +692,7 @@ public class AddAnimalActivity extends BaseActivity {
                                     bean.longitude = locationManager.currentLon;
                                     bean.time = System.currentTimeMillis();
                                     InnovationAiOpen.getInstance().postEventEvent(bean);
+                                    finish();
                                     return;
                                 }
                                 Intent intent = new Intent(AddAnimalActivity.this, HomeActivity.class);
@@ -937,6 +938,7 @@ public class AddAnimalActivity extends BaseActivity {
                                         bean.time = System.currentTimeMillis();
                                         InnovationAiOpen.getInstance().postEventEvent(bean);
                                         finish();
+                                        return;
                                     }
                                     finish();
 
@@ -1050,6 +1052,17 @@ public class AddAnimalActivity extends BaseActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
+                                    if (FarmAppConfig.FARMER_DEPTH_JOIN) {
+                                        CattleBean bean = new CattleBean();
+                                        bean.zipPath = FarmGlobal.mediaInsureItem.getZipImageDir() + FarmGlobal.ZipFileName + ".zip";
+                                        bean.address = addressAddAnimal;
+                                        bean.latitude = locationManager.currentLat;
+                                        bean.longitude = locationManager.currentLon;
+                                        bean.time = System.currentTimeMillis();
+                                        InnovationAiOpen.getInstance().postEventEvent(bean);
+                                        finish();
+                                        return;
+                                    }
                                     finish();
                                 }
                             })

@@ -4,7 +4,8 @@ buildscript {
     ext.objectboxVersion = '2.2.0'
     repositories {
         google()
-        jcenter()
+        jcenter() { url 'http://jcenter.bintray.com/' }
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
         mavenLocal()
         //这里是 LeanCloud 的包仓库
         maven {
@@ -13,15 +14,15 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.4.1'
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
         classpath "io.objectbox:objectbox-gradle-plugin:$objectboxVersion"
     }
 }
 allprojects {
     repositories {
         google()
-        jcenter()
+        jcenter() { url 'http://jcenter.bintray.com/' }
+//        maven{url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+        maven { url 'http://github.com/innovationaiaar/farmer_depth_pro/raw/master' }
         maven { url 'http://github.com/saki4510t/libcommon/raw/master/repository/' }
         maven { url 'https://jitpack.io' }
         maven { url "http://mvn.aliyun.cn/nexus/content/groups/public" }
@@ -34,8 +35,10 @@ allprojects {
         maven { url 'http://github.com/innovationaiaar/farmer_pig_insurance/raw/master' }
 //        maven { url "https://raw.githubusercontent.com/rysq008/repos/master" }
 //        maven{url "https://raw.gitlabusercontent.com/androidapp/ScheduleApp/tree/master/raw/com/innovation/aar/pigInsurance"}
-        maven {url "http://github.com/Lucas1012/pig_insurance_aar/raw/master"}
-        maven {url 'http://github.com/innovationaiaar/farmer_depth_join/raw/master'}
+//        maven { url "http://github.com/Lucas1012/pig_insurance_aar/raw/master" }
+        maven { url "http://github.com/innovationaiaar/weight_aar/raw/master" }
+//        maven { url 'http://github.com/innovationaiaar/farmer_depth_join/raw/master' }
+        maven { url 'http://raw.githubusercontent.com/innovationaiaar/farmer_depth_pro/master' }
     }
 }
 

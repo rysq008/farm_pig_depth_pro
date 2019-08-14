@@ -5,6 +5,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -13,7 +15,13 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.farm.innovation.bean.CattleBean;
+import com.innovation.pig.insurance.AppConfig;
+import com.innovationai.pigweight.Constants;
+import com.innovationai.pigweight.activitys.SplashActivity;
 import com.xiangchuang.risks.view.LoginPigAarActivity;
+
+import innovation.utils.InnovationAiOpen;
 
 import static android.widget.LinearLayout.VERTICAL;
 
@@ -73,14 +81,22 @@ public class MainActivity extends Activity {
                     }
                     Toast.makeText(MainActivity.this, "nb", Toast.LENGTH_LONG).show();
                     Intent mIntent = new Intent(MainActivity.this, LoginPigAarActivity.class);
-//                    mIntent.putExtra(AppConfig.TOKEY, "android_token");
-//                    mIntent.putExtra(AppConfig.USER_ID, userid/*"android_userid3"*/);
-//                    mIntent.putExtra(AppConfig.PHONE_NUMBER, phone);
-//                    mIntent.putExtra(AppConfig.NAME, "android_name");
-//                    mIntent.putExtra(AppConfig.DEPARTMENT_ID, pid/*"14079900"*//*"android_department"*/);
-//                    mIntent.putExtra(AppConfig.IDENTITY_CARD, "android_identitry");
-//                    startActivity(mIntent);
+                    mIntent.putExtra(AppConfig.TOKEY, "android_token");
+                    mIntent.putExtra(AppConfig.USER_ID, userid/*"android_userid3"*/);
+                    mIntent.putExtra(AppConfig.PHONE_NUMBER, phone);
+                    mIntent.putExtra(AppConfig.NAME, "android_name");
+                    mIntent.putExtra(AppConfig.DEPARTMENT_ID, pid/*"14079900"*//*"android_department"*/);
+                    mIntent.putExtra(AppConfig.IDENTITY_CARD, "android_identitry");
+                    startActivity(mIntent);
                     dialog.dismiss();
+//                    innovation.f.j.a().a();
+//                    InnovationAiOpen.getInstance().requestInnovationApi(MainActivity.this, "actionId", "userId", 0, new Handler.Callback() {
+//                        @Override
+//                        public boolean handleMessage(Message msg) {
+//                            CattleBean bean = msg.obj;
+//                            return false;
+//                        }
+//                    });
                 }
             }).show();
         } else if (view.getId() == R.id.farm_tv) {
@@ -132,5 +148,11 @@ public class MainActivity extends Activity {
 
 //        Intent it = new Intent(this, LoginFamerServer.class);
 //        startService(it);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        InnovationAiOpen.getInstance().removeEvent(this);
     }
 }

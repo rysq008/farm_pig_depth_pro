@@ -66,6 +66,7 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
+import static com.farm.innovation.base.FarmAppConfig.ACTION_ID;
 import static com.farm.innovation.base.FarmAppConfig.getStringTouboaExtra;
 import static com.farm.innovation.base.FarmAppConfig.getlipeiTempNumber;
 import static com.farm.innovation.utils.HttpUtils.INSURE_IMAGE_UPLOAD;
@@ -849,11 +850,16 @@ public class InsureDataProcessor {
             try {
                 TreeMap<String, String> treeMap = new TreeMap<>();
                 treeMap.put(Utils.UploadNew.USERID, uid + "");
-                treeMap.put(Utils.UploadNew.LIB_NUM, libMum);
-                treeMap.put(Utils.UploadNew.TYPE, model + "");
-                treeMap.put(Utils.UploadNew.LIBD_SOURCE, 1 + "");
-                treeMap.put(Utils.UploadNew.LIB_ENVINFO, getEnvInfo(mActivity, gps));
-                treeMap.put(Utils.UploadNew.COLLECT_TIME, FarmAppConfig.during / 1000 + "");
+                if(FarmAppConfig.FARMER_DEPTH_JOIN){
+                    treeMap.put(ACTION_ID, mActivity.getIntent().getStringExtra(ACTION_ID));
+                    treeMap.put(Utils.UploadNew.TYPE, model + "");
+                }else{
+                    treeMap.put(Utils.UploadNew.LIB_NUM, libMum);
+                    treeMap.put(Utils.UploadNew.TYPE, model + "");
+                    treeMap.put(Utils.UploadNew.LIBD_SOURCE, 1 + "");
+                    treeMap.put(Utils.UploadNew.LIB_ENVINFO, getEnvInfo(mActivity, gps));
+                    treeMap.put(Utils.UploadNew.COLLECT_TIME, FarmAppConfig.during / 1000 + "");
+                }
 
                 MultipartBody.Builder requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM);
                 FormBody.Builder builder = new FormBody.Builder();

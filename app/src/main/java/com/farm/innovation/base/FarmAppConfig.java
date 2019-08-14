@@ -154,7 +154,7 @@ public class FarmAppConfig {
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
                 FarmAppConfig.activity = activity;
 
-                if(activity instanceof BaseActivity){
+                if (activity instanceof BaseActivity) {
                     if (activity != null && !(activity instanceof WelcomeActivity)) {
                         GlobalDialogUtils.getNotice(activity.getClass().getCanonicalName(), activity);
                     }
@@ -341,7 +341,7 @@ public class FarmAppConfig {
         }
     }
 
-    public static boolean isOriginApk(){
+    public static boolean isOriginApk() {
         return "com.farm.innovation.nongxian".equals(FarmAppConfig.getApplication().getPackageName());
     }
 
@@ -365,9 +365,23 @@ public class FarmAppConfig {
 
     public static String TOKEY = "token";
     public static String DEPARTMENT_ID = "departmentId";
-    public static String USER_ID = "userId";
-    public static String NAME = "name";
+    public static String DEPARTMENT_NAME = "departmentName";
+    public static String DEPARTMENT_STRUCT = "departmentStruct";
+    public static String NAME = "userName";
     public static String PHONE_NUMBER = "phoneNumber";
-    public static String IDENTITY_CARD = "identityCard";
+    public static String IDENTITY_CARD = "idCard";
     public static boolean FARMER_DEPTH_JOIN = true;
+    public static String ACTION_ID = "actionId";// 任务号或者保单号（必填） 1075274131248574464
+    public static String USER_ID = "userid";// 用户id（必填）      89979dc663caa2580164f88b57796251
+    public static String OFFICE_CODE = "officeCode";// 机构编码（必填）         14112100
+    public static String OFFICE_NAME = "officeName";// 机构名称（必填）     文水县支公司
+    public static String OFFICE_LEVEL = "officeLevel";// 机构层级                  3
+    public static String PARENT_CODE = "parentCode";//  父机构编码               14119900
+    public static String PARENT_OFFICE_NAMES = "parentOfficeNames";// 机构层级（必填）   总公司/山西分公司/吕梁市中心支公司/文水县支公司
+    public static String PARENT_OFFICE_CODES = "parentOfficeCodes";// 机构层级编码（必填）   00000000,14000000,14119900,
+    public static String TYPE = "type";// 操作类型（必填）
+    public static String PHONE = "phone";// 手机号
+    public static String ID_CARD = "idcard";// 身份证号（必填）
+    public static String USER_NAME = "username";// 用户名（必填）
+
 }
