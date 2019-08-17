@@ -70,9 +70,11 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import static com.farm.innovation.base.FarmAppConfig.ACTION_ID;
 import static com.farm.innovation.base.FarmAppConfig.getStringTouboaExtra;
 import static com.farm.innovation.base.FarmAppConfig.getlipeiTempNumber;
 import static com.farm.innovation.utils.HttpUtils.FORCE_LIPEI_UPLOAD;
+import static com.farm.innovation.utils.HttpUtils.GSC_PAY_LIBUPLOAD;
 import static com.farm.innovation.utils.HttpUtils.PAY_LIBUPLOAD;
 import static com.farm.innvocation.upload.UploadHelper.getEnvInfo;
 import static org.tensorflow.demo.FarmCameraConnectionFragment.collectNumberHandler;
@@ -1022,19 +1024,26 @@ public class PayDataProcessor {
             try {
                 Map<String, String> map = new HashMap<>();
                 map.put("userId", uid + "");
-                map.put("libEnvinfo", getEnvInfo(mActivity, FarmAppConfig.version));
-                map.put("baodanNoReal", FarmerPreferencesUtils.getStringValue("baodannum", mActivity));
-                map.put("cardNo", FarmerPreferencesUtils.getStringValue("cardnum", mActivity));
-                map.put("reason", FarmerPreferencesUtils.getStringValue("reason", mActivity));
-                map.put("yiji", getPayYiji == null ? "" : getPayYiji);
-                map.put("erji", getPayErji == null ? "" : getPayErji);
-                map.put("sanji", getPaySanji == null ? "" : getPaySanji);
-                map.put("pigNo", getAnimalEarsTagNo == null ? "" : getAnimalEarsTagNo);
-                map.put("longitude", currentLon + "");
-                map.put("latitude", currentLat + "");
-                map.put(Utils.UploadNew.COLLECT_TIME, FarmAppConfig.during / 1000 + "");
-                map.put("address", caddress);
-                map.put("timesFlag", timesFlag);
+                if (FarmAppConfig.FARMER_DEPTH_JOIN) {
+                    map.put("policyNo", mActivity.getIntent().getStringExtra(ACTION_ID));
+                    map.put("address", LocationManager.getInstance(mActivity).str_address);
+                    map.put("longitude", String.valueOf(LocationManager.getInstance(mActivity).currentLon));
+                    map.put("latitude", String.valueOf(LocationManager.getInstance(mActivity).currentLat));
+                } else {
+                    map.put("libEnvinfo", getEnvInfo(mActivity, FarmAppConfig.version));
+                    map.put("baodanNoReal", FarmerPreferencesUtils.getStringValue("baodannum", mActivity));
+                    map.put("cardNo", FarmerPreferencesUtils.getStringValue("cardnum", mActivity));
+                    map.put("reason", FarmerPreferencesUtils.getStringValue("reason", mActivity));
+                    map.put("yiji", getPayYiji == null ? "" : getPayYiji);
+                    map.put("erji", getPayErji == null ? "" : getPayErji);
+                    map.put("sanji", getPaySanji == null ? "" : getPaySanji);
+                    map.put("pigNo", getAnimalEarsTagNo == null ? "" : getAnimalEarsTagNo);
+                    map.put("longitude", currentLon + "");
+                    map.put("latitude", currentLat + "");
+                    map.put(Utils.UploadNew.COLLECT_TIME, FarmAppConfig.during / 1000 + "");
+                    map.put("address", caddress);
+                    map.put("timesFlag", timesFlag);
+                }
 
                 //Log.e("理赔图片包上传接口请求报文：", treeMap.toString() + "\n请求地址：" + PAY_LIBUPLOAD);
                 MultipartBody.Builder requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM);
@@ -1046,13 +1055,14 @@ public class PayDataProcessor {
                 requestBody.addFormDataPart("zipFile", zipFileImage.getName(),
                         RequestBody.create(MediaType.parse("application/octet-stream"), zipFileImage));
 
-                String responsePayZipImageUpload = HttpUtils.post(FORCE_LIPEI_UPLOAD, requestBody.build());
+                String url = FarmAppConfig.FARMER_DEPTH_JOIN?GSC_PAY_LIBUPLOAD:FORCE_LIPEI_UPLOAD;
+                String responsePayZipImageUpload = HttpUtils.post(url, requestBody.build());
                 if (responsePayZipImageUpload != null) {
                     //Log.e("理赔图片包上传接口返回：\n", PAY_LIBUPLOAD + "\nresponsePayZipImageUpload:\n" + responsePayZipImageUpload);
                     resultPayZipImageBean = gson.fromJson(responsePayZipImageUpload, ResultBean.class);
                     if (resultPayZipImageBean.getStatus() == 1) {
                         mProgressDialog.dismiss();
-                        if(FarmAppConfig.FARMER_DEPTH_JOIN){
+                        if (FarmAppConfig.FARMER_DEPTH_JOIN) {
                             CattleBean bean = new CattleBean();
                             bean.zipPath = zipFileImage.getAbsolutePath();
                             bean.address = caddress;
@@ -1126,14 +1136,21 @@ public class PayDataProcessor {
             try {
                 TreeMap<String, String> treeMap = new TreeMap<>();
                 treeMap.put(Utils.UploadNew.USERID, uid + "");
-                treeMap.put(Utils.UploadNew.LIB_NUM, libNum);
-                treeMap.put(Utils.UploadNew.TYPE, model + "");
-                treeMap.put(Utils.UploadNew.LIBD_SOURCE, source + "");
-                treeMap.put(Utils.UploadNew.COLLECT_TIME, FarmAppConfig.during / 1000 + "");
+                if (FarmAppConfig.FARMER_DEPTH_JOIN) {
+                    treeMap.put("policyNo", mActivity.getIntent().getStringExtra(ACTION_ID));
+                    treeMap.put("address", LocationManager.getInstance(mActivity).str_address);
+                    treeMap.put("longitude", String.valueOf(LocationManager.getInstance(mActivity).currentLon));
+                    treeMap.put("latitude", String.valueOf(LocationManager.getInstance(mActivity).currentLat));
+                } else {
+                    treeMap.put(Utils.UploadNew.LIB_NUM, libNum);
+                    treeMap.put(Utils.UploadNew.TYPE, model + "");
+                    treeMap.put(Utils.UploadNew.LIBD_SOURCE, source + "");
+                    treeMap.put(Utils.UploadNew.COLLECT_TIME, FarmAppConfig.during / 1000 + "");
 
-                treeMap.put(Utils.UploadNew.LIB_ENVINFO, getEnvInfo(mActivity, FarmAppConfig.version));
-                treeMap.put("collectTimes", String.valueOf(99));
-                treeMap.put("timesFlag", timesFlag);
+                    treeMap.put(Utils.UploadNew.LIB_ENVINFO, getEnvInfo(mActivity, FarmAppConfig.version));
+                    treeMap.put("collectTimes", String.valueOf(99));
+                    treeMap.put("timesFlag", timesFlag);
+                }
                 //Log.e("理赔图片包上传接口请求报文：", treeMap.toString() + "\n请求地址：" + PAY_LIBUPLOAD);
                 MultipartBody.Builder requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM);
                 FormBody.Builder builder = new FormBody.Builder();
@@ -1144,7 +1161,8 @@ public class PayDataProcessor {
                 requestBody.addFormDataPart("zipFile", zipFileImage.getName(),
                         RequestBody.create(MediaType.parse("application/octet-stream"), zipFileImage));
 
-                String responsePayZipImageUpload = HttpUtils.post(PAY_LIBUPLOAD, requestBody.build());
+                String url = FarmAppConfig.FARMER_DEPTH_JOIN?GSC_PAY_LIBUPLOAD:PAY_LIBUPLOAD;
+                String responsePayZipImageUpload = HttpUtils.post(url, requestBody.build());
                 if (responsePayZipImageUpload != null) {
                     //Log.e("理赔图片包上传接口返回：\n", PAY_LIBUPLOAD + "\nresponsePayZipImageUpload:\n" + responsePayZipImageUpload);
                     resultPayZipImageBean = gson.fromJson(responsePayZipImageUpload, ResultBean.class);
@@ -1158,7 +1176,7 @@ public class PayDataProcessor {
                             comparerListener.onComparer(lipeiUploadGetLibId);
                         }
                         if (strfleg.equals("liUpload")) {
-                            Message msg = payInfoHandler.obtainMessage(17,zipFileImage.getAbsolutePath());
+                            Message msg = payInfoHandler.obtainMessage(17, zipFileImage.getAbsolutePath());
                             payInfoHandler.sendMessage(msg);
                         }
                     } else if (resultPayZipImageBean.getStatus() == 0) {
@@ -1498,7 +1516,7 @@ public class PayDataProcessor {
                         ResultBean resultBeanPayInfoContrast = gson.fromJson(responsePayInfoContrast, ResultBean.class);
                         if (resultBeanPayInfoContrast.getStatus() == 1) {
                             //   展示比对结果
-                            if(FarmAppConfig.FARMER_DEPTH_JOIN){
+                            if (FarmAppConfig.FARMER_DEPTH_JOIN) {
                                 CattleBean bean = new CattleBean();
                                 bean.zipPath = (String) msg.obj;
                                 bean.address = caddress;

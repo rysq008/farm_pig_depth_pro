@@ -101,10 +101,12 @@ public class HttpUtils {
     public static String ANIMAL_PAY_INFOCHECK = baseUrl + "appCoreV2/lipeiInfoCheck";
     //	 理赔图像信息上传接口
     public static String PAY_LIBUPLOAD = baseUrl + "appCoreV2/libUpload";
+    public static String GSC_PAY_LIBUPLOAD = baseUrl + "gsAppCore/gsLipeiUpload";
     //  理赔强制上传接口
     public static String FORCE_LIPEI_UPLOAD = baseUrl + "appCoreV2/forceLipeiUpload";
     //	 投保图像信息上传接口
     public static String INSURE_IMAGE_UPLOAD = baseUrl + "appCore/toubaoUpload";
+    public static String GSC_INSURE_IMAGE_UPLOAD = baseUrl + "gsAppCore/gsToubaoUpload";
     //  理赔比对接口
     public static String PAY_INFO_CONTRAST = baseUrl + "appCoreV2/lipeiContrast";
     //	理赔申请处理接口
@@ -214,6 +216,8 @@ public class HttpUtils {
         BaoDannametest = baseUrl + "baodanSum/testName";
         BaoDanaddyan = baseUrl + "baodanSum/addYanbiao";
         upload = baseUrl + "uploadImg";
+        GSC_INSURE_IMAGE_UPLOAD = baseUrl+"gsAppCore/gsToubaoUpload";
+        GSC_PAY_LIBUPLOAD = baseUrl+"gsAppCore/gsLipeiUpload";
     }
 
     public static boolean isOfficialHost() {

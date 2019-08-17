@@ -69,6 +69,7 @@ import okhttp3.RequestBody;
 import static com.farm.innovation.base.FarmAppConfig.ACTION_ID;
 import static com.farm.innovation.base.FarmAppConfig.getStringTouboaExtra;
 import static com.farm.innovation.base.FarmAppConfig.getlipeiTempNumber;
+import static com.farm.innovation.utils.HttpUtils.GSC_INSURE_IMAGE_UPLOAD;
 import static com.farm.innovation.utils.HttpUtils.INSURE_IMAGE_UPLOAD;
 import static com.farm.innovation.utils.HttpUtils.getEnvInfo;
 import static org.tensorflow.demo.FarmCameraConnectionFragment.collectNumberHandler;
@@ -851,8 +852,10 @@ public class InsureDataProcessor {
                 TreeMap<String, String> treeMap = new TreeMap<>();
                 treeMap.put(Utils.UploadNew.USERID, uid + "");
                 if(FarmAppConfig.FARMER_DEPTH_JOIN){
-                    treeMap.put(ACTION_ID, mActivity.getIntent().getStringExtra(ACTION_ID));
-                    treeMap.put(Utils.UploadNew.TYPE, model + "");
+                    treeMap.put("taskId", mActivity.getIntent().getStringExtra(ACTION_ID));
+                    treeMap.put("address", LocationManager.getInstance(mActivity).str_address);
+                    treeMap.put("longitude", String.valueOf(LocationManager.getInstance(mActivity).currentLon));
+                    treeMap.put("latitude", String.valueOf(LocationManager.getInstance(mActivity).currentLat));
                 }else{
                     treeMap.put(Utils.UploadNew.LIB_NUM, libMum);
                     treeMap.put(Utils.UploadNew.TYPE, model + "");
@@ -871,7 +874,8 @@ public class InsureDataProcessor {
                 // TODO: 2018/8/4
 
                 //Log.e("投保图片上传接口请求报文：", treeMap.toString() + "\n请求地址：" + INSURE_IMAGE_UPLOAD);
-                String responseInsureImageUpload = HttpUtils.post(INSURE_IMAGE_UPLOAD, requestBody.build());
+                String url = FarmAppConfig.FARMER_DEPTH_JOIN?GSC_INSURE_IMAGE_UPLOAD:INSURE_IMAGE_UPLOAD;
+                String responseInsureImageUpload = HttpUtils.post(url, requestBody.build());
                 resultBean = null;
                 if (responseInsureImageUpload != null) {
                     publishProgress(MSG_UI_FINISH_UPLOAD_IMG_ONE_SUCCESS);

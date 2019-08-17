@@ -136,7 +136,7 @@ public class InnovationAiOpen {
         mIntent.putExtra(FarmAppConfig.PARENT_CODE, parentCode);
         mIntent.putExtra(FarmAppConfig.PARENT_OFFICE_NAMES, parentOfficeName);
         mIntent.putExtra(FarmAppConfig.PARENT_OFFICE_CODES, parentOfficeCodes);
-        mIntent.putExtra(FarmAppConfig.TYPE, type);
+        mIntent.putExtra(FarmAppConfig.TYPE, type + "");
         mIntent.putExtra(FarmAppConfig.PHONE, phone);
         mIntent.putExtra(FarmAppConfig.ID_CARD, idcard);
         mIntent.putExtra(FarmAppConfig.USER_NAME, username);

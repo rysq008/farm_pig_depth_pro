@@ -73,6 +73,8 @@ import static com.farm.innovation.base.FarmAppConfig.TOKEY;
 import static com.farm.innovation.base.FarmAppConfig.TYPE;
 import static com.farm.innovation.base.FarmAppConfig.USER_ID;
 import static com.farm.innovation.base.FarmAppConfig.USER_NAME;
+import static com.innovation.pig.insurance.netutils.Constants.AAR_LOGINURLNEW;
+import static com.innovation.pig.insurance.netutils.Constants.GSC_AAR_LOGINURLNEW;
 
 /**
  * @author 56861
@@ -119,8 +121,9 @@ public class LoginPigAarActivity extends BaseActivity {
                                 LoginPigAarActivity.this.finish();
                                 return;
                             }
-                            showTypeDialog();
-//                            getDataFromNet("15000000001", "123456");
+//                            showTypeDialog();
+                            FarmerPreferencesUtils.setAnimalType(ConstUtils.ANIMAL_TYPE_CATTLE, LoginPigAarActivity.this);
+                            getDataFarmFromNet("", "");
 
                         } else {
                             Toast.makeText(LoginPigAarActivity.this, "is not all permission", Toast.LENGTH_LONG).show();
@@ -513,8 +516,9 @@ public class LoginPigAarActivity extends BaseActivity {
         mProgressDialog.show();
 //        String url = "http://192.168.1.175:8081/app/ftnAarLogin";
 //        String url = "http://47.92.167.61:8081/nongxian2/app/ftnAarLogin";
-        String url = "http://test1.innovationai.cn:8081/nongxian2/app/aarLogin";
-        com.farm.innovation.utils.OkHttp3Util.doPost(/*AAR_LOGINURLNEW*/url, mapbody, new Callback() {
+        String url = FarmAppConfig.FARMER_DEPTH_JOIN?GSC_AAR_LOGINURLNEW:"http://test1.innovationai.cn:8081/nongxian2/app/aarLogin";
+
+        com.farm.innovation.utils.OkHttp3Util.doPost(url, mapbody, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 mProgressDialog.dismiss();
