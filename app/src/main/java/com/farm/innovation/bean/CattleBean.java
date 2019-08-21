@@ -9,5 +9,6 @@ public class CattleBean implements Serializable {
     public double latitude;//	//维度
     public String address;//	//地点
     public long time;//		//拍照时间戳
-    public String zipPath;
+    public String zipPath;//图片数据
+    public String message;//比较结果
 }

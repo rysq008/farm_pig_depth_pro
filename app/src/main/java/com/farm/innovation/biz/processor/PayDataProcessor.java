@@ -296,7 +296,9 @@ public class PayDataProcessor {
             if (FarmAppConfig.debugNub == 1) {
                 collectNumberHandler.sendEmptyMessage(5);
             } else {
-                Intent intent = new Intent(mActivity, FarmDetectorActivity.class);
+//                Intent intent = new Intent(mActivity, FarmDetectorActivity.class);
+                Intent intent = mActivity.getIntent();
+                intent.setClass(mActivity, FarmDetectorActivity.class);
                 intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                 intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                 mActivity.startActivity(intent);
@@ -900,6 +902,7 @@ public class PayDataProcessor {
                         bean.latitude = currentLat;
                         bean.longitude = currentLon;
                         bean.time = System.currentTimeMillis();
+                        bean.message = "理赔未上传完成离线处理";
                         InnovationAiOpen.getInstance().postEventEvent(bean);
                         mActivity.finish();
                     }
@@ -993,6 +996,7 @@ public class PayDataProcessor {
                         bean.latitude = currentLat;
                         bean.longitude = currentLon;
                         bean.time = System.currentTimeMillis();
+                        bean.message = "理赔已上传完成离线处理";
                         InnovationAiOpen.getInstance().postEventEvent(bean);
                         mActivity.finish();
                     }
@@ -1069,10 +1073,12 @@ public class PayDataProcessor {
                             bean.latitude = currentLat;
                             bean.longitude = currentLon;
                             bean.time = System.currentTimeMillis();
+                            bean.message = resultPayZipImageBean.getMsg();
                             InnovationAiOpen.getInstance().postEventEvent(bean);
                             mActivity.finish();
+                            return;
                         }
-//                        payInfoHandler.sendEmptyMessage(999);
+                        payInfoHandler.sendEmptyMessage(999);
                     } else if (resultPayZipImageBean.getStatus() == 0) {
                         //  图像质量不好
                         Log.e("uploadZipImage", "uploadZipImage:  图像质量不好");
@@ -1085,7 +1091,8 @@ public class PayDataProcessor {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
-                                        Intent intent = new Intent(mActivity, FarmDetectorActivity.class);
+                                        Intent intent = mActivity.getIntent();
+                                        intent.setClass(mActivity, FarmDetectorActivity.class);
                                         intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                         mActivity.startActivity(intent);
                                         reInitCurrentDir();
@@ -1176,8 +1183,19 @@ public class PayDataProcessor {
                             comparerListener.onComparer(lipeiUploadGetLibId);
                         }
                         if (strfleg.equals("liUpload")) {
-                            Message msg = payInfoHandler.obtainMessage(17, zipFileImage.getAbsolutePath());
-                            payInfoHandler.sendMessage(msg);
+                            if (FarmAppConfig.FARMER_DEPTH_JOIN) {
+                                CattleBean bean = new CattleBean();
+                                bean.zipPath = zipFileImage.getAbsolutePath();
+                                bean.address = caddress;
+                                bean.latitude = currentLat;
+                                bean.longitude = currentLon;
+                                bean.time = System.currentTimeMillis();
+                                bean.message = payImageUploadResultBean.getMsg();
+                                InnovationAiOpen.getInstance().postEventEvent(bean);
+                                mActivity.finish();
+                                return;
+                            }
+                            payInfoHandler.sendEmptyMessage(17);
                         }
                     } else if (resultPayZipImageBean.getStatus() == 0) {
                         //  图像质量不好
@@ -1191,7 +1209,8 @@ public class PayDataProcessor {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
-                                        Intent intent = new Intent(mActivity, FarmDetectorActivity.class);
+                                        Intent intent = mActivity.getIntent();
+                                        intent.setClass(mActivity, FarmDetectorActivity.class);
                                         intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                         mActivity.startActivity(intent);
                                         reInitCurrentDir();
@@ -1516,17 +1535,6 @@ public class PayDataProcessor {
                         ResultBean resultBeanPayInfoContrast = gson.fromJson(responsePayInfoContrast, ResultBean.class);
                         if (resultBeanPayInfoContrast.getStatus() == 1) {
                             //   展示比对结果
-                            if (FarmAppConfig.FARMER_DEPTH_JOIN) {
-                                CattleBean bean = new CattleBean();
-                                bean.zipPath = (String) msg.obj;
-                                bean.address = caddress;
-                                bean.latitude = currentLat;
-                                bean.longitude = currentLon;
-                                bean.time = System.currentTimeMillis();
-                                InnovationAiOpen.getInstance().postEventEvent(bean);
-                                mActivity.finish();
-                                return;
-                            }
                             payInfoHandler.sendEmptyMessage(18);
                         } else if (resultBeanPayInfoContrast.getStatus() == 0) {
                             Log.e("理赔", resultBeanPayInfoContrast.getMsg());
@@ -1538,7 +1546,8 @@ public class PayDataProcessor {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             dialog.dismiss();
-                                            Intent intent = new Intent(mContext, FarmDetectorActivity.class);
+                                            Intent intent = mActivity.getIntent();
+                                            intent.setClass(mActivity, FarmDetectorActivity.class);
                                             intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                             intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                                             mContext.startActivity(intent);
@@ -1564,7 +1573,8 @@ public class PayDataProcessor {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             dialog.dismiss();
-                                            Intent intent = new Intent(mContext, FarmDetectorActivity.class);
+                                            Intent intent = mActivity.getIntent();
+                                            intent.setClass(mActivity, FarmDetectorActivity.class);
                                             intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                             intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                                             mContext.startActivity(intent);
@@ -1626,7 +1636,8 @@ public class PayDataProcessor {
                             dialogLipeiResult.dismiss();
                         } else {
                             dialogLipeiResult.dismiss();
-                            Intent intent = new Intent(mActivity, FarmDetectorActivity.class);
+                            Intent intent = mActivity.getIntent();
+                            intent.setClass(mActivity, FarmDetectorActivity.class);
                             intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                             intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                             mActivity.startActivity(intent);
@@ -1759,7 +1770,8 @@ public class PayDataProcessor {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
-                                    Intent intent = new Intent(mActivity, FarmDetectorActivity.class);
+                                    Intent intent = mActivity.getIntent();
+                                    intent.setClass(mActivity, FarmDetectorActivity.class);
                                     intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                     intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                                     mActivity.startActivity(intent);
@@ -1780,7 +1792,8 @@ public class PayDataProcessor {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
-                                    Intent intent = new Intent(mActivity, FarmDetectorActivity.class);
+                                    Intent intent = mActivity.getIntent();
+                                    intent.setClass(mActivity, FarmDetectorActivity.class);
                                     intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                     intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                                     mActivity.startActivity(intent);
@@ -1801,7 +1814,8 @@ public class PayDataProcessor {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
-                                    Intent intent = new Intent(mActivity, FarmDetectorActivity.class);
+                                    Intent intent = mActivity.getIntent();
+                                    intent.setClass(mActivity, FarmDetectorActivity.class);
                                     intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                     intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                                     mActivity.startActivity(intent);
@@ -1822,7 +1836,8 @@ public class PayDataProcessor {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
-                                    Intent intent = new Intent(mActivity, FarmDetectorActivity.class);
+                                    Intent intent = mActivity.getIntent();
+                                    intent.setClass(mActivity, FarmDetectorActivity.class);
                                     intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                     intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                                     mActivity.startActivity(intent);
@@ -1869,7 +1884,8 @@ public class PayDataProcessor {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
-                                    Intent intent = new Intent(mActivity, FarmDetectorActivity.class);
+                                    Intent intent = mActivity.getIntent();
+                                    intent.setClass(mActivity, FarmDetectorActivity.class);
                                     intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                     intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                                     mActivity.startActivity(intent);
@@ -1890,7 +1906,8 @@ public class PayDataProcessor {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
-                                    Intent intent = new Intent(mActivity, FarmDetectorActivity.class);
+                                    Intent intent = mActivity.getIntent();
+                                    intent.setClass(mActivity, FarmDetectorActivity.class);
                                     intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                     mActivity.startActivity(intent);
                                     reInitCurrentDir();

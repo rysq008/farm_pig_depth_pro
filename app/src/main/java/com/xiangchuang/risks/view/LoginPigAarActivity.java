@@ -18,6 +18,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.farm.innovation.base.FarmAppConfig;
+import com.farm.innovation.bean.BaseBean;
+import com.farm.innovation.bean.GscLoginBean;
 import com.farm.innovation.bean.ResultBean;
 import com.farm.innovation.login.RespObject;
 import com.farm.innovation.login.ResponseProcessor;
@@ -28,6 +30,7 @@ import com.farm.innovation.utils.ConstUtils;
 import com.farm.innovation.utils.FarmerPreferencesUtils;
 import com.farm.innovation.utils.HttpUtils;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
@@ -39,7 +42,6 @@ import com.innovation.pig.insurance.netutils.PreferencesUtils;
 import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
-import com.xiangchuang.risks.utils.IDCard;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -73,7 +75,6 @@ import static com.farm.innovation.base.FarmAppConfig.TOKEY;
 import static com.farm.innovation.base.FarmAppConfig.TYPE;
 import static com.farm.innovation.base.FarmAppConfig.USER_ID;
 import static com.farm.innovation.base.FarmAppConfig.USER_NAME;
-import static com.innovation.pig.insurance.netutils.Constants.AAR_LOGINURLNEW;
 import static com.innovation.pig.insurance.netutils.Constants.GSC_AAR_LOGINURLNEW;
 
 /**
@@ -447,7 +448,7 @@ public class LoginPigAarActivity extends BaseActivity {
 //        mapbody.put(account, musername);
 //        mapbody.put(password, muserpass);
         mMapbody.clear();
-        if(!FarmAppConfig.FARMER_DEPTH_JOIN){
+        if (!FarmAppConfig.FARMER_DEPTH_JOIN) {
             if (TextUtils.isEmpty(mIntent.getStringExtra(TOKEY))) {
                 Toast.makeText(this, "请传入token", Toast.LENGTH_LONG).show();
                 LoginPigAarActivity.this.finish();
@@ -491,7 +492,8 @@ public class LoginPigAarActivity extends BaseActivity {
                 mMapbody.put(IDENTITY_CARD, "");
             } else
                 mMapbody.put(IDENTITY_CARD, mIntent.getStringExtra(IDENTITY_CARD));
-        }else{
+        } else {
+            showProgressDialog(this);
             mMapbody.put(TOKEY, mIntent.getStringExtra(TOKEY));
             mMapbody.put(ACTION_ID, mIntent.getStringExtra(ACTION_ID));
             mMapbody.put(USER_ID, mIntent.getStringExtra(USER_ID));
@@ -516,7 +518,7 @@ public class LoginPigAarActivity extends BaseActivity {
         mProgressDialog.show();
 //        String url = "http://192.168.1.175:8081/app/ftnAarLogin";
 //        String url = "http://47.92.167.61:8081/nongxian2/app/ftnAarLogin";
-        String url = FarmAppConfig.FARMER_DEPTH_JOIN?GSC_AAR_LOGINURLNEW:"http://test1.innovationai.cn:8081/nongxian2/app/aarLogin";
+        String url = FarmAppConfig.FARMER_DEPTH_JOIN ? GSC_AAR_LOGINURLNEW : "http://test1.innovationai.cn:8081/nongxian2/app/aarLogin";
 
         com.farm.innovation.utils.OkHttp3Util.doPost(url, mapbody, new Callback() {
             @Override
@@ -526,6 +528,7 @@ public class LoginPigAarActivity extends BaseActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        if (null != mProgressDialog) mProgressDialog.dismiss();
                         Toast.makeText(LoginPigAarActivity.this, "登录失败，请检查网络后重试。", Toast.LENGTH_LONG).show();
                         finish();
                         return;
@@ -539,25 +542,16 @@ public class LoginPigAarActivity extends BaseActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 String string = response.body().string();
                 Log.i("LoginPigAarActivity", string);
-
+                runOnUiThread(() -> {
+                    if (null != mProgressDialog) mProgressDialog.dismiss();
+                });
                 Gson gson = new Gson();
-                ResultBean resultBean = gson.fromJson(string, ResultBean.class);
-                if (resultBean != null) {
-                    if (resultBean.getStatus() == 1) {
-                        {
-                            TokenResp tokenresp = (TokenResp) ResponseProcessor.processResp(string, Utils.LOGIN_GET_TOKEN_URL);
-                            if (tokenresp == null || TextUtils.isEmpty(tokenresp.token) || tokenresp.user_status != RespObject.USER_STATUS_1) {
-                                Toast.makeText(LoginPigAarActivity.this, "数据返回异常！", Toast.LENGTH_LONG).show();
-                                LoginPigAarActivity.this.finish();
-                                return;
-                            }
-
-                            if ((String.valueOf(tokenresp.uid)).equals(FarmerPreferencesUtils.getStringValue(HttpUtils.user_id, LoginPigAarActivity.this))) {
-                                FarmerPreferencesUtils.saveBooleanValue("isone", true, LoginPigAarActivity.this);
-                            } else {
-                                FarmerPreferencesUtils.saveBooleanValue("isone", false, LoginPigAarActivity.this);
-                            }
-
+                if (FarmAppConfig.FARMER_DEPTH_JOIN) {
+                    BaseBean<GscLoginBean> gscLoginBean = gson.fromJson(string, new TypeToken<BaseBean<GscLoginBean>>() {
+                    }.getType());
+                    GscLoginBean tokenresp = gscLoginBean.data;
+                    if (gscLoginBean != null) {
+                        if (gscLoginBean.isSuccess()) {
                             //  存储用户信息
                             SharedPreferences userinfo = getApplicationContext().getSharedPreferences(Utils.USERINFO_SHAREFILE, Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = userinfo.edit();
@@ -566,42 +560,94 @@ public class LoginPigAarActivity extends BaseActivity {
                             //  验证码的有效期，应该在获取验证码的时候返回才�?
                             editor.putInt("tokendate", tokenresp.tokendate);
                             editor.putInt("uid", tokenresp.uid);
-                            editor.putString("username", tokenresp.user_username);
-                            editor.putString("fullname", tokenresp.user_fullname);
-                            editor.putString("codedate", tokenresp.codedate);
+                            editor.putString("username", tokenresp.username);
+                            editor.putString("fullname", tokenresp.fullname);
+                            editor.putString("codedate", String.valueOf(tokenresp.codedate));
                             //用户创建时间
                             editor.putString("createtime", tokenresp.createtime);
                             //  editor.putInt("deptid", tokenresp.deptid);
                             editor.apply();
-                            int i = tokenresp.deptid;
                             FarmerPreferencesUtils.saveIntValue(HttpUtils.deptId, tokenresp.deptid, FarmAppConfig.getApplication());
                             FarmerPreferencesUtils.saveKeyValue(HttpUtils.user_id, String.valueOf(tokenresp.uid), FarmAppConfig.getApplication());
-                            Log.i("===id==", tokenresp.uid + "");
-                        }
-                        Intent add_intent = new Intent(LoginPigAarActivity.this, HomeActivity.class);
-                        if(FarmAppConfig.FARMER_DEPTH_JOIN){
-                            add_intent = mIntent;
-                            add_intent.setClass(LoginPigAarActivity.this, FarmDetectorActivity.class);
-                        }
-                        startActivity(add_intent);
-                        LoginPigAarActivity.this.finish();
-                        isRequest = false;
-                        return;
-                    } else {
+
+                            mIntent.setClass(LoginPigAarActivity.this, FarmDetectorActivity.class);
+
+                            startActivity(mIntent);
+                            LoginPigAarActivity.this.finish();
+                            isRequest = false;
+                            return;
+                        } else {
 //                        mProgressHandler.sendEmptyMessage(44);
-                        Toast.makeText(LoginPigAarActivity.this, resultBean.getMsg(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginPigAarActivity.this, gscLoginBean.msg, Toast.LENGTH_SHORT).show();
+                            LoginPigAarActivity.this.finish();
+                            isRequest = false;
+                            return;
+                        }
+                    } else {
+                        Toast.makeText(LoginPigAarActivity.this, "服务器错误，请稍后再试！", Toast.LENGTH_SHORT).show();
                         LoginPigAarActivity.this.finish();
                         isRequest = false;
                         return;
                     }
-
                 } else {
+                    ResultBean resultBean = gson.fromJson(string, ResultBean.class);
+                    if (resultBean != null) {
+                        if (resultBean.getStatus() == 1) {
+                            {
+                                TokenResp tokenresp = (TokenResp) ResponseProcessor.processResp(string, Utils.LOGIN_GET_TOKEN_URL);
+                                if (tokenresp == null || TextUtils.isEmpty(tokenresp.token) || tokenresp.user_status != RespObject.USER_STATUS_1) {
+//                                Toast.makeText(LoginPigAarActivity.this, "数据返回异常！", Toast.LENGTH_LONG).show();
+                                    LoginPigAarActivity.this.finish();
+                                    return;
+                                }
+
+                                if ((String.valueOf(tokenresp.uid)).equals(FarmerPreferencesUtils.getStringValue(HttpUtils.user_id, LoginPigAarActivity.this))) {
+                                    FarmerPreferencesUtils.saveBooleanValue("isone", true, LoginPigAarActivity.this);
+                                } else {
+                                    FarmerPreferencesUtils.saveBooleanValue("isone", false, LoginPigAarActivity.this);
+                                }
+
+                                //  存储用户信息
+                                SharedPreferences userinfo = getApplicationContext().getSharedPreferences(Utils.USERINFO_SHAREFILE, Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = userinfo.edit();
+                                editor.putString("token", tokenresp.token);
+                                //  int 类型的可能需要修�?
+                                //  验证码的有效期，应该在获取验证码的时候返回才�?
+                                editor.putInt("tokendate", tokenresp.tokendate);
+                                editor.putInt("uid", tokenresp.uid);
+                                editor.putString("username", tokenresp.user_username);
+                                editor.putString("fullname", tokenresp.user_fullname);
+                                editor.putString("codedate", tokenresp.codedate);
+                                //用户创建时间
+                                editor.putString("createtime", tokenresp.createtime);
+                                //  editor.putInt("deptid", tokenresp.deptid);
+                                editor.apply();
+                                int i = tokenresp.deptid;
+                                FarmerPreferencesUtils.saveIntValue(HttpUtils.deptId, tokenresp.deptid, FarmAppConfig.getApplication());
+                                FarmerPreferencesUtils.saveKeyValue(HttpUtils.user_id, String.valueOf(tokenresp.uid), FarmAppConfig.getApplication());
+                                Log.i("===id==", tokenresp.uid + "");
+                            }
+                            Intent add_intent = new Intent(LoginPigAarActivity.this, HomeActivity.class);
+                            startActivity(add_intent);
+                            LoginPigAarActivity.this.finish();
+                            isRequest = false;
+                            return;
+                        } else {
+//                        mProgressHandler.sendEmptyMessage(44);
+                            Toast.makeText(LoginPigAarActivity.this, resultBean.getMsg(), Toast.LENGTH_SHORT).show();
+                            LoginPigAarActivity.this.finish();
+                            isRequest = false;
+                            return;
+                        }
+
+                    } else {
 //                    Snackbar.make(nestedScrollView, "服务器错误，请稍后再试！", Snackbar.LENGTH_LONG).setText("服务器错误，请稍后再试！").show();
-                    Toast.makeText(LoginPigAarActivity.this, "服务器错误，请稍后再试！", Toast.LENGTH_SHORT).show();
-                    LoginPigAarActivity.this.finish();
-                    isRequest = false;
-                    return;
+                        Toast.makeText(LoginPigAarActivity.this, "服务器错误，请稍后再试！", Toast.LENGTH_SHORT).show();
+                        LoginPigAarActivity.this.finish();
+                        isRequest = false;
+                        return;
 //                    mProgressHandler.sendEmptyMessage(41);
+                    }
                 }
             }
         });

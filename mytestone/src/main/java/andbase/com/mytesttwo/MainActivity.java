@@ -3,7 +3,6 @@ package andbase.com.mytesttwo;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,11 +14,10 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+
 import com.farm.innovation.bean.CattleBean;
-import com.innovation.pig.insurance.AppConfig;
 import com.innovationai.pigweight.Constants;
-import com.innovationai.pigweight.activitys.SplashActivity;
-import com.xiangchuang.risks.view.LoginPigAarActivity;
+import com.innovationai.pigweight.event.EventManager;
 
 import innovation.utils.InnovationAiOpen;
 
@@ -80,30 +78,54 @@ public class MainActivity extends Activity {
                         PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putString("pid", pid).apply();
                     }
                     Toast.makeText(MainActivity.this, "nb", Toast.LENGTH_LONG).show();
-                    Intent mIntent = new Intent(MainActivity.this, LoginPigAarActivity.class);
-                    mIntent.putExtra(AppConfig.TOKEY, "android_token");
-                    mIntent.putExtra(AppConfig.USER_ID, userid/*"android_userid3"*/);
-                    mIntent.putExtra(AppConfig.PHONE_NUMBER, phone);
-                    mIntent.putExtra(AppConfig.NAME, "android_name");
-                    mIntent.putExtra(AppConfig.DEPARTMENT_ID, pid/*"14079900"*//*"android_department"*/);
-                    mIntent.putExtra(AppConfig.IDENTITY_CARD, "android_identitry");
-                    startActivity(mIntent);
+//                    Intent mIntent = new Intent(MainActivity.this, LoginPigAarActivity.class);
+//                    mIntent.putExtra(AppConfig.TOKEY, "android_token");
+//                    mIntent.putExtra(AppConfig.USER_ID, userid/*"android_userid3"*/);
+//                    mIntent.putExtra(AppConfig.PHONE_NUMBER, phone);
+//                    mIntent.putExtra(AppConfig.NAME, "android_name");
+//                    mIntent.putExtra(AppConfig.DEPARTMENT_ID, pid/*"14079900"*//*"android_department"*/);
+//                    mIntent.putExtra(AppConfig.IDENTITY_CARD, "android_identitry");
+//                    startActivity(mIntent);
                     dialog.dismiss();
 //                    innovation.f.j.a().a();
-//                    InnovationAiOpen.getInstance().requestInnovationApi(MainActivity.this, "actionId", "userId", 0, new Handler.Callback() {
-//                        @Override
-//                        public boolean handleMessage(Message msg) {
-//                            CattleBean bean = msg.obj;
-//                            return false;
-//                        }
-//                    });
+                    /**
+
+                     actionId 任务号或者保单号（必填） 1075274131248574464
+                     userid 用户id（必填）      89979dc663caa2580164f88b57796251
+                     officeCode 机构编码（必填）         14112100
+                     officeName 机构名称（必填）     文水县支公司
+                     officeLevel 机构层级                  3
+                     parentCode  父机构编码               14119900
+                     parentOfficeNames 机构层级（必填）   总公司/山西分公司/吕梁市中心支公司/文水县支公司
+                     parentOfficeCodes 机构层级编码（必填）   00000000,14000000,14119900,
+                     type 操作类型（必填）
+                     phone 手机号
+                     idcard 身份证号（必填）
+                     username 用户名（必填）
+                     */
+                    InnovationAiOpen.getInstance().requestInnovationApi(MainActivity.this, "1075274131248574464", "89979dc663caa2580164f88b57796251",
+                            "14112100","文水县支公司","总公司/山西分公司/吕梁市中心支公司/文水县支公司",
+                            "00000000,14000000,14119900,",InnovationAiOpen.INSURE,"111111111111111111",
+                            "test",new Handler.Callback() {
+                        @Override
+                        public boolean handleMessage(Message msg) {
+                            CattleBean bean = (CattleBean) msg.obj;
+                            return false;
+                        }
+                    });
                 }
             }).show();
         } else if (view.getId() == R.id.farm_tv) {
-//            Bundle bundle = new Bundle();
-//            bundle.putString(Constants.ACTION_APPID,"oL-mw59d4mEgDxG49-nQVM2hIha4");
-//            bundle.putString(Constants.ACTION_TOKEN,"android_token");
+            Bundle bundle = new Bundle();
+            bundle.putString(Constants.ACTION_APPID,"oL-mw59d4mEgDxG49-nQVM2hIha4");
+            bundle.putString(Constants.ACTION_TOKEN,"android_token");
 //            SplashActivity.start(this,bundle);
+            EventManager.getInstance().requestWeightApi(this, bundle, new Handler.Callback() {
+                @Override
+                public boolean handleMessage(Message msg) {
+                    return false;
+                }
+            });
 
 //            EditText et = new EditText(this);
 //            et.setInputType(InputType.TYPE_CLASS_PHONE);
@@ -153,6 +175,6 @@ public class MainActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        InnovationAiOpen.getInstance().removeEvent(this);
+//        InnovationAiOpen.getInstance().removeEvent(this);
     }
 }

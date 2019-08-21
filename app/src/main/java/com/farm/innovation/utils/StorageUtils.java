@@ -41,7 +41,7 @@ public class StorageUtils {
     public static File getExternalCacheDir(Context context) {
 //        File dataDir = new File(new File(Environment.getExternalStorageDirectory(), "/Android/data/com.farm.innovation.nongxian"), "animal");//haojie del
 //        File dataDir = new File(new File(context.getExternalCacheDir(), "innovation"), "animal");
-        String path = Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.farm.innovation.nongxian/animal/";
+        String path = Environment.getExternalStorageDirectory().getPath()+"/Android/data/"+context.getPackageName()+"/animal/";
         File dataDir = new File(path);
         if (!dataDir.exists()) {
             if (!dataDir.mkdirs()) {
@@ -78,7 +78,7 @@ public class StorageUtils {
     public static File getExternalCurrentDir(Context context) {
         //File dataDir = new File(new File(Environment.getExternalStorageDirectory(), "innovation"), "animal");//haojie del
 //        File dataDir = new File(context.getExternalCacheDir(), "innovation");
-        String path = Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.farm.innovation.nongxian/animal/";
+        String path = Environment.getExternalStorageDirectory().getPath()+"/Android/data/+"+context.getPackageName()+"+/animal/";
         File dataDir = new File(path);
         if (!dataDir.exists()) {
             if (!dataDir.mkdirs()) {
@@ -99,8 +99,6 @@ public class StorageUtils {
         }
         return mDir;
     }
-
-
 
     public static File getCrashDir(Context context) {
         //File dataDir = new File(new File(Environment.getExternalStorageDirectory(), "innovation"), "crash");//haojie del

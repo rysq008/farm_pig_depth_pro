@@ -57,6 +57,7 @@ configurations.all {
         force 'com.amap.api:search:latest.integration'
         force 'com.squareup.okhttp3:logging-interceptor:3.8.1'
         force 'io.reactivex.rxjava2:rxjava:2.2.6'
+        force 'com.android.support:multidex:1.0.3'
     }
 }
 configurations.all {
@@ -114,12 +115,15 @@ configurations.all {
 //}
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation('com.innovation.ai:farmer_depth_pro:1.118'){transitive = true}
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    implementation 'com.android.support:multidex:1.0.1'
+    implementation('com.innovation.ai:farmer_depth_pro:1.127'){transitive = true}
+//    implementation project(':app')
 //    implementation('com.innovation.aar:farmer_depth_pro:1.118'){transitive = true}
 //    implementation ('com.innovation.ai:farmer_pig_aar:1.113'){transitive =true }
 //    implementation('com.innovation.aar:farmer_pig_Insurance:1.118')
 //            { transitive = true }
 //    implementation('com.innovationai.pigweight:pig_insurance_weight:1.0.8') { transitive = true }
-//    implementation('com.innovationai.pigweight:pig_insurance_weight:1.1.0') { transitive = true }
+    implementation('com.innovationai.pigweight:pig_insurance_weight:1.1.0') { transitive = true }
 }
 //apply plugin: 'io.objectbox'

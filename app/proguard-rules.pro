@@ -567,4 +567,8 @@ public static java.lang.String TABLENAME;
 -keep  interface org.greenrobot.eventbus.**{*;}
 -keep  class android.support.media.**{*;}
 -keep  interface android.support.media.**{*;}
--keep public class innovation.utils.InnovationAiOpen {*;}
+-keep  public class innovation.utils.InnovationAiOpen {
+    public static final int *;
+    public <fields>;
+    public <methods>;
+}

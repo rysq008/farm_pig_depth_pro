@@ -268,7 +268,9 @@ public class InsureDataProcessor {
 
             mInsureDialog.dismiss();
 
-            Intent intent = new Intent(activity, FarmDetectorActivity.class);
+
+            Intent intent = mActivity.getIntent();
+                    intent.setClass(activity, FarmDetectorActivity.class);
             intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
             intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
             activity.startActivity(intent);
@@ -1077,7 +1079,8 @@ public class InsureDataProcessor {
 
                 mProgressDialog.dismiss();
 
-                Intent intent = new Intent(mActivity, FarmDetectorActivity.class);
+                Intent intent = mActivity.getIntent();
+                intent.setClass(mActivity, FarmDetectorActivity.class);
                 intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                 mActivity.startActivity(intent);
                 mActivity.finish();
@@ -1169,7 +1172,8 @@ public class InsureDataProcessor {
                         View.OnClickListener listener_ReCollect = v -> {
                             FarmAppConfig.during = 0;
                             dialogToubaoUploadResult.dismiss();
-                            Intent intent = new Intent(mActivity, FarmDetectorActivity.class);
+                            Intent intent = mActivity.getIntent();
+                            intent.setClass(mActivity, FarmDetectorActivity.class);
                             intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                             mActivity.startActivity(intent);
                             reInitCurrentDir();
@@ -1208,9 +1212,10 @@ public class InsureDataProcessor {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
-                                    Intent inten = new Intent(mActivity, FarmDetectorActivity.class);
-                                    inten.putExtra("ToubaoTempNumber", getStringTouboaExtra);
-                                    mActivity.startActivity(inten);
+                                    Intent intent = mActivity.getIntent();
+                                    intent.setClass(mActivity, FarmDetectorActivity.class);
+                                    intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
+                                    mActivity.startActivity(intent);
                                     reInitCurrentDir();
                                     collectNumberHandler.sendEmptyMessage(2);
                                     mActivity.finish();
