@@ -14,10 +14,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-
 import com.farm.innovation.bean.CattleBean;
-import com.innovationai.pigweight.Constants;
-import com.innovationai.pigweight.event.EventManager;
+
+import java.util.Random;
 
 import innovation.utils.InnovationAiOpen;
 
@@ -103,29 +102,44 @@ public class MainActivity extends Activity {
                      idcard 身份证号（必填）
                      username 用户名（必填）
                      */
-                    InnovationAiOpen.getInstance().requestInnovationApi(MainActivity.this, "1075274131248574464", "89979dc663caa2580164f88b57796251",
-                            "14112100","文水县支公司","总公司/山西分公司/吕梁市中心支公司/文水县支公司",
-                            "00000000,14000000,14119900,",InnovationAiOpen.INSURE,"111111111111111111",
-                            "test",new Handler.Callback() {
+                    InnovationAiOpen.getInstance().requestInnovationApi(MainActivity.this, "98765432101", "89979dc663caa2580164f88b57796251",
+                            "14112100", "文水县支公司", "总公司/山西分公司/吕梁市中心支公司/文水县支公司",
+                            "00000000,14000000,14119900,", InnovationAiOpen.INSURE, "111111111111111111",
+                            "test", new Handler.Callback() {
+                                @Override
+                                public boolean handleMessage(Message msg) {
+                                    CattleBean bean = (CattleBean) msg.obj;
+                                    if(bean.type == InnovationAiOpen.INSURE)
+                                    Toast.makeText(MainActivity.this, "投保返回", Toast.LENGTH_LONG).show();
+                                    return true;
+                                }
+                            });
+                }
+            }).show();
+
+        } else if (view.getId() == R.id.farm_tv) {
+            InnovationAiOpen.getInstance().requestInnovationApi(MainActivity.this, "98765432102", "89979dc663caa2580164f88b57796251",
+                    "14112100", "文水县支公司", "总公司/山西分公司/吕梁市中心支公司/文水县支公司",
+                    "00000000,14000000,14119900,", InnovationAiOpen.PAY, "111111111111111111",
+                    "test", new Handler.Callback() {
                         @Override
                         public boolean handleMessage(Message msg) {
                             CattleBean bean = (CattleBean) msg.obj;
-                            return false;
+                            if(bean.type == InnovationAiOpen.PAY)
+                                Toast.makeText(MainActivity.this, "理赔返回", Toast.LENGTH_LONG).show();
+                            return true;
                         }
                     });
-                }
-            }).show();
-        } else if (view.getId() == R.id.farm_tv) {
-            Bundle bundle = new Bundle();
-            bundle.putString(Constants.ACTION_APPID,"oL-mw59d4mEgDxG49-nQVM2hIha4");
-            bundle.putString(Constants.ACTION_TOKEN,"android_token");
-//            SplashActivity.start(this,bundle);
-            EventManager.getInstance().requestWeightApi(this, bundle, new Handler.Callback() {
-                @Override
-                public boolean handleMessage(Message msg) {
-                    return false;
-                }
-            });
+            //            Bundle bundle = new Bundle();
+//            bundle.putString(Constants.ACTION_APPID,"oL-mw59d4mEgDxG49-nQVM2hIha4");
+//            bundle.putString(Constants.ACTION_TOKEN,"android_token");
+////            SplashActivity.start(this,bundle);
+//            EventManager.getInstance().requestWeightApi(this, bundle, new Handler.Callback() {
+//                @Override
+//                public boolean handleMessage(Message msg) {
+//                    return false;
+//                }
+//            });
 
 //            EditText et = new EditText(this);
 //            et.setInputType(InputType.TYPE_CLASS_PHONE);
@@ -175,6 +189,6 @@ public class MainActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        InnovationAiOpen.getInstance().removeEvent(this);
+        InnovationAiOpen.getInstance().removeEvent(this);
     }
 }

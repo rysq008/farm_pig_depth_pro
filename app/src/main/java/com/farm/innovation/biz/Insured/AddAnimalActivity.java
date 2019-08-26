@@ -684,6 +684,7 @@ public class AddAnimalActivity extends BaseActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
+                                collectNumberHandler.sendEmptyMessage(2);
                                 if (FarmAppConfig.FARMER_DEPTH_JOIN) {
                                     CattleBean bean = new CattleBean();
                                     bean.zipPath = uuidFileName;
@@ -781,6 +782,8 @@ public class AddAnimalActivity extends BaseActivity {
                 addAnimalResultHandler.sendEmptyMessage(24);
                 AVOSCloudUtils.saveErrorMessage(e, AddAnimalActivity.class.getSimpleName());
                 return false;
+            }finally {
+                collectNumberHandler.sendEmptyMessage(2);
             }
 
         }

@@ -67,6 +67,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
 import static com.farm.innovation.base.FarmAppConfig.ACTION_ID;
+import static com.farm.innovation.base.FarmAppConfig.FARMER_DEPTH_JOIN;
 import static com.farm.innovation.base.FarmAppConfig.getStringTouboaExtra;
 import static com.farm.innovation.base.FarmAppConfig.getlipeiTempNumber;
 import static com.farm.innovation.utils.HttpUtils.GSC_INSURE_IMAGE_UPLOAD;
@@ -111,8 +112,8 @@ public class InsureDataProcessor {
     private Activity mActivity = null;
     private ProgressDialog mProgressDialog;
     private InsureDialog mInsureDialog = null;
-    private final Handler mProcessorHandler_new;
-    private final Handler mUiHandler_new;
+    private static Handler mProcessorHandler_new = null;
+    private static Handler mUiHandler_new = null;
     private ReviewImageDialog mReviewDialogImage = null;
     private ReviewVideoDialog mReviewDialogVideo = null;
     private Gson gson;
@@ -498,6 +499,7 @@ public class InsureDataProcessor {
             FarmGlobal.mediaPayItem.currentDel();
             FarmGlobal.mediaPayItem.currentInit();
         }
+        collectNumberHandler.sendEmptyMessage(2);
     }
 
     private void writeNumnerFile(String number) {
@@ -1218,7 +1220,7 @@ public class InsureDataProcessor {
                                     mActivity.startActivity(intent);
                                     reInitCurrentDir();
                                     collectNumberHandler.sendEmptyMessage(2);
-                                    mActivity.finish();
+//                                    mActivity.finish();
                                 }
                             })
                             .setPositiveButton("重试", new DialogInterface.OnClickListener() {

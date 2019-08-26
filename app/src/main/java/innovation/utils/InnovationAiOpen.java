@@ -65,10 +65,19 @@ public class InnovationAiOpen {
     }
 
     public <T> void postEventEvent(T obj) {
-        Message msg = Message.obtain();
-        msg.obj = obj;
+//        Message msg = Message.obtain();
+//        msg.obj = obj;
         for (Map.Entry<Object, Handler> entry : mHandlerMap.entrySet()) {
-            entry.getValue().sendMessage(msg);
+            Handler handler = entry.getValue();
+//            if(handler.obtainMessage(msg.what,msg.obj)!=null){
+//                Message _msg = new Message();
+//                _msg.what = msg.what;
+//                _msg.obj= msg.obj;
+//                msg = _msg;
+//            }
+            Message msg = new Message();
+            msg.obj = obj;
+            handler.sendMessage(msg);
         }
     }
 

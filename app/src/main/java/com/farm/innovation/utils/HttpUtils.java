@@ -149,7 +149,7 @@ public class HttpUtils {
     public static final int DATABSAE_VERSION = 8;
 
 
-    public static void resetIp(String baseUrl){
+    public static void resetIp(String baseUrl) {
         HttpUtils.baseUrl = baseUrl;
         //新增投保保单接口
         INSUR_NEW_URL = baseUrl + "baodan/addApp";
@@ -180,7 +180,7 @@ public class HttpUtils {
         USERINFO_SHAREFILE = "userinfo_sharefile";
         //登陆
         PIC_LOGIN_URL = baseUrl + "app/login";
-        MERGE_LOGIN_URL = baseUrl+ "app/mergeLogin";
+        MERGE_LOGIN_URL = baseUrl + "app/mergeLogin";
         //获取公司
         GET_ALL_COMPANY_URL = baseUrl + "app/queryAppDept";
         //获取版本更新json
@@ -216,8 +216,8 @@ public class HttpUtils {
         BaoDannametest = baseUrl + "baodanSum/testName";
         BaoDanaddyan = baseUrl + "baodanSum/addYanbiao";
         upload = baseUrl + "uploadImg";
-        GSC_INSURE_IMAGE_UPLOAD = baseUrl+"gsAppCore/gsToubaoUpload";
-        GSC_PAY_LIBUPLOAD = baseUrl+"gsAppCore/gsLipeiUpload";
+        GSC_INSURE_IMAGE_UPLOAD = baseUrl + "gsAppCore/gsToubaoUpload";
+        GSC_PAY_LIBUPLOAD = baseUrl + "gsAppCore/gsLipeiUpload";
     }
 
     public static boolean isOfficialHost() {
@@ -242,7 +242,7 @@ public class HttpUtils {
                 && !HttpUtils.QUERY_VIDEOFLAG_NEW.equals(url)
                 && !HttpUtils.GET_NOTICE.equals(url)
                 && !HttpUtils.MERGE_LOGIN_URL.equals(url)
-                ) {
+        ) {
             AlertDialogManager.showMessageDialogOne(FarmAppConfig.getActivity(), "提示", "您还未选择牲畜信息");
             return "";
         } else {
@@ -256,10 +256,11 @@ public class HttpUtils {
             OkHttpClient client = new OkHttpClient.Builder()
                     .connectTimeout(130, TimeUnit.SECONDS)
                     .readTimeout(160, TimeUnit.SECONDS)
+                    .retryOnConnectionFailure(true)
                     .build();
             Response response = null;
 //            try {
-            response = client.newCall(request).execute();
+//            response = client.newCall(request).execute();
 //            }
 //            catch (SocketTimeoutException e){
 //
@@ -271,12 +272,18 @@ public class HttpUtils {
 //                baseE.printStackTrace();
 //                Log.e(TAG, "Exception: "+baseE.toString());
 //            }
-
-            if (response == null) {
-                return null;
-            } else {
-                return response.body().string();
+            try {
+                response = client.newCall(request).execute();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (response == null) {
+                    return null;
+                } else {
+                    return response.body().string();
+                }
             }
+
         }
     }
 
@@ -290,7 +297,7 @@ public class HttpUtils {
                 && !HttpUtils.GET_REGISTER_URL.equals(url)
                 && !HttpUtils.GET_UPDATE_URL.equals(url)
                 && !HttpUtils.QUERY_VIDEOFLAG_NEW.equals(url)
-                ) {
+        ) {
             AlertDialogManager.showMessageDialogOne(FarmAppConfig.getActivity(), "提示", "您还未选择牲畜信息");
             return "";
         } else {

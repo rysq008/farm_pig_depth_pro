@@ -546,6 +546,7 @@ public class PayDataProcessor {
             FarmGlobal.mediaPayItem.currentDel();
             FarmGlobal.mediaPayItem.currentInit();
         }
+        collectNumberHandler.sendEmptyMessage(2);
     }
 
     private void UploadOnePay() {
@@ -903,6 +904,7 @@ public class PayDataProcessor {
                         bean.longitude = currentLon;
                         bean.time = System.currentTimeMillis();
                         bean.message = "理赔未上传完成离线处理";
+                        bean.type = InnovationAiOpen.PAY;
                         InnovationAiOpen.getInstance().postEventEvent(bean);
                         mActivity.finish();
                     }
@@ -997,6 +999,7 @@ public class PayDataProcessor {
                         bean.longitude = currentLon;
                         bean.time = System.currentTimeMillis();
                         bean.message = "理赔已上传完成离线处理";
+                        bean.type = InnovationAiOpen.PAY;
                         InnovationAiOpen.getInstance().postEventEvent(bean);
                         mActivity.finish();
                     }
@@ -1030,9 +1033,9 @@ public class PayDataProcessor {
                 map.put("userId", uid + "");
                 if (FarmAppConfig.FARMER_DEPTH_JOIN) {
                     map.put("policyNo", mActivity.getIntent().getStringExtra(ACTION_ID));
-                    map.put("address", LocationManager.getInstance(mActivity).str_address);
-                    map.put("longitude", String.valueOf(LocationManager.getInstance(mActivity).currentLon));
-                    map.put("latitude", String.valueOf(LocationManager.getInstance(mActivity).currentLat));
+                    map.put("address", caddress);
+                    map.put("longitude", String.valueOf(currentLon));
+                    map.put("latitude", String.valueOf(currentLat));
                 } else {
                     map.put("libEnvinfo", getEnvInfo(mActivity, FarmAppConfig.version));
                     map.put("baodanNoReal", FarmerPreferencesUtils.getStringValue("baodannum", mActivity));
@@ -1067,13 +1070,17 @@ public class PayDataProcessor {
                     if (resultPayZipImageBean.getStatus() == 1) {
                         mProgressDialog.dismiss();
                         if (FarmAppConfig.FARMER_DEPTH_JOIN) {
+                            PayInfoContrastResultBean payInfoContrastResultBean = gson.fromJson(responsePayZipImageUpload,PayInfoContrastResultBean.class);
+                            lipeiUploadGetLibId = payInfoContrastResultBean.getData().getLipeiId();
                             CattleBean bean = new CattleBean();
                             bean.zipPath = zipFileImage.getAbsolutePath();
                             bean.address = caddress;
                             bean.latitude = currentLat;
                             bean.longitude = currentLon;
                             bean.time = System.currentTimeMillis();
-                            bean.message = resultPayZipImageBean.getMsg();
+                            bean.message = payInfoContrastResultBean.getData().getResultMsg();
+                            bean.resultStatus = payInfoContrastResultBean.getData().getResultStatus();
+                            bean.type = InnovationAiOpen.PAY;
                             InnovationAiOpen.getInstance().postEventEvent(bean);
                             mActivity.finish();
                             return;
@@ -1145,9 +1152,9 @@ public class PayDataProcessor {
                 treeMap.put(Utils.UploadNew.USERID, uid + "");
                 if (FarmAppConfig.FARMER_DEPTH_JOIN) {
                     treeMap.put("policyNo", mActivity.getIntent().getStringExtra(ACTION_ID));
-                    treeMap.put("address", LocationManager.getInstance(mActivity).str_address);
-                    treeMap.put("longitude", String.valueOf(LocationManager.getInstance(mActivity).currentLon));
-                    treeMap.put("latitude", String.valueOf(LocationManager.getInstance(mActivity).currentLat));
+                    treeMap.put("address", caddress);
+                    treeMap.put("longitude", String.valueOf(currentLon));
+                    treeMap.put("latitude", String.valueOf(currentLat));
                 } else {
                     treeMap.put(Utils.UploadNew.LIB_NUM, libNum);
                     treeMap.put(Utils.UploadNew.TYPE, model + "");
@@ -1174,6 +1181,22 @@ public class PayDataProcessor {
                     //Log.e("理赔图片包上传接口返回：\n", PAY_LIBUPLOAD + "\nresponsePayZipImageUpload:\n" + responsePayZipImageUpload);
                     resultPayZipImageBean = gson.fromJson(responsePayZipImageUpload, ResultBean.class);
                     if (resultPayZipImageBean.getStatus() == 1) {
+                        if (FarmAppConfig.FARMER_DEPTH_JOIN) {
+                            PayInfoContrastResultBean payInfoContrastResultBean = gson.fromJson(responsePayZipImageUpload,PayInfoContrastResultBean.class);
+                            lipeiUploadGetLibId = payInfoContrastResultBean.getData().getLipeiId();
+                            CattleBean bean = new CattleBean();
+                            bean.zipPath = zipFileImage.getAbsolutePath();
+                            bean.address = caddress;
+                            bean.latitude = currentLat;
+                            bean.longitude = currentLon;
+                            bean.time = System.currentTimeMillis();
+                            bean.message = payInfoContrastResultBean.getData().getResultMsg();
+                            bean.resultStatus = payInfoContrastResultBean.getData().getResultStatus();
+                            bean.type = InnovationAiOpen.PAY;
+                            InnovationAiOpen.getInstance().postEventEvent(bean);
+                            mActivity.finish();
+                            return;
+                        }
                         PayImageUploadResultBean payImageUploadResultBean = gson.fromJson(responsePayZipImageUpload, PayImageUploadResultBean.class);
                         //获取ib_id
                         lipeiUploadGetLibId = payImageUploadResultBean.getData().getLibId();
@@ -1183,18 +1206,6 @@ public class PayDataProcessor {
                             comparerListener.onComparer(lipeiUploadGetLibId);
                         }
                         if (strfleg.equals("liUpload")) {
-                            if (FarmAppConfig.FARMER_DEPTH_JOIN) {
-                                CattleBean bean = new CattleBean();
-                                bean.zipPath = zipFileImage.getAbsolutePath();
-                                bean.address = caddress;
-                                bean.latitude = currentLat;
-                                bean.longitude = currentLon;
-                                bean.time = System.currentTimeMillis();
-                                bean.message = payImageUploadResultBean.getMsg();
-                                InnovationAiOpen.getInstance().postEventEvent(bean);
-                                mActivity.finish();
-                                return;
-                            }
                             payInfoHandler.sendEmptyMessage(17);
                         }
                     } else if (resultPayZipImageBean.getStatus() == 0) {
