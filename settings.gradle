@@ -1,1 +1,1 @@
-include ':app', ':mytestone', ':lib2'
+include ':app', ':mytestone'

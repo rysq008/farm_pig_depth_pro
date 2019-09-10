@@ -76,7 +76,7 @@ public class MainActivity extends Activity {
                     } else {
                         PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putString("pid", pid).apply();
                     }
-                    Toast.makeText(MainActivity.this, "nb", Toast.LENGTH_LONG).show();
+//                    Toast.makeText(MainActivity.this, "nb", Toast.LENGTH_LONG).show();
 //                    Intent mIntent = new Intent(MainActivity.this, LoginPigAarActivity.class);
 //                    mIntent.putExtra(AppConfig.TOKEY, "android_token");
 //                    mIntent.putExtra(AppConfig.USER_ID, userid/*"android_userid3"*/);

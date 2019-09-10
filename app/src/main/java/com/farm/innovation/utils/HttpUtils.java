@@ -53,7 +53,8 @@ public class HttpUtils {
     // TODO: 2018/8/17 By:LuoLu
 //    正式地址：60.205.209.245:8081;   测试地址：47.92.167.61:8081
 //    public static final String baseUrl = "http://60.205.209.245:8081/nongxian2/";
-    public static String baseUrl = "http://test1.innovationai.cn:8081/nongxian2/";
+//    public static String baseUrl = "http://test1.innovationai.cn:8081/nongxian2/";
+    public static String baseUrl = "http://f14e.innovationai.cn/nongxian2/";
     //新增投保保单接口
     public static String INSUR_NEW_URL = baseUrl + "baodan/addApp";
     //新增投保保单接口
@@ -102,6 +103,8 @@ public class HttpUtils {
     //	 理赔图像信息上传接口
     public static String PAY_LIBUPLOAD = baseUrl + "appCoreV2/libUpload";
     public static String GSC_PAY_LIBUPLOAD = baseUrl + "gsAppCore/gsLipeiUpload";
+    public static String GSC_AAR_LOGINURLNEW = baseUrl + "app/aarLogin";
+
     //  理赔强制上传接口
     public static String FORCE_LIPEI_UPLOAD = baseUrl + "appCoreV2/forceLipeiUpload";
     //	 投保图像信息上传接口
@@ -218,6 +221,7 @@ public class HttpUtils {
         upload = baseUrl + "uploadImg";
         GSC_INSURE_IMAGE_UPLOAD = baseUrl + "gsAppCore/gsToubaoUpload";
         GSC_PAY_LIBUPLOAD = baseUrl + "gsAppCore/gsLipeiUpload";
+        GSC_AAR_LOGINURLNEW = baseUrl+"app/aarLogin";
     }
 
     public static boolean isOfficialHost() {

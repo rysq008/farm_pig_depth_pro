@@ -50,25 +50,27 @@
     <!-- android:hardwareAccelerated="false" -->
     <!-- android:name="com.xiangchuangtec.luolu.animalcounter.AppConfig" -->
 
-<!--    <application
-        android:name=".MyApplication"
-        android:allowBackup="false"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:largeHeap="true"
-        android:launchMode="singleInstance"
-        android:screenOrientation="portrait"
-        android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar">-->
+<!--
+        <application
+            android:name=".MyApplication"
+            android:allowBackup="false"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:largeHeap="true"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            android:supportsRtl="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+-->
     <application
         android:largeHeap="true"
         android:launchMode="singleInstance"
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         tools:overrideLibrary="com.innovation.pig.insurance">
-<!--        <meta-data
-            android:name="com.amap.api.v2.apikey"
-            android:value="adf3458ffa64cdeee292d3ed2a68b6cc" />-->
+<!--                <meta-data
+                    android:name="com.amap.api.v2.apikey"
+                    android:value="adf3458ffa64cdeee292d3ed2a68b6cc" />-->
         <activity
             android:name="com.innovation.pig.insurance.CounterActivity_new"
             android:configChanges="orientation|keyboardHidden"
@@ -78,11 +80,11 @@
             android:name="com.xiangchuang.risks.view.LoginPigAarActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
-<!--            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+<!--                        <intent-filter>
+                            <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+                            <category android:name="android.intent.category.LAUNCHER" />
+                        </intent-filter>-->
         </activity>
         <activity
             android:name="com.xiangchuang.risks.view.ShowPollingActivity_new"
@@ -152,7 +154,7 @@
         <activity
             android:name="com.xiangchuang.risks.view.HogDetailActivity_new"
             android:exported="true" />
-<!--        <activity android:name="com.xiangchuang.risks.base.BaseBarActivity" />-->
+        <!--        <activity android:name="com.xiangchuang.risks.base.BaseBarActivity" />-->
         <activity android:name="com.xiangchuang.risks.view.JuanSettingActivity" />
         <activity android:name="com.xiangchuang.risks.view.SettingActivity" />
         <activity android:name="com.xiangchuang.risks.view.InsuredActivity" />
@@ -180,7 +182,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.xiangchuang.risks.view.CameraPicActivity"
-           android:launchMode="singleTop"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity
@@ -201,10 +203,10 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             >
-<!--                        <intent-filter>
-                            <action android:name="android.intent.action.MAIN" />
-                            <category android:name="android.intent.category.LAUNCHER" />
-                        </intent-filter>-->
+            <!--                        <intent-filter>
+                                        <action android:name="android.intent.action.MAIN" />
+                                        <category android:name="android.intent.category.LAUNCHER" />
+                                    </intent-filter>-->
         </activity>
         <activity
             android:name="org.tensorflow.demo.FarmDetectorActivity"

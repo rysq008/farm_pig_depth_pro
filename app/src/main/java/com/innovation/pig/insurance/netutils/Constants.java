@@ -49,7 +49,6 @@ public class Constants {
     public static String BASENEW = HttpUtils.baseUrl + "app/";
     public static String LOGINURLNEW = BASENEW + "ftnLogin";
     public static String AAR_LOGINURLNEW = BASENEW + "ftnAarLogin";
-    public static String GSC_AAR_LOGINURLNEW = BASENEW + "aarLogin";
 
     public static String ZHUSHESHOW = BASENEW + "ftnShe/list";
 
@@ -223,7 +222,6 @@ public class Constants {
         BASENEW = HttpUtils.baseUrl + "app/";
         LOGINURLNEW = BASENEW + "ftnLogin";
         AAR_LOGINURLNEW = BASENEW + "ftnAarLogin";
-        GSC_AAR_LOGINURLNEW = BASENEW+"aarLogin";
 
         ZHUSHESHOW = BASENEW + "ftnShe/list";
 

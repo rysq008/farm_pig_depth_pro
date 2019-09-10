@@ -75,7 +75,7 @@ import static com.farm.innovation.base.FarmAppConfig.TOKEY;
 import static com.farm.innovation.base.FarmAppConfig.TYPE;
 import static com.farm.innovation.base.FarmAppConfig.USER_ID;
 import static com.farm.innovation.base.FarmAppConfig.USER_NAME;
-import static com.innovation.pig.insurance.netutils.Constants.GSC_AAR_LOGINURLNEW;
+import static com.farm.innovation.utils.HttpUtils.GSC_AAR_LOGINURLNEW;
 
 /**
  * @author 56861
@@ -442,7 +442,9 @@ public class LoginPigAarActivity extends BaseActivity {
 
 
     private void getDataFarmFromNet(String musername, String muserpass) {
-        if (isRequest) return;
+        if (isRequest) {
+            return;
+        }
         isRequest = true;
         Map<String, String> mapbody = new HashMap<>();
 //        mapbody.put(account, musername);
@@ -543,112 +545,123 @@ public class LoginPigAarActivity extends BaseActivity {
                 String string = response.body().string();
                 Log.i("LoginPigAarActivity", string);
                 runOnUiThread(() -> {
-                    if (null != mProgressDialog) mProgressDialog.dismiss();
-                });
-                Gson gson = new Gson();
-                if (FarmAppConfig.FARMER_DEPTH_JOIN) {
-                    BaseBean<GscLoginBean> gscLoginBean = gson.fromJson(string, new TypeToken<BaseBean<GscLoginBean>>() {
-                    }.getType());
-                    GscLoginBean tokenresp = gscLoginBean.data;
-                    if (gscLoginBean != null) {
-                        if (gscLoginBean.isSuccess()) {
-                            //  存储用户信息
-                            SharedPreferences userinfo = getApplicationContext().getSharedPreferences(Utils.USERINFO_SHAREFILE, Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = userinfo.edit();
-                            editor.putString("token", tokenresp.token);
-                            //  int 类型的可能需要修�?
-                            //  验证码的有效期，应该在获取验证码的时候返回才�?
-                            editor.putInt("tokendate", tokenresp.tokendate);
-                            editor.putInt("uid", tokenresp.uid);
-                            editor.putString("username", tokenresp.username);
-                            editor.putString("fullname", tokenresp.fullname);
-                            editor.putString("codedate", String.valueOf(tokenresp.codedate));
-                            //用户创建时间
-                            editor.putString("createtime", tokenresp.createtime);
-                            //  editor.putInt("deptid", tokenresp.deptid);
-                            editor.apply();
-                            FarmerPreferencesUtils.saveIntValue(HttpUtils.deptId, tokenresp.deptid, FarmAppConfig.getApplication());
-                            FarmerPreferencesUtils.saveKeyValue(HttpUtils.user_id, String.valueOf(tokenresp.uid), FarmAppConfig.getApplication());
-
-                            mIntent.setClass(LoginPigAarActivity.this, FarmDetectorActivity.class);
-
-                            startActivity(mIntent);
-                            LoginPigAarActivity.this.finish();
-                            isRequest = false;
-                            return;
-                        } else {
-//                        mProgressHandler.sendEmptyMessage(44);
-                            Toast.makeText(LoginPigAarActivity.this, gscLoginBean.msg, Toast.LENGTH_SHORT).show();
-                            LoginPigAarActivity.this.finish();
-                            isRequest = false;
-                            return;
-                        }
-                    } else {
-                        Toast.makeText(LoginPigAarActivity.this, "服务器错误，请稍后再试！", Toast.LENGTH_SHORT).show();
-                        LoginPigAarActivity.this.finish();
-                        isRequest = false;
-                        return;
+                    if (null != mProgressDialog) {
+                        mProgressDialog.dismiss();
                     }
-                } else {
-                    ResultBean resultBean = gson.fromJson(string, ResultBean.class);
-                    if (resultBean != null) {
-                        if (resultBean.getStatus() == 1) {
-                            {
-                                TokenResp tokenresp = (TokenResp) ResponseProcessor.processResp(string, Utils.LOGIN_GET_TOKEN_URL);
-                                if (tokenresp == null || TextUtils.isEmpty(tokenresp.token) || tokenresp.user_status != RespObject.USER_STATUS_1) {
-//                                Toast.makeText(LoginPigAarActivity.this, "数据返回异常！", Toast.LENGTH_LONG).show();
+
+                    Gson gson = new Gson();
+                    if (FarmAppConfig.FARMER_DEPTH_JOIN) {
+                        try {
+                            BaseBean<GscLoginBean> gscLoginBean = gson.fromJson(string, new TypeToken<BaseBean<GscLoginBean>>() {
+                            }.getType());
+                            GscLoginBean tokenresp = gscLoginBean.data;
+                            if (gscLoginBean != null) {
+                                if (gscLoginBean.isSuccess()) {
+                                    //  存储用户信息
+                                    SharedPreferences userinfo = getApplicationContext().getSharedPreferences(Utils.USERINFO_SHAREFILE, Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = userinfo.edit();
+                                    editor.putString("token", tokenresp.token);
+                                    //  int 类型的可能需要修�?
+                                    //  验证码的有效期，应该在获取验证码的时候返回才�?
+                                    editor.putInt("tokendate", tokenresp.tokendate);
+                                    editor.putInt("uid", tokenresp.uid);
+                                    editor.putString("username", tokenresp.username);
+                                    editor.putString("fullname", tokenresp.fullname);
+                                    editor.putString("codedate", String.valueOf(tokenresp.codedate));
+                                    //用户创建时间
+                                    editor.putString("createtime", tokenresp.createtime);
+                                    //  editor.putInt("deptid", tokenresp.deptid);
+                                    editor.apply();
+                                    FarmerPreferencesUtils.saveIntValue(HttpUtils.deptId, tokenresp.deptid, FarmAppConfig.getApplication());
+                                    FarmerPreferencesUtils.saveKeyValue(HttpUtils.user_id, String.valueOf(tokenresp.uid), FarmAppConfig.getApplication());
+
+                                    mIntent.setClass(LoginPigAarActivity.this, FarmDetectorActivity.class);
+
+                                    startActivity(mIntent);
                                     LoginPigAarActivity.this.finish();
+                                    isRequest = false;
+                                    return;
+                                } else {
+//                        mProgressHandler.sendEmptyMessage(44);
+                                    Toast.makeText(LoginPigAarActivity.this, gscLoginBean.msg, Toast.LENGTH_SHORT).show();
+                                    LoginPigAarActivity.this.finish();
+                                    isRequest = false;
                                     return;
                                 }
-
-                                if ((String.valueOf(tokenresp.uid)).equals(FarmerPreferencesUtils.getStringValue(HttpUtils.user_id, LoginPigAarActivity.this))) {
-                                    FarmerPreferencesUtils.saveBooleanValue("isone", true, LoginPigAarActivity.this);
-                                } else {
-                                    FarmerPreferencesUtils.saveBooleanValue("isone", false, LoginPigAarActivity.this);
-                                }
-
-                                //  存储用户信息
-                                SharedPreferences userinfo = getApplicationContext().getSharedPreferences(Utils.USERINFO_SHAREFILE, Context.MODE_PRIVATE);
-                                SharedPreferences.Editor editor = userinfo.edit();
-                                editor.putString("token", tokenresp.token);
-                                //  int 类型的可能需要修�?
-                                //  验证码的有效期，应该在获取验证码的时候返回才�?
-                                editor.putInt("tokendate", tokenresp.tokendate);
-                                editor.putInt("uid", tokenresp.uid);
-                                editor.putString("username", tokenresp.user_username);
-                                editor.putString("fullname", tokenresp.user_fullname);
-                                editor.putString("codedate", tokenresp.codedate);
-                                //用户创建时间
-                                editor.putString("createtime", tokenresp.createtime);
-                                //  editor.putInt("deptid", tokenresp.deptid);
-                                editor.apply();
-                                int i = tokenresp.deptid;
-                                FarmerPreferencesUtils.saveIntValue(HttpUtils.deptId, tokenresp.deptid, FarmAppConfig.getApplication());
-                                FarmerPreferencesUtils.saveKeyValue(HttpUtils.user_id, String.valueOf(tokenresp.uid), FarmAppConfig.getApplication());
-                                Log.i("===id==", tokenresp.uid + "");
+                            } else {
+                                Toast.makeText(LoginPigAarActivity.this, "服务器错误，请稍后再试！", Toast.LENGTH_SHORT).show();
+                                LoginPigAarActivity.this.finish();
+                                isRequest = false;
+                                return;
                             }
-                            Intent add_intent = new Intent(LoginPigAarActivity.this, HomeActivity.class);
-                            startActivity(add_intent);
-                            LoginPigAarActivity.this.finish();
-                            isRequest = false;
-                            return;
-                        } else {
-//                        mProgressHandler.sendEmptyMessage(44);
-                            Toast.makeText(LoginPigAarActivity.this, resultBean.getMsg(), Toast.LENGTH_SHORT).show();
+                        } catch (Exception e) {
+                            Toast.makeText(LoginPigAarActivity.this, "系统异常，请稍后再试！", Toast.LENGTH_SHORT).show();
                             LoginPigAarActivity.this.finish();
                             isRequest = false;
                             return;
                         }
-
                     } else {
+                        ResultBean resultBean = gson.fromJson(string, ResultBean.class);
+                        if (resultBean != null) {
+                            if (resultBean.getStatus() == 1) {
+                                {
+                                    TokenResp tokenresp = (TokenResp) ResponseProcessor.processResp(string, Utils.LOGIN_GET_TOKEN_URL);
+                                    if (tokenresp == null || TextUtils.isEmpty(tokenresp.token) || tokenresp.user_status != RespObject.USER_STATUS_1) {
+//                                Toast.makeText(LoginPigAarActivity.this, "数据返回异常！", Toast.LENGTH_LONG).show();
+                                        LoginPigAarActivity.this.finish();
+                                        return;
+                                    }
+
+                                    if ((String.valueOf(tokenresp.uid)).equals(FarmerPreferencesUtils.getStringValue(HttpUtils.user_id, LoginPigAarActivity.this))) {
+                                        FarmerPreferencesUtils.saveBooleanValue("isone", true, LoginPigAarActivity.this);
+                                    } else {
+                                        FarmerPreferencesUtils.saveBooleanValue("isone", false, LoginPigAarActivity.this);
+                                    }
+
+                                    //  存储用户信息
+                                    SharedPreferences userinfo = getApplicationContext().getSharedPreferences(Utils.USERINFO_SHAREFILE, Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = userinfo.edit();
+                                    editor.putString("token", tokenresp.token);
+                                    //  int 类型的可能需要修�?
+                                    //  验证码的有效期，应该在获取验证码的时候返回才�?
+                                    editor.putInt("tokendate", tokenresp.tokendate);
+                                    editor.putInt("uid", tokenresp.uid);
+                                    editor.putString("username", tokenresp.user_username);
+                                    editor.putString("fullname", tokenresp.user_fullname);
+                                    editor.putString("codedate", tokenresp.codedate);
+                                    //用户创建时间
+                                    editor.putString("createtime", tokenresp.createtime);
+                                    //  editor.putInt("deptid", tokenresp.deptid);
+                                    editor.apply();
+                                    int i = tokenresp.deptid;
+                                    FarmerPreferencesUtils.saveIntValue(HttpUtils.deptId, tokenresp.deptid, FarmAppConfig.getApplication());
+                                    FarmerPreferencesUtils.saveKeyValue(HttpUtils.user_id, String.valueOf(tokenresp.uid), FarmAppConfig.getApplication());
+                                    Log.i("===id==", tokenresp.uid + "");
+                                }
+                                Intent add_intent = new Intent(LoginPigAarActivity.this, HomeActivity.class);
+                                startActivity(add_intent);
+                                LoginPigAarActivity.this.finish();
+                                isRequest = false;
+                                return;
+                            } else {
+//                        mProgressHandler.sendEmptyMessage(44);
+                                Toast.makeText(LoginPigAarActivity.this, resultBean.getMsg(), Toast.LENGTH_SHORT).show();
+                                LoginPigAarActivity.this.finish();
+                                isRequest = false;
+                                return;
+                            }
+
+                        } else {
 //                    Snackbar.make(nestedScrollView, "服务器错误，请稍后再试！", Snackbar.LENGTH_LONG).setText("服务器错误，请稍后再试！").show();
-                        Toast.makeText(LoginPigAarActivity.this, "服务器错误，请稍后再试！", Toast.LENGTH_SHORT).show();
-                        LoginPigAarActivity.this.finish();
-                        isRequest = false;
-                        return;
+                            Toast.makeText(LoginPigAarActivity.this, "服务器错误，请稍后再试！", Toast.LENGTH_SHORT).show();
+                            LoginPigAarActivity.this.finish();
+                            isRequest = false;
+                            return;
 //                    mProgressHandler.sendEmptyMessage(41);
+                        }
                     }
-                }
+                });
+
             }
         });
     }

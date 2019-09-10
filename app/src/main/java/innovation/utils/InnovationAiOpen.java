@@ -152,7 +152,7 @@ public class InnovationAiOpen {
 
         FarmGlobal.model = (type == 1 ? Model.VERIFY.value() : Model.BUILD.value());
         Global.model = FarmGlobal.model;
-        Toast.makeText(context, "nb", Toast.LENGTH_LONG).show();
+//        Toast.makeText(context, "nb", Toast.LENGTH_LONG).show();
         String finalPhone = phone;
         queryVideoFlag(context, new Handler.Callback() {
             @Override
