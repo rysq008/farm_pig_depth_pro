@@ -3,6 +3,9 @@ package andbase.com.mytesttwo;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,10 +15,13 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.farm.innovation.bean.CattleBean;
+import com.innovationai.pigweight.event.EventManager;
 
+import java.util.Map;
 import java.util.Random;
 
 import innovation.utils.InnovationAiOpen;
@@ -118,19 +124,23 @@ public class MainActivity extends Activity {
             }).show();
 
         } else if (view.getId() == R.id.farm_tv) {
-            InnovationAiOpen.getInstance().requestInnovationApi(MainActivity.this, "98765432102", "89979dc663caa2580164f88b57796251",
-                    "14112100", "文水县支公司", "总公司/山西分公司/吕梁市中心支公司/文水县支公司",
-                    "00000000,14000000,14119900,", InnovationAiOpen.PAY, "111111111111111111",
-                    "test", new Handler.Callback() {
-                        @Override
-                        public boolean handleMessage(Message msg) {
-                            CattleBean bean = (CattleBean) msg.obj;
-                            if(bean.type == InnovationAiOpen.PAY)
-                                Toast.makeText(MainActivity.this, "理赔返回", Toast.LENGTH_LONG).show();
-                            return true;
-                        }
-                    });
-            //            Bundle bundle = new Bundle();
+//            InnovationAiOpen.getInstance().requestInnovationApi(MainActivity.this, "98765432102", "89979dc663caa2580164f88b57796251",
+//                    "14112100", "文水县支公司", "总公司/山西分公司/吕梁市中心支公司/文水县支公司",
+//                    "00000000,14000000,14119900,", InnovationAiOpen.PAY, "111111111111111111",
+//                    "test", new Handler.Callback() {
+//                        @Override
+//                        public boolean handleMessage(Message msg) {
+//                            CattleBean bean = (CattleBean) msg.obj;
+//                            if(bean.type == InnovationAiOpen.PAY)
+//                                Toast.makeText(MainActivity.this, "理赔返回", Toast.LENGTH_LONG).show();
+//                            return true;
+//                        }
+//                    });
+
+
+
+
+//                        Bundle bundle = new Bundle();
 //            bundle.putString(Constants.ACTION_APPID,"oL-mw59d4mEgDxG49-nQVM2hIha4");
 //            bundle.putString(Constants.ACTION_TOKEN,"android_token");
 ////            SplashActivity.start(this,bundle);
@@ -141,49 +151,30 @@ public class MainActivity extends Activity {
 //                }
 //            });
 
-//            EditText et = new EditText(this);
-//            et.setInputType(InputType.TYPE_CLASS_PHONE);
-//            et.setHint("请输入手机号码");
-//            EditText uet = new EditText(this);
-//            uet.setHint("请输入用户名");
-//            LinearLayout linearLayout = new LinearLayout(this);
-//            linearLayout.setOrientation(VERTICAL);
-//            linearLayout.addView(uet);
-//            linearLayout.addView(et);
-//            new AlertDialog.Builder(this).setTitle("请输入用户名和手机号码").setView(linearLayout).setPositiveButton("确定", new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialog, int which) {
-//                    String phone = et.getText().toString().trim();
-//                    String userid = uet.getText().toString().trim();
-//                    if (TextUtils.isEmpty(phone)) {
-//                        phone = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("phone", "19000000003");
-//                    } else {
-//                        PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putString("phone", phone).apply();
-//                    }
-//                    if (TextUtils.isEmpty(userid)) {
-//                        userid = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("userid", "android_userid6");
-//                    } else {
-//                        PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putString("userid", userid).apply();
-//                    }
-//                    Toast.makeText(MainActivity.this, "nb", Toast.LENGTH_LONG).show();
-////                    Intent mIntent = new Intent(MainActivity.this, LoginFamerAarActivity.class);
-////                    mIntent.putExtra(FarmAppConfig.TOKEY, "android_token");
-////                    mIntent.putExtra(FarmAppConfig.USER_ID, userid);
-////                    mIntent.putExtra(FarmAppConfig.PHONE_NUMBER, phone);
-////                    mIntent.putExtra(FarmAppConfig.NAME, "android_name");
-////                    mIntent.putExtra(FarmAppConfig.DEPARTMENT_ID, "14079900"/*"android_department"*/);
-////                    mIntent.putExtra(FarmAppConfig.IDENTITY_CARD, "android_identitry");
-////                    startActivity(mIntent);
-//                    dialog.dismiss();
-//
-//                }
-//            }).show();
-
+            EventManager.getInstance().requestWeightApi(MainActivity.this, "2c28450ebe993dd61cb4d76eff7a916d","token", new Handler.Callback() {
+                @Override
+                public boolean handleMessage(Message msg) {
+                    if (MainActivity.this == null || MainActivity.this.isFinishing())
+                        return false;
+                    Map<String, Object> map = (Map<String, Object>) msg.obj;
+                    if (map == null) {
+                        Toast.makeText(MainActivity.this, "没有返回结果", Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+                    try {
+                        Toast.makeText(MainActivity.this, "模型结果反馈： " + map.get("data").toString(), Toast.LENGTH_LONG).show();
+                        ((TextView)view).setText(map.get("data").toString());
+                        byte[] bis = (byte[]) map.get("bitmap");
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(bis, 0, bis.length);
+                        view.setBackground(new BitmapDrawable(bitmap));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(MainActivity.this, "aaaaa", Toast.LENGTH_SHORT).show();
+                    }
+                    return false;
+                }
+            });
         }
-
-
-//        Intent it = new Intent(this, LoginFamerServer.class);
-//        startService(it);
     }
 
     @Override

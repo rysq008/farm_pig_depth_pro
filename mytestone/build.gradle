@@ -118,13 +118,13 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     implementation 'com.android.support:multidex:1.0.1'
     implementation('com.innovation.ai:farmer_depth_pro:1.133')
-//            {transitive = true}
+            {transitive = true}
 //    implementation project(':app')
 //    implementation('com.innovation.aar:farmer_depth_pro:1.118'){transitive = true}
 //    implementation ('com.innovation.ai:farmer_pig_aar:1.113'){transitive =true }
 //    implementation('com.innovation.aar:farmer_pig_Insurance:1.118')
 //            { transitive = true }
 //    implementation('com.innovationai.pigweight:pig_insurance_weight:1.0.8') { transitive = true }
-    implementation('com.innovationai.pigweight:pig_insurance_weight:1.1.0') { transitive = true }
+    implementation('com.innovationai.pigweight:pig_insurance_weight:1.1.6') { transitive = true }
 }
 //apply plugin: 'io.objectbox'
