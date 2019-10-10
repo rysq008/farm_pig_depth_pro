@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:background="@color/color_half_translucent"
+    android:orientation="vertical">
+
+
+
+    <RelativeLayout
+        android:id="@+id/lin_name"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_45"
+        android:layout_below="@+id/statusbar"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+
+        <RelativeLayout
+            android:id="@+id/rl_add_company"
+            android:layout_width="@dimen/dp_50"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:background="@mipmap/icon_mask_white_dot">
+
+            <ImageView
+                android:id="@+id/iv_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@mipmap/iv_add_select" />
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/dp_16"
+            android:layout_marginRight="@dimen/dp_44"
+            android:background="@mipmap/iv_right_arrows"/>
+    </RelativeLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_marginTop="40dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_msg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dp_17"
+            tools:text="点击右上角‘+’，添加企业"/>
+
+        <ImageView
+            android:id="@+id/iv_btn_agree"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_67"
+            android:background="@mipmap/iv_btn_agree"/>
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/pig_house_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/WHITE"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_70"
+        android:layout_marginLeft="@dimen/dp_13"
+        android:layout_marginTop="@dimen/dp_6"
+        android:layout_marginRight="@dimen/dp_13"
+        android:layout_marginBottom="@dimen/dp_5"
+        android:background="#fff"
+        app:cardCornerRadius="@dimen/dp_5"
+        app:cardElevation="@dimen/dp_3">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="@dimen/dp_7"
+                android:layout_height="match_parent"
+                android:background="#1086F2" />
+
+            <LinearLayout
+                android:id="@+id/poll_detail"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_pig_house_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_20"
+                    android:textColor="@color/colorText_333"
+                    android:textSize="@dimen/dp_14"
+                    tools:text="1号猪舍" />
+
+
+                <TextView
+                    android:id="@+id/tv_pig_house_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_20"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:textColor="#999"
+                    android:textSize="@dimen/dp_12"
+                    tools:text="猪舍类型" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_pig_house_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/dp_9"
+                android:layout_marginTop="@dimen/dp_8"
+                android:textColor="#999"
+                android:textSize="@dimen/dp_10"
+                tools:text="2019-08-06 09:08:08"/>
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.xiangchuang.risks.view.SelectFunctionActivity_new">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_268">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_178"
+            android:background="@mipmap/bg_company_top">
+
+            <!--头部title-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_45"
+                android:layout_marginTop="@dimen/dp_25">
+
+                <RelativeLayout
+                    android:id="@+id/rl_back"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true">
+
+                    <ImageView
+                        android:id="@+id/iv_cancel"
+                        android:layout_width="25dp"
+                        android:layout_height="28dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="6dp"
+                        android:background="@mipmap/cancel" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/select_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginLeft="100dp"
+                    android:layout_marginRight="100dp"
+                    android:ellipsize="marquee"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:singleLine="true"
+                    android:text="XXXXX农厂"
+                    android:textColor="#ffffff"
+                    android:textSize="18dp" />
+
+                <RelativeLayout
+                    android:id="@+id/rl_edit"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true">
+
+                    <TextView
+                        android:id="@+id/tv_exit"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_centerInParent="true"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/setting"
+                        android:textColor="#fff"
+                        android:textSize="16sp" />
+
+
+                    <ImageView
+                        android:id="@+id/iv_sign"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/dian"
+                        android:visibility="gone" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rl_video_monitor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="8dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/bg_white_circle"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="4dp"
+                        android:paddingRight="10dp"
+                        android:paddingBottom="4dp"
+                        android:text="猪舍监控"
+                        android:textColor="@color/C_99CC00"
+                        android:textSize="16dp" />
+                </RelativeLayout>
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/rl_company_info"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_172"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/dp_13"
+            android:layout_marginRight="@dimen/dp_13"
+            android:background="@mipmap/bg_company_card"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
+                android:src="@mipmap/ic_photo" />
+
+            <TextView
+                android:id="@+id/tv_farm_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="养殖企业"
+                android:textColor="@color/color292B32"
+                android:textSize="@dimen/dp_18" />
+
+            <TextView
+                android:id="@+id/tv_user_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="账户ID:12554"
+                android:textColor="@color/colorFF999999"
+                android:textSize="@dimen/dp_12" />
+
+            <TextView
+                android:id="@+id/tv_farm_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_15"
+                android:layout_marginTop="@dimen/dp_15"
+                android:layout_marginRight="@dimen/dp_15"
+                android:text="地址:北京市"
+                android:textColor="@color/colorFF999999"
+                android:textSize="@dimen/dp_12" />
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <!--第一行功能-->
+            <LinearLayout
+                android:id="@+id/ll_one_line"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:orientation="horizontal">
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cv_one_func"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp_80"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="9dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_weight="1"
+                    app:cardCornerRadius="5dp"
+                    app:cardElevation="3dp"
+                    app:cardMaxElevation="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="@dimen/dp_7"
+                            android:layout_height="match_parent"
+                            android:background="#97C474" />
+
+                        <RelativeLayout
+                            android:id="@+id/rl_one_func"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:id="@+id/tv_one_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="@dimen/dp_10"
+                                android:text="预理赔"
+                                android:textColor="#333"
+                                android:textSize="@dimen/dp_18" />
+
+                            <ImageView
+                                android:id="@+id/iv_one_img"
+                                android:layout_width="@dimen/dp_36"
+                                android:layout_height="@dimen/dp_36"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentBottom="true"
+                                android:layout_margin="@dimen/dp_10"
+                                android:src="@mipmap/icon_yulipei" />
+                        </RelativeLayout>
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cv_two_func"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp_80"
+                    android:layout_marginLeft="9dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="18dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_weight="1"
+                    app:cardCornerRadius="5dp"
+                    app:cardElevation="3dp"
+                    app:cardMaxElevation="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="@dimen/dp_7"
+                            android:layout_height="match_parent"
+                            android:background="#9092FA" />
+
+                        <RelativeLayout
+                            android:id="@+id/rl_two_func"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:id="@+id/tv_two_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="@dimen/dp_10"
+                                android:text="理赔"
+                                android:textColor="#333"
+                                android:textSize="@dimen/dp_18" />
+
+                            <ImageView
+                                android:id="@+id/iv_two_img"
+                                android:layout_width="@dimen/dp_36"
+                                android:layout_height="@dimen/dp_36"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentBottom="true"
+                                android:layout_margin="@dimen/dp_10"
+                                android:src="@mipmap/icon_lipei" />
+
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+
+                </android.support.v7.widget.CardView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cv_three_func"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp_80"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="18dp"
+                    android:layout_marginBottom="30dp"
+                    android:layout_weight="1"
+                    android:visibility="visible"
+                    app:cardCornerRadius="5dp"
+                    app:cardElevation="3dp"
+                    app:cardMaxElevation="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="@dimen/dp_7"
+                            android:layout_height="match_parent"
+                            android:background="#D3CD6E" />
+
+                        <RelativeLayout
+                            android:id="@+id/rl_three_func"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:id="@+id/tv_three_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="@dimen/dp_10"
+                                android:text="点数"
+                                android:textColor="#333"
+                                android:textSize="@dimen/dp_18"/>
+
+                            <ImageView
+                                android:id="@+id/iv_three_img"
+                                android:layout_width="@dimen/dp_36"
+                                android:layout_height="@dimen/dp_36"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentBottom="true"
+                                android:layout_margin="@dimen/dp_10"
+                                android:src="@mipmap/icon_dianshu" />
+                        </RelativeLayout>
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

@@ -7,7 +7,7 @@ import java.io.Serializable;
  * 时   间：2019/3/27
  * 简   述：<功能简述> 基类Bean
  */
-public class BaseBean<T> implements Serializable{
+public class BaseBean<T> implements Serializable {
 
     private int status;
     private String msg;
@@ -22,7 +22,13 @@ public class BaseBean<T> implements Serializable{
     }
 
     public String getMsg() {
+        if (msg == null)
+            msg = "";
         return msg;
+    }
+
+    public boolean isSuccess(){
+        return status == 1;
     }
 
     public void setMsg(String msg) {

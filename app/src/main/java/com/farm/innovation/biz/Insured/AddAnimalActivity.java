@@ -75,7 +75,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
 
-import innovation.utils.InnovationAiOpen;
+import innovation.utils.FarmInnovationAiOpen;
 import okhttp3.FormBody;
 import okhttp3.RequestBody;
 
@@ -692,7 +692,7 @@ public class AddAnimalActivity extends BaseActivity {
                                     bean.latitude = locationManager.currentLat;
                                     bean.longitude = locationManager.currentLon;
                                     bean.time = System.currentTimeMillis();
-                                    InnovationAiOpen.getInstance().postEventEvent(bean);
+                                    FarmInnovationAiOpen.getInstance().postEventEvent(bean);
                                     finish();
                                     return;
                                 }
@@ -874,7 +874,7 @@ public class AddAnimalActivity extends BaseActivity {
                                         bean.latitude = locationManager.currentLat;
                                         bean.longitude = locationManager.currentLon;
                                         bean.time = System.currentTimeMillis();
-                                        InnovationAiOpen.getInstance().postEventEvent(bean);
+                                        FarmInnovationAiOpen.getInstance().postEventEvent(bean);
                                         finish();
                                         return;
                                     }
@@ -939,7 +939,7 @@ public class AddAnimalActivity extends BaseActivity {
                                         bean.latitude = locationManager.currentLat;
                                         bean.longitude = locationManager.currentLon;
                                         bean.time = System.currentTimeMillis();
-                                        InnovationAiOpen.getInstance().postEventEvent(bean);
+                                        FarmInnovationAiOpen.getInstance().postEventEvent(bean);
                                         finish();
                                         return;
                                     }
@@ -1062,7 +1062,7 @@ public class AddAnimalActivity extends BaseActivity {
                                         bean.latitude = locationManager.currentLat;
                                         bean.longitude = locationManager.currentLon;
                                         bean.time = System.currentTimeMillis();
-                                        InnovationAiOpen.getInstance().postEventEvent(bean);
+                                        FarmInnovationAiOpen.getInstance().postEventEvent(bean);
                                         finish();
                                         return;
                                     }

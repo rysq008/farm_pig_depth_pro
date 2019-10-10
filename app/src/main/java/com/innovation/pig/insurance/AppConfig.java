@@ -22,7 +22,7 @@ import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.update.UpdateInfoModel;
 import com.xiangchuang.risks.utils.AppUpdateUtils;
 import com.xiangchuang.risks.utils.ShareUtils;
-import com.xiangchuang.risks.view.LoginPigAarActivity;
+import com.xiangchuang.risks.view.LoginFarmAarActivity;
 
 import net.gotev.uploadservice.UploadService;
 import net.gotev.uploadservice.okhttp.OkHttpStack;
@@ -145,7 +145,7 @@ public class AppConfig {
 //                }
                 AppConfig.activity = activity;
                 if (activity instanceof BaseActivity) {
-                    if (activity != null && !(activity instanceof LoginPigAarActivity)) {
+                    if (activity != null && !(activity instanceof LoginFarmAarActivity)) {
                         GlobalDialogUtils.getNotice(activity.getClass().getCanonicalName(), activity);
                     }
                 }

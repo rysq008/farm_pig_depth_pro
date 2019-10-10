@@ -44,7 +44,6 @@ import com.farm.innovation.utils.HttpUtils;
 import com.farm.innovation.utils.UploadObject;
 import com.farm.innovation.utils.ZipUtil;
 import com.google.gson.Gson;
-import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
 
 import org.json.JSONException;
@@ -60,14 +59,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import innovation.utils.InnovationAiOpen;
+import innovation.utils.FarmInnovationAiOpen;
 import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
 import static com.farm.innovation.base.FarmAppConfig.ACTION_ID;
-import static com.farm.innovation.base.FarmAppConfig.FARMER_DEPTH_JOIN;
 import static com.farm.innovation.base.FarmAppConfig.getStringTouboaExtra;
 import static com.farm.innovation.base.FarmAppConfig.getlipeiTempNumber;
 import static com.farm.innovation.utils.HttpUtils.GSC_INSURE_IMAGE_UPLOAD;
@@ -615,7 +613,7 @@ public class InsureDataProcessor {
 //                                bean.latitude = locationManager.currentLat;
 //                                bean.longitude = locationManager.currentLon;
 //                                bean.time = System.currentTimeMillis();
-//                                InnovationAiOpen.getInstance().postEventEvent(bean);
+//                                FarmInnovationAiOpen.getInstance().postEventEvent(bean);
                                if(FarmAppConfig.FARMER_DEPTH_JOIN){
                                    CattleBean bean = new CattleBean();
                                    bean.zipPath = FarmGlobal.mediaInsureItem.getZipImageDir()+FarmGlobal.ZipFileName + ".zip";
@@ -623,7 +621,7 @@ public class InsureDataProcessor {
                                    bean.latitude = LocationManager.getInstance(mActivity).currentLat;
                                    bean.longitude = LocationManager.getInstance(mActivity).currentLon;
                                    bean.time = System.currentTimeMillis();
-                                   InnovationAiOpen.getInstance().postEventEvent(bean);
+                                   FarmInnovationAiOpen.getInstance().postEventEvent(bean);
                                }
                                 FarmDetectorActivity detectorActivity = (FarmDetectorActivity) mActivity;
                                 detectorActivity.finish();
@@ -1153,7 +1151,7 @@ public class InsureDataProcessor {
                         bean.latitude = LocationManager.getInstance(mActivity).currentLat;
                         bean.longitude = LocationManager.getInstance(mActivity).currentLon;
                         bean.time = System.currentTimeMillis();
-                        InnovationAiOpen.getInstance().postEventEvent(bean);
+                        FarmInnovationAiOpen.getInstance().postEventEvent(bean);
                         mActivity.finish();
                         return;
                     }

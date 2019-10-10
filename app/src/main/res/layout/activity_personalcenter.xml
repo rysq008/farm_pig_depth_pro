@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/titlebar"
+        layout="@layout/activity_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/titlebar"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <!--用户信息-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/iv_user_icon"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:src="@mipmap/iv_user_default_icon" />
+
+                <TextView
+                    android:id="@+id/tv_farm_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_toRightOf="@+id/iv_user_icon"
+                    android:text="张虎养殖场"
+                    android:textColor="@color/black"
+                    android:textSize="18dp" />
+
+                <TextView
+                    android:id="@+id/tv_user_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/tv_farm_name"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_toRightOf="@+id/tv_farm_name"
+                    android:text="账户ID：123456"
+                    android:textColor="@color/C_666666"
+                    android:textSize="14dp" />
+
+                <TextView
+                    android:id="@+id/tv_farm_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_farm_name"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_toRightOf="@+id/iv_user_icon"
+                    android:text="地址：北京市、朝阳区、二环养殖场"
+                    android:textColor="@color/black"
+                    android:textSize="16dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_below="@+id/tv_farm_address"
+                    android:layout_marginTop="30dp"
+                    android:background="#666666" />
+            </RelativeLayout>
+
+            <com.xiangchuangtec.luolu.animalcounter.view.ItemView
+                android:id="@+id/item_yulipei_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:content_drawable_padding="10dp"
+                app:content_right_icon="@mipmap/ic_item_right"
+                app:show_bottom_line="true"
+                app:show_top_line="true"
+                app:title_data="预理赔信息"
+                app:title_drawable_padding="5dp"
+                app:title_left_icon="@mipmap/iv_default_item"
+                app:title_text_size="14sp"
+                app:top_line_margin_left="50dp" />
+
+            <com.xiangchuangtec.luolu.animalcounter.view.ItemView
+                android:id="@+id/item_lipei_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:content_drawable_padding="10dp"
+                app:content_right_icon="@mipmap/ic_item_right"
+                app:show_bottom_line="true"
+                app:show_top_line="true"
+                app:title_data="理赔信息"
+                app:title_drawable_padding="5dp"
+                app:title_left_icon="@mipmap/iv_default_item"
+                app:title_text_size="14sp"
+                app:top_line_margin_left="50dp" />
+
+            <com.xiangchuangtec.luolu.animalcounter.view.ItemView
+                android:id="@+id/item_insurance_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:content_drawable_padding="10dp"
+                app:content_right_icon="@mipmap/ic_item_right"
+                app:show_bottom_line="true"
+                app:show_top_line="true"
+                app:title_data="投保信息"
+                app:title_drawable_padding="5dp"
+                app:title_left_icon="@mipmap/iv_default_item"
+                app:title_text_size="14sp"
+                app:top_line_margin_left="50dp" />
+
+            <com.xiangchuangtec.luolu.animalcounter.view.ItemView
+                android:id="@+id/item_version_update_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:content_drawable_padding="10dp"
+                app:content_right_icon="@mipmap/ic_item_right"
+                app:show_bottom_line="true"
+                app:show_top_line="true"
+                app:title_data="版本更新"
+                app:title_drawable_padding="5dp"
+                app:title_left_icon="@mipmap/iv_default_item"
+                app:title_text_size="14sp"
+                app:top_line_margin_left="50dp" />
+
+            <com.xiangchuangtec.luolu.animalcounter.view.ItemView
+                android:id="@+id/item_pig_room_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:content_drawable_padding="10dp"
+                app:content_right_icon="@mipmap/ic_item_right"
+                app:show_bottom_line="true"
+                app:show_top_line="true"
+                app:title_data="猪舍信息"
+                app:title_drawable_padding="5dp"
+                app:title_left_icon="@mipmap/iv_default_item"
+                app:title_text_size="14sp"
+                app:top_line_margin_left="50dp" />
+
+            <com.xiangchuangtec.luolu.animalcounter.view.ItemView
+                android:id="@+id/item_about_me_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:content_drawable_padding="10dp"
+                app:content_right_icon="@mipmap/ic_item_right"
+                app:show_bottom_line="true"
+                app:show_top_line="true"
+                app:title_data="关于我们"
+                app:title_drawable_padding="5dp"
+                app:title_left_icon="@mipmap/iv_default_item"
+                app:title_text_size="14sp"
+                app:top_line_margin_left="50dp" />
+
+            <com.xiangchuangtec.luolu.animalcounter.view.ItemView
+                android:id="@+id/item_contact_me"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:content_drawable_padding="10dp"
+                app:content_right_icon="@mipmap/ic_item_right"
+                app:show_bottom_line="true"
+                app:show_top_line="true"
+                app:title_data="联系客户"
+                app:title_drawable_padding="5dp"
+                app:title_left_icon="@mipmap/iv_default_item"
+                app:title_text_size="14sp"
+                app:top_line_margin_left="50dp" />
+
+            <Button
+                android:id="@+id/btn_logout"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="8dp"
+                android:gravity="center"
+                android:background="@drawable/bg_circle_rect_selector"
+                android:text="退出登录"
+                android:textColor="@color/black"
+                android:textSize="18dp" />
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+</RelativeLayout>

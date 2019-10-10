@@ -89,6 +89,14 @@ public class HttpUtils {
     //更新接口
     public static String GET_UPDATE_URL = baseUrl + "app/appVersion/zxupdate";
 
+    //	 身份验证接口
+    public static String GSC_PIG_AAR_LOGINURLNEW = baseUrl + "app/aarLogin";
+    public static String GSC_PIG_AAR_FARM_INFO = baseUrl + "app/ftnGs/enInfo";
+    //	 投保图像信息上传接口
+    public static String GSC_INSURE_IMAGE_UPLOAD = baseUrl + "app/ftnGs/insure";
+    public static String GSC_PAY_LIBUPLOAD = baseUrl + "app/ftnGs/lipei";
+
+
     public static void resetIp(String baseUrl) {
         com.farm.innovation.utils.HttpUtils.resetIp(baseUrl);
         HttpUtils.baseUrl = baseUrl;
@@ -123,6 +131,11 @@ public class HttpUtils {
         GET_REGISTER_URL = baseUrl + "app/register";
         //更新接口
         GET_UPDATE_URL = baseUrl + "app/appVersion/zxupdate";
+
+        GSC_PAY_LIBUPLOAD = baseUrl + "app/ftnGs/lipei";
+        GSC_PIG_AAR_LOGINURLNEW = baseUrl + "app/aarLogin";
+        GSC_INSURE_IMAGE_UPLOAD = baseUrl + "app/ftnGs/insure";
+        GSC_PIG_AAR_FARM_INFO = baseUrl + "app/ftnGs/enInfo";
     }
 
     public static boolean isOfficialHost() {

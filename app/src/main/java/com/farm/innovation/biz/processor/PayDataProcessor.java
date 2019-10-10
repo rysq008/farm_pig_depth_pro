@@ -62,7 +62,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import innovation.utils.InnovationAiOpen;
+import innovation.utils.FarmInnovationAiOpen;
 import okhttp3.Call;
 import okhttp3.FormBody;
 import okhttp3.MediaType;
@@ -904,8 +904,8 @@ public class PayDataProcessor {
                         bean.longitude = currentLon;
                         bean.time = System.currentTimeMillis();
                         bean.message = "理赔未上传完成离线处理";
-                        bean.type = InnovationAiOpen.PAY;
-                        InnovationAiOpen.getInstance().postEventEvent(bean);
+                        bean.type = FarmInnovationAiOpen.PAY;
+                        FarmInnovationAiOpen.getInstance().postEventEvent(bean);
                         mActivity.finish();
                     }
                     EventBus.getDefault().post("finish");
@@ -999,8 +999,8 @@ public class PayDataProcessor {
                         bean.longitude = currentLon;
                         bean.time = System.currentTimeMillis();
                         bean.message = "理赔已上传完成离线处理";
-                        bean.type = InnovationAiOpen.PAY;
-                        InnovationAiOpen.getInstance().postEventEvent(bean);
+                        bean.type = FarmInnovationAiOpen.PAY;
+                        FarmInnovationAiOpen.getInstance().postEventEvent(bean);
                         mActivity.finish();
                     }
                     EventBus.getDefault().post("finish");
@@ -1080,8 +1080,8 @@ public class PayDataProcessor {
                             bean.time = System.currentTimeMillis();
                             bean.message = payInfoContrastResultBean.getData().getResultMsg();
                             bean.resultStatus = payInfoContrastResultBean.getData().getResultStatus();
-                            bean.type = InnovationAiOpen.PAY;
-                            InnovationAiOpen.getInstance().postEventEvent(bean);
+                            bean.type = FarmInnovationAiOpen.PAY;
+                            FarmInnovationAiOpen.getInstance().postEventEvent(bean);
                             mActivity.finish();
                             return;
                         }
@@ -1192,8 +1192,8 @@ public class PayDataProcessor {
                             bean.time = System.currentTimeMillis();
                             bean.message = payInfoContrastResultBean.getData().getResultMsg();
                             bean.resultStatus = payInfoContrastResultBean.getData().getResultStatus();
-                            bean.type = InnovationAiOpen.PAY;
-                            InnovationAiOpen.getInstance().postEventEvent(bean);
+                            bean.type = FarmInnovationAiOpen.PAY;
+                            FarmInnovationAiOpen.getInstance().postEventEvent(bean);
                             mActivity.finish();
                             return;
                         }

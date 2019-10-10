@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:nzltext="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_25"
+        android:background="@color/app_base_color"/>
+
+    <include
+        android:id="@+id/add_animal_title"
+        layout="@layout/activity_title" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/add_animal_title">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#fff"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/ll_tip"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_26"
+                android:background="#F9FDE0"
+                android:orientation="vertical"
+                android:gravity="center">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="为防止理赔失败，请拍摄整只死猪照片提交"
+                    android:textColor="#F92D12"
+                    android:textSize="@dimen/dp_12" />
+            </LinearLayout>
+
+            <!--称重拍照-->
+            <LinearLayout
+                android:id="@+id/ll_guzhong"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/rl_farm_about_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_farm_about_img"
+                    android:layout_marginTop="10dp"
+                    android:minHeight="100dp">
+
+                    <innovation.view.MeasureGridView
+                        android:id="@+id/gv_pic_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:columnWidth="90dp"
+                        android:numColumns="3"
+                        android:stretchMode="spacingWidthUniform" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_98"
+                    android:paddingLeft="@dimen/dp_11"
+                    android:paddingRight="@dimen/dp_11"
+                    android:layout_marginTop="@dimen/dp_26"
+                    android:orientation="horizontal"
+                    android:background="@color/white">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/dp_56"
+                            android:scaleType="fitXY"
+                            android:src="@mipmap/iv_pigpic_right"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_7"
+                            android:textColor="#919191"
+                            android:textSize="@dimen/dp_13"
+                            android:text="标准"/>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_marginLeft="@dimen/dp_9"
+                        android:layout_height="match_parent"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/dp_56"
+                            android:scaleType="fitXY"
+                            android:src="@mipmap/iv_pigpic_incomplete"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_7"
+                            android:textColor="#919191"
+                            android:textSize="@dimen/dp_13"
+                            android:text="身体不全"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_marginLeft="@dimen/dp_9"
+                        android:layout_height="match_parent"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/dp_56"
+                            android:scaleType="fitXY"
+                            android:src="@mipmap/iv_pigpic_blurry"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_7"
+                            android:textColor="#919191"
+                            android:textSize="@dimen/dp_13"
+                            android:text="模糊"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_marginLeft="@dimen/dp_9"
+                        android:layout_height="match_parent"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/dp_56"
+                            android:scaleType="fitXY"
+                            android:src="@mipmap/iv_pigpic_noruler"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_7"
+                            android:textColor="#919191"
+                            android:textSize="@dimen/dp_13"
+                            android:text="无尺子"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="15dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:text="畜龄："
+                    android:textColor="@android:color/black"
+                    android:textSize="16dp" />
+
+                <EditText
+                    android:id="@+id/etPigAge"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:hint="请输入养殖天数"
+                    android:inputType="number"
+                    android:maxLength="4"
+                    android:maxLines="1"
+                    android:minWidth="100dp"
+                    android:textColor="#333"
+                    android:textColorHint="#999"
+                    android:textSize="16dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="天"
+                    android:textColor="@android:color/black"
+                    android:textSize="16dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:text="死猪死亡时间："
+                    android:textColor="@android:color/black"
+                    android:textSize="16dp" />
+
+                <EditText
+                    android:id="@+id/etPigDeathTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:focusable="false"
+                    android:gravity="center_vertical"
+                    android:hint="请点击选择死猪死亡时间"
+                    android:maxLines="1"
+                    android:minWidth="100dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="#999"
+                    android:textSize="16dp" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/v_placeholder_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_270"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:visibility="gone"/>
+
+            <!--提交按钮-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="@dimen/dp_120"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnCommit"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_onclick"
+                    android:gravity="center"
+                    android:text="提交"
+                    android:textColor="#fff" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

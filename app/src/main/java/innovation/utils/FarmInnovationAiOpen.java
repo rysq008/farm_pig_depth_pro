@@ -24,7 +24,7 @@ import com.farm.innovation.utils.FarmerPreferencesUtils;
 import com.farm.innovation.utils.HttpUtils;
 import com.google.gson.Gson;
 import com.innovation.pig.insurance.R;
-import com.xiangchuang.risks.view.LoginPigAarActivity;
+import com.xiangchuang.risks.view.LoginFarmAarActivity;
 
 import org.tensorflow.demo.FarmGlobal;
 import org.tensorflow.demo.Global;
@@ -36,17 +36,17 @@ import java.util.TreeMap;
 import okhttp3.FormBody;
 import okhttp3.RequestBody;
 
-public class InnovationAiOpen {
+public class FarmInnovationAiOpen {
     public static final int INSURE = 0;
     public static final int PAY = 1;
 
     private Map<Object, Handler> mHandlerMap = new HashMap<>();
 
     private static class Holder {
-        public static InnovationAiOpen instance = new InnovationAiOpen();
+        public static FarmInnovationAiOpen instance = new FarmInnovationAiOpen();
     }
 
-    public static InnovationAiOpen getInstance() {
+    public static FarmInnovationAiOpen getInstance() {
         return Holder.instance;
     }
 
@@ -82,7 +82,7 @@ public class InnovationAiOpen {
     }
 
     public void requestWeightApi(Context context, Bundle bundle, Handler.Callback callback) {
-        Intent it = new Intent(context, LoginPigAarActivity.class);
+        Intent it = new Intent(context, LoginFarmAarActivity.class);
         it.putExtras(bundle);
         context.startActivity(it);
         if (callback != null)
@@ -184,7 +184,7 @@ public class InnovationAiOpen {
 
     private void skipTo(Context context, String actionId, String userid, String officeCode, String officeName,
                         String officeLevel, String parentCode, String parentOfficeName, String parentOfficeCodes, int type, String phone, String idcard, String username) {
-        Intent mIntent = new Intent(context, LoginPigAarActivity.class);
+        Intent mIntent = new Intent(context, LoginFarmAarActivity.class);
         mIntent.putExtra(FarmAppConfig.ACTION_ID, actionId);
         mIntent.putExtra(FarmAppConfig.USER_ID, userid);
         mIntent.putExtra(FarmAppConfig.OFFICE_CODE, officeCode);

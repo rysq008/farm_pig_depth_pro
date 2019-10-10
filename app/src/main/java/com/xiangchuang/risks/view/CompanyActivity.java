@@ -266,7 +266,7 @@ public class CompanyActivity extends BaseActivity {
                                     //如果退出，清空保存的相关状态， 跳转到登录页
                                     PreferencesUtils.removeAllKey(CompanyActivity.this);
                                     FarmerShareUtils.clearMergeLoginInfo();
-//                                    Intent addIntent = new Intent(CompanyActivity.this, LoginPigAarActivity.class);
+//                                    Intent addIntent = new Intent(CompanyActivity.this, LoginFarmAarActivity.class);
                                     Intent addIntent = new Intent(CompanyActivity.this, LoginMergeActivity.class);
                                     startActivity(addIntent);
                                     finish();

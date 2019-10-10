@@ -270,7 +270,7 @@ public class LoginPigActivity extends BaseActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 mProgressDialog.dismiss();
-                Log.i("LoginPigAarActivity", e.toString());
+                Log.i("LoginFarmAarActivity", e.toString());
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -283,7 +283,7 @@ public class LoginPigActivity extends BaseActivity {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String string = response.body().string();
-                Log.i("LoginPigAarActivity", string);
+                Log.i("LoginFarmAarActivity", string);
                 try {
                     JSONObject jsonObject = new JSONObject(string);
                     int status = jsonObject.getInt("status");

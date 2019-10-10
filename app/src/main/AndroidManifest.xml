@@ -50,7 +50,6 @@
     <!-- android:hardwareAccelerated="false" -->
     <!-- android:name="com.xiangchuangtec.luolu.animalcounter.AppConfig" -->
 
-<!--
         <application
             android:name=".MyApplication"
             android:allowBackup="false"
@@ -61,23 +60,22 @@
             android:screenOrientation="portrait"
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
--->
-    <application
+  <!--  <application
         android:largeHeap="true"
         android:launchMode="singleInstance"
         android:screenOrientation="portrait"
         android:supportsRtl="true"
-        tools:overrideLibrary="com.innovation.pig.insurance">
-<!--                <meta-data
+        tools:overrideLibrary="com.innovation.pig.insurance">-->
+                <meta-data
                     android:name="com.amap.api.v2.apikey"
-                    android:value="adf3458ffa64cdeee292d3ed2a68b6cc" />-->
+                    android:value="adf3458ffa64cdeee292d3ed2a68b6cc" />
         <activity
             android:name="com.innovation.pig.insurance.CounterActivity_new"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.xiangchuang.risks.view.LoginPigAarActivity"
+            android:name="com.xiangchuang.risks.view.LoginFarmAarActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
 <!--                        <intent-filter>
@@ -203,10 +201,10 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             >
-            <!--                        <intent-filter>
+                                    <intent-filter>
                                         <action android:name="android.intent.action.MAIN" />
                                         <category android:name="android.intent.category.LAUNCHER" />
-                                    </intent-filter>-->
+                                    </intent-filter>
         </activity>
         <activity
             android:name="org.tensorflow.demo.FarmDetectorActivity"

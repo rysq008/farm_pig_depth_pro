@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:gravity="center_vertical"
+        android:background="@color/app_base_color"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:textSize="@dimen/dp_16"
+            android:text="提示：理赔请在12小时内完成！"
+            android:textColor="#fff"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/BLACK_A010"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:background="@drawable/ic_right"/>
+        <TextView
+            android:id="@+id/tv_res_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:textSize="20sp"
+            android:text="预理赔提交成功！"
+            android:textStyle="bold"
+            android:textColor="#009900"/>
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/tv_msg1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="16sp"
+        android:text="请立即拍摄圈舍360角度视频并上传。"
+        android:textColor="#333"/>
+    <TextView
+        android:id="@+id/tv_msg2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:text="（上传时间不超过2分钟）"
+        android:textColor="#FF0000"
+        android:visibility="invisible"/>
+
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/tv_govideo"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_40"
+            android:paddingLeft="60dp"
+            android:paddingRight="60dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:background="@color/app_base_color"
+            android:gravity="center"
+            android:text="去录制"
+            android:textColor="#fff"
+            android:textSize="16dp"/>
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/pig_house_list_layout"
+    tools:context="com.xiangchuang.risks.view.PigHouseListActivity">
+
+    <TextView
+        android:id="@+id/statusbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_25"
+        android:background="@color/app_base_color" />
+
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_45"
+        android:layout_below="@+id/statusbar"
+        android:background="@color/app_base_color">
+
+        <RelativeLayout
+            android:id="@+id/rl_back"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="28dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="6dp"
+                android:background="@mipmap/cancel" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_title_name"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="center"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:singleLine="true"
+            android:text="@string/pig_house_list"
+            android:textColor="#ffffff"
+            android:textSize="18sp" />
+
+        <RelativeLayout
+            android:id="@+id/rl_add_pig_house"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginRight="6dp"
+                android:background="@drawable/add" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_pig_house_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        android:layout_below="@+id/header"/>
+
+</RelativeLayout>
