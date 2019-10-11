@@ -5,12 +5,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 
 import org.tensorflow.demo.Global;
-import org.tensorflow.demo.env.Logger;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
@@ -23,7 +22,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,7 +32,8 @@ import java.util.Scanner;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
-import java.util.zip.ZipOutputStream;
+
+import static android.os.Environment.DIRECTORY_PICTURES;
 
 /**
  * @author wbs on 11/2/17.
@@ -72,7 +71,7 @@ public class FileUtils {
         }
         if (file.isDirectory()) {
             File files[] = file.listFiles();
-            if(files != null && files.length >= 0) {
+            if(files != null && files.length >= 0){
                 for (File f : files) {
                     if (f.isDirectory()) {
                         deleteFile(f);
@@ -384,7 +383,7 @@ public class FileUtils {
             int byteread = 0;
             File oldfile = new File(oldPath);
             if (oldfile.exists()) {  //文件存在时
-//读入原文件
+                //读入原文件
                 InputStream inStream = new FileInputStream(oldPath);
                 FileOutputStream fs = new FileOutputStream(newPath);
                 byte[] buffer = new byte[1444];
@@ -412,7 +411,7 @@ public class FileUtils {
         try {
             String filePath = filePathAndName;
             filePath = filePath.toString();
-            File myDelFile = new File(filePath);
+            java.io.File myDelFile = new java.io.File(filePath);
             myDelFile.delete();
 
         } catch (Exception e) {
@@ -491,4 +490,98 @@ public class FileUtils {
         }
     }
 
+    //创建签名文件
+    public static File createSignFile(Context ct, Bitmap mSignBitmap) throws IOException {
+        ByteArrayOutputStream baos = null;
+        FileOutputStream fos = null;
+        String path = null;
+        File file = null;
+//        try {
+        path = ct.getExternalFilesDir(DIRECTORY_PICTURES).getCanonicalPath() + File.separator + System.currentTimeMillis() + "_sign.jpg";
+        file = new File(path);
+        fos = new FileOutputStream(file);
+//            baos = new ByteArrayOutputStream();
+        //如果设置成Bitmap.compress(CompressFormat.JPEG, 100, fos) 图片的背景都是黑色的
+        mSignBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+////            byte[] b = baos.toByteArray();
+////            if (b != null) {
+////                fos.write(b);
+////            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } finally {
+//            try {
+        if (fos != null) {
+            fos.close();
+        }
+//                if (baos != null) {
+//                    baos.close();
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+        return file;
+    }
+
+    public static String fileToBase64(File file) {
+        if(file==null) {
+            return null;
+        }
+        String base64 = null;
+        FileInputStream fin = null;
+        try {
+            fin = new FileInputStream(file);
+            byte[] buff = new byte[fin.available()];
+            fin.read(buff);
+            base64 = Base64.encodeToString(buff, Base64.DEFAULT);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fin != null) {
+                try {
+                    fin.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return base64;
+    }
+
+    public static File base64ToFile(String base64) {
+        if(base64==null||"".equals(base64)) {
+            return null;
+        }
+        byte[] buff= Base64.decode(base64, Base64.DEFAULT);
+        File file=null;
+        FileOutputStream fout=null;
+        try {
+            file = File.createTempFile("tmp", null);
+            fout=new FileOutputStream(file);
+            fout.write(buff);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            if(fout!=null) {
+                try {
+                    fout.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return file;
+    }
+
+    public static byte[] base64ToByte(String base64) {
+        if(base64==null||"".equals(base64)) {
+            return null;
+        }
+        byte[] buff= Base64.decode(base64, Base64.DEFAULT);
+
+        return buff;
+    }
 }

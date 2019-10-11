@@ -13,14 +13,11 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.farm.innovation.biz.login.LoginFamerActivity;
+import com.hjq.toast.ToastUtils;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
-import com.xiangchuang.risks.view.LoginFamerActivity;
 import com.xiangchuangtec.luolu.animalcounter.AppConfig;
 import com.xiangchuangtec.luolu.animalcounter.model.Commit;
-import innovation.utils.Toast;
-
-
-import com.hjq.toast.ToastUtils;
 
 import org.json.JSONObject;
 
@@ -35,6 +32,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import innovation.media.DormNextInfoDialog;
+import innovation.utils.Toast;
 import okhttp3.Cache;
 import okhttp3.Call;
 import okhttp3.Callback;

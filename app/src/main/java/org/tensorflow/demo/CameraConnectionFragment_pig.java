@@ -71,7 +71,7 @@ import android.widget.TextView;
 
 import com.xiangchuangtec.luolu.animalcounter.AppConfig;
 import com.xiangchuangtec.luolu.animalcounter.JPushStatsConfig;
-import com.xiangchuangtec.luolu.animalcounter.R;
+import com.innovation.pig.insurance.R;
 
 import org.tensorflow.demo.env.Logger;
 import org.tensorflow.demo.tracking.MultiBoxTracker;

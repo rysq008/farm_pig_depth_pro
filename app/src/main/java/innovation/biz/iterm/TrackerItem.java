@@ -31,4 +31,10 @@ public class TrackerItem {
     }
 
 
+    public TrackerItem(RectF rect)
+    {
+        this.mRect = rect;
+    }
+
+
 }

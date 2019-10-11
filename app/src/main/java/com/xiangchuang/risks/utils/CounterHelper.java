@@ -31,6 +31,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,7 +60,8 @@ public final class CounterHelper {
     }
 
     public interface OnImageRecognitionListener {
-        void onCompleted(int count, Bitmap bitmap);
+//        void onCompleted(int count, Bitmap bitmap);
+        void onCompleted(int count, Bitmap bitmap, String time);
     }
 
     public interface OnImageRecognitionWeightListener {
@@ -166,7 +169,9 @@ public final class CounterHelper {
                 OkHttp3Util.doPost(URL_TEST, param, mHeaderMap, new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        listener.onCompleted(-1, null);
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        String time = simpleDateFormat.format(new Date());
+                        listener.onCompleted(-1, null,time);
                         AVOSCloudUtils.saveErrorMessage(e,CounterHelper.class.getSimpleName());
                     }
 
@@ -174,6 +179,8 @@ public final class CounterHelper {
                     public void onResponse(Call call, Response response) throws IOException {
                         int count = -1;
                         Bitmap resultBitmap = null;
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        String time = simpleDateFormat.format(new Date());
                         try {
                             if (response.code() == 200) {
                                 String responseStr = response.body().string();
@@ -197,7 +204,7 @@ public final class CounterHelper {
                         } finally {
                             if (response.body() != null)
                                 response.body().close();
-                            listener.onCompleted(count, resultBitmap);
+                            listener.onCompleted(count, resultBitmap,time);
                         }
                     }
                 });

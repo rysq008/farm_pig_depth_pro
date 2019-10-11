@@ -40,6 +40,7 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.innovation.pig.insurance.R;
 import com.xiangchuang.risks.base.BaseActivity;
 import innovation.utils.Toast;
 

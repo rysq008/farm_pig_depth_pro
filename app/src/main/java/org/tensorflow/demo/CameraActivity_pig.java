@@ -33,7 +33,7 @@ import android.view.WindowManager;
 import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuangtec.luolu.animalcounter.AppConfig;
-import com.xiangchuangtec.luolu.animalcounter.R;
+import com.innovation.pig.insurance.R;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
 import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
 

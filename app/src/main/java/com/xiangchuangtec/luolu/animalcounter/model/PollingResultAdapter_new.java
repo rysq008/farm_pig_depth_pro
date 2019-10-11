@@ -8,9 +8,9 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.innovation.pig.insurance.R;
 import com.xiangchuang.risks.model.bean.SheListBean;
 import com.xiangchuang.risks.utils.AlertDialogManager;
-import com.xiangchuangtec.luolu.animalcounter.R;
 import com.xiangchuang.risks.view.ShowPollingActivity_new;
 
 import java.util.List;

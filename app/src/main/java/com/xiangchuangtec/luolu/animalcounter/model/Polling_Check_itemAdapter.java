@@ -7,8 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.xiangchuangtec.luolu.animalcounter.R;
-
+import com.innovation.pig.insurance.R;
 import java.util.List;
 
 

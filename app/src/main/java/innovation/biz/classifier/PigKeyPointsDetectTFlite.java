@@ -9,6 +9,7 @@ import android.graphics.Matrix;
 import android.os.SystemClock;
 import android.os.Trace;
 
+import innovation.biz.iterm.NewPigKeyPointAndRotationItem;
 import innovation.biz.iterm.PigFaceKeyPointsItem;
 import innovation.biz.iterm.PredictRotationIterm;
 import innovation.utils.FileUtils;
@@ -131,6 +132,11 @@ public class PigKeyPointsDetectTFlite implements Classifier {
     }
 
     private PigKeyPointsDetectTFlite() {
+    }
+
+    @Override
+    public NewPigKeyPointAndRotationItem pigRecognizePointImage(Bitmap bitmap, Bitmap originalBitmap) {
+        return null;
     }
 
     @Override

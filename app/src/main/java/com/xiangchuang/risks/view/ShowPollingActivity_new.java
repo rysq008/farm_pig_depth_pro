@@ -16,23 +16,23 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.hjq.toast.ToastUtils;
+import com.innovation.pig.insurance.R;
 import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.bean.SheListBean;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.utils.CounterHelper;
 import com.xiangchuang.risks.utils.PermissionsDelegate;
-import com.innovation.pig.insurance.AppConfig;
-import com.innovation.pig.insurance.R;
-import com.innovation.pig.insurance.model.PollingResultAdapter_new;
-import com.innovation.pig.insurance.netutils.Constants;
-import com.innovation.pig.insurance.netutils.GsonUtils;
-import com.innovation.pig.insurance.netutils.OkHttp3Util;
-import com.innovation.pig.insurance.netutils.PreferencesUtils;
+import com.xiangchuangtec.luolu.animalcounter.AppConfig;
+import com.xiangchuangtec.luolu.animalcounter.model.PollingResultAdapter_new;
+import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
+import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
+import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
+import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
 
-import org.tensorflow.demo.BreedingDetectorActivityBreeding;
+import org.tensorflow.demo.BreedingDetectorActivity_pig;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -40,31 +40,33 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-
+import innovation.database.SheInfo;
+import innovation.utils.Toast;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
+
+import static com.xiangchuangtec.luolu.animalcounter.AppConfig.offLineModle;
 
 /**
  * @authorlxr 2018.08.30
  * 展示巡检结果
  */
-public class ShowPollingActivity_new extends BaseActivity {
+public class ShowPollingActivity_new extends BaseActivity implements View.OnClickListener {
 
     TextView mshowpollingname;
-
     TextView mshowpollingnumber;
-
     ListView mshowpollingresult_list;
-
     RelativeLayout rlTitle;
-
+    ImageView ivCancel;
 
     private String recodetitle;
     private String recodenumber;
     private String no;
     List<SheListBean.DataOffLineBaodanBean> mSheBeans;
     final PermissionsDelegate permissionsDelegate = new PermissionsDelegate(this);
+
+    private List<SheInfo> sheInfoList;
 
     @Override
     protected int getLayoutId() {
@@ -74,23 +76,19 @@ public class ShowPollingActivity_new extends BaseActivity {
     @Override
     public void initView() {
         super.initView();
-        mshowpollingname = (TextView) findViewById(R.id.tv_title);
-        mshowpollingnumber = (TextView) findViewById(R.id.showpolling_number);
-        mshowpollingresult_list = (ListView) findViewById(R.id.showpolling_result_list);
-        rlTitle = (RelativeLayout) findViewById(R.id.rl_title);
-        findViewById(R.id.iv_cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onClickView((View) v);
-            }
-        });
-        String companyname = PreferencesUtils.getStringValue(Constants.companyname, AppConfig.getAppContext(), "育肥猪农场");
-        mshowpollingname.setText(companyname);
-//        FarmerPreferencesUtils.saveIntValue(Constants.deptId, mdeptid, ShowPollingActivity_new.this);
+        mshowpollingname = findViewById(R.id.tv_title);
+        mshowpollingnumber = findViewById(R.id.showpolling_number);
+        mshowpollingresult_list = findViewById(R.id.showpolling_result_list);
+        rlTitle = findViewById(R.id.rl_title);
+        ivCancel = findViewById(R.id.iv_cancel);
+
+        ivCancel.setOnClickListener(this);
     }
 
     @Override
     protected void initData() {
+        String companyname = PreferencesUtils.getStringValue(Constants.companyname, AppConfig.getAppContext(), "育肥猪农场");
+        mshowpollingname.setText("智能点数");
 
         String enId = PreferencesUtils.getStringValue(Constants.en_id, ShowPollingActivity_new.this);
         getDataFromNet(enId);
@@ -98,18 +96,21 @@ public class ShowPollingActivity_new extends BaseActivity {
 
     private void getDataFromNet(String enId) {
         Log.i("ShowPollingActivity", "enId" + enId);
-//        String url = "http://47.92.167.61:8081/numberCheck/app/sheList";
+//        String url = "http://test1.innovationai.cn:8081/numberCheck/app/sheList";
+        mLoadProgressDialog.show();
         OkHttp3Util.doPost(Constants.SHELIST, null, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i("ShowPollingActivity", e.toString());
-                AVOSCloudUtils.saveErrorMessage(e,ShowPollingActivity_new.class.getSimpleName());
+                mLoadProgressDialog.show();
+                AVOSCloudUtils.saveErrorMessage(e, ShowPollingActivity_new.class.getSimpleName());
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String string = response.body().string();
                 Log.i("ShowPollingActivity", string);
+                mLoadProgressDialog.dismiss();
                 final SheListBean bean = GsonUtils.getBean(string, SheListBean.class);
                 if (null != bean && null != bean.getData()) {
                     if (1 == bean.getStatus()) {
@@ -127,7 +128,7 @@ public class ShowPollingActivity_new extends BaseActivity {
                                         public void onClick(int position) {
                                             Intent intent = new Intent(ShowPollingActivity_new.this, HogDetailActivity_new.class);
                                             intent.putExtra("sheid", mSheBeans.get(position).getSheId());
-                                            intent.putExtra("pigtype",mSheBeans.get(position).getPigType() );
+                                            intent.putExtra("pigtype", mSheBeans.get(position).getPigType());
                                             startActivity(intent);
                                         }
                                     });
@@ -135,13 +136,14 @@ public class ShowPollingActivity_new extends BaseActivity {
                                     resultAdapter.setListener(new PollingResultAdapter_new.OnDetailitemClickListener() {
                                         @Override
                                         public void onClick(int position) {
-
+                                            SelectFunctionActivity_new.g_SheID = String.valueOf(mSheBeans.get(position).getSheId());
+                                            SelectFunctionActivity_new.g_PigType = mSheBeans.get(position).getPigType();
                                             //Toast.makeText(this, deviceHashMap.size() + "", Toast.LENGTH_LONG).show();
                                             CounterHelper.number = 1;
                                             if (isOPen(ShowPollingActivity_new.this)) {
                                                 //判断如果是能繁母猪点数进入新的点数逻辑界面
                                                 if (mSheBeans.get(position).getPigType().equals("102")) {
-
+                                                    //改完
                                                     AlertDialog.Builder builder = new AlertDialog.Builder(ShowPollingActivity_new.this);
                                                     LayoutInflater inflater = LayoutInflater.from(ShowPollingActivity_new.this);
                                                     View v = inflater.inflate(R.layout.breeding_select_dialog_layout, null);
@@ -152,13 +154,14 @@ public class ShowPollingActivity_new extends BaseActivity {
                                                     TextView location = v.findViewById(R.id.tv_location_select);
                                                     TextView captivity = v.findViewById(R.id.tv_captivity_select);
 
-                                                    ImageView close = v.findViewById(R.id.iv_close);
+                                                    TextView close = v.findViewById(R.id.iv_close);
                                                     //定位栏  能繁
                                                     location.setOnClickListener(new View.OnClickListener() {
                                                         @Override
                                                         public void onClick(View v) {
                                                             dialog.dismiss();
-                                                            Intent intent = new Intent(ShowPollingActivity_new.this, BreedingDetectorActivityBreeding.class);
+//                                                            g_CaptivityMap.put(g_SheID, g_CaptivityMap.get(g_SheID));
+                                                            Intent intent = new Intent(ShowPollingActivity_new.this, BreedingDetectorActivity_pig.class);
                                                             intent.putExtra("recodetitle", recodetitle);
                                                             intent.putExtra("recodenumber", recodenumber);
                                                             intent.putExtra("no", no);
@@ -178,8 +181,9 @@ public class ShowPollingActivity_new extends BaseActivity {
                                                             HashMap<String, UsbDevice> deviceHashMap = ((UsbManager) getSystemService(USB_SERVICE)).getDeviceList();
                                                             if (deviceHashMap.size() > 0) {
                                                                 dialog.dismiss();
+//                                                                g_CaptivityMap.put(g_SheID, null);
                                                                 //摄像头页面
-                                                                Intent intent = new Intent(ShowPollingActivity_new.this, USBCameraActivity_newUsb.class);
+                                                                Intent intent = new Intent(ShowPollingActivity_new.this, USBCameraActivity_new.class);
                                                                 intent.putExtra("recodetitle", recodetitle);
                                                                 intent.putExtra("recodenumber", recodenumber);
                                                                 intent.putExtra("no", no);
@@ -191,7 +195,7 @@ public class ShowPollingActivity_new extends BaseActivity {
                                                                 intent.putExtra("juancnt", mSheBeans.get(position).getJuanCnt());
                                                                 startActivity(intent);
                                                             } else {
-                                                                Toast.makeText(ShowPollingActivity_new.this, "请连接外接摄像头。", Toast.LENGTH_LONG).show();
+                                                                ToastUtils.show("请连接外接摄像头。");
                                                                 return;
                                                             }
                                                         }
@@ -209,8 +213,9 @@ public class ShowPollingActivity_new extends BaseActivity {
                                                 } else {
                                                     HashMap<String, UsbDevice> deviceHashMap = ((UsbManager) getSystemService(USB_SERVICE)).getDeviceList();
                                                     if (deviceHashMap.size() > 0) {
+//                                                        g_CaptivityMap.put(g_SheID, null);
                                                         //摄像头页面
-                                                        Intent intent = new Intent(ShowPollingActivity_new.this, USBCameraActivity_newUsb.class);
+                                                        Intent intent = new Intent(ShowPollingActivity_new.this, USBCameraActivity_new.class);
                                                         intent.putExtra("recodetitle", recodetitle);
                                                         intent.putExtra("recodenumber", recodenumber);
                                                         intent.putExtra("no", no);
@@ -222,6 +227,7 @@ public class ShowPollingActivity_new extends BaseActivity {
                                                         intent.putExtra("juancnt", mSheBeans.get(position).getJuanCnt());
                                                         startActivity(intent);
                                                     } else {
+//                                                        ToastUtils.show("请连接外接摄像头。");
                                                         Toast.makeText(ShowPollingActivity_new.this, "请连接外接摄像头。", Toast.LENGTH_LONG).show();
                                                         return;
                                                     }
@@ -244,7 +250,8 @@ public class ShowPollingActivity_new extends BaseActivity {
                                     });
                                     setTotalCount();
                                 } else {
-                                    Toast.makeText(ShowPollingActivity_new.this, "暂无猪舍记录", Toast.LENGTH_LONG).show();
+                                    ToastUtils.show("暂无猪舍记录");
+//                                    Toast.makeText(ShowPollingActivity_new.this, "暂无猪舍记录", Toast.LENGTH_LONG).show();
                                 }
 
                             }
@@ -254,24 +261,27 @@ public class ShowPollingActivity_new extends BaseActivity {
 
             }
         });
-
     }
 
     private void setTotalCount() {
         int totalCount = 0;
-        for (SheListBean.DataOffLineBaodanBean bean : mSheBeans) {
-            totalCount += bean.getCount();
+        if (offLineModle) {
+            for (SheInfo bean : sheInfoList) {
+                totalCount += Integer.parseInt(bean.count);
+            }
+        } else {
+            for (SheListBean.DataOffLineBaodanBean bean : mSheBeans) {
+                totalCount += bean.getCount();
+            }
         }
+
         mshowpollingnumber.setText(totalCount + "");
     }
 
-
-    public void onClickView(View view) {
-        int i = view.getId();
-        if (i == R.id.iv_cancel) {
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.iv_cancel) {
             finish();
-
-        } else {
         }
 
     }
@@ -296,4 +306,5 @@ public class ShowPollingActivity_new extends BaseActivity {
         ShowPollingActivity_new activity = (ShowPollingActivity_new) mContext;
         activity.startActivityForResult(intent, 1315);
     }
+
 }

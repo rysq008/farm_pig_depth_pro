@@ -32,4 +32,28 @@
     <color name="BLACK_A010">#19000000</color>
     <color name="app_color">#00adff</color>
     <color name="color_transparent">#00000000</color>
+
+    <color name="C_99CC00">#99CC00</color>
+    <color name="C_666666">#666666</color>
+    <color name="C_DDDDDD">#DDDDDD</color>
+
+    <color name="colorText_333">#333</color>
+    <color name="color_half_translucent">#80333333</color>
+    <color name="gray1">#e7e4e4</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="colorFF333333">#FF333333</color>
+    <color name="colorFF666666">#FF666666</color>
+    <color name="colorFF999999">#FF999999</color>
+    <color name="colorFFE1E1E1">#FFE1E1E1</color>
+    <color name="colorFFFFFFFF">#FFFFFFFF</color>
+    <color name="color00000000">#00000000</color>
+    <color name="colorFFEFEFEF">#FFEFEFEF</color>
+    <color name="colorFFF9F9F9">#FFF9F9F9</color>
+
+    <color name="app_base_color">#1086F2</color>
+    <color name="color292B32">#292B32</color>
+    <color name="colorF6F6F6">#F6F6F6</color>
+    <color name="colorC6C6C6">#C6C6C6</color>
+    <color name="c_666666">#666666</color>
 </resources>

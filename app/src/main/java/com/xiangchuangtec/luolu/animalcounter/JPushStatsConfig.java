@@ -9,15 +9,15 @@ import android.util.Log;
 import java.util.HashMap;
 import java.util.Map;
 
-import cn.jiguang.analytics.android.api.BrowseEvent;
-import cn.jiguang.analytics.android.api.CalculateEvent;
-import cn.jiguang.analytics.android.api.CountEvent;
-import cn.jiguang.analytics.android.api.Currency;
-import cn.jiguang.analytics.android.api.Event;
-import cn.jiguang.analytics.android.api.JAnalyticsInterface;
-import cn.jiguang.analytics.android.api.LoginEvent;
-import cn.jiguang.analytics.android.api.PurchaseEvent;
-import cn.jiguang.analytics.android.api.RegisterEvent;
+//import cn.jiguang.analytics.android.api.BrowseEvent;
+//import cn.jiguang.analytics.android.api.CalculateEvent;
+//import cn.jiguang.analytics.android.api.CountEvent;
+//import cn.jiguang.analytics.android.api.Currency;
+//import cn.jiguang.analytics.android.api.Event;
+//import cn.jiguang.analytics.android.api.JAnalyticsInterface;
+//import cn.jiguang.analytics.android.api.LoginEvent;
+//import cn.jiguang.analytics.android.api.PurchaseEvent;
+//import cn.jiguang.analytics.android.api.RegisterEvent;
 
 public class JPushStatsConfig {
 
@@ -29,24 +29,24 @@ public class JPushStatsConfig {
      * 初始化极光,在Application的oncreate()方法中调用
      **/
     public static void initStats(Context mContext) {
-        JPushStatsConfig.mContext = mContext;
-        //极光统计
-        JAnalyticsInterface.setDebugMode(true);
-        JAnalyticsInterface.init(mContext);
+//        JPushStatsConfig.mContext = mContext;
+//        //极光统计
+//        JAnalyticsInterface.setDebugMode(true);
+//        JAnalyticsInterface.init(mContext);
     }
 
     /**
      * 开启crashlog日志上报
      **/
     public static void openCrashLog() {
-        JAnalyticsInterface.initCrashHandler(mContext);
+//        JAnalyticsInterface.initCrashHandler(mContext);
     }
 
     /**
      * 关闭crashlog日志上报
      **/
     public static void closeCrashLog() {
-        JAnalyticsInterface.stopCrashHandler(mContext);
+//        JAnalyticsInterface.stopCrashHandler(mContext);
     }
 
     /**
@@ -56,7 +56,7 @@ public class JPushStatsConfig {
      * @param pageName 页面名称
      */
     public static void onPageStart(Context context, String pageName) {
-        JAnalyticsInterface.onPageStart(context, pageName);
+//        JAnalyticsInterface.onPageStart(context, pageName);
     }
 
     /**
@@ -66,7 +66,7 @@ public class JPushStatsConfig {
      * @param pageName 页面名称
      */
     public static void onPageEnd(Context context, String pageName) {
-        JAnalyticsInterface.onPageEnd(context, pageName);
+//        JAnalyticsInterface.onPageEnd(context, pageName);
     }
 
     /**
@@ -76,12 +76,12 @@ public class JPushStatsConfig {
      * @param extra   map的key不能为"register_method","register_success"
      */
     public static void onRegisterEvent(Context context, Map<String, String> extra) {
-        RegisterEvent registerEvent = new RegisterEvent("testRegisterMethod", true);
-        //添加自己的Extra 信息
-        for (Map.Entry<String, String> entry : extra.entrySet()) {
-            registerEvent.addKeyValue(entry.getKey(), entry.getValue());
-        }
-        JAnalyticsInterface.onEvent(context, registerEvent);
+//        RegisterEvent registerEvent = new RegisterEvent("testRegisterMethod", true);
+//        //添加自己的Extra 信息
+//        for (Map.Entry<String, String> entry : extra.entrySet()) {
+//            registerEvent.addKeyValue(entry.getKey(), entry.getValue());
+//        }
+//        JAnalyticsInterface.onEvent(context, registerEvent);
     }
 
     /**
@@ -93,14 +93,14 @@ public class JPushStatsConfig {
      * @param extra          附加信息 map的key不能为"register_method","register_success"
      */
     public static void onRegisterEvent(Context context,
-                                String registerMethod,
-                                boolean isSuccess,
-                                Map<String, String> extra) {
-        Event registerEvent = new RegisterEvent()
-                .setRegisterMethod(registerMethod) //注册方式
-                .setRegisterSuccess(isSuccess) //是否成功
-                .addExtMap(extra);
-        JAnalyticsInterface.onEvent(context, registerEvent);
+                                       String registerMethod,
+                                       boolean isSuccess,
+                                       Map<String, String> extra) {
+//        Event registerEvent = new RegisterEvent()
+//                .setRegisterMethod(registerMethod) //注册方式
+//                .setRegisterSuccess(isSuccess) //是否成功
+//                .addExtMap(extra);
+//        JAnalyticsInterface.onEvent(context, registerEvent);
     }
 
     /**
@@ -110,12 +110,12 @@ public class JPushStatsConfig {
      * @param extra   map的key不能为"login_method","login_success"
      */
     public static void onLoginEvent(Context context, Map<String, String> extra) {
-        LoginEvent loginEvent = new LoginEvent("testLoginMethod", true);
-        //添加自己的Extra 信息
-        for (Map.Entry<String, String> entry : extra.entrySet()) {
-            loginEvent.addKeyValue(entry.getKey(), entry.getValue());
-        }
-        JAnalyticsInterface.onEvent(context, loginEvent);
+//        LoginEvent loginEvent = new LoginEvent("testLoginMethod", true);
+//        //添加自己的Extra 信息
+//        for (Map.Entry<String, String> entry : extra.entrySet()) {
+//            loginEvent.addKeyValue(entry.getKey(), entry.getValue());
+//        }
+//        JAnalyticsInterface.onEvent(context, loginEvent);
     }
 
     /**
@@ -127,14 +127,14 @@ public class JPushStatsConfig {
      * @param extra       附加信息  map的key不能为"login_method","login_success"
      */
     public static void onLoginEvent(Context context,
-                             String loginMethod,
-                             boolean isSuccess,
-                             Map<String, String> extra) {
-        Event loginEvent = new LoginEvent()
-                .setLoginMethod(loginMethod) //login方式
-                .setLoginSuccess(isSuccess) //是否成功
-                .addExtMap(extra);
-        JAnalyticsInterface.onEvent(context, loginEvent);
+                                    String loginMethod,
+                                    boolean isSuccess,
+                                    Map<String, String> extra) {
+//        Event loginEvent = new LoginEvent()
+//                .setLoginMethod(loginMethod) //login方式
+//                .setLoginSuccess(isSuccess) //是否成功
+//                .addExtMap(extra);
+//        JAnalyticsInterface.onEvent(context, loginEvent);
     }
 
     /**
@@ -143,18 +143,18 @@ public class JPushStatsConfig {
      * @param context
      */
     public static void onPurchaseEvent(Context context, Map<String, String> extra) {
-        PurchaseEvent purchaseEvent = new PurchaseEvent("test_purchaseGoodsID", //商品ID
-                "篮球", //商品名称
-                300, //商品价格
-                true, //商品购买是否成功
-                Currency.CNY, //货币类型
-                "sport",//商品类型
-                1); //商品购买数量
-        //添加自己的Extra 信息
-        for (Map.Entry<String, String> entry : extra.entrySet()) {
-            purchaseEvent.addKeyValue(entry.getKey(), entry.getValue());
-        }
-        JAnalyticsInterface.onEvent(context, purchaseEvent);
+//        PurchaseEvent purchaseEvent = new PurchaseEvent("test_purchaseGoodsID", //商品ID
+//                "篮球", //商品名称
+//                300, //商品价格
+//                true, //商品购买是否成功
+//                Currency.CNY, //货币类型
+//                "sport",//商品类型
+//                1); //商品购买数量
+//        //添加自己的Extra 信息
+//        for (Map.Entry<String, String> entry : extra.entrySet()) {
+//            purchaseEvent.addKeyValue(entry.getKey(), entry.getValue());
+//        }
+//        JAnalyticsInterface.onEvent(context, purchaseEvent);
     }
 
     /**
@@ -169,26 +169,26 @@ public class JPushStatsConfig {
      * @param purchaseGoodsCount 购买数量
      * @param purchaseGoodstype  购买物品类型(如衣服，手表，鞋子，家用电器etc)
      */
-    public static void onPurchaseEvent(Context context,
-                                       String purchaseGoodsid,
-                                       String purchaseGoodsname,
-                                       double purchasePrice,
-                                       boolean purchaseSuccess,
-                                       Currency purchaseCurrency,
-                                       String purchaseGoodstype,
-                                       int purchaseGoodsCount,
-                                       Map<String, String> extra) {
-        Event purchaseEvent = new PurchaseEvent()
-                .setPurchaseGoodsid(purchaseGoodsid) //商品ID
-                .setPurchaseGoodsname(purchaseGoodsname) //商品名称
-                .setPurchasePrice(purchasePrice) //商品价格
-                .setPurchaseSuccess(purchaseSuccess) //购买是否成功
-                .setPurchaseCurrency(purchaseCurrency) //货币类型
-                .setPurchaseGoodstype(purchaseGoodstype) //商品类型
-                .setPurchaseGoodsCount(purchaseGoodsCount)
-                .addExtMap(extra);
-        JAnalyticsInterface.onEvent(context, purchaseEvent);
-    }
+//    public static void onPurchaseEvent(Context context,
+//                                       String purchaseGoodsid,
+//                                       String purchaseGoodsname,
+//                                       double purchasePrice,
+//                                       boolean purchaseSuccess,
+//                                       Currency purchaseCurrency,
+//                                       String purchaseGoodstype,
+//                                       int purchaseGoodsCount,
+//                                       Map<String, String> extra) {
+//        Event purchaseEvent = new PurchaseEvent()
+//                .setPurchaseGoodsid(purchaseGoodsid) //商品ID
+//                .setPurchaseGoodsname(purchaseGoodsname) //商品名称
+//                .setPurchasePrice(purchasePrice) //商品价格
+//                .setPurchaseSuccess(purchaseSuccess) //购买是否成功
+//                .setPurchaseCurrency(purchaseCurrency) //货币类型
+//                .setPurchaseGoodstype(purchaseGoodstype) //商品类型
+//                .setPurchaseGoodsCount(purchaseGoodsCount)
+//                .addExtMap(extra);
+//        JAnalyticsInterface.onEvent(context, purchaseEvent);
+//    }
 
     /**
      * 浏览事件
@@ -206,13 +206,13 @@ public class JPushStatsConfig {
                                      String browseType,
                                      float browseDuration,
                                      Map<String, String> extra) {
-        Event browseEvent = new BrowseEvent()
-                .setBrowseId(browseId) //设置浏览内容id
-                .setBrowseName(browseName) //设置浏览的内容的名称
-                .setBrowseType(browseType) //设置浏览的内容类型
-                .setBrowseDuration(browseDuration) //设置浏览的内容时长
-                .addExtMap(extra);
-        JAnalyticsInterface.onEvent(context, browseEvent);
+//        Event browseEvent = new BrowseEvent()
+//                .setBrowseId(browseId) //设置浏览内容id
+//                .setBrowseName(browseName) //设置浏览的内容的名称
+//                .setBrowseType(browseType) //设置浏览的内容类型
+//                .setBrowseDuration(browseDuration) //设置浏览的内容时长
+//                .addExtMap(extra);
+//        JAnalyticsInterface.onEvent(context, browseEvent);
     }
 
     /**
@@ -227,11 +227,11 @@ public class JPushStatsConfig {
                                         String eventId,
                                         double eventValue,
                                         Map<String, String> extra) {
-        Event calculateEvent = new CalculateEvent()
-                .setEventId(eventId)
-                .setEventValue(eventValue)
-                .addExtMap(extra);
-        JAnalyticsInterface.onEvent(context, calculateEvent);
+//        Event calculateEvent = new CalculateEvent()
+//                .setEventId(eventId)
+//                .setEventValue(eventValue)
+//                .addExtMap(extra);
+//        JAnalyticsInterface.onEvent(context, calculateEvent);
     }
 
     /**
@@ -242,10 +242,10 @@ public class JPushStatsConfig {
      * @param extra   附加信息
      */
     public static void onCountEvent(Context context, String eventId, Map<String, String> extra) {
-        Event countEvent = new CountEvent()
-                .setEventId(eventId)
-                .addExtMap(extra);
-        JAnalyticsInterface.onEvent(context, countEvent);
+//        Event countEvent = new CountEvent()
+//                .setEventId(eventId)
+//                .addExtMap(extra);
+//        JAnalyticsInterface.onEvent(context, countEvent);
     }
 
     // 取得AppKey

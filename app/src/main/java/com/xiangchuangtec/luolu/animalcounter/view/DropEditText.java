@@ -18,7 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
-import com.xiangchuangtec.luolu.animalcounter.R;
+import com.innovation.pig.insurance.R;
 
 public class DropEditText extends FrameLayout implements View.OnClickListener, OnItemClickListener {
     private EditText mEditText;  // 输入框

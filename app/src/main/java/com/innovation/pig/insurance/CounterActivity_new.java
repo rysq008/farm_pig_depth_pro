@@ -446,7 +446,7 @@ public class CounterActivity_new extends BaseActivity implements View.OnClickLis
                 showPop();
                 CounterHelper.recognitionFromNet(CounterActivity_new.this, bitmap, new CounterHelper.OnImageRecognitionListener() {
                     @Override
-                    public void onCompleted(int count, Bitmap bitmap) {
+                    public void onCompleted(int count, Bitmap bitmap, String time) {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {

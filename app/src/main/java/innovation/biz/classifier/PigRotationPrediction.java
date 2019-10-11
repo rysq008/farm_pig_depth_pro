@@ -8,6 +8,7 @@ import android.graphics.Matrix;
 import android.os.SystemClock;
 import android.os.Trace;
 
+import innovation.biz.iterm.NewPigKeyPointAndRotationItem;
 import innovation.biz.iterm.PredictRotationIterm;
 import innovation.utils.FileUtils;
 import innovation.utils.PointFloat;
@@ -127,6 +128,11 @@ public class PigRotationPrediction implements Classifier {
 
     @Override
     public List<PointFloat> recognizePointImage(Bitmap bitmap, Bitmap oriBitmap) {
+        return null;
+    }
+
+    @Override
+    public NewPigKeyPointAndRotationItem pigRecognizePointImage(Bitmap bitmap, Bitmap originalBitmap) {
         return null;
     }
 

@@ -2,13 +2,17 @@ package innovation.utils;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
+import android.view.ViewGroup;
 
 /**
  * @author wbs on 10/29/17.
  */
 
 public class UIUtils {
+    public static final int DEFAULT_VIEW_HEIGHT = 55;
+
     public static int getWidthPixels(Context context) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         Configuration cf = context.getResources().getConfiguration();
@@ -41,5 +45,13 @@ public class UIUtils {
     public static int px2dp(Context context, float pxValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (pxValue / scale + 0.5f);
+    }
+
+    public static void setDefaultRootViewSize(@NonNull Context context, @NonNull ViewGroup rootView){
+        ViewGroup.LayoutParams rootParams = rootView.getLayoutParams();
+        rootParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        rootParams.height = UIUtils.dp2px(context,45);
+        rootView.setLayoutParams(rootParams);
+
     }
 }

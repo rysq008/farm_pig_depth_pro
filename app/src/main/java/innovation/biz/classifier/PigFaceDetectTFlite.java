@@ -16,6 +16,7 @@ import android.util.Log;
 import com.innovation.pig.insurance.AppConfig;
 
 import innovation.biz.iterm.AnimalClassifierResultIterm;
+import innovation.biz.iterm.NewPigKeyPointAndRotationItem;
 import innovation.biz.iterm.PostureItem;
 import innovation.biz.iterm.PredictRotationIterm;
 import innovation.media.Model;
@@ -189,6 +190,11 @@ public class PigFaceDetectTFlite implements Classifier {
 
     @Override
     public List<PointFloat> recognizePointImage(Bitmap bitmap, Bitmap originalBitmap) {
+        return null;
+    }
+
+    @Override
+    public NewPigKeyPointAndRotationItem pigRecognizePointImage(Bitmap bitmap, Bitmap originalBitmap) {
         return null;
     }
 

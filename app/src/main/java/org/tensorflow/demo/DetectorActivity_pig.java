@@ -36,7 +36,7 @@ import android.util.TypedValue;
 import android.view.Display;
 import android.view.KeyEvent;
 
-import com.xiangchuangtec.luolu.animalcounter.R;
+import com.innovation.pig.insurance.R;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
 
 import org.tensorflow.demo.OverlayView.DrawCallback;

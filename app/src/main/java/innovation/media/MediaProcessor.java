@@ -3,15 +3,13 @@ package innovation.media;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-
-import android.net.Uri;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
@@ -23,45 +21,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-
-import com.amap.api.location.AMapLocationClient;
-import com.amap.api.location.AMapLocationClientOption;
-import com.amap.api.location.AMapLocationListener;
-import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
-import com.mainaer.wjoklib.okhttp.upload.UploadTask;
-import com.mainaer.wjoklib.okhttp.upload.UploadTaskListener;
-import com.xiangchuang.risks.model.bean.CommitBean;
+import com.hjq.toast.ToastUtils;
+import com.innovation.pig.insurance.R;
 import com.xiangchuang.risks.model.bean.CommitLiBean;
-import com.xiangchuang.risks.model.bean.StartBean;
+import com.xiangchuang.risks.model.bean.GSCPigBean;
+import com.xiangchuang.risks.model.bean.GsCommitBean;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
-import com.xiangchuang.risks.view.AddPigPicActivity;
-import com.xiangchuang.risks.view.PreparedLiPeiActivity_new;
-
-import com.innovation.pig.insurance.AppConfig;
-import com.innovation.pig.insurance.R;
-import com.innovation.pig.insurance.netutils.Constants;
-import com.innovation.pig.insurance.netutils.GsonUtils;
-import com.innovation.pig.insurance.netutils.OkHttp3Util;
-import com.innovation.pig.insurance.netutils.PreferencesUtils;
-
+import com.xiangchuangtec.luolu.animalcounter.AppConfig;
+import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
+import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
+import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.tensorflow.demo.DetectorActivity;
+import org.tensorflow.demo.DetectorActivity_pig;
 import org.tensorflow.demo.Global;
-import org.tensorflow.demo.SmallVideoActivity;
 import org.tensorflow.demo.ToubaoCowInfoActivity;
 import org.tensorflow.demo.env.Logger;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -74,39 +57,39 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.zip.ZipOutputStream;
 
-import innovation.database.VideoUploadTable;
 import innovation.entry.GsonBean;
 import innovation.entry.InnApplication;
 import innovation.entry.NewBuildResultObject;
 import innovation.location.LocationManager_new;
 import innovation.login.RespObject;
 import innovation.login.Utils;
-//import innovation.tensorflow.tracking.FaceDetector;
 import innovation.network_status.NetworkUtil;
 import innovation.upload.UploadHelper;
 import innovation.upload.UploadThread;
-import innovation.upload.UploadUtils;
 import innovation.utils.FileUtils;
 import innovation.utils.HttpRespObject;
 import innovation.utils.HttpUtils;
 import innovation.utils.JsonHelper;
+import innovation.utils.PigInnovationAiOpen;
+import innovation.utils.Toast;
 import innovation.utils.UploadObject;
 import innovation.utils.ZipUtil;
-import io.objectbox.Box;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-
 import static android.content.ContentValues.TAG;
-import static com.innovation.pig.insurance.AppConfig.isNoCamera;
+import static com.xiangchuang.risks.view.SelectFunctionActivity_new.gscPigBeans;
 import static innovation.entry.InnApplication.getCowEarNumber;
 import static innovation.entry.InnApplication.getCowType;
 import static innovation.entry.InnApplication.getStringTouboaExtra;
 import static innovation.entry.InnApplication.getlipeiTempNumber;
-import static org.tensorflow.demo.CameraConnectionFragment.collectNumberHandler;
+import static innovation.utils.FileUtils.fileToBase64;
+import static org.tensorflow.demo.CameraConnectionFragment_pig.collectNumberHandler;
+
+//import innovation.tensorflow.tracking.FaceDetector;
 
 /**
  * Author by luolu, Date on 2018/8/16.
@@ -145,7 +128,7 @@ public class MediaProcessor {
     private static final int MSG_UI_FINISH_VERIFY = 19;
     private static final int MSG_UI_FINISH_BUILD = 21;
     private static final int MSG_UI_FINISH_ZIP_FILE_NULL = 22;
-    private final Logger mLogger = new Logger(MediaProcessor.class.getSimpleName());
+    private final Logger mLoggerPig = new Logger(MediaProcessor.class.getSimpleName());
     private static MediaProcessor sInstance;
     private final Context mContext;
     private Activity mActivity = null;
@@ -162,8 +145,7 @@ public class MediaProcessor {
     private String verification_status;
     private NewBuildResultObject pigBuildResp2;
     private NewBuildResultObject pigBuildRespResult;
-    //声明AMapLocationClient类对象
-    private AMapLocationClient mLocationClient = null;
+
     private String str_address = "";
     private final Gson gson;
     private GsonBean bean;
@@ -193,6 +175,7 @@ public class MediaProcessor {
     private String similarityDegree;
     private String seqNo = "";
     private String compensateTime = "";
+    private String pigType = "";
 
     private boolean isChongFu = false;
 
@@ -371,7 +354,7 @@ public class MediaProcessor {
                 if (pignum.length() > 0) {
                     saveLibId(pignum);
                 }
-                mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
+                mActivity.startActivity(new Intent(mActivity, DetectorActivity_pig.class));
                 reInitCurrentDir();
                 collectNumberHandler.sendEmptyMessage(2);
                 Log.i("initInsureDialog:", "listener_abort");
@@ -447,12 +430,11 @@ public class MediaProcessor {
         };
         //取消停止录制
         View.OnClickListener listener_cancel = v -> {
-            editRecoed();
             mInsureDialog.dismiss();
             AppConfig.during = 0;
             reInitCurrentDir();
             collectNumberHandler.sendEmptyMessage(2);
-            mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
+            mActivity.startActivity(new Intent(mActivity, DetectorActivity_pig.class));
 
         };
         mInsureDialog.setAbortButton("放弃", listener_abort);
@@ -470,299 +452,91 @@ public class MediaProcessor {
         //updateInsureDialog(activity);
     }
 
-    private void editRecoed() {
-        String videoIds = PreferencesUtils.getStringValue(Constants.preVideoId, AppConfig.getAppContext(), "0");
-        String[] ids = videoIds.split(",");
-        Map map = new HashMap();
-        map.put(Constants.en_user_id, String.valueOf(PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext())));
-        Map mapbody = new HashMap();
-
-        for (int i = 0; i < ids.length; i++) {
-            mapbody.put(Constants.videoId, ids[i]);
-            OkHttp3Util.doPost(Constants.PRESTOP, mapbody, map, new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    com.orhanobut.logger.Logger.e("editRecoed"+ e.getLocalizedMessage());
-                    AVOSCloudUtils.saveErrorMessage(e, MediaProcessor.class.getSimpleName());
-                }
-
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                }
-            });
-        }
-    }
-
-    private void preCommit(File zipFile, String timesFlag) {
-        Map<String, String> mapbody = new HashMap<>();
-        mapbody.put(Constants.sheId, String.valueOf(sheId));
-        mapbody.put(Constants.insureNo, String.valueOf(inspectNo));
-        mapbody.put(Constants.reason, reason);
-        mapbody.put(Constants.preCompensateVideoId, PreferencesUtils.getStringValue(Constants.preVideoId, AppConfig.getAppContext(), "0"));
-
-        mapbody.put(Constants.address, str_address);
-        mapbody.put(Constants.timesFlag, timesFlag);
-
-        com.orhanobut.logger.Logger.e("precommit:zipimage2"+ zipFile.getAbsolutePath());
-
-        com.orhanobut.logger.Logger.e("precommit:mapbody"+  mapbody.toString());
-
-        try {
-            String currenUrl = Constants.PRECOMMIT;
-            if (AppConfig.debugNub > 0) {
-                currenUrl = Constants.PREPAY_FORCE_COMMIT;
-            } else {
-                currenUrl = Constants.PRECOMMIT;
-            }
-
-            OkHttp3Util.uploadPreFile(currenUrl, zipFile, "a.zip", mapbody, null, new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    Log.e("precommit", "onFailure======" + e.getLocalizedMessage());
-                    mActivity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mProgressDialog.dismiss();
-                            showTimeOutDialog();
-                        }
-                    });
-                    AVOSCloudUtils.saveErrorMessage(e, MediaProcessor.class.getSimpleName());
-                }
-
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    Activity appContext = (Activity) mActivity;
-                    String s = "";
-                    if (response.isSuccessful()) {
-                        s = response.body().string();
-                        Log.e("precommit", "上传--" + s);
-                        JSONObject jsonObject = null;
-                        try {
-                            jsonObject = new JSONObject(s);
-                            int status = jsonObject.getInt("status");
-                            String msg = jsonObject.getString("msg");
-                            if (-1 == status) {
-                                appContext.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        mProgressDialog.dismiss();
-                                        showErrorDialog(msg);
-                                    }
-                                });
-                            } else if (0 == status) {
-                                mActivity.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        mProgressDialog.dismiss();
-                                        showTimeOutDialog();
-                                    }
-                                });
-                            } else {
-                                CommitBean bean = GsonUtils.getBean(s, CommitBean.class);
-                                Log.e("precommit", "上传--" + bean.getData().getSimilarFlg() + "");
-                                appContext.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (1 == bean.getStatus() && 1 == bean.getData().getSimilarFlg()) {
-                                            similarImgUrl = bean.getData().getSimilarImgUrl();
-                                            lipeiId = bean.getData().getLipeiId() + "";
-                                            //有相似
-                                            mProgressDialog.dismiss();
-                                            showDialog(bean);
-                                        } else if (1 == bean.getStatus() && 0 == bean.getData().getSimilarFlg()) {
-                                            //无相似
-                                            lipeiId = bean.getData().getLipeiId() + "";
-                                            mProgressDialog.dismiss();
-                                            showSuccessDialog(bean.getMsg());
-                                        }
-                                        boolean result = FileUtils.deleteFile(zipFile);
-                                        if (result == true) {
-                                            Log.i("yulipeidetete:", "本地图片打包文件删除成功！！");
-                                        }
-                                    }
-                                });
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            Log.e("uploadZipImage", "uploadZipImage1: " + e.toString());
-                            AVOSCloudUtils.saveErrorMessage(e, MediaProcessor.class.getSimpleName());
-                        }
-
-                    }
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.e("uploadZipImage", "uploadZipImage2: " + e.toString());
-        }
-    }
-
     private void preCommitForLiPei(File zipFile, String timesFlag) {
         Log.e("precommit:zipimage2", "path=" + zipFile.getAbsolutePath());
 
         Map<String, String> mapbody = new HashMap<>();
+        mapbody.put("taskID", PigInnovationAiOpen.GSC_TASKID);
         mapbody.put(Constants.timesFlag, timesFlag);
         mapbody.put(Constants.address, str_address);
-
+        mapbody.put(Constants.COLLECT_TIME, AppConfig.during / 1000 + "");
         Activity appContext = (Activity) mActivity;
 
-        if (AppConfig.debugNub > 0) {
-            OkHttp3Util.uploadPreFile(Constants.PAY_FORCE_COMMIT, zipFile, "a.zip", mapbody, null, new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    mProgressDialog.dismiss();
-                    appContext.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            showTimeOutDialog();
-                        }
-                    });
-                    AVOSCloudUtils.saveErrorMessage(e, MediaProcessor.class.getSimpleName());
-                }
-
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    mProgressDialog.dismiss();
-                    if (response.isSuccessful()) {
-                        String s = response.body().string();
-                        Log.e("lipeicommit", "上传--" + s);
-                        JSONObject jsonObject = null;
-                        try {
-                            jsonObject = new JSONObject(s);
-                            int status = jsonObject.getInt("status");
-                            String mymsg = jsonObject.getString("msg");
-                            appContext.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (status == 1) {
-                                        showPayForce(timesFlag);
-                                    } else {
-                                        showErrorDialog(mymsg);
-                                    }
-                                }
-                            });
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            showRetryDialog("网络异常，请检查网络后重试。");
-                            AVOSCloudUtils.saveErrorMessage(e, MediaProcessor.class.getSimpleName());
-                        }
-                    } else {
-                        showRetryDialog("网络异常，请检查网络后重试。");
+        OkHttp3Util.uploadPreFile(HttpUtils.GSC_PAY_LIBUPLOAD, zipFile, "a.zip", mapbody, null, new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+//                            Log.e("lipeiprecommit", e.getLocalizedMessage());
+                        mProgressDialog.dismiss();
+                        appContext.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                showTimeOutDialog();
+                            }
+                        });
+                        AVOSCloudUtils.saveErrorMessage(e, MediaProcessor.class.getSimpleName());
                     }
-                }
-            });
-        } else {
-            OkHttp3Util.uploadPreFile(Constants.LICOMMIT, zipFile, "a.zip", mapbody, null, new Callback() {
-                        @Override
-                        public void onFailure(Call call, IOException e) {
-                            com.orhanobut.logger.Logger.e("lipeiprecommit"+ e.getLocalizedMessage());
-                            mProgressDialog.dismiss();
-                            appContext.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    showTimeOutDialog();
-                                }
-                            });
-                            AVOSCloudUtils.saveErrorMessage(e, MediaProcessor.class.getSimpleName());
-                        }
 
-                        @Override
-                        public void onResponse(Call call, Response response) throws IOException {
-                            mProgressDialog.dismiss();
-                            if (response.isSuccessful()) {
-                                String s = response.body().string();
-                                Log.e("lipeicommit", "上传--" + s);
-                                JSONObject jsonObject = null;
-                                try {
-                                    jsonObject = new JSONObject(s);
-                                    int status = jsonObject.getInt("status");
-                                    String mymsg = jsonObject.getString("msg");
-                                    appContext.runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            if (status == -1) {
-                                                //上传过程中有异常终止了，此时用户需要重试
-                                                showTimeOutDialog();
-                                            } else if (0 == status) {
-                                                //模型返回图片质量不合格，用户需要重新采集
-                                                showErrorDialog(mymsg);
-                                            } else {
-                                                CommitLiBean bean = GsonUtils.getBean(s, CommitLiBean.class);
-                                                Log.e("lipeicommit", "SimilarFlg--" + bean.getData().getSimilarFlg() + "");
-                                                isChongFu = false;
-                                                if (1 == bean.getStatus() && 1 == bean.getData().getSimilarFlg()) {
-                                                    //有相似
-                                                    animalId = bean.getData().getSimilarList().get(0).getAnimalId();
-                                                    lipeiId = bean.getData().getSimilarList().get(0).getLipeiId();
-                                                    similarImgUrl = bean.getData().getSimilarList().get(0).getSimilarImgUrl();
-                                                    minsureNo = bean.getData().getSimilarList().get(0).getInsureNo();
-                                                    lipeiNo = bean.getData().getSimilarList().get(0).getLipeiNo();
-                                                    mpreCompensateTime = bean.getData().getSimilarList().get(0).getPreCompensateTime();
-                                                    mjuanName = bean.getData().getSimilarList().get(0).getJuanName();
-                                                    msheName = bean.getData().getSimilarList().get(0).getSheName();
-                                                    similarityDegree = bean.getData().getSimilarList().get(0).getSimilarityDegree();
-                                                    userLibId = bean.getData().getUserLibId();
-                                                    mProgressDialog.dismiss();
-                                                    showmsg = bean.getMsg();
-                                                    seqNo = bean.getData().getSimilarList().get(0).getSeqNo();
-                                                    showDialoglipei();
-                                                } else if (1 == bean.getStatus() && 0 == bean.getData().getSimilarFlg()) {
-                                                    userLibId = bean.getData().getUserLibId();
-                                                    PreferencesUtils.saveKeyValue(Constants.userLibId, userLibId + "", mActivity);
-                                                    showmsg = bean.getMsg();
-                                                    //无相似
-                                                    mProgressDialog.dismiss();
-                                                    showDialogLiNone(timesFlag);
-                                                } else if (1 == bean.getStatus() && 2 == bean.getData().getSimilarFlg()) {
-                                                    userLibId = bean.getData().getUserLibId();
-                                                    similarList = bean.getData().getSimilarList();
-                                              /*  mjuanName = bean.getData().getSimilarList().get(2).getJuanName();
-                                                msheName = bean.getData().getSimilarList().get(2).getSheName();*/
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        mProgressDialog.dismiss();
+                        if (response.isSuccessful()) {
+                            String s = response.body().string();
+                            Log.e("lipeicommit", "上传--" + s);
+                            JSONObject jsonObject = null;
+                            try {
+                                jsonObject = new JSONObject(s);
+                                int status = jsonObject.getInt("status");
+                                String mymsg = jsonObject.getString("msg");
+                                appContext.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (-1 == status) {
+                                            //上传过程中有异常终止了，此时用户需要重试
+                                            showTimeOutDialog();
+                                        } else if (0 == status) {
+                                            //模型返回图片质量不合格，用户需要重新采集
+                                            showErrorDialog(mymsg);
+                                        } else if (1 == status)  {
+                                            GsCommitBean bean = GsonUtils.getBean(s, GsCommitBean.class);
+                                            Log.e(TAG, "bean: " + bean);
 
-                                                    //有近似
-                                                    mProgressDialog.dismiss();
-                                                    showmsg = bean.getMsg();
-                                                    showDialogLiJin(similarList);
-                                                } else if (1 == bean.getStatus() && 3 == bean.getData().getSimilarFlg()) {
-                                                    //重复理赔情况
-                                                    //isChongFu = true;
-                                                    animalId = bean.getData().getSimilarList().get(0).getAnimalId();
-                                                    lipeiId = bean.getData().getSimilarList().get(0).getLipeiId();
-                                                    similarImgUrl = bean.getData().getSimilarList().get(0).getSimilarImgUrl();
-                                                    minsureNo = bean.getData().getSimilarList().get(0).getInsureNo();
-                                                    lipeiNo = bean.getData().getSimilarList().get(0).getLipeiNo();
-                                                    mpreCompensateTime = bean.getData().getSimilarList().get(0).getPreCompensateTime();
-                                                    mjuanName = bean.getData().getSimilarList().get(0).getJuanName();
-                                                    msheName = bean.getData().getSimilarList().get(0).getSheName();
-                                                    similarityDegree = bean.getData().getSimilarList().get(0).getSimilarityDegree();
-                                                    userLibId = bean.getData().getUserLibId();
-                                                    mProgressDialog.dismiss();
-                                                    showmsg = bean.getMsg();
-                                                    compensateTime = bean.getData().getSimilarList().get(0).getCompensateTime();
-                                                    seqNo = bean.getData().getSimilarList().get(0).getSeqNo();
-                                                    showDialoglipei();
-                                                }
-                                                boolean result = FileUtils.deleteFile(zipFile);
-                                                if (result) {
-                                                    Log.i("lipeidetete:", "本地图片打包文件删除成功！！");
-                                                }
+                                            GSCPigBean gscPigBean = new GSCPigBean();
+                                            gscPigBean.name = fileName;
+                                            gscPigBean.picture = filePath;
+                                            gscPigBean.address = str_address;
+                                            gscPigBean.latitude = LocationManager_new.getInstance(appContext).currentLat;
+                                            gscPigBean.longitude = LocationManager_new.getInstance(appContext).currentLon;
+                                            gscPigBean.time = System.currentTimeMillis();
+                                            gscPigBean.pigHouseNumber = "";
+                                            gscPigBean.photoPigsNumber = 1;
+                                            gscPigBean.result = bean.getData().getResultMsg() +",相似度:"+ bean.getData().getXiangsidu();
+                                            gscPigBean.videoFlag = "0";
+
+                                            gscPigBeans.add(gscPigBean);
+                                            ToastUtils.show("理赔申请成功");
+                                            ((Activity) AppConfig.getContext()).finish();
+
+                                            boolean result = FileUtils.deleteFile(zipFile);
+                                            if (result) {
+                                                Log.i("lipeidetete:", "本地图片打包文件删除成功！！");
                                             }
                                         }
-                                    });
+                                    }
+                                });
 
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    showRetryDialog("网络异常，请检查网络后重试。");
-                                    AVOSCloudUtils.saveErrorMessage(e, MediaProcessor.class.getSimpleName());
-                                }
-
-                            } else {
+                            } catch (Exception e) {
+                                e.printStackTrace();
                                 showRetryDialog("网络异常，请检查网络后重试。");
+                                AVOSCloudUtils.saveErrorMessage(e, MediaProcessor.class.getSimpleName());
                             }
+
+                        } else {
+                            showRetryDialog("网络异常，请检查网络后重试。");
                         }
                     }
-            );
-        }
+                }
+        );
+
     }
 
     /**
@@ -771,36 +545,21 @@ public class MediaProcessor {
      * @param msg
      */
     private void showRetryDialog(String msg) {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
-        View inflate = View.inflate(mActivity, R.layout.pre_timeout, null);
-        TextView timeout_resert = inflate.findViewById(R.id.timeout_resert);
-        TextView timeout_cancel = inflate.findViewById(R.id.timeout_cancel);
-        TextView tv_msg = inflate.findViewById(R.id.tv_msg);
-        tv_msg.setText(msg);
-        dialog.setView(inflate);
-        AlertDialog dialogcreate = dialog.create();
-        dialogcreate.setCanceledOnTouchOutside(false);
-        dialogcreate.show();
-        timeout_resert.setOnClickListener(new View.OnClickListener() {
+
+        AlertDialogManager.showMessageDialog(mActivity, "提示", msg, new AlertDialogManager.DialogInterface() {
             @Override
-            public void onClick(View v) {
+            public void onPositive() {
                 if (!NetworkUtil.isNetworkConnect(mContext)) {
                     Toast.makeText(mActivity, "断网了，请联网后重试。", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                dialogcreate.dismiss();
                 showProgressDialog(mActivity);
                 processUploadOne_Pay();
             }
-        });
-        timeout_cancel.setOnClickListener(new View.OnClickListener() {
+
             @Override
-            public void onClick(View v) {
-                dialogcreate.dismiss();
-                if ("pre".equals(PreferencesUtils.getStringValue(Constants.fleg, AppConfig.getAppContext()))) {
-                    mActivity.startActivity(new Intent(AppConfig.getActivity(), PreparedLiPeiActivity_new.class));
-                }
-                ((Activity) AppConfig.getActivity()).finish();
+            public void onNegative() {
+                ((Activity) AppConfig.getContext()).finish();
             }
         });
     }
@@ -814,7 +573,7 @@ public class MediaProcessor {
                     @Override
                     public void onPositive() {
                         AppConfig.during = 0;
-                        mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
+                        mActivity.startActivity(new Intent(mActivity, DetectorActivity_pig.class));
                         collectNumberHandler.sendEmptyMessage(2);
                     }
 
@@ -824,700 +583,25 @@ public class MediaProcessor {
                 });
     }
 
-    //预理赔库已有相似度"++"对象
-    private void showDialog(CommitBean bean) {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
-        View inflate = View.inflate(mActivity, R.layout.pre_result5, null);
-        TextView result5_edit = inflate.findViewById(R.id.result5_edit);
-        TextView result5_goon = inflate.findViewById(R.id.result5_goon);
-        ImageView result1_image = inflate.findViewById(R.id.image_one);
-        TextView xs = inflate.findViewById(R.id.xs);
-        // xs.setText("预理赔库已有相似度"++"对象，是否取消本次预理赔？");
-        com.orhanobut.logger.Logger.e("similarImgUrl"+ similarImgUrl);
-        if (!"".equals(similarImgUrl)) {
-            Glide.with(mContext).load(similarImgUrl).into(result1_image);
-        }
-        xs.setText(bean.getMsg());
+    private void showTimeOutDialog() {
 
-        dialog.setView(inflate);
-        AlertDialog dialogcreate = dialog.create();
-        dialogcreate.setCanceledOnTouchOutside(false);
-        dialogcreate.show();
-        result5_edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialogcreate.dismiss();
-                mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
-                collectNumberHandler.sendEmptyMessage(2);
-                //mActivity.startActivity(new Intent(mActivity, PreparedLiPeiActivity.class));
-
-
-            }
-        });
-        result5_goon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goonPre(dialogcreate);
-            }
-        });
-    }
-
-    //
-    private void showSuccessDialog(String mmsg) {
-        if (isNoCamera && !("lipei".equals(PreferencesUtils.getStringValue(Constants.fleg, AppConfig.getAppContext())))) {
-            mmsg += "\n为完成理赔，请拍摄死猪和猪舍短视频并上传。";
-        }
-        AlertDialogManager.showMessageDialogOne(mActivity, "提示", mmsg, new AlertDialogManager.DialogInterface() {
+        AlertDialogManager.showMessageDialog(mActivity, "提示", "连接超时，请检查网络后重试。", new AlertDialogManager.DialogInterface() {
             @Override
             public void onPositive() {
-                destroyDialogs();
-                if ("lipei".equals(PreferencesUtils.getStringValue(Constants.fleg, AppConfig.getAppContext()))) {
-                    mActivity.startActivity(new Intent(mActivity, AddPigPicActivity.class)
-                            .putExtra("lipeiid", lipeiId)
-                            .putExtra("insureNo", minsureNo)
-                            .putExtra("lipeiNo", lipeiNo)
-                            .putExtra("timesFlag", ""));
-                } else {
-                    if (isNoCamera) {
-                        mActivity.startActivity(new Intent(mActivity, SmallVideoActivity.class).putExtra("lipeiid", lipeiId));
-                    }
+                if (!NetworkUtil.isNetworkConnect(mContext)) {
+                    Toast.makeText(mActivity, "断网了，请联网后重试。", Toast.LENGTH_SHORT).show();
+                    return;
                 }
-                mActivity.finish();
+                showProgressDialog(mActivity);
+                processUploadOne_Pay();
             }
 
             @Override
             public void onNegative() {
-
-            }
-        });
-       /* AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
-        View inflate = View.inflate(mActivity, R.layout.prelipei_result2, null);
-        TextView result2_edit = inflate.findViewById(R.id.result2_edit);
-        TextView success_msg = inflate.findViewById(R.id.success_msg);
-        success_msg.setText(mmsg);
-        dialog.setView(inflate);
-        AlertDialog dialogcreate = dialog.create();
-        dialogcreate.setCanceledOnTouchOutside(false);
-        dialogcreate.show();
-        result2_edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClickView(View v) {
-                destroyDialogs();
-                dialogcreate.dismiss();
-                mActivity.finish();
-            }
-        });*/
-    }
-
-    /**
-     * 理赔弹框
-     */
-    private void showDialoglipei() {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
-        View inflate = View.inflate(mActivity, R.layout.lipei_result5, null);
-        TextView result5_edit = inflate.findViewById(R.id.result5_edit);
-        TextView result5_goon = inflate.findViewById(R.id.result5_goon);
-        TextView pigfleg = inflate.findViewById(R.id.pigfleg);
-        TextView baodantime = inflate.findViewById(R.id.baodantime);
-        TextView baodannum = inflate.findViewById(R.id.baodannum);
-        TextView have_msg = inflate.findViewById(R.id.have_msg);
-        TextView xiangsi = inflate.findViewById(R.id.xiangsi);
-        TextView tvSeqNo = inflate.findViewById(R.id.tv_seqNo);
-        LinearLayout llSeqNo = inflate.findViewById(R.id.ll_seqNo);
-        TextView tvCompensateTime = inflate.findViewById(R.id.tv_compensatetime);
-        LinearLayout llCompensateTime = inflate.findViewById(R.id.ll_compensatetime);
-
-        if (!compensateTime.isEmpty()) {
-            llCompensateTime.setVisibility(View.VISIBLE);
-            tvCompensateTime.setText(compensateTime);
-        } else {
-            llCompensateTime.setVisibility(View.GONE);
-        }
-
-        if (!seqNo.isEmpty()) {
-            llSeqNo.setVisibility(View.VISIBLE);
-            tvSeqNo.setText(seqNo);
-        } else {
-            llSeqNo.setVisibility(View.GONE);
-        }
-        xiangsi.setText(similarityDegree);
-        pigfleg.setText(msheName);
-        baodantime.setText(mpreCompensateTime);
-        baodannum.setText(minsureNo);
-        have_msg.setText(showmsg);
-        ImageView result1_image = inflate.findViewById(R.id.image_one);
-        com.orhanobut.logger.Logger.e("similarImgUrl"+ similarImgUrl);
-        if (!"".equals(similarImgUrl)) {
-            Glide.with(mContext).load(similarImgUrl).into(result1_image);
-        }
-
-        if (isChongFu) {
-            result5_goon.setVisibility(View.GONE);
-        }
-        dialog.setView(inflate);
-        AlertDialog dialogcreate = dialog.create();
-        dialogcreate.setCanceledOnTouchOutside(false);
-        dialogcreate.setCancelable(false);
-        dialogcreate.show();
-        result5_edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialogcreate.dismiss();
-                mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
-                collectNumberHandler.sendEmptyMessage(2);
-
-            }
-        });
-        result5_goon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goonLiEnd1(dialogcreate);
+                ((Activity) AppConfig.getContext()).finish();
             }
         });
     }
-
-    private void showDialogLiJin(List<CommitLiBean.DataBean.SimilarListBean> similarList) {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
-        View inflate = View.inflate(mActivity, R.layout.lipei_result2, null);
-        TextView result2_edit = inflate.findViewById(R.id.result2_edit);
-        TextView result2_goon = inflate.findViewById(R.id.result2_goon);
-        TextView pigfleg = inflate.findViewById(R.id.pigfleg);
-        TextView jin_msg = inflate.findViewById(R.id.jin_msg);
-        ImageView image_one = inflate.findViewById(R.id.image_one);
-        ImageView image_two = inflate.findViewById(R.id.image_two);
-        ImageView image_three = inflate.findViewById(R.id.image_three);
-        RelativeLayout lipei_one = inflate.findViewById(R.id.lipei_one);
-        RelativeLayout lipei_two = inflate.findViewById(R.id.lipei_two);
-        RelativeLayout lipei_three = inflate.findViewById(R.id.lipei_three);
-        TextView baodannum = inflate.findViewById(R.id.baodannum);
-        TextView baodantime = inflate.findViewById(R.id.baodantime);
-
-
-        mjuanName = similarList.get(0).getJuanName();
-        msheName = similarList.get(0).getSheName();
-
-        jin_msg.setText(showmsg);
-        pigfleg.setText(msheName + "-" + mjuanName);
-        baodantime.setText(similarList.get(0).getPreCompensateTime());
-        baodannum.setText(similarList.get(0).getInsureNo());
-
-        if (this.similarList.size() > 0) {
-            animalId = this.similarList.get(0).getAnimalId();
-            lipeiId = this.similarList.get(0).getLipeiId();
-            if (this.similarList.size() == 1) {
-                if (!"".equals(this.similarList.get(0).getSimilarImgUrl())) {
-                    try {
-                        /*jin_msg.setText(showmsg);
-                        pigfleg.setText(msheName + "-" + mjuanName);
-                        baodannum.setText(this.similarList.get(0).getInsureNo());
-                        baodantime.setText(this.similarList.get(0).getPreCompensateTime());*/
-                        lipei_one.setVisibility(View.VISIBLE);
-                        lipei_two.setVisibility(View.GONE);
-                        lipei_three.setVisibility(View.GONE);
-                        Glide.with(mContext).load(this.similarList.get(0).getSimilarImgUrl()).into(image_one);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            } else if (this.similarList.size() == 2) {
-                if (!"".equals(this.similarList.get(1).getSimilarImgUrl())) {
-                    try {
-                        lipei_one.setVisibility(View.VISIBLE);
-                        lipei_two.setVisibility(View.VISIBLE);
-                        lipei_three.setVisibility(View.GONE);
-                        Glide.with(mContext).load(this.similarList.get(0).getSimilarImgUrl()).into(image_one);
-                        Glide.with(mContext).load(this.similarList.get(1).getSimilarImgUrl()).into(image_two);
-                        image_three.setVisibility(View.GONE);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    image_one.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            baodannum.setText(similarList.get(0).getInsureNo());
-                            baodantime.setText(similarList.get(0).getPreCompensateTime());
-                            animalId = similarList.get(0).getAnimalId();
-                            lipeiId = similarList.get(0).getLipeiId();
-                            lipei_one.setBackground(mActivity.getDrawable(R.drawable.checked_shape));
-                            lipei_two.setBackground(null);
-                            lipei_three.setBackground(null);
-                        }
-                    });
-                    image_two.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            animalId = similarList.get(1).getAnimalId();
-                            lipeiId = similarList.get(1).getLipeiId();
-                            baodantime.setText(similarList.get(1).getPreCompensateTime());
-                            baodannum.setText(similarList.get(1).getInsureNo());
-                            lipei_one.setBackground(null);
-                            lipei_two.setBackground(mActivity.getDrawable(R.drawable.checked_shape));
-                            lipei_three.setBackground(null);
-                        }
-                    });
-                }
-            } else if (this.similarList.size() == 3) {
-
-                if (!"".equals(this.similarList.get(2).getSimilarImgUrl())) {
-                    try {
-                        lipei_one.setVisibility(View.VISIBLE);
-                        lipei_two.setVisibility(View.VISIBLE);
-                        lipei_three.setVisibility(View.VISIBLE);
-                        lipei_one.setBackground(mActivity.getDrawable(R.drawable.checked_shape));
-                        lipei_two.setBackground(null);
-                        lipei_three.setBackground(null);
-                        Glide.with(mContext).load(similarList.get(0).getSimilarImgUrl()).into(image_one);
-                        Glide.with(mContext).load(similarList.get(1).getSimilarImgUrl()).into(image_two);
-                        Glide.with(mContext).load(similarList.get(2).getSimilarImgUrl()).into(image_three);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    image_one.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            animalId = similarList.get(0).getAnimalId();
-                            lipeiId = similarList.get(0).getLipeiId();
-                            baodantime.setText(similarList.get(0).getPreCompensateTime());
-                            baodannum.setText(similarList.get(0).getInsureNo());
-                            lipei_one.setBackground(mActivity.getDrawable(R.drawable.checked_shape));
-                            lipei_two.setBackground(null);
-                            lipei_three.setBackground(null);
-                        }
-                    });
-                    image_two.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            animalId = similarList.get(1).getAnimalId();
-                            lipeiId = similarList.get(1).getLipeiId();
-                            baodantime.setText(similarList.get(1).getPreCompensateTime());
-                            baodannum.setText(similarList.get(1).getInsureNo());
-                            lipei_one.setBackground(null);
-                            lipei_two.setBackground(mActivity.getDrawable(R.drawable.checked_shape));
-                            lipei_three.setBackground(null);
-                        }
-                    });
-                    image_three.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            animalId = similarList.get(2).getAnimalId();
-                            lipeiId = similarList.get(2).getLipeiId();
-                            baodantime.setText(similarList.get(2).getPreCompensateTime());
-                            baodannum.setText(similarList.get(2).getInsureNo());
-                            lipei_one.setBackground(null);
-                            lipei_two.setBackground(null);
-                            lipei_three.setBackground(mActivity.getDrawable(R.drawable.checked_shape));
-                        }
-                    });
-                }
-            }
-
-
-        }
-
-        dialog.setView(inflate);
-        AlertDialog dialogcreate = dialog.create();
-        dialogcreate.setCanceledOnTouchOutside(false);
-        dialogcreate.setCancelable(false);
-        dialogcreate.show();
-        //取消
-        result2_edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialogcreate.dismiss();
-                mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
-                collectNumberHandler.sendEmptyMessage(2);
-
-            }
-        });
-        //继续
-        result2_goon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goonLiEnd1(dialogcreate);
-            }
-        });
-    }
-
-    //未找到相似对象的处理
-    private void showDialogLiNone(String timesFlag) {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
-        View inflate = View.inflate(mActivity, R.layout.lipei_result1, null);
-        TextView noLipei = inflate.findViewById(R.id.tv_no_lipei);
-        TextView liresult1Edit = inflate.findViewById(R.id.liresult1_edit);
-        TextView liresult1Goon = inflate.findViewById(R.id.liresult1_goon);
-        noLipei.setText("采集数据已提交，" + showmsg + "，请选择重新拍摄或结束采集并交由后台识别。");
-        dialog.setView(inflate);
-        AlertDialog dialogcreate = dialog.create();
-        dialogcreate.setCanceledOnTouchOutside(false);
-        dialogcreate.setCancelable(false);
-        dialogcreate.show();
-        liresult1Edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialogcreate.dismiss();
-                mActivity.startActivity(new Intent(mActivity, DetectorActivity.class));
-                collectNumberHandler.sendEmptyMessage(2);
-
-            }
-        });
-        liresult1Goon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialogcreate.dismiss();
-                //mActivity.startActivity(new Intent(mActivity, PreparedLiPeiActivity.class));
-                payForceEnd(timesFlag);
-            }
-        });
-    }
-
-    private void payForceEnd(String timesFlag) {
-        Map<String, String> mapbody = new HashMap<>();
-        mapbody.put(Constants.timesFlag, timesFlag);
-        mapbody.put(Constants.address, str_address);
-        mapbody.put(Constants.userLibId, userLibId + "");
-
-        OkHttp3Util.doPost(Constants.PAY_FORCE_END, mapbody, null, new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                mActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-//                        showTryAgainDialog(timesFlag);
-                        mActivity.startActivity(new Intent(mActivity, AddPigPicActivity.class)
-                                .putExtra("lipeiid", "")
-                                .putExtra("insureNo", minsureNo)
-                                .putExtra("lipeiNo", lipeiNo)
-                                .putExtra("timesFlag", timesFlag)
-                        );
-                        mActivity.finish();
-                    }
-                });
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-
-                mActivity.startActivity(new Intent(mActivity, AddPigPicActivity.class)
-                        .putExtra("lipeiid", "")
-                        .putExtra("insureNo", minsureNo)
-                        .putExtra("lipeiNo", lipeiNo)
-                        .putExtra("timesFlag", timesFlag)
-                );
-                mActivity.finish();
-
-//                if (response.isSuccessful()) {
-//                    mActivity.runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            mProgressDialog.dismiss();
-//                            JSONObject jsonObject = null;
-//                            try {
-//                                String s = response.body().string();
-//                                Log.e("end1", "--" + s);
-//                                jsonObject = new JSONObject(s);
-//                                int status = jsonObject.getInt("status");
-//                                String msg = jsonObject.getString("msg");
-//                                if (1 == status) {
-//                                    mActivity.startActivity(new Intent(mActivity, AddPigPicActivity.class)
-//                                            .putExtra("lipeiid", "")
-//                                            .putExtra("timesFlag",timesFlag)
-//                                    );
-//                                    mActivity.finish();
-//                                } else {
-//                                    showTryAgainDialog(timesFlag);
-//                                }
-//                            } catch (Exception e) {
-//                                e.printStackTrace();
-//                            }
-//
-//                        }
-//                    });
-//                }
-            }
-        });
-    }
-
-    private void showTryAgainDialog(String timesFlag) {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
-        View inflate = View.inflate(mActivity, R.layout.pre_timeout, null);
-        TextView timeoutResert = inflate.findViewById(R.id.timeout_resert);
-        TextView timeoutCancel = inflate.findViewById(R.id.timeout_cancel);
-        timeoutCancel.setVisibility(View.GONE);
-        dialog.setView(inflate);
-        AlertDialog dialogcreate = dialog.create();
-        dialogcreate.setCanceledOnTouchOutside(false);
-        dialogcreate.show();
-        timeoutResert.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!NetworkUtil.isNetworkConnect(mContext)) {
-                    Toast.makeText(mActivity, "断网了，请联网后重试。", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                dialogcreate.dismiss();
-                payForceEnd(timesFlag);
-            }
-        });
-    }
-
-
-    private void goonLiEnd1(AlertDialog dialogcreate) {
-        Map<String, String> mapbody = new HashMap<>();
-        mapbody.put(Constants.userLibId, String.valueOf(userLibId));
-        mapbody.put(Constants.animalId, String.valueOf(animalId));
-        mapbody.put(Constants.lipeiId, lipeiId);
-        mapbody.put(Constants.compensateVideoId, PreferencesUtils.getStringValue(Constants.preVideoId, AppConfig.getAppContext(), "0"));
-        mapbody.put(Constants.address, str_address);
-        mapbody.put("seqNo", seqNo);
-        OkHttp3Util.doPost(Constants.LIEDD1, mapbody, null, new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                com.orhanobut.logger.Logger.e("end1"+ e.getLocalizedMessage());
-                dialogcreate.dismiss();
-                mActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        showErrorDialogLi(bean.getMsg(), dialogcreate);
-                    }
-                });
-                AVOSCloudUtils.saveErrorMessage(e, MediaProcessor.class.getSimpleName());
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    String s = response.body().string();
-                    Activity appContext = (Activity) mActivity;
-                    appContext.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mProgressDialog.dismiss();
-                            JSONObject jsonObject = null;
-                            try {
-
-                                Log.e("end1", "--" + s);
-                                jsonObject = new JSONObject(s);
-                                int status = jsonObject.getInt("status");
-                                String msg = jsonObject.getString("msg");
-                                if (status == -1 || 0 == status) {
-                                    dialogcreate.dismiss();
-                                    showErrorDialogLi(msg, dialogcreate);
-                                } else {
-                                    StartBean bean = GsonUtils.getBean(s, StartBean.class);
-                                    if (1 == bean.getStatus()) {
-                                        dialogcreate.dismiss();
-                                        showSuccessDialog(bean.getMsg());
-                                    }
-                                }
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                AVOSCloudUtils.saveErrorMessage(e, MediaProcessor.class.getSimpleName());
-                            }
-
-                        }
-                    });
-
-                }
-            }
-        });
-    }
-
-    private void goonPre(AlertDialog dialogcreate) {
-        Map mapbody = new HashMap();
-        mapbody.put(Constants.lipeiId, lipeiId);
-        OkHttp3Util.doPost(Constants.PREJIXU, mapbody, null, new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                com.orhanobut.logger.Logger.e("pregoon"+ e.getLocalizedMessage());
-                dialogcreate.dismiss();
-                mActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        showErrorDialog(bean.getMsg());
-                    }
-                });
-                AVOSCloudUtils.saveErrorMessage(e, MediaProcessor.class.getSimpleName());
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    String s = response.body().string();
-                    Activity appContext = (Activity) mActivity;
-                    appContext.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            JSONObject jsonObject = null;
-                            try {
-
-                                Log.e("goonPre", "--" + s);
-                                jsonObject = new JSONObject(s);
-                                int status = jsonObject.getInt("status");
-                                String msg = jsonObject.getString("msg");
-                                if (status == -1 || 0 == status) {
-                                    dialogcreate.dismiss();
-                                    showErrorDialog(msg);
-                                    // showErrorDialogLi(msg);
-                                } else {
-                                    StartBean bean = GsonUtils.getBean(s, StartBean.class);
-                                    if (1 == bean.getStatus()) {
-                                        dialogcreate.dismiss();
-                                        showSuccessDialog(bean.getMsg());
-                                    }
-                                }
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                AVOSCloudUtils.saveErrorMessage(e, MediaProcessor.class.getSimpleName());
-                            }
-
-                        }
-                    });
-                }
-            }
-        });
-    }
-
-    private void showTimeOutDialog() {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
-        View inflate = View.inflate(mActivity, R.layout.pre_timeout, null);
-        TextView timeoutResert = inflate.findViewById(R.id.timeout_resert);
-        TextView timeoutCancel = inflate.findViewById(R.id.timeout_cancel);
-        dialog.setView(inflate);
-        AlertDialog dialogcreate = dialog.create();
-        dialogcreate.setCanceledOnTouchOutside(false);
-        dialogcreate.show();
-        timeoutResert.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!NetworkUtil.isNetworkConnect(mContext)) {
-                    Toast.makeText(mActivity, "断网了，请联网后重试。", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                dialogcreate.dismiss();
-                showProgressDialog(mActivity);
-                processUploadOne_Pay();
-            }
-        });
-        timeoutCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialogcreate.dismiss();
-                if ("pre".equals(PreferencesUtils.getStringValue(Constants.fleg, AppConfig.getAppContext()))) {
-                    mActivity.startActivity(new Intent(AppConfig.getActivity(), PreparedLiPeiActivity_new.class));
-                }
-                ((Activity) AppConfig.getActivity()).finish();
-            }
-        });
-    }
-
-    private void showPayForce(String timesFlag) {
-        String customServ = PreferencesUtils.getStringValue(Constants.customServ, AppConfig.getActivity());
-        String phone = PreferencesUtils.getStringValue(Constants.phone, AppConfig.getActivity());
-
-        AlertDialog.Builder pwdBuilder = new AlertDialog.Builder(mActivity)
-                .setIcon(R.drawable.cowface)
-                .setTitle("提示")
-                .setMessage("提交成功，系统无法找到对应牲畜。\n" +
-                        "请用手机直接对着牲畜的左、中、右脸拍摄一段不少于2分钟视频，留存作为档案提交到" + customServ + "处。\n" +
-                        "后台将进行人工复核，复核结果会通过短信方式通知。如有疑问请致电人工坐席服务电话：" + phone + "。")
-                .setPositiveButton("拨打客服电话", null)
-                .setNegativeButton("完成", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        if ("lipei".equals(PreferencesUtils.getStringValue(Constants.fleg, AppConfig.getAppContext()))) {
-                            mActivity.startActivity(new Intent(mActivity, AddPigPicActivity.class)
-                                    .putExtra("lipeiid", "")
-                                    .putExtra("insureNo", minsureNo)
-                                    .putExtra("lipeiNo", lipeiNo)
-                                    .putExtra("timesFlag", timesFlag)
-                            );
-                        }
-                        mActivity.finish();
-                    }
-                });
-
-        AlertDialog pwdDialog = pwdBuilder.create();
-        pwdDialog.setCancelable(false);
-        pwdDialog.show();
-
-        pwdDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-                Uri data = Uri.parse("tel:" + phone);
-                intent.setData(data);
-                mActivity.startActivity(intent);
-            }
-        });
-    }
-
-
-    private void showErrorDialogLi(String msg, AlertDialog diaLog) {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
-        View inflate = View.inflate(mActivity, R.layout.lipei_result4, null);
-        TextView result4Msg = inflate.findViewById(R.id.result4_msg);
-        TextView result4Edit = inflate.findViewById(R.id.result4_edit);
-        result4Msg.setText(msg);
-        dialog.setView(inflate);
-        AlertDialog dialogcreate = dialog.create();
-        dialogcreate.setCanceledOnTouchOutside(false);
-        dialogcreate.show();
-        result4Edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialogcreate.dismiss();
-                goonLiEnd1(diaLog);
-//                mActivity.finish();
-            }
-        });
-    }
-
-
-    private void getCurrentLocationLatLng() {
-        //初始化定位
-        mLocationClient = new AMapLocationClient(mContext);
-        //设置定位回调监听
-        mLocationClient.setLocationListener(mLocationListener);
-        //初始化AMapLocationClientOption对象
-        AMapLocationClientOption mLocationOption = new AMapLocationClientOption();
-        mLocationOption.setOnceLocation(true);
-        //设置定位间隔,单位毫秒,默认为2000ms，最低1000ms。默认连续定位 切最低时间间隔为1000ms
-        mLocationOption.setInterval(3500);
-        mLocationClient.setLocationOption(mLocationOption);
-        //启动定位
-        mLocationClient.startLocation();
-    }
-
-
-    private double currentLat;
-    private double currentLon;
-    private final AMapLocationListener mLocationListener = amapLocation -> {
-        if (amapLocation != null) {
-            if (amapLocation.getErrorCode() == 0) {
-                //定位成功回调信息，设置相关消息
-                amapLocation.getLocationType();//获取当前定位结果来源，如网络定位结果，详见定位类型表
-                currentLat = amapLocation.getLatitude();//获取纬度
-                currentLon = amapLocation.getLongitude();//获取经度
-                str_address = amapLocation.getAddress();
-                str_address = mLocationClient.getLastKnownLocation().getAddress();
-                str_address = str_address.equals("") ? "未知位置" : str_address;
-                Log.i("====", currentLat + "");
-                Log.i("====", currentLon + "");
-                Log.i("====", str_address + "");
-                amapLocation.getAccuracy();//获取精度信息
-
-            } else {
-                //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
-                Log.e("AmapError", "location Error, ErrCode:"
-                        + amapLocation.getErrorCode() + ", errInfo:"
-                        + amapLocation.getErrorInfo());
-            }
-        }
-    };
-
 
     private void updateReviewDialog_image(final Activity activity) {
         if (mReviewDialogImage == null) {
@@ -1770,6 +854,9 @@ public class MediaProcessor {
 
     }
 
+    String imgBase64 = "";
+    String filePath = "";
+    String fileName = "";
 
     private class ProcessorHandler_new extends Handler {
         ProcessorHandler_new(Looper looper) {
@@ -1778,7 +865,7 @@ public class MediaProcessor {
 
         @Override
         public void handleMessage(Message msg) {
-            mLogger.i("ProcessorHandler message: %d, obj: %s", msg.what, msg.obj);
+            mLoggerPig.i("ProcessorHandler message: %d, obj: %s", msg.what, msg.obj);
             switch (msg.what) {
                 case MSG_PROCESSOR_ZIP:
                     processZip(true);
@@ -1868,6 +955,7 @@ public class MediaProcessor {
             }
             //获取图片文件
             File imageDir_new = new File(imageDri);//图片目录下的文件
+
             File[] files_image = imageDir_new.listFiles();
             if (files_image == null) {
                 publishProgress(MSG_UI_FINISH_ZIP_FILE_NULL);//"文件不存在
@@ -1878,6 +966,28 @@ public class MediaProcessor {
                 return;
             }
 
+            File imgFile = new File(imageDri + "/Angle-02");
+            //获取文件夹下制定后缀的文件集合
+            File[] files = imgFile.listFiles(new FilenameFilter() {
+                @Override
+                public boolean accept(File dir, String name) {
+                    return name.endsWith(".jpeg");
+                }
+            });
+            //zip打包文件
+            File file_current = new File(zipimageDri);
+
+            if (files != null && files.length > 0) {
+                File f = files[0];
+                File fileGSCImg = new File(file_current, f.getName());
+                filePath = fileGSCImg.getAbsolutePath();
+                fileName = f.getName();
+                FileUtils.copyFile(f.getAbsolutePath(), fileGSCImg.getAbsolutePath());
+                imgBase64 = fileToBase64(f);
+            } else {
+                imgBase64 = "";
+            }
+//            Log.e(TAG, "imgBase64: " + imgBase64);
             // 4. zip recognized image
             //加入编号文件
             File[] fs_image = new File[files_image.length + 1];
@@ -1887,7 +997,7 @@ public class MediaProcessor {
             fs_image[files_image.length] = file_num;
 
             //打包图片文件
-            File file_current = new File(zipimageDri);
+
             File zipFile_image = new File(file_current, namepre + ".zip");
             ZipUtil.zipFiles(fs_image, zipFile_image);
             if (!zipFile_image.exists()) {
@@ -1933,10 +1043,10 @@ public class MediaProcessor {
             boolean deleteCurrentVideoResult = FileUtils.deleteFile(videoDir_new);
             boolean deleteCurrentImageResult = FileUtils.deleteFile(imageDri_new);
             if (deleteCurrentVideoResult == true) {
-                mLogger.i("当前视频文件夹删除成功！");
+                mLoggerPig.i("当前视频文件夹删除成功！");
             }
             if (deleteCurrentImageResult == true) {
-                mLogger.i("当前图片文件夹删除成功！");
+                mLoggerPig.i("当前图片文件夹删除成功！");
             }
 
 
@@ -1975,10 +1085,10 @@ public class MediaProcessor {
             boolean deleteCurrentVideoResult = FileUtils.deleteFile(videoDir_new);
             boolean deleteCurrentImageResult = FileUtils.deleteFile(imageDri_new);
             if (deleteCurrentVideoResult) {
-                mLogger.i("当前投保视频文件夹删除成功！");
+                mLoggerPig.i("当前投保视频文件夹删除成功！");
             }
             if (deleteCurrentImageResult) {
-                mLogger.i("当前投保图片文件夹删除成功！");
+                mLoggerPig.i("当前投保图片文件夹删除成功！");
             }
 
             // TODO: 2018/8/18 By:LuoLu  是否传视频设置
@@ -1986,11 +1096,11 @@ public class MediaProcessor {
                 // TODO: 2018/8/16 By:LuoLu  投保建库上传图片包和视频包
                 String zipImageDir = Global.mediaInsureItem.getZipImageDir();
                 String zipVideoDir = Global.mediaInsureItem.getZipVideoDir();
-                com.orhanobut.logger.Logger.i("zipVideoDir:"+ zipVideoDir);
+                Log.i("zipVideoDir:", zipVideoDir);
                 File file_zip = new File(zipImageDir);
                 File file_zipVideo = new File(zipVideoDir);
                 String fname_image = Global.ZipFileName + ".zip";
-                com.orhanobut.logger.Logger.i("fname_video:"+ fname_image);
+                Log.i("fname_video:", fname_image);
                 File zipFile_image2 = new File(file_zip, fname_image); //要上传的文件
                 File zipFile_video2 = new File(file_zipVideo, fname_image); //要上传的视频文件
                 if (!zipFile_image2.exists()) {
@@ -2072,7 +1182,7 @@ public class MediaProcessor {
                 String zipImageDir = Global.mediaInsureItem.getZipImageDir();
                 File file_zip = new File(zipImageDir);
                 String fname_image = Global.ZipFileName + ".zip";
-                com.orhanobut.logger.Logger.i("fname_video:"+ fname_image);
+                Log.i("fname_video:", fname_image);
                 File zipFile_image2 = new File(file_zip, fname_image); //要上传的文件
                 if (!zipFile_image2.exists()) {
                     Log.i("zipFile_image2:", "压缩图片文件夹不存在！！");
@@ -2138,13 +1248,13 @@ public class MediaProcessor {
             UploadObject imgResp = HttpUtils.uploadImages(mContext, model, zipFile_image, uid, libMum);
             if (imgResp == null || imgResp.status != HttpRespObject.STATUS_OK) {
                 int status = imgResp == null ? -1 : imgResp.status;
-                mLogger.e("upload images failed, status: %d", status);
+                mLoggerPig.e("upload images failed, status: %d", status);
 //                processUploadOne_Insure();
                 return imgResp;
             }
             //boolean result = FileUtils.deleteFile(zipFile_image);
            /* if (result == true) {
-                mLogger.i("本地图片打包文件删除成功！！");
+                mLoggerPig.i("本地图片打包文件删除成功！！");
             }*/
             return imgResp;
         }
@@ -2154,67 +1264,14 @@ public class MediaProcessor {
             UploadObject imgResp = HttpUtils.uploadVideo(mContext, model, lib_id, videoZipFile, uid, libMum);
             if (imgResp == null || imgResp.status != HttpRespObject.STATUS_OK) {
                 int status = imgResp == null ? -1 : imgResp.status;
-                mLogger.e("upload video failed, status: %d", status);
+                mLoggerPig.e("upload video failed, status: %d", status);
                 return imgResp;
             }
             boolean result = FileUtils.deleteFile(videoZipFile);
             if (result == true) {
-                mLogger.i("本地视频打包文件删除成功！！");
+                mLoggerPig.i("本地视频打包文件删除成功！！");
             }
             return imgResp;
-        }
-
-        /**
-         * 离线上传图片
-         */
-        private void offLineUploadPic(File file) {
-            File zipFile_image = new File(file.getAbsoluteFile(), Global.ZipFileName + ".zip");
-            String insureNoPath = Environment.getExternalStorageDirectory().getPath() + InnApplication.OFFLINE_TEMP_PATH;
-            File newDir = new File(insureNoPath);
-
-            FileUtils.deleteFileAll(newDir);
-            newDir.mkdirs();
-//            文件不存在创建目录
-            /*
-            if (!newDir.exists()) {
-                newDir.mkdirs();
-            } else {
-                //文件存在删除目录中的文件
-                FileUtils.deleteFileAll(newDir);
-            }*/
-
-            // 取得自动生成的zip文件的文件名
-            String[] pathArray = zipFile_image.getPath().split("/");
-            String localImageFielName = pathArray[pathArray.length - 1];
-            //图片文件名称
-            String imagePathFile = insureNoPath + localImageFielName;
-
-            FileUtils.moveFile(zipFile_image.getPath(), imagePathFile);//移动文件
-
-
-           /* String uuidFileName = insureNoPath + UUID.randomUUID() + ".zip";
-            File insuredNofile = new File(insureNoPath);
-            File[] files = insuredNofile.listFiles();
-            ZipUtil.zipFiles(files, new File(uuidFileName));*/
-
-            // TODO: 2018/8/8 上传文件
-            /*
-            UploadUtils.upload(imagePath, "123456", "123456", new okhttp3.Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    Log.e("onFailure", "onFailure");
-                }
-
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    Log.e("onResponse", "onResponse");
-                }
-            });*/
-
-            // 离线模式时为对话框正常显示提供给UI的假数据
-            UploadObject imgResp = new UploadObject();
-            imgResp.upload_pigInfo = "{\"lib_id\":0,\"lib_envinfo\":{\"imei\":\"\",\"gps\":\"\"},\"lib_createtime\":\"\"}";
-            publishProgress(MSG_UI_FINISH_BUILD, Global.model, 0, imgResp.upload_pigInfo);
         }
     }
 
@@ -2234,10 +1291,10 @@ public class MediaProcessor {
         boolean deleteCurrentVideoResult = FileUtils.deleteFile(videoDirNew);
         boolean deleteCurrentImageResult = FileUtils.deleteFile(imageDriNew);
         if (deleteCurrentVideoResult) {
-            mLogger.i("当前理赔视频文件夹删除成功！");
+            mLoggerPig.i("当前理赔视频文件夹删除成功！");
         }
         if (deleteCurrentImageResult) {
-            mLogger.i("当前理赔图片文件夹删除成功！");
+            mLoggerPig.i("当前理赔图片文件夹删除成功！");
         }
 
 
@@ -2254,11 +1311,11 @@ public class MediaProcessor {
 
         /* 处理视频文件 start */
         String zipVideoDir = Global.mediaPayItem.getZipVideoDir();
-        com.orhanobut.logger.Logger.i("zipVideoDir:" +  zipVideoDir);
+        Log.i("zipVideoDir:", zipVideoDir);
         File fileZipVideo = new File(zipVideoDir);
         String fnameVideo = Global.ZipFileName + ".zip";
         File zipFileVideo2 = new File(fileZipVideo, fnameVideo); //要上传的视频ZIP文件
-        com.orhanobut.logger.Logger.i("zipVideo=====:" +  zipFileVideo2.getAbsolutePath());
+        Log.i("zipVideo=====:", zipFileVideo2.getAbsolutePath());
         /* 处理视频文件 end */
 
         //如果图片文件不存在直接返回
@@ -2267,11 +1324,7 @@ public class MediaProcessor {
             Toast.makeText(mActivity, "压缩视频文件夹为空。", Toast.LENGTH_SHORT).show();
             return;
         }
-        String mfleg = PreferencesUtils.getStringValue(Constants.fleg, AppConfig.getAppContext());
-        //结束录制视频
-        if (mActivity != null) {
-            editRecoed();
-        }
+
 
         if (!zipFileVideo2.exists()) {
             Log.i("zipVideo:", "压缩视频文件夹不存在！！");
@@ -2279,53 +1332,9 @@ public class MediaProcessor {
         }
 
         String timesflag = zipFileVideo2.getName();
-        /* 将视频文件插入数据库 */
-        Box<VideoUploadTable> box = AppConfig.getBoxStore().boxFor(VideoUploadTable.class);
-        VideoUploadTable bean = new VideoUploadTable();
-        bean.fpath = "" + zipFileVideo2.getAbsolutePath();
-        bean.timesflag = "" + zipFileVideo2.getName();
-        bean.iscomplete = false;
-        box.put(bean);
 
-        List<VideoUploadTable> list = new ArrayList<>();
-        list.add(bean);
-        /* 开启视频断点续传 */
-        UploadUtils.uploadFile(AppConfig.getActivity(), new UploadTaskListener() {
-            @Override
-            public void onUploading(UploadTask uploadTask, String percent, int position) {
-
-            }
-
-            @Override
-            public void onUploadSuccess(UploadTask uploadTask, File file) {
-                if (AppConfig.isApkInDebug()) {
-                    Toast.makeText(AppConfig.getActivity(), "提交成功", Toast.LENGTH_LONG).show();
-                }
-                VideoUploadTable videoUpLoadBean = (VideoUploadTable) uploadTask.getT();
-                videoUpLoadBean.iscomplete = true;
-                box.put(videoUpLoadBean);
-            }
-
-            @Override
-            public void onError(UploadTask uploadTask, int errorCode, int position) {
-
-            }
-
-            @Override
-            public void onPause(UploadTask uploadTask) {
-
-            }
-        }, list);
-
-        //预理赔
-        if ("pre".equals(mfleg)) {
-            Log.i("预理赔调用", "===");
-            //预理赔提交
-            preCommit(zipFileImage2, timesflag);
-        } else if ("lipei".equals(mfleg)) {
-            //理赔提交
-            preCommitForLiPei(zipFileImage2, timesflag);
-        }
+        //理赔提交
+        preCommitForLiPei(zipFileImage2, timesflag);
     }
 
     private static boolean emptyPigInfo(String pigInfo) {
@@ -2348,7 +1357,7 @@ public class MediaProcessor {
 
         @Override
         public void handleMessage(final Message msg) {
-            mLogger.i("UiHandler message: %d", msg.what);
+            mLoggerPig.i("UiHandler message: %d", msg.what);
             final String showMessage;
             switch (msg.what) {
                 case MSG_UI_PROGRESS_EXTRACT_IMG:
@@ -2444,7 +1453,6 @@ public class MediaProcessor {
                     final Context context = mProgressDialog.getContext();
 //                    mProgressDialog.dismiss();
 //                    mProgressDialog = null;
-                    getCurrentLocationLatLng();
                     obj_cow_verify = (String) msg.obj;
                     final LipeiDialog dialogVerify = new LipeiDialog(context);
                     View.OnClickListener listener_new = v -> {
@@ -2456,23 +1464,27 @@ public class MediaProcessor {
                                 updateProgressDialog(showMessage1);
                                 JSONObject jo = new JSONObject(obj_cow_verify);
                                 cow_libid = JsonHelper.getString(jo, Utils.Upload.LIB_ID);
-                                str_address = mLocationClient.getLastKnownLocation().getAddress();
                                 str_address = str_address.equals("") ? "未知位置" : str_address;
 //                                pigBuildResp2 = HttpUtils.upload_build(String.valueOf(Model.VERIFY.value()), cow_libid, mcowear_number.getText().toString(), mNumberEdit.getText().toString(), mContext);
 
-                                com.orhanobut.logger.Logger.i("Mplipei cow_libid:"+ cow_libid);
-                                com.orhanobut.logger.Logger.i("Mlipei getCowEarNumber:"+ getCowEarNumber);
-                                com.orhanobut.logger.Logger.i("lp getlipeiTempNumber:"+ getlipeiTempNumber);
+                                Log.i("Mplipei cow_libid:", cow_libid);
+                                Log.i("Mlipei getCowEarNumber:", getCowEarNumber);
+                                Log.i("lp getlipeiTempNumber:", getlipeiTempNumber);
                                 pigBuildResp2 = HttpUtils.upload_build(String.valueOf(Model.VERIFY.value()), cow_libid, getCowEarNumber, getlipeiTempNumber, mContext);
                                 mHandler.sendEmptyMessage(2);
                             } catch (JSONException e) {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(mActivity)
-                                        .setIcon(R.drawable.cowface)
-                                        .setTitle("提示")
-                                        .setMessage("查询失败")
-                                        .setPositiveButton("确认", (dialog, which) -> mActivity.finish());
-                                builder.setCancelable(false);
-                                builder.show();
+
+                                AlertDialogManager.showMessageDialogOne(mActivity, "提示", "查询失败", new AlertDialogManager.DialogInterface() {
+                                    @Override
+                                    public void onPositive() {
+                                        mActivity.finish();
+                                    }
+
+                                    @Override
+                                    public void onNegative() {
+
+                                    }
+                                });
                                 e.printStackTrace();
                             }
                         }
@@ -2574,7 +1586,7 @@ public class MediaProcessor {
 
                 mProgressDialog.dismiss();
                 collectNumberHandler.sendEmptyMessage(2);
-                Intent intent = new Intent(mActivity, DetectorActivity.class);
+                Intent intent = new Intent(mActivity, DetectorActivity_pig.class);
                 intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                 mActivity.startActivity(intent);
             });
@@ -2604,7 +1616,7 @@ public class MediaProcessor {
                     msg += "请登录后再拍摄视频";
                     break;
                 case RespObject.STATUS_105:
-                    msg += "返回数据未空";
+                    msg += "返回数据为空";
                     break;
                 case RespObject.STATUS_106:
                     msg += "操作不成功";
@@ -2644,7 +1656,7 @@ public class MediaProcessor {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0:
-                    com.orhanobut.logger.Logger.i("理赔库查询pigBuildRespResult"+ String.valueOf(pigBuildRespResult));
+                    Log.i("理赔库查询pigBuildRespResult", String.valueOf(pigBuildRespResult));
                     if (pigBuildRespResult != null) {
                         if (pigBuildRespResult.status == 1) {
 
@@ -2730,7 +1742,7 @@ public class MediaProcessor {
                                         View.OnClickListener listener_ReCollect = v -> {
                                             dialogLipeiResult.dismiss();
                                             collectNumberHandler.sendEmptyMessage(2);
-                                            Intent intent = new Intent(mActivity, DetectorActivity.class);
+                                            Intent intent = new Intent(mActivity, DetectorActivity_pig.class);
                                             intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                             intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                                             mActivity.startActivity(intent);
@@ -2841,7 +1853,7 @@ public class MediaProcessor {
                                         View.OnClickListener listener_ReCollect = v -> {
                                             dialogLipeiResult.dismiss();
                                             collectNumberHandler.sendEmptyMessage(2);
-                                            Intent intent = new Intent(mActivity, DetectorActivity.class);
+                                            Intent intent = new Intent(mActivity, DetectorActivity_pig.class);
                                             intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                             intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                                             mActivity.startActivity(intent);
@@ -2950,7 +1962,7 @@ public class MediaProcessor {
                                         View.OnClickListener listener_ReCollect = v -> {
                                             dialogLipeiResult.dismiss();
                                             collectNumberHandler.sendEmptyMessage(2);
-                                            Intent intent = new Intent(mActivity, DetectorActivity.class);
+                                            Intent intent = new Intent(mActivity, DetectorActivity_pig.class);
                                             intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                             intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                                             mActivity.startActivity(intent);
@@ -3048,7 +2060,7 @@ public class MediaProcessor {
                                         View.OnClickListener listener_ReCollect = v -> {
                                             dialogLipeiResult.dismiss();
                                             collectNumberHandler.sendEmptyMessage(2);
-                                            Intent intent = new Intent(mActivity, DetectorActivity.class);
+                                            Intent intent = new Intent(mActivity, DetectorActivity_pig.class);
                                             intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                             intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                                             mActivity.startActivity(intent);
@@ -3083,50 +2095,62 @@ public class MediaProcessor {
                                 }
 
                             } else {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(mActivity)
-                                        .setIcon(R.drawable.cowface)
-                                        .setTitle("提示")
-                                        .setMessage("理赔失败")
-                                        .setPositiveButton("确认", (dialog, which) -> mActivity.finish());
-                                builder.setCancelable(false);
-                                builder.show();
+
+                                AlertDialogManager.showMessageDialogOne(mActivity, "提示", "理赔失败", new AlertDialogManager.DialogInterface() {
+                                    @Override
+                                    public void onPositive() {
+                                        mActivity.finish();
+                                    }
+
+                                    @Override
+                                    public void onNegative() {
+
+                                    }
+                                });
+
                             }
 
                         } else if (pigBuildRespResult.status == 0) {
 
-                            AlertDialog.Builder builder = new AlertDialog.Builder(mActivity)
-                                    .setIcon(R.drawable.cowface)
-                                    .setTitle("提示")
-                                    .setMessage(pigBuildRespResult.msg)
-                                    .setPositiveButton("重试", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
-                                            collectNumberHandler.sendEmptyMessage(2);
-                                            Intent intent = new Intent(mActivity, DetectorActivity.class);
-                                            intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
-                                            intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
-                                            mActivity.startActivity(intent);
-                                        }
-                                    });
-                            builder.create();
-                            builder.show();
+                            AlertDialogManager.showMessageDialogRetry(mActivity, "提示", pigBuildRespResult.msg, new AlertDialogManager.DialogInterface() {
+                                @Override
+                                public void onPositive() {
+                                    collectNumberHandler.sendEmptyMessage(2);
+                                    Intent intent = new Intent(mActivity, DetectorActivity_pig.class);
+                                    intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
+                                    intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
+                                    mActivity.startActivity(intent);
+                                }
+
+                                @Override
+                                public void onNegative() {
+
+                                }
+                            });
                         } else if (pigBuildRespResult.status == -4) {
-                            AlertDialog.Builder dialogNewCow = new AlertDialog.Builder(mActivity)
-                                    .setIcon(R.drawable.cowface)
-                                    .setTitle("提示")
-                                    .setMessage("服务端异常，请稍后再试！")
-                                    .setPositiveButton("确认", (dialog, which) -> mActivity.finish());
-                            dialogNewCow.setCancelable(false);
-                            dialogNewCow.show();
+                            AlertDialogManager.showMessageDialogOne(mActivity, "提示", "服务端异常，请稍后再试！", new AlertDialogManager.DialogInterface() {
+                                @Override
+                                public void onPositive() {
+                                    mActivity.finish();
+                                }
+
+                                @Override
+                                public void onNegative() {
+
+                                }
+                            });
                         } else {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(mActivity)
-                                    .setIcon(R.drawable.cowface)
-                                    .setTitle("提示")
-                                    .setMessage("参数校验异常！")
-                                    .setPositiveButton("确认", (dialog, which) -> mActivity.finish());
-                            builder.setCancelable(false);
-                            builder.show();
+                            AlertDialogManager.showMessageDialogOne(mActivity, "提示", "参数校验异常！", new AlertDialogManager.DialogInterface() {
+                                @Override
+                                public void onPositive() {
+                                    mActivity.finish();
+                                }
+
+                                @Override
+                                public void onNegative() {
+
+                                }
+                            });
                         }
 
                     } else {
@@ -3148,7 +2172,7 @@ public class MediaProcessor {
                         if (pigBuildResp2.status == 1) {
                             if (pigBuildResp2.buildStatus == 1) {
 
-                                com.orhanobut.logger.Logger.i("投保库查询获得的pid"+ pigBuildResp2.build_result_pid);
+                                Log.i("投保库查询获得的pid", pigBuildResp2.build_result_pid);
                                 verification_status = pigBuildResp2.buildVertificaton;
 
                                 //-->2.5新增猪/牛的信息 /pigInfo/addApp.
@@ -3206,13 +2230,13 @@ public class MediaProcessor {
                                     bean = gson.fromJson(response, GsonBean.class);
 
 
-                                    com.orhanobut.logger.Logger.i("transerPayData s:"+ getPayYiji);
-                                    com.orhanobut.logger.Logger.i("transerPayData s1:"+ getPayErji);
-                                    com.orhanobut.logger.Logger.i("transerPayData s2:"+ getPaySanji);
+                                    Log.i("transerPayData s:", getPayYiji);
+                                    Log.i("transerPayData s1:", getPayErji);
+                                    Log.i("transerPayData s2:", getPaySanji);
 
 
-                                    com.orhanobut.logger.Logger.i("GsonBeen getStatus:"+ String.valueOf(bean.getStatus()));
-                                    com.orhanobut.logger.Logger.i(HttpUtils.INSUR_ADDPIG_URL + "\n新增牲畜response:\n"+ response);
+                                    Log.i("GsonBeen getStatus:", String.valueOf(bean.getStatus()));
+                                    Log.i(HttpUtils.INSUR_ADDPIG_URL + "\n新增牲畜response:\n", response);
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
@@ -3222,121 +2246,161 @@ public class MediaProcessor {
                                     pigBuildRespResult = HttpUtils.upload_build("3", cow_libid, getCowEarNumber, getlipeiTempNumber, mContext);
                                     mHandler.sendEmptyMessage(0);
                                 } else if (bean.getStatus() == 0) {
-                                    AlertDialog.Builder dialogNewCow = new AlertDialog.Builder(mActivity)
-                                            .setIcon(R.drawable.cowface)
-                                            .setTitle("提示")
-                                            .setMessage("服务端异常，请稍后再试！")
-                                            .setPositiveButton("确认", (dialog, which) -> mActivity.finish());
-                                    dialogNewCow.setCancelable(false);
-                                    dialogNewCow.show();
-                                } else {
-                                    AlertDialog.Builder dialogNewCow = new AlertDialog.Builder(mActivity)
-                                            .setIcon(R.drawable.cowface)
-                                            .setTitle("提示")
-                                            .setMessage("新增对象失败！！")
-                                            .setPositiveButton("确认", (dialog, which) -> mActivity.finish());
-                                    dialogNewCow.setCancelable(false);
-                                    dialogNewCow.show();
-                                }
-                            } else if (pigBuildResp2.buildStatus == 2) {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(mActivity)
-                                        .setIcon(R.drawable.cowface)
-                                        .setTitle("提示")
-                                        .setMessage("建库失败，图片质量不合格！")
-                                        .setPositiveButton("完成", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.dismiss();
-                                                mActivity.finish();
-                                            }
-                                        })
-                                        .setNegativeButton("重新采集", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.dismiss();
-                                                collectNumberHandler.sendEmptyMessage(2);
-                                                Intent intent = new Intent(mActivity, DetectorActivity.class);
-                                                intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
-                                                intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
-                                                mActivity.startActivity(intent);
-                                            }
-                                        });
-                                builder.create();
-                                builder.show();
-                            } else if (pigBuildResp2.buildStatus == 0) {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(mActivity)
-                                        .setIcon(R.drawable.cowface)
-                                        .setTitle("提示")
-                                        .setMessage(pigBuildResp2.msg)
-                                        .setPositiveButton("完成", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.dismiss();
-                                                mActivity.finish();
-                                            }
-                                        })
-                                        .setNegativeButton("重新采集", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.dismiss();
-                                                collectNumberHandler.sendEmptyMessage(2);
-                                                Intent intent = new Intent(mActivity, DetectorActivity.class);
-                                                intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
-                                                intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
-                                                mActivity.startActivity(intent);
-                                            }
-                                        });
-                                builder.create();
-                                builder.show();
-                            }
-                        } else {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(mActivity)
-                                    .setIcon(R.drawable.cowface)
-                                    .setTitle("提示")
-                                    .setMessage(pigBuildRespResult.msg)
-                                    .setPositiveButton("重试", new DialogInterface.OnClickListener() {
+
+                                    AlertDialogManager.showMessageDialogOne(mActivity, "提示", "服务端异常，请稍后再试！", new AlertDialogManager.DialogInterface() {
                                         @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
-                                            collectNumberHandler.sendEmptyMessage(2);
-                                            Intent intent = new Intent(mActivity, DetectorActivity.class);
-                                            intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
-                                            intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
-                                            mActivity.startActivity(intent);
+                                        public void onPositive() {
+                                            mActivity.finish();
+                                        }
+
+                                        @Override
+                                        public void onNegative() {
+
                                         }
                                     });
-                            builder.create();
-                            builder.show();
-                        }
-                    } else {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity)
-                                .setIcon(R.drawable.cowface)
-                                .setTitle("提示")
-                                .setMessage(pigBuildRespResult.msg)
-                                .setPositiveButton("重试", new DialogInterface.OnClickListener() {
+                                } else {
+
+                                    AlertDialogManager.showMessageDialogOne(mActivity, "提示", "新增对象失败！！", new AlertDialogManager.DialogInterface() {
+                                        @Override
+                                        public void onPositive() {
+                                            mActivity.finish();
+                                        }
+
+                                        @Override
+                                        public void onNegative() {
+
+                                        }
+                                    });
+                                }
+                            } else if (pigBuildResp2.buildStatus == 2) {
+                                //改完
+                                AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+
+                                final View dialogView = LayoutInflater.from(mActivity).inflate(R.layout.dialog_common_two_layout, null);
+                                TextView dialog_content_tv1 = dialogView.findViewById(R.id.dialog_content_tv1);
+                                TextView dialog_ok_btn = dialogView.findViewById(R.id.dialog_ok_btn);
+                                TextView dialog_cancel_btn = dialogView.findViewById(R.id.dialog_cancel_btn);
+                                TextView dialog_tips_tv = dialogView.findViewById(R.id.dialog_tips_tv);
+
+                                dialog_tips_tv.setText("提示");
+                                dialog_content_tv1.setText("建库失败，图片质量不合格！");
+                                dialog_ok_btn.setText("完成");
+                                dialog_cancel_btn.setText("重新采集");
+
+                                builder.setView(dialogView);
+
+                                Dialog d = builder.create();
+
+                                dialog_ok_btn.setOnClickListener(new View.OnClickListener() {
                                     @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
+                                    public void onClick(View v) {
+                                        d.dismiss();
+                                        mActivity.finish();
+                                    }
+                                });
+
+                                dialog_cancel_btn.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        d.dismiss();
                                         collectNumberHandler.sendEmptyMessage(2);
-                                        Intent intent = new Intent(mActivity, DetectorActivity.class);
+                                        Intent intent = new Intent(mActivity, DetectorActivity_pig.class);
                                         intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
                                         intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
                                         mActivity.startActivity(intent);
                                     }
                                 });
-                        builder.create();
-                        builder.show();
+                                d.setCancelable(false);
+                                d.show();
+                            } else if (pigBuildResp2.buildStatus == 0) {
+                                //改完
+                                AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+                                final View dialogView = LayoutInflater.from(mActivity).inflate(R.layout.dialog_common_two_layout, null);
+                                TextView dialog_content_tv1 = dialogView.findViewById(R.id.dialog_content_tv1);
+                                TextView dialog_ok_btn = dialogView.findViewById(R.id.dialog_ok_btn);
+                                TextView dialog_cancel_btn = dialogView.findViewById(R.id.dialog_cancel_btn);
+                                TextView dialog_tips_tv = dialogView.findViewById(R.id.dialog_tips_tv);
+
+                                dialog_tips_tv.setText("提示");
+                                dialog_content_tv1.setText(pigBuildResp2.msg);
+                                dialog_ok_btn.setText("完成");
+                                dialog_cancel_btn.setText("重新采集");
+
+                                builder.setView(dialogView);
+
+                                Dialog d = builder.create();
+                                dialog_ok_btn.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        d.dismiss();
+                                        mActivity.finish();
+                                    }
+                                });
+
+                                dialog_cancel_btn.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        d.dismiss();
+                                        collectNumberHandler.sendEmptyMessage(2);
+                                        Intent intent = new Intent(mActivity, DetectorActivity_pig.class);
+                                        intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
+                                        intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
+                                        mActivity.startActivity(intent);
+                                    }
+                                });
+                                d.setCancelable(false);
+                                d.show();
+                            }
+                        } else {
+                            AlertDialogManager.showMessageDialogRetry(mActivity, "提示", pigBuildRespResult.msg, new AlertDialogManager.DialogInterface() {
+                                @Override
+                                public void onPositive() {
+                                    collectNumberHandler.sendEmptyMessage(2);
+                                    Intent intent = new Intent(mActivity, DetectorActivity_pig.class);
+                                    intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
+                                    intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
+                                    mActivity.startActivity(intent);
+                                }
+
+                                @Override
+                                public void onNegative() {
+
+                                }
+                            });
+                        }
+                    } else {
+                        AlertDialogManager.showMessageDialogRetry(mActivity, "提示", pigBuildRespResult.msg, new AlertDialogManager.DialogInterface() {
+                            @Override
+                            public void onPositive() {
+                                collectNumberHandler.sendEmptyMessage(2);
+                                Intent intent = new Intent(mActivity, DetectorActivity_pig.class);
+                                intent.putExtra("ToubaoTempNumber", getStringTouboaExtra);
+                                intent.putExtra("LipeiTempNumber", getlipeiTempNumber);
+                                mActivity.startActivity(intent);
+                            }
+
+                            @Override
+                            public void onNegative() {
+
+                            }
+                        });
                     }
                     break;
 
                 case 400:
-                    AlertDialog.Builder builder = new AlertDialog.Builder(mActivity)
-                            .setIcon(R.drawable.cowface)
-                            .setTitle("提示")
-                            .setMessage("获取用户ID失败！")
-                            .setPositiveButton("确认", (dialog, which) -> mActivity.finish());
-                    builder.setCancelable(false);
-                    builder.show();
+
+                    AlertDialogManager.showMessageDialogOne(mActivity, "提示", "获取用户ID失败！", new AlertDialogManager.DialogInterface() {
+                        @Override
+                        public void onPositive() {
+                            mActivity.finish();
+                        }
+
+                        @Override
+                        public void onNegative() {
+
+                        }
+                    });
+
                     break;
                 case 94:
                     break;

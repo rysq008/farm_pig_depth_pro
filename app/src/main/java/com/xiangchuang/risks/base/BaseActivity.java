@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +17,11 @@ import android.widget.TextView;
 
 import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
+import com.xiangchuang.risks.update.AppUpgradeService;
 import com.xiangchuang.risks.update.UpdateInfoModel;
+import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.utils.ToastUtils;
+import com.xiangchuang.risks.utils.statusBarUtils.StatusBarUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -34,8 +38,7 @@ import butterknife.Unbinder;
 public abstract class BaseActivity extends AppCompatActivity {
 
     protected ViewGroup title_bar = null;
-    Unbinder unbinder;
-    public ProgressDialog mProgressDialog;
+    public ProgressDialog mProgressDialog, mLoadProgressDialog;
     private boolean isPause = false;
     public ToastUtils toastUtils;
     protected Activity mActivity;
@@ -45,28 +48,26 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivity = this;
-      /*  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            WindowManager.LayoutParams localLayoutParams = getWindow().getAttributes();
-            localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
-            Window win = getWindow();
-           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                //透明状态栏
-                win.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                // 状态栏字体设置为深色，SYSTEM_UI_FLAG_LIGHT_STATUS_BAR 为SDK23增加
-                win.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
-                // 部分机型的statusbar会有半透明的黑色背景
-                win.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                win.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                // SDK21
-                win.setStatusBarColor(Color.TRANSPARENT);
-            }
+        //这里注意下 调用setRootViewFitsSystemWindows 里面 winContent.getChildCount()=0 导致代码无法继续
+        //是因为需要在setContentView之后才可以调用 setRootViewFitsSystemWindows
+        //当FitsSystemWindows设置 true 时，会在屏幕最上方预留出状态栏高度的 padding
+        StatusBarUtil.setRootViewFitsSystemWindows(this, true);
+        //设置状态栏透明
+        StatusBarUtil.setTranslucentStatus(this);
+        //一般的手机的状态栏文字和图标都是白色的, 可如果你的应用也是纯白色的, 或导致状态栏文字看不清
+        //所以如果你是这种情况,请使用以下代码, 设置状态使用深色文字图标风格, 否则你可以选择性注释掉这个if内容
+        /*if (!StatusBarUtil.setStatusBarDarkTheme(this, true)) {
+            //如果不支持设置深色风格 为了兼容总不能让状态栏白白的看不清, 于是设置一个状态栏颜色为半透明,
+            //这样半透明+白=灰, 状态栏的文字能看得清
+            StatusBarUtil.setStatusBarColor(this,0x55000000);
         }*/
         setTheme(R.style.AppFullScreenTheme);
         toastUtils = new ToastUtils();
         AppConfig.verifyStoragePermissions(this);
         showProgressDialog(this);
-        if (getLayoutId() != 0) {
+        showLoadProgressDialog();
+        if (getLayoutId() > 0) {
             this.setContentView(this.getLayoutId());//缺少这一行
             // setContentView(getLayoutId());
             ButterKnife.bind(this);
@@ -91,6 +92,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         isPause = true;
+        Intent mIntent = new Intent(mActivity, AppUpgradeService.class);
+        mActivity.stopService(mIntent);
     }
 
     @Override
@@ -99,8 +102,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (isPause) {
             initData();
         }
-        if (null != AppConfig.getUpdateInfoModel())
-            EventBus.getDefault().post(AppConfig.getUpdateInfoModel());
+//        if (null != AppConfig.getUpdateInfoModel())
+//            EventBus.getDefault().post(AppConfig.getUpdateInfoModel());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -128,16 +131,22 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        if (this.unbinder != null) {
-            this.unbinder.unbind();
-        }
-        toastUtils = null;
+        runOnUiThread(() -> {
+            if (null != mLoadProgressDialog) {
+                mLoadProgressDialog.dismiss();
+            }
+            if (null != mProgressDialog) {
+                mProgressDialog.dismiss();
+            }
+        });
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
+//        EventBus.getDefault().unregister(this);
     }
 
     public void showProgressDialog(Activity activity) {
-        if(activity == null || activity.isFinishing()) return;
+        if (activity == null || activity.isFinishing()) {
+            return;
+        }
         mProgressDialog = new ProgressDialog(activity);
         mProgressDialog.setTitle(R.string.dialog_title);
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -154,21 +163,45 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+    public void showLoadProgressDialog() {
+        if (mActivity == null || mActivity.isFinishing()) {
+            return;
+        }
+        mLoadProgressDialog = new ProgressDialog(mActivity);
+        mLoadProgressDialog.setTitle(R.string.dialog_title);
+        mLoadProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mLoadProgressDialog.setCancelable(false);
+        mLoadProgressDialog.setCanceledOnTouchOutside(false);
+        mLoadProgressDialog.setMessage("加载中......");
+        Button positive = mLoadProgressDialog.getButton(ProgressDialog.BUTTON_POSITIVE);
+        if (positive != null) {
+            positive.setVisibility(View.GONE);
+        }
+        Button negative = mLoadProgressDialog.getButton(ProgressDialog.BUTTON_NEGATIVE);
+        if (negative != null) {
+            negative.setVisibility(View.GONE);
+        }
+    }
+
+    protected void dismissLoadDialog() {
+        if (mActivity != null && mLoadProgressDialog != null && mLoadProgressDialog.isShowing()) {
+            mLoadProgressDialog.dismiss();
+        }
+    }
+
     public void showDialogError(String s) {
-        if(mActivity == null || mActivity.isFinishing()) return;
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        View inflate = View.inflate(AppConfig.getAppContext(), R.layout.error_nomal, null);
-        TextView error_msg = inflate.findViewById(R.id.error_msg);
-        TextView error_sure = inflate.findViewById(R.id.error_sure);
-        dialog.setView(inflate);
-        error_msg.setText(s);
-        AlertDialog dialogcreate = dialog.create();
-        dialogcreate.setCanceledOnTouchOutside(false);
-        dialogcreate.show();
-        error_sure.setOnClickListener(new View.OnClickListener() {
+        if (mActivity == null || mActivity.isFinishing()) {
+            return;
+        }
+        AlertDialogManager.showMessageDialogOne(this, "提示", s, new AlertDialogManager.DialogInterface() {
             @Override
-            public void onClick(View v) {
-                dialogcreate.dismiss();
+            public void onPositive() {
+
+            }
+
+            @Override
+            public void onNegative() {
+
             }
         });
     }
@@ -187,5 +220,22 @@ public abstract class BaseActivity extends AppCompatActivity {
                 dialogcreate.dismiss();
             }
         });
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        // 请注意这段代码强烈建议不要放到实际开发中，因为用户屏蔽通知栏和开启应用状态下的情况极少，可以忽略不计
+
+        // 如果通知栏的权限被手动关闭了
+        if (!NotificationManagerCompat.from(this).areNotificationsEnabled() &&
+                !"SupportToast".equals(com.hjq.toast.ToastUtils.getToast().getClass().getSimpleName())) {
+            try {
+                // 因为吐司只有初始化的时候才会判断通知权限有没有开启，根据这个通知开关来显示原生的吐司还是兼容的吐司
+                com.hjq.toast.ToastUtils.init(getApplication());
+                recreate();
+            } catch (Exception ignored) {
+            }
+        }
     }
 }

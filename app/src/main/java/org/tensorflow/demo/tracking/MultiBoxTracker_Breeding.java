@@ -493,7 +493,7 @@ public class MultiBoxTracker_Breeding {
         trackedObjects.add(trackedRecognition);
     }
 
-    public synchronized void trackAnimalResults(List<PostureItem> postureItemList, int angletype) {
+    public synchronized void trackAnimalResults(List<PostureItem> postureItemList) {
         mFrameRects.clear();
         if (postureItemList == null) {
             return;
@@ -510,7 +510,7 @@ public class MultiBoxTracker_Breeding {
         RectF trackRectF = new RectF(left, top, right, bottom);
 
         for(int i = 0;i< postureItemList.size();++i){
-            TrackerItem item = new TrackerItem(angletype, trackRectF);
+            TrackerItem item = new TrackerItem(trackRectF);
             mFrameRects.add(item);
         }
     }

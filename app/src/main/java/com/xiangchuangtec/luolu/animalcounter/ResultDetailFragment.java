@@ -17,6 +17,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.innovation.pig.insurance.R;
+
 import innovation.utils.Toast;
 
 import org.tensorflow.demo.env.Logger;

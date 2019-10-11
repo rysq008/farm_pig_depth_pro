@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.innovation.pig.insurance.R;
 import com.xiangchuang.risks.model.bean.RecognitionResult;
 
 import java.util.ArrayList;

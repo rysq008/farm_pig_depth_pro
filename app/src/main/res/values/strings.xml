@@ -124,4 +124,38 @@
     <string name="selectwarning">您还未选择牲畜信息</string>
 
 
+    <string name="word">我</string>
+
+    <string name="pig_house_list">猪舍列表</string>
+    <string name="pig_house_name">猪舍名称</string>
+    <string name="pig_house_type">猪舍类型</string>
+    <string name="submit">确认</string>
+
+    <string name="sure_to_add">确认添加当前猪舍吗？</string>
+    <string name="compensate_time">理赔时间：</string>
+    <string name="insurance_no">保单号：</string>
+    <string name="pig_house_name1">猪舍名称：</string>
+
+    <string name="pre_pay_time">预理赔时间：</string>
+    <string name="cause_of_death">死亡原因：</string>
+    <string name="she_name">猪舍名称：</string>
+    <string name="info_pre_pay">预理赔信息</string>
+    <string name="info_compensate">理赔信息</string>
+    <string name="info_insurance">投保信息</string>
+    <string name="info_pig_house">猪舍信息</string>
+    <string name="weight">体重：</string>
+    <string name="identification_code">标的识别码：</string>
+    <string name="similarity">相似度：</string>
+    <string name="coefficient">系数：</string>
+    <string name="insurance_amount">投保数量：</string>
+    <string name="insurance_total_amount">投保总数：</string>
+    <string name="checked">已审核</string>
+    <string name="unchecked">待审核</string>
+    <string name="about_us">关于我们</string>
+    <string name="contact_customer_service">联系客服</string>
+    <string name="version_updating">版本更新</string>
+    <string name="setting">设置</string>
+    <string name="new_version">发现新版本</string>
+    <string name="neglect">忽略</string>
+    <string name="updating">升级</string>
 </resources>

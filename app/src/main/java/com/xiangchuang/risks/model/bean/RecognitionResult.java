@@ -15,6 +15,7 @@ public final class RecognitionResult {
     public double lat, lon;
     public String juanName;
     public int autoCount;
+    public String time;
 
     public Bitmap getBitmap() {
         return bitmap;
@@ -34,14 +35,21 @@ public final class RecognitionResult {
                 ", lat=" + lat +
                 ", lon=" + lon +
                 ", juanName='" + juanName + '\'' +
+                ", autoCount=" + autoCount +
+                ", time='" + time + '\'' +
                 '}';
     }
 
-    public RecognitionResult(int index, int autoCount, Bitmap bitmap, String fileName) {
+    public RecognitionResult(int index, int autoCount, Bitmap bitmap, String fileName, String time) {
         this.index = index;
         this.autoCount = autoCount;
         this.bitmap = bitmap;
         this.fileName = fileName;
         this.count = autoCount;
+        this.time = time;
+    }
+
+    public RecognitionResult(int index, int autoCount, Bitmap bitmap, String fileName){
+        this(index,autoCount,bitmap,fileName,"");
     }
 }

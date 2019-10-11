@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.view.ShowPollingActivity_new;
-import com.xiangchuangtec.luolu.animalcounter.R;
+import com.innovation.pig.insurance.R;
 
 import java.util.List;
 

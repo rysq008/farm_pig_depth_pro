@@ -15,6 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.innovation.pig.insurance.R;
+
 /**
  * 自定义时长的Toast
  * @author luolu

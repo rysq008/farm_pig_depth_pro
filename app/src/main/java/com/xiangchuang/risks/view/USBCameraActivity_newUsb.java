@@ -366,7 +366,7 @@ public final class USBCameraActivity_newUsb extends UsbBaseActivity implements C
                 showPop();
                 CounterHelper.recognitionFromNet(USBCameraActivity_newUsb.this, tBitmap, new CounterHelper.OnImageRecognitionListener() {
                     @Override
-                    public void onCompleted(int count, Bitmap bitmap) {
+                    public void onCompleted(int count, Bitmap bitmap, String time) {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {

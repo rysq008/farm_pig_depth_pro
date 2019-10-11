@@ -269,7 +269,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
             if (AppConfig.PIG_DEPTH_JOIN) {
                 android.widget.Toast.makeText(mActivity, "请打开网络链接！", Toast.LENGTH_SHORT).show();
             } else {
-                goToActivity(SelectFunctionActivity_OffLine.class, null);
+//                goToActivity(SelectFunctionActivity_OffLine.class, null);
             }
             finish();
         }
@@ -476,7 +476,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
             ivSign.setVisibility(View.GONE);
             this.goToActivity(SettingActivity.class, (Bundle) null);
         } else if (i == R.id.rl_company_info) {
-            this.goToActivity(CompanyInfoActivity.class, (Bundle) null);
+//            this.goToActivity(CompanyInfoActivity.class, (Bundle) null);
         } else if (i == R.id.function_submit_btn) {
 
             if (Global.model == PigInnovationAiOpen.INSURE) {
@@ -605,7 +605,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
         AlertDialogManager.showMessageDialog(mActivity, "提示", "当前存在离线数据，请先上传离线数据后再进行操作。", new AlertDialogManager.DialogInterface() {
             @Override
             public void onPositive() {
-                SelectFunctionActivity_new.this.startActivity(new Intent(SelectFunctionActivity_new.this, PrePayListActivity.class));
+//                SelectFunctionActivity_new.this.startActivity(new Intent(SelectFunctionActivity_new.this, PrePayListActivity.class));
             }
 
             @Override
@@ -1163,7 +1163,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
             if (AppConfig.PIG_DEPTH_JOIN) {
                 android.widget.Toast.makeText(mActivity, "请打开网络链接！", Toast.LENGTH_SHORT).show();
             } else {
-                goToActivity(SelectFunctionActivity_OffLine.class, null);
+//                goToActivity(SelectFunctionActivity_OffLine.class, null);
             }
             finish();
         }

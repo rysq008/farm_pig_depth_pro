@@ -21,6 +21,8 @@ import android.graphics.RectF;
 
 import java.io.File;
 import java.util.List;
+
+import innovation.biz.iterm.NewPigKeyPointAndRotationItem;
 import innovation.biz.iterm.PostureItem;
 import innovation.biz.iterm.PredictRotationIterm;
 import innovation.utils.PointFloat;
@@ -152,6 +154,7 @@ public interface Classifier {
       this.postureItem = postureItem;
     }
   }
+  NewPigKeyPointAndRotationItem pigRecognizePointImage(Bitmap bitmap, Bitmap originalBitmap);
 
   RecognitionAndPostureItem pigRecognitionAndPostureItem(Bitmap bitmap, Bitmap originalBitmap);
   RecognitionAndPostureItem pigRecognitionAndPostureItemTFlite(Bitmap bitmap, Bitmap originalBitmap);
@@ -161,7 +164,7 @@ public interface Classifier {
 
 
   void enableStatLogging(final boolean debug);
-  
+
   String getStatString();
 
   void close();

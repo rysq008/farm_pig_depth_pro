@@ -15,6 +15,7 @@ import android.support.v4.app.ActivityCompat;
 import com.avos.avoscloud.AVOSCloud;
 import com.hjq.toast.ToastUtils;
 import com.hjq.toast.style.ToastAliPayStyle;
+import com.innovation.pig.insurance.BuildConfig;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 import com.tencent.bugly.crashreport.CrashReport;

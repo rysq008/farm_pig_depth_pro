@@ -9,7 +9,6 @@ import android.graphics.Point;
 import android.graphics.RectF;
 import android.os.SystemClock;
 import android.os.Trace;
-import android.util.Log;
 
 import com.xiangchuang.risks.model.bean.shanTiaoBean;
 
@@ -36,18 +35,18 @@ import java.util.Map;
 import innovation.biz.iterm.PostureItem;
 import innovation.biz.iterm.PredictRotationIterm;
 
-import static com.innovation.pig.insurance.AppConfig.currentPadSize;
-import static com.innovation.pig.insurance.AppConfig.sowCount;
+import static com.xiangchuangtec.luolu.animalcounter.AppConfig.currentPadSize;
+import static com.xiangchuangtec.luolu.animalcounter.AppConfig.sowCount;
 import static innovation.utils.ImageUtils.padBitmap2SpRatio;
 import static innovation.utils.ImageUtils.zoomImage;
-import static org.tensorflow.demo.BreedingDetectorActivityBreeding.offsetX;
-import static org.tensorflow.demo.BreedingDetectorActivityBreeding.offsetY;
+import static org.tensorflow.demo.BreedingDetectorActivity_pig.offsetX;
+import static org.tensorflow.demo.BreedingDetectorActivity_pig.offsetY;
 
 /**
  *
  */
 public class BreedingPigFaceDetectTFlite {
-    private static final Logger sLogger = new Logger(BreedingPigFaceDetectTFlite.class);
+    private static final Logger S_LOGGER = new Logger(BreedingPigFaceDetectTFlite.class);
 
     // 2018/12/18 hedazhi edit start
     //private static final float MIN_CONFIDENCE = (float) 0.7;
@@ -177,7 +176,7 @@ public class BreedingPigFaceDetectTFlite {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS", Locale.getDefault());
         srcPigBitmapName = sdf.format(new Date(System.currentTimeMillis())) + ".jpeg";
 //        saveBitMap(bitmap, "pigSrcImage", srcPigBitmapName);
-        sLogger.i("padBitmap padSize %d:" + padSize);
+        S_LOGGER.i("padBitmap padSize %d:" + padSize);
         maxBase = 0.7f * padSize - offsetY;
 
         Matrix frameToCropTransform = ImageUtils.getTransformationMatrix(bitmap.getWidth(), bitmap.getHeight(),
@@ -190,8 +189,8 @@ public class BreedingPigFaceDetectTFlite {
 
         croppedBitmap.getPixels(intValues, 0, croppedBitmap.getWidth(), 0, 0, croppedBitmap.getWidth(), croppedBitmap.getHeight());
 
-        sLogger.i("croppedBitmap height:" + croppedBitmap.getHeight());
-        sLogger.i("croppedBitmap width:" + croppedBitmap.getWidth());
+        S_LOGGER.i("croppedBitmap height:" + croppedBitmap.getHeight());
+        S_LOGGER.i("croppedBitmap width:" + croppedBitmap.getWidth());
 
 
         Trace.beginSection("preprocessBitmap");
@@ -223,7 +222,7 @@ public class BreedingPigFaceDetectTFlite {
         outputScores = new float[1][NUM_DETECTIONS];
         outputDetectNum = new float[1];
 
-        sLogger.i("inputSize:" + inputSize);
+        S_LOGGER.i("inputSize:" + inputSize);
 
         Object[] inputArray = {imgData};
 
@@ -241,13 +240,13 @@ public class BreedingPigFaceDetectTFlite {
 
         tfLite.runForMultipleInputsOutputs(inputArray, outputMap);
 
-        sLogger.i("pig Detect face tflite cost:" + (SystemClock.uptimeMillis() - startTime));
+        S_LOGGER.i("pig Detect face tflite cost:" + (SystemClock.uptimeMillis() - startTime));
 
         Trace.endSection();
 
         /*if (outputDetectNum[0] > 1) {
             if(System.currentTimeMillis() - lastToastTime > 5000) {
-                CameraConnectionFragment.showToast("请确保采集范围内只有一头牲畜。");
+                CameraConnectionFragment_pig.showToast("请确保采集范围内只有一头牲畜。");
                 lastToastTime = System.currentTimeMillis();
             }
             saveBitMap(bitmap, "pigDetected_ng3", srcPigBitmapName);
@@ -255,30 +254,30 @@ public class BreedingPigFaceDetectTFlite {
         }*/
 
         if (outputDetectNum[0] < 1) {
-            sLogger.i("对象不足：" + outputDetectNum[0]);
+            S_LOGGER.i("对象不足：" + outputDetectNum[0]);
 //            saveBitMap(bitmap, "pigDetected_ng4", srcPigBitmapName);
             return recognitionAndPostureItem;
         }
 
         final ArrayList<Recognition> recognitions = new ArrayList<>();
         long jisuanweizhiStar = System.currentTimeMillis();
-        Log.e(TAG, "jisuanweizhi_star "+jisuanweizhiStar );
+        com.orhanobut.logger.Logger.e( "jisuanweizhi_star "+jisuanweizhiStar );
         for (int i = 0; i < outputScores[0].length; ++i) {
             if (outputScores[0][i] > 1 || outputScores[0][i] < MIN_CONFIDENCE) {
-                sLogger.i("分值超出/分值不足：" + outputScores[0][0]);
+                S_LOGGER.i("分值超出/分值不足：" + outputScores[0][0]);
 //            saveBitMap(bitmap, "pigDetected_ng2", srcPigBitmapName);
                 continue;
             }
-            sLogger.i("outputScores0 %f:" + outputScores[0][0]);
-            sLogger.i("OutClassifyResult0 %f:" + outputClassifyResult[0][0]);
-            sLogger.i("OutPDetectNum %f:" + outputDetectNum[0]);
+            S_LOGGER.i("outputScores0 %f:" + outputScores[0][0]);
+            S_LOGGER.i("OutClassifyResult0 %f:" + outputClassifyResult[0][0]);
+            S_LOGGER.i("OutPDetectNum %f:" + outputDetectNum[0]);
             //获取当前坐标
             float modelY0 = (float) outputLocations[0][i][1];
             float modelX0 = (float) outputLocations[0][i][0];
             float modelY1 = (float) outputLocations[0][i][3];
             float modelX1 = (float) outputLocations[0][i][2];
 
-            Log.e(TAG, "outputLocations: Xmin=" + modelX0 + ";Ymin="
+            com.orhanobut.logger.Logger.e("outputLocations: Xmin=" + modelX0 + ";Ymin="
                     + modelY0 + ";Xmax=" + modelX1 + ";Ymax=" + modelY1);
 
             //判断当前xmin是否大于 基线0.15
@@ -294,7 +293,7 @@ public class BreedingPigFaceDetectTFlite {
 
             //判断是否超出识别范围
             if (left < 0 || top < 0 || right > padSize - 2 * offsetY || bottom > padSize - 2 * offsetX) {
-                sLogger.i("识别范围超出图像范围2");
+                S_LOGGER.i("识别范围超出图像范围2");
                 continue;
             }
 
@@ -323,18 +322,18 @@ public class BreedingPigFaceDetectTFlite {
 
             postureItemList.add(posture);
         }
-        Log.e(TAG, "jisuanweizhi_end "+(System.currentTimeMillis()- jisuanweizhiStar));
+        com.orhanobut.logger.Logger.e("jisuanweizhi_end "+(System.currentTimeMillis()- jisuanweizhiStar));
         Trace.endSection(); // "recognizeImage"
 
         long paixuStar = System.currentTimeMillis();
-        Log.e(TAG, "paixu_star:"+paixuStar);
+        com.orhanobut.logger.Logger.e("paixu_star:"+paixuStar);
         Collections.sort(recognitions, new Comparator<Recognition>() {
             @Override
             public int compare(Recognition o1, Recognition o2) {
                 return Float.compare((o1.location.left + o1.location.right) / 2, (o2.location.left + o2.location.right) / 2);
             }
         });
-        Log.e(TAG, "paixu_end:"+(System.currentTimeMillis()- paixuStar));
+        com.orhanobut.logger.Logger.e("paixu_end:"+(System.currentTimeMillis()- paixuStar));
 
         //获取的画框集合size大于0 时
         if (recognitions.size() > 0) {
@@ -371,10 +370,10 @@ public class BreedingPigFaceDetectTFlite {
 //            lastXmin = center;
         }
 
-        Log.d("数组", "crecognitions: " + recognitions.toString());
-        Log.d("数组 赋值以后", "lrecognitions: " + lastRecognitions.toString());
+        com.orhanobut.logger.Logger.d("数组" + "crecognitions: " + recognitions.toString());
+        com.orhanobut.logger.Logger.d("数组 赋值以后" + "lrecognitions: " + lastRecognitions.toString());
 
-        Log.e("sowCount", "sowCount" + sowCount);
+        com.orhanobut.logger.Logger.e("sowCount" + "sowCount" + sowCount);
         recognitionAndPostureItem.setList(recognitions);
 
         recognitionAndPostureItem.setPostureItem(postureItemList);
@@ -521,17 +520,17 @@ public class BreedingPigFaceDetectTFlite {
     private float calculateIou(ArrayList<Recognition> currents, ArrayList<Recognition> lasts) {
         float iou = 0;
 
-        Log.e(TAG, "calculateIou: +currents.left" + currents.get(0).getLocation().left);
-        Log.e(TAG, "calculateIou: +lasts.left" + lasts.get(0).getLocation().left);
+        com.orhanobut.logger.Logger.e( "calculateIou: +currents.left" + currents.get(0).getLocation().left);
+        com.orhanobut.logger.Logger.e( "calculateIou: +lasts.left" + lasts.get(0).getLocation().left);
 
-        Log.e(TAG, "calculateIou: +currents.right" + currents.get(0).getLocation().right);
-        Log.e(TAG, "calculateIou: +lasts.right" + lasts.get(0).getLocation().right);
+        com.orhanobut.logger.Logger.e("calculateIou: +currents.right" + currents.get(0).getLocation().right);
+        com.orhanobut.logger.Logger.e("calculateIou: +lasts.right" + lasts.get(0).getLocation().right);
 
-        Log.e(TAG, "calculateIou: +currents.top" + currents.get(0).getLocation().top);
-        Log.e(TAG, "calculateIou: +lasts.top" + lasts.get(0).getLocation().top);
+        com.orhanobut.logger.Logger.e("calculateIou: +currents.top" + currents.get(0).getLocation().top);
+        com.orhanobut.logger.Logger.e("calculateIou: +lasts.top" + lasts.get(0).getLocation().top);
 
-        Log.e(TAG, "calculateIou: +currents.bottom" + currents.get(0).getLocation().bottom);
-        Log.e(TAG, "calculateIou: +lasts.bottom" + lasts.get(0).getLocation().bottom);
+        com.orhanobut.logger.Logger.e("calculateIou: +currents.bottom" + currents.get(0).getLocation().bottom);
+        com.orhanobut.logger.Logger.e("calculateIou: +lasts.bottom" + lasts.get(0).getLocation().bottom);
 
 
         float leftx1 = Math.max(currents.get(0).getLocation().left, lasts.get(0).getLocation().left);
@@ -554,7 +553,7 @@ public class BreedingPigFaceDetectTFlite {
 
     //计算重合区域面积与总面积的百分比
     private void calculateListIou(ArrayList<Recognition> currents, ArrayList<Recognition> lasts) {
-        Log.e("time==", "star-calculate: "+System.currentTimeMillis());
+        com.orhanobut.logger.Logger.e("time==" + "star-calculate: "+System.currentTimeMillis());
         //获取数据长度
         int currentsSize = currents.size();
         int lastsSize = lasts.size();
@@ -647,9 +646,9 @@ public class BreedingPigFaceDetectTFlite {
                     isDan = false;
                     break;
                 } else {
-                    Log.e("isDaniou", "iou=====:"+iou);
-                    Log.e("isDan", "isDan");
-                    Log.e("isDanX", "isDanXcenter==="+ w/2);
+                    com.orhanobut.logger.Logger.e("isDaniou" + "iou=====:"+iou);
+                    com.orhanobut.logger.Logger.e("isDan"+ "isDan");
+                    com.orhanobut.logger.Logger.e("isDanX"+ "isDanXcenter==="+ w/2);
                     isDan = true;
                 }
             }
@@ -678,11 +677,11 @@ public class BreedingPigFaceDetectTFlite {
                     }
                     if (!isInXOffset && c < lastC) {
                         sowCount++;
-                        Log.e("isDanAll", "总数: "+sowCount );
+                        com.orhanobut.logger.Logger.e("isDanAll"+ "总数: "+sowCount );
                     }
                 }
             }
         }
-        Log.e("time==", "end-calculate: "+System.currentTimeMillis());
+        com.orhanobut.logger.Logger.e("time=="+ "end-calculate: "+System.currentTimeMillis());
     }
 }

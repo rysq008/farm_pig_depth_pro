@@ -14,6 +14,7 @@ import android.util.Log;
 import innovation.biz.classifier.NewFaceDetectTFlite;
 
 import com.google.gson.Gson;
+import com.innovation.pig.insurance.R;
 import com.xiangchuang.risks.model.bean.QueryVideoFlagDataBean;
 
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;

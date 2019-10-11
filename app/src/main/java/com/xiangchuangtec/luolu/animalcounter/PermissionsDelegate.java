@@ -7,6 +7,8 @@ package com.xiangchuangtec.luolu.animalcounter;
         import android.support.v4.content.ContextCompat;
         import android.view.View;
 
+        import com.innovation.pig.insurance.R;
+
 /**
  * Created by luolu on 2018/3/1.
  */
