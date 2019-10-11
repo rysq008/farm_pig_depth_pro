@@ -1,19 +1,15 @@
 package com.xiangchuang.risks.view;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.app.Service;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
@@ -26,10 +22,10 @@ import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
 import com.innovation.pig.insurance.netutils.Constants;
 import com.innovation.pig.insurance.netutils.OkHttp3Util;
-import com.innovation.pig.insurance.netutils.PreferencesUtils;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
-import com.xiangchuang.risks.utils.ShareUtils;
+import com.xiangchuang.risks.utils.PigShareUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,7 +41,6 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 import static com.serenegiant.utils.UIThreadHelper.runOnUiThread;
-import static com.xiangchuang.risks.view.OutHurdleActivity.TAG;
 
 /**
  * @author 56861
@@ -59,7 +54,7 @@ public class LoginFamerServer extends Service {
 
         startService(new Intent(this, UploadService.class));
 
-//        Box<VideoUploadTable> box = AppConfig.getBoxStore().boxFor(VideoUploadTable.class);
+//        Box<VideoUploadTable> box = PigAppConfig.getBoxStore().boxFor(VideoUploadTable.class);
 //        box.removeAll();
 //        List<VideoUploadTable> list = new ArrayList<>();
 //        for (int i = 0; i <5 ; i++) {
@@ -109,7 +104,7 @@ public class LoginFamerServer extends Service {
 //                                public void hasPermission(List<String> granted, boolean isAll) {
 //                                    if (isAll) {
 //                                        // FarmerPreferencesUtils.saveBooleanValue("isallow", true, WelcomeActivity.this);
-//                                        // toastUtils.showLong(AppConfig.getAppContext(), "获取权限成功");
+//                                        // toastUtils.showLong(PigAppConfig.getAppContext(), "获取权限成功");
 //                                        if (Build.VERSION.SDK_INT > 9) {
 //                                            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 //                                            StrictMode.setThreadPolicy(policy);
@@ -141,8 +136,8 @@ public class LoginFamerServer extends Service {
 //        } else
         {
             //根据保存的标记判断是否登录
-            if (PreferencesUtils.getBooleanValue(Constants.ISLOGIN, AppConfig.getAppContext())) {
-                String type = PreferencesUtils.getStringValue(Constants.companyfleg, AppConfig.getAppContext());
+            if (PigPreferencesUtils.getBooleanValue(Constants.ISLOGIN, AppConfig.getAppContext())) {
+                String type = PigPreferencesUtils.getStringValue(Constants.companyfleg, AppConfig.getAppContext());
                 if (type.equals("1")) {
                     goToActivity(CompanyActivity.class, null);
                     stopSelf();
@@ -153,7 +148,7 @@ public class LoginFamerServer extends Service {
             }
         }
         if (!HttpUtils.isOfficialHost())
-            Toast.makeText(LoginFamerServer.this, ShareUtils.getHost("host"), Toast.LENGTH_LONG).show();
+            Toast.makeText(LoginFamerServer.this, PigShareUtils.getHost("host"), Toast.LENGTH_LONG).show();
 //        FarmerShareUtils.setUpGlobalHost(LoginFamerServer.this, passTv);
     }
 
@@ -221,11 +216,11 @@ public class LoginFamerServer extends Service {
                                     data = jsonObject.getJSONObject("data");
                                     int type = data.getInt("type");
 //                                    int myToken = data.getInt("token");
-//                                    FarmerPreferencesUtils.saveKeyValue(Constants.token, myToken + "", AppConfig.getAppContext());
-                                    PreferencesUtils.saveKeyValue(Constants.companyfleg, type + "", AppConfig.getAppContext());
-                                    PreferencesUtils.saveKeyValue(Constants.username, musername + "", AppConfig.getAppContext());
-                                    PreferencesUtils.saveKeyValue(Constants.password, muserpass + "", AppConfig.getAppContext());
-                                    PreferencesUtils.saveBooleanValue(Constants.ISLOGIN, true, AppConfig.getAppContext());
+//                                    FarmerPreferencesUtils.saveKeyValue(Constants.token, myToken + "", PigAppConfig.getAppContext());
+                                    PigPreferencesUtils.saveKeyValue(Constants.companyfleg, type + "", AppConfig.getAppContext());
+                                    PigPreferencesUtils.saveKeyValue(Constants.username, musername + "", AppConfig.getAppContext());
+                                    PigPreferencesUtils.saveKeyValue(Constants.password, muserpass + "", AppConfig.getAppContext());
+                                    PigPreferencesUtils.saveBooleanValue(Constants.ISLOGIN, true, AppConfig.getAppContext());
 
                                     //1 保险公司  2 猪场企业
                                     if (type == 1) {
@@ -234,10 +229,10 @@ public class LoginFamerServer extends Service {
                                         String name = adminUser.getString("name");
                                         int deptId = adminUser.getInt("deptId");
                                         int id = adminUser.getInt("id");
-                                        PreferencesUtils.saveKeyValue(Constants.companyuser, name, AppConfig.getAppContext());
-                                        PreferencesUtils.saveKeyValue(Constants.insurecompany, deptName, AppConfig.getAppContext());
-                                        PreferencesUtils.saveKeyValue(Constants.deptId, deptId + "", AppConfig.getAppContext());
-                                        PreferencesUtils.saveKeyValue(Constants.id, id + "", AppConfig.getAppContext());
+                                        PigPreferencesUtils.saveKeyValue(Constants.companyuser, name, AppConfig.getAppContext());
+                                        PigPreferencesUtils.saveKeyValue(Constants.insurecompany, deptName, AppConfig.getAppContext());
+                                        PigPreferencesUtils.saveKeyValue(Constants.deptId, deptId + "", AppConfig.getAppContext());
+                                        PigPreferencesUtils.saveKeyValue(Constants.id, id + "", AppConfig.getAppContext());
 
                                         goToActivity(CompanyActivity.class, null);
 //                                        stopSelf();
@@ -246,9 +241,9 @@ public class LoginFamerServer extends Service {
                                         int enId = enUser.getInt("enId");
                                         int enUserId = enUser.getInt("enUserId");
                                         String enName = enUser.getString("enName");
-                                        PreferencesUtils.saveKeyValue(Constants.en_id, enId + "", AppConfig.getAppContext());
-                                        PreferencesUtils.saveKeyValue(Constants.companyname, enName, AppConfig.getAppContext());
-                                        PreferencesUtils.saveIntValue(Constants.en_user_id, enUserId, AppConfig.getAppContext());
+                                        PigPreferencesUtils.saveKeyValue(Constants.en_id, enId + "", AppConfig.getAppContext());
+                                        PigPreferencesUtils.saveKeyValue(Constants.companyname, enName, AppConfig.getAppContext());
+                                        PigPreferencesUtils.saveIntValue(Constants.en_user_id, enUserId, AppConfig.getAppContext());
                                         goToActivity(SelectFunctionActivity_new.class, null);
 //                                        stopSelf();
                                     }

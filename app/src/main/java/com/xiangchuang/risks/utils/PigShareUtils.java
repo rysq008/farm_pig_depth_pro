@@ -26,7 +26,7 @@ import java.util.Map;
 
 import innovation.utils.HttpUtils;
 
-public class ShareUtils {
+public class PigShareUtils {
 
     public static SharedPreferences preferences_pig;
 
@@ -128,7 +128,7 @@ public class ShareUtils {
                                         List<String> slist = new ArrayList<>();
                                         final String[] list = {"http://60.205.209.245:8081/nongxian2/", "http://test1.innovationai.cn:8081/nongxian2/"};//要填充的数据
                                         slist.addAll(Arrays.asList(list));
-                                        slist.addAll(ShareUtils.getIPList());
+                                        slist.addAll(PigShareUtils.getIPList());
                                         AlertDialog enterDialog = new AlertDialog.Builder(ct).setTitle("提示").setMessage("请转入地址")
                                                 .setView(et).setCancelable(false).setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                                     @Override
@@ -137,9 +137,9 @@ public class ShareUtils {
                                                         String str = et.getText().toString().trim();
                                                         if (TextUtils.isEmpty(str)) return;
                                                         if (!slist.contains(str))
-                                                            ShareUtils.saveString(et.getText().toString().trim(), "ip");
-                                                        if (ShareUtils.saveHost("host", str)) {
-                                                            HttpUtils.resetIp(ShareUtils.getHost("host"));
+                                                            PigShareUtils.saveString(et.getText().toString().trim(), "ip");
+                                                        if (PigShareUtils.saveHost("host", str)) {
+                                                            HttpUtils.resetIp(PigShareUtils.getHost("host"));
                                                             ((Activity) ct).finish();
                                                             Intent it = ct.getPackageManager().getLaunchIntentForPackage(ct.getPackageName());
                                                             it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -177,8 +177,8 @@ public class ShareUtils {
                                                             et.setText(str);//把选择的选项内容展示在EditText上
                                                             listPopupWindow.dismiss();//如果已经选择了，隐藏起来
                                                             enterDialog.cancel();
-                                                            if (ShareUtils.saveHost("host", str)) {
-                                                                HttpUtils.resetIp(ShareUtils.getHost("host"));
+                                                            if (PigShareUtils.saveHost("host", str)) {
+                                                                HttpUtils.resetIp(PigShareUtils.getHost("host"));
                                                                 ((Activity) ct).finish();
                                                                 Intent it = ct.getPackageManager().getLaunchIntentForPackage(ct.getPackageName());
                                                                 it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);

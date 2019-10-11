@@ -102,8 +102,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (isPause) {
             initData();
         }
-//        if (null != AppConfig.getUpdateInfoModel())
-//            EventBus.getDefault().post(AppConfig.getUpdateInfoModel());
+//        if (null != PigAppConfig.getUpdateInfoModel())
+//            EventBus.getDefault().post(PigAppConfig.getUpdateInfoModel());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

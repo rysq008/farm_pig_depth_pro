@@ -19,7 +19,6 @@ import com.innovation.pig.insurance.R;
 import com.innovation.pig.insurance.Utils;
 import com.innovation.pig.insurance.netutils.Constants;
 import com.innovation.pig.insurance.netutils.OkHttp3Util;
-import com.innovation.pig.insurance.netutils.PreferencesUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -124,7 +123,7 @@ public final class CounterHelper {
                 ZipUtil.zipFiles(files, zipFile);
                 Map<String, String> map = new HashMap<>();
                 map.put(Constants.AppKeyAuthorization, "hopen");
-                map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, context));
+                map.put(Constants.en_id, PigPreferencesUtils.getStringValue(Constants.en_id, context));
 
 //                String url = "http://47.92.167.61:8081/numberCheck/app/sheCommit";
                 Map<String, String> param = new HashMap<>();
@@ -135,7 +134,7 @@ public final class CounterHelper {
                 param.put("location", locationString);
                 param.put("timeLength", "" + duration);
                 param.put("juanCnt", "" + results.size());
-                param.put("createuser", "" + PreferencesUtils.getIntValue(Constants.userid, AppConfig.getAppContext()));
+                param.put("createuser", "" + PigPreferencesUtils.getIntValue(Constants.userid, AppConfig.getAppContext()));
                 OkHttp3Util.uploadPreFile(Constants.SHECOMMIT, zipFile, "out.zip", param, map, new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {

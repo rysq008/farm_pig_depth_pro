@@ -20,7 +20,7 @@ import java.util.Locale;
 import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.Recognition;
 import com.innovation.pig.insurance.Utils;
-import com.innovation.pig.insurance.netutils.PreferencesUtils;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
 
 
 /**
@@ -126,8 +126,8 @@ public class RecognitionView extends View implements TextToSpeech.OnInitListener
         String toSpeak = count + "头";
         Long currentDateTimeString = System.currentTimeMillis();// && (currentDateTimeString%2)==0
         if (count > 0) {
-            Log.i("===isfleg====", PreferencesUtils.getBooleanValue("isfleg", AppConfig.getAppContext())+"");
-            if (!PreferencesUtils.getBooleanValue("isfleg", AppConfig.getAppContext())) {
+            Log.i("===isfleg====", PigPreferencesUtils.getBooleanValue("isfleg", AppConfig.getAppContext())+"");
+            if (!PigPreferencesUtils.getBooleanValue("isfleg", AppConfig.getAppContext())) {
                 textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_ADD, null);
             }
             textToSpeech.setPitch(0.3f);

@@ -18,7 +18,7 @@ import com.innovation.pig.insurance.R;
 import com.innovation.pig.insurance.netutils.Constants;
 import com.innovation.pig.insurance.netutils.GsonUtils;
 import com.innovation.pig.insurance.netutils.OkHttp3Util;
-import com.innovation.pig.insurance.netutils.PreferencesUtils;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -111,8 +111,8 @@ public class ZhuSheXinXI_item_Adapter extends BaseAdapter {
     private void deleteZhuShe(int position, String sheid) {
         Map map = new HashMap();
         map.put(Constants.AppKeyAuthorization, "hopen");
-        map.put(Constants.en_user_id, PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext()) + "");
-        map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0") + "");
+        map.put(Constants.en_user_id, PigPreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext()) + "");
+        map.put(Constants.en_id, PigPreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0") + "");
         Map mapbody = new HashMap();
         mapbody.put(Constants.sheId, sheid);
         Log.i("shedeletesheid:", sheid);
@@ -162,8 +162,8 @@ public class ZhuSheXinXI_item_Adapter extends BaseAdapter {
     private void updateZhuShe(int sheid, String sname, int position) {
         Map map = new HashMap();
         map.put(Constants.AppKeyAuthorization, "hopen");
-        map.put(Constants.en_user_id, String.valueOf(PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext())));
-        map.put(Constants.en_id, String.valueOf(PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0")));
+        map.put(Constants.en_user_id, String.valueOf(PigPreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext())));
+        map.put(Constants.en_id, String.valueOf(PigPreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0")));
         Map mapbody = new HashMap();
         mapbody.put(Constants.sheId, String.valueOf(sheid));
         mapbody.put(Constants.name, sname);

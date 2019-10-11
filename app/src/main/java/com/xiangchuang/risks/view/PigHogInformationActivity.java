@@ -1,7 +1,5 @@
 package com.xiangchuang.risks.view;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -25,7 +23,7 @@ import com.innovation.pig.insurance.R;
 import com.innovation.pig.insurance.netutils.Constants;
 import com.innovation.pig.insurance.netutils.GsonUtils;
 import com.innovation.pig.insurance.netutils.OkHttp3Util;
-import com.innovation.pig.insurance.netutils.PreferencesUtils;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
 
 import org.json.JSONObject;
 
@@ -36,7 +34,6 @@ import java.util.List;
 import java.util.Map;
 
 
-import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -110,9 +107,9 @@ public class PigHogInformationActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        defaultpig = PreferencesUtils.getIntValue(Constants.defaultpig, AppConfig.getAppContext());
-        en_id = PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0");
-        userid = PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext());
+        defaultpig = PigPreferencesUtils.getIntValue(Constants.defaultpig, AppConfig.getAppContext());
+        en_id = PigPreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0");
+        userid = PigPreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext());
         tv_title.setText("猪圈信息");
         if (!en_id.equals(0)) {
             getDataFromNet();

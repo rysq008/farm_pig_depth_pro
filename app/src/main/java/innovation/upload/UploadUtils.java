@@ -9,7 +9,7 @@ import com.mainaer.wjoklib.okhttp.upload.UploadTaskListener;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.netutils.Constants;
-import com.innovation.pig.insurance.netutils.PreferencesUtils;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.json.JSONObject;
@@ -128,11 +128,11 @@ public class UploadUtils {
 
     public static Map makeBean2Map(VideoUploadTable bean) {
         Map<String, String> params = new HashMap<String, String>();
-        String type = PreferencesUtils.getStringValue(Constants.companyfleg, AppConfig.getAppContext());
+        String type = PigPreferencesUtils.getStringValue(Constants.companyfleg, AppConfig.getAppContext());
         if (type.equals("1")) {
-            params.put("userId", PreferencesUtils.getStringValue(Constants.id, AppConfig.getAppContext()));//用户id
+            params.put("userId", PigPreferencesUtils.getStringValue(Constants.id, AppConfig.getAppContext()));//用户id
         } else {
-            params.put("userId", PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext())+"");//用户id
+            params.put("userId", PigPreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext())+"");//用户id
         }
         params.put("timesFlag", bean.timesflag);
         return params;

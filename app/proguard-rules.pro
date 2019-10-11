@@ -68,7 +68,7 @@
 -keep public class org.tensorflow.demo.ObjectTracker {*;}
 -keep public class org.tensorflow.demo.OverlayView {*;}
 -keep public class org.tensorflow.demo.tracking.**{*;}
--keep public class com.innovation.pig.insurance.netutils.PreferencesUtils {*;}
+-keep public class com.xiangchuang.risks.utils.PigPreferencesUtils {*;}
 
 -keep public class com.farm.innovation.base.FarmAppConfig {*;}
 -keep class com.farm.innovation.bean.**{*;}

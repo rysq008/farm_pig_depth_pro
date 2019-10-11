@@ -23,6 +23,7 @@ import com.farm.innovation.utils.AVOSCloudUtils;
 import com.farm.innovation.utils.FarmerPreferencesUtils;
 import com.farm.innovation.utils.HttpUtils;
 import com.google.gson.Gson;
+import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
 import com.xiangchuang.risks.view.LoginFarmAarActivity;
 
@@ -149,7 +150,7 @@ public class FarmInnovationAiOpen {
         if (TextUtils.isEmpty(phone)) {
             phone = "";
         }
-
+        AppConfig.setSdkType(AppConfig.SDK_TYPE.COW);
         FarmGlobal.model = (type == 1 ? Model.VERIFY.value() : Model.BUILD.value());
         Global.model = FarmGlobal.model;
 //        Toast.makeText(context, "nb", Toast.LENGTH_LONG).show();

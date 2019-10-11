@@ -2,9 +2,7 @@ package com.xiangchuang.risks.view;
 
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.GridView;
@@ -23,7 +21,7 @@ import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.innovation.pig.insurance.R;
 import com.innovation.pig.insurance.netutils.Constants;
 import com.innovation.pig.insurance.netutils.OkHttp3Util;
-import com.innovation.pig.insurance.netutils.PreferencesUtils;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
 
 import org.json.JSONObject;
 
@@ -97,7 +95,7 @@ public class HogDetailActivity_new extends BaseActivity {
     private void getHogMessage() {
         Map mapheader = new HashMap();
         mapheader.put(Constants.AppKeyAuthorization, "hopen");
-        mapheader.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, HogDetailActivity_new.this));
+        mapheader.put(Constants.en_id, PigPreferencesUtils.getStringValue(Constants.en_id, HogDetailActivity_new.this));
         Map mapbody = new HashMap();
         mapbody.put("sheId", mSheId);
 

@@ -49,12 +49,12 @@ import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.utils.AppUpdateUtils;
 import com.xiangchuang.risks.utils.NoWeighingDialog;
-import com.xiangchuangtec.luolu.animalcounter.AppConfig;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
+import com.xiangchuangtec.luolu.animalcounter.PigAppConfig;
 import com.xiangchuangtec.luolu.animalcounter.JPushStatsConfig;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
 import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
 import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
 
 import org.tensorflow.demo.DetectorActivity_pig;
 import org.tensorflow.demo.Global;
@@ -84,15 +84,15 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-import static com.xiangchuangtec.luolu.animalcounter.AppConfig.PIG_DEPTH_JOIN;
-import static com.xiangchuangtec.luolu.animalcounter.AppConfig.offLineModle;
+import static com.xiangchuangtec.luolu.animalcounter.PigAppConfig.PIG_DEPTH_JOIN;
+import static com.xiangchuangtec.luolu.animalcounter.PigAppConfig.offLineModle;
 import static com.xiangchuangtec.luolu.animalcounter.netutils.Constants.BUBBLE_DATA;
 import static com.xiangchuangtec.luolu.animalcounter.netutils.Constants.DISPOSE_UNFINISH;
 import static com.xiangchuangtec.luolu.animalcounter.netutils.Constants.GET_PAY_LIST;
 import static com.xiangchuangtec.luolu.animalcounter.netutils.Constants.JUDGE_RECORD_VIDEO;
 import static com.xiangchuangtec.luolu.animalcounter.netutils.Constants.NUMBER;
 
-public class SelectFunctionActivity_new extends BaseActivity implements OnClickListener, AppConfig.eventListener {
+public class SelectFunctionActivity_new extends BaseActivity implements OnClickListener, PigAppConfig.eventListener {
 
     public static String TAG = "SelectFunctionActivity";
     ImageView iv_cancel;
@@ -200,11 +200,11 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
     @Override
     protected void initData() {
         if (null != getIntent().getBundleExtra("data")) {
-            taskId = getIntent().getBundleExtra("data").getString(AppConfig.TASK_ID, "");
+            taskId = getIntent().getBundleExtra("data").getString(PigAppConfig.TASK_ID, "");
         }
 
-        this.companyname = PreferencesUtils.getStringValue("companyname", AppConfig.getAppContext(), "育肥猪农场");
-        this.companyfleg = PreferencesUtils.getStringValue("companyfleg", AppConfig.getAppContext(), "0");
+        this.companyname = PigPreferencesUtils.getStringValue("companyname", PigAppConfig.getAppContext(), "育肥猪农场");
+        this.companyfleg = PigPreferencesUtils.getStringValue("companyfleg", PigAppConfig.getAppContext(), "0");
         Log.i("==companyfleg=", this.companyfleg + "");
         this.mselectname.setText(this.companyname);
 //        companyfleg = "2";
@@ -218,16 +218,16 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
                     //todo nothing 此处不再做非强制更新状态处理，非强制更新在设置中处理
                     if (isUpdate) {
                         ivSign.setVisibility(View.VISIBLE);
-                        PreferencesUtils.saveKeyValue(Constants.isUpdate, "1", AppConfig.getAppContext());
+                        PigPreferencesUtils.saveKeyValue(Constants.isUpdate, "1", PigAppConfig.getAppContext());
                     } else {
-                        PreferencesUtils.saveKeyValue(Constants.isUpdate, "0", AppConfig.getAppContext());
+                        PigPreferencesUtils.saveKeyValue(Constants.isUpdate, "0", PigAppConfig.getAppContext());
                     }
                 }
             });
             getEnDetail();
         } else if ("1".equals(this.companyfleg)) {
-            String enId = PreferencesUtils.getStringValue(Constants.en_id, mActivity);
-            Box<CompanyInfo> companyInfoBox = AppConfig.getBoxStore().boxFor(CompanyInfo.class);
+            String enId = PigPreferencesUtils.getStringValue(Constants.en_id, mActivity);
+            Box<CompanyInfo> companyInfoBox = PigAppConfig.getBoxStore().boxFor(CompanyInfo.class);
             CompanyInfo companyInfo = companyInfoBox.query().equal(CompanyInfo_.enId, enId).build().findUnique();
             if (companyInfo != null) {
                 String showText = companyInfo.enName + "    账户ID：" + companyInfo.enId;
@@ -245,8 +245,8 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
             getEnDetail();
         }
 
-        String enName = PreferencesUtils.getStringValue(Constants.companyname, mActivity);
-        int enUId = PreferencesUtils.getIntValue(Constants.en_user_id, mActivity);
+        String enName = PigPreferencesUtils.getStringValue(Constants.companyname, mActivity);
+        int enUId = PigPreferencesUtils.getIntValue(Constants.en_user_id, mActivity);
         if (!TextUtils.isEmpty(enName)) {
             String showText = enName + "    账户ID：" + enUId;
             SpannableString spannableString = new SpannableString(showText);
@@ -264,9 +264,9 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
             getPayList();
             getTouBao();
         }
-        AppConfig.registEvent(this);
+        PigAppConfig.registEvent(this);
         if (offLineModle) {
-            if (AppConfig.PIG_DEPTH_JOIN) {
+            if (PigAppConfig.PIG_DEPTH_JOIN) {
                 android.widget.Toast.makeText(mActivity, "请打开网络链接！", Toast.LENGTH_SHORT).show();
             } else {
 //                goToActivity(SelectFunctionActivity_OffLine.class, null);
@@ -276,7 +276,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
     }
 
     private void refreshFuncList() {
-        if (AppConfig.PIG_DEPTH_JOIN) {
+        if (PigAppConfig.PIG_DEPTH_JOIN) {
             mIsHaveInnocuous = false;
         }
         if ("1".equals(this.companyfleg)) {
@@ -305,7 +305,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
             this.tvCount = (TextView) this.findViewById(R.id.tv_position_one_count);
         }
 
-        if (AppConfig.PIG_DEPTH_JOIN) {
+        if (PigAppConfig.PIG_DEPTH_JOIN) {
             runOnUiThread(() -> {
                 rlEdit.setVisibility(View.INVISIBLE);
                 ll_check_number_layout = findViewById(R.id.ll_check_number_layout);
@@ -363,7 +363,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
                                 } else {
                                     SelectFunctionActivity_new.this.mProgressDialog.dismiss();
                                     Intent intent = new Intent(SelectFunctionActivity_new.this, PreparedLiPeiActivity_new.class);
-                                    PreferencesUtils.saveKeyValue("fleg", "pre", AppConfig.getAppContext());
+                                    PigPreferencesUtils.saveKeyValue("fleg", "pre", PigAppConfig.getAppContext());
                                     SelectFunctionActivity_new.this.startActivity(intent);
                                 }
                             } else {
@@ -425,8 +425,8 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
             JPushStatsConfig.onCountEvent(SelectFunctionActivity_new.this, "preliminary_adjustments", null);
             this.isLiPei = false;
             List<OffLineDataInfos> offLineDataInfosList = new ArrayList<>();
-            String enId = PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "");
-            Box<OffLineDataInfos> offLineBox = AppConfig.getBoxStore().boxFor(OffLineDataInfos.class);
+            String enId = PigPreferencesUtils.getStringValue(Constants.en_id, PigAppConfig.getAppContext(), "");
+            Box<OffLineDataInfos> offLineBox = PigAppConfig.getBoxStore().boxFor(OffLineDataInfos.class);
             offLineDataInfosList = offLineBox.query().equal(OffLineDataInfos_.enId, enId).build().find();
 
             if (offLineDataInfosList.size() > 0) {
@@ -451,8 +451,8 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
                 return;
             }
             List<OffLineDataInfos> offLineDataInfosList = new ArrayList<>();
-            String enId = PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "");
-            Box<OffLineDataInfos> offLineBox = AppConfig.getBoxStore().boxFor(OffLineDataInfos.class);
+            String enId = PigPreferencesUtils.getStringValue(Constants.en_id, PigAppConfig.getAppContext(), "");
+            Box<OffLineDataInfos> offLineBox = PigAppConfig.getBoxStore().boxFor(OffLineDataInfos.class);
             offLineDataInfosList = offLineBox.query().equal(OffLineDataInfos_.enId, enId).build().find();
 
             if (offLineDataInfosList.size() > 0) {
@@ -555,8 +555,8 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
                 for (Map.Entry<String, Integer> entry : g_TotalMap.entrySet()) {
                     Map map = new HashMap();
                     map.put("taskId", taskId);
-                    map.put("enUserId", PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext()) + "");
-                    map.put("enId", PreferencesUtils.getStringValue(Constants.en_id, this));
+                    map.put("enUserId", PigPreferencesUtils.getIntValue(Constants.en_user_id, PigAppConfig.getAppContext()) + "");
+                    map.put("enId", PigPreferencesUtils.getStringValue(Constants.en_id, this));
                     map.put("amount", entry.getValue().toString());
                     map.put("ratio", "1");
                     map.put("pigType", entry.getKey());
@@ -619,7 +619,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
      * 获取未完成的无害化处理信息
      */
     private void getUnfinish() {
-        if (AppConfig.PIG_DEPTH_JOIN) {
+        if (PigAppConfig.PIG_DEPTH_JOIN) {
             return;
         }
         this.mLoadProgressDialog.show();
@@ -681,7 +681,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
      * 获取待无害化处理数量
      */
     private void getNumber() {
-        if (AppConfig.PIG_DEPTH_JOIN) {
+        if (PigAppConfig.PIG_DEPTH_JOIN) {
             return;
         }
         OkHttp3Util.doPost(NUMBER, (Map) null, new Callback() {
@@ -730,7 +730,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
      * 获取处理步骤
      */
     private void getDisposeStep() {
-        if (AppConfig.PIG_DEPTH_JOIN) {
+        if (PigAppConfig.PIG_DEPTH_JOIN) {
             return;
         }
         OkHttp3Util.doPost(Constants.DISPOSE_STEP, (Map) null, new Callback() {
@@ -796,9 +796,9 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
                         public void run() {
                             SelectFunctionActivity_new.this.mProgressDialog.dismiss();
                             if (bean.getStatus() == 1) {
-                                PreferencesUtils.saveKeyValue("fleg", "lipei", AppConfig.getAppContext());
-                                PreferencesUtils.saveKeyValue("preCompensateVideoId", bean.getData(), AppConfig.getAppContext());
-                                PreferencesUtils.saveKeyValue(Constants.preTimesFlag, "", AppConfig.getAppContext());
+                                PigPreferencesUtils.saveKeyValue("fleg", "lipei", PigAppConfig.getAppContext());
+                                PigPreferencesUtils.saveKeyValue("preCompensateVideoId", bean.getData(), PigAppConfig.getAppContext());
+                                PigPreferencesUtils.saveKeyValue(Constants.preTimesFlag, "", PigAppConfig.getAppContext());
                                 Global.model = Model.VERIFY.value();
                                 Intent intent = new Intent(SelectFunctionActivity_new.this, DetectorActivity_pig.class);
                                 SelectFunctionActivity_new.this.startActivity(intent);
@@ -886,10 +886,10 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
                                     tv_farm_address.setText("地址：" + rInfo.enAddress);
 
                                     /* 将数据插入数据库 */
-                                    Box<CompanyInfo> box = AppConfig.getBoxStore().boxFor(CompanyInfo.class);
+                                    Box<CompanyInfo> box = PigAppConfig.getBoxStore().boxFor(CompanyInfo.class);
                                     CompanyInfo cInfo = box.query().equal(CompanyInfo_.enId, rInfo.enId).build().findUnique();
 
-                                    Box<SheInfo> sheBox = AppConfig.getBoxStore().boxFor(SheInfo.class);
+                                    Box<SheInfo> sheBox = PigAppConfig.getBoxStore().boxFor(SheInfo.class);
 
                                     List<SheInfo> sheInfoList = new ArrayList<>(rInfo.sheInfo);
                                     if (cInfo == null) {
@@ -1033,7 +1033,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
                             if (null != result) {
                                 if (result.getStatus() == 1) {
                                     BubbleDataBean bubbleDataBean = result.getData();
-                                    if (!AppConfig.PIG_DEPTH_JOIN) {
+                                    if (!PigAppConfig.PIG_DEPTH_JOIN) {
                                         if (bubbleDataBean.getToubaoCount() > 0) {
                                             rl_toubao_count.setVisibility(View.VISIBLE);
                                             tv_toubao_count.setText(bubbleDataBean.getToubaoCount() + "");
@@ -1126,7 +1126,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
                 Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
                 this.firstTime = secondTime;
             } else {
-                if (AppConfig.PIG_DEPTH_JOIN) {
+                if (PigAppConfig.PIG_DEPTH_JOIN) {
                     finish();
                     return;
                 }
@@ -1142,13 +1142,13 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
     @Override
     protected void onPause() {
         super.onPause();
-        AppConfig.UnRegistEvent(this);
+        PigAppConfig.UnRegistEvent(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        AppConfig.UnRegistEvent(this);
+        PigAppConfig.UnRegistEvent(this);
         g_CaptivityMap.clear();
         g_LocationMap.clear();
         g_TotalMap.clear();
@@ -1160,7 +1160,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
     @Override
     public void receiveEvent(Object o) {
         if (offLineModle) {
-            if (AppConfig.PIG_DEPTH_JOIN) {
+            if (PigAppConfig.PIG_DEPTH_JOIN) {
                 android.widget.Toast.makeText(mActivity, "请打开网络链接！", Toast.LENGTH_SHORT).show();
             } else {
 //                goToActivity(SelectFunctionActivity_OffLine.class, null);

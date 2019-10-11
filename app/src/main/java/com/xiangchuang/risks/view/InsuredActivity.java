@@ -1,6 +1,5 @@
 package com.xiangchuang.risks.view;
 
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,7 +21,7 @@ import com.innovation.pig.insurance.R;
 import com.innovation.pig.insurance.netutils.Constants;
 import com.innovation.pig.insurance.netutils.GsonUtils;
 import com.innovation.pig.insurance.netutils.OkHttp3Util;
-import com.innovation.pig.insurance.netutils.PreferencesUtils;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
 
 import org.json.JSONObject;
 
@@ -88,7 +87,7 @@ public class InsuredActivity extends BaseActivity {
     protected void initData() {
         getPigType();
         getInsureList();
-        companyname.setText(PreferencesUtils.getStringValue(Constants.companyname, InsuredActivity.this));
+        companyname.setText(PigPreferencesUtils.getStringValue(Constants.companyname, InsuredActivity.this));
         tv_title.setText("投保");
         submit.setOnClickListener(new View.OnClickListener() {
             @Override

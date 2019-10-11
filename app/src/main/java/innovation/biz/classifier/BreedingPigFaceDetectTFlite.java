@@ -35,8 +35,8 @@ import java.util.Map;
 import innovation.biz.iterm.PostureItem;
 import innovation.biz.iterm.PredictRotationIterm;
 
-import static com.xiangchuangtec.luolu.animalcounter.AppConfig.currentPadSize;
-import static com.xiangchuangtec.luolu.animalcounter.AppConfig.sowCount;
+import static com.xiangchuangtec.luolu.animalcounter.PigAppConfig.currentPadSize;
+import static com.xiangchuangtec.luolu.animalcounter.PigAppConfig.sowCount;
 import static innovation.utils.ImageUtils.padBitmap2SpRatio;
 import static innovation.utils.ImageUtils.zoomImage;
 import static org.tensorflow.demo.BreedingDetectorActivity_pig.offsetX;

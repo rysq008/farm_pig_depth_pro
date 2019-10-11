@@ -1,8 +1,6 @@
 package com.xiangchuang.risks.view;
 
 import android.content.res.Configuration;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -25,7 +23,7 @@ import com.innovation.pig.insurance.R;
 import com.innovation.pig.insurance.netutils.Constants;
 import com.innovation.pig.insurance.netutils.GsonUtils;
 import com.innovation.pig.insurance.netutils.OkHttp3Util;
-import com.innovation.pig.insurance.netutils.PreferencesUtils;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -37,7 +35,6 @@ import java.util.List;
 import java.util.Map;
 
 
-import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -101,8 +98,8 @@ public class USBMenageActivity extends BaseActivity {
     private void getZhuShe() {
         Map map = new HashMap();
         map.put(Constants.AppKeyAuthorization, "hopen");
-        map.put(Constants.en_user_id, PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext()) + "");
-        map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0"));
+        map.put(Constants.en_user_id, PigPreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext()) + "");
+        map.put(Constants.en_id, PigPreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0"));
         Map mapbody = new HashMap();
         mapbody.put(Constants.amountFlg, String.valueOf(9));
         mapbody.put(Constants.insureFlg, String.valueOf(9));
@@ -183,10 +180,10 @@ public class USBMenageActivity extends BaseActivity {
     private void getDataFromNet() {
         Map map = new HashMap();
         map.put(Constants.AppKeyAuthorization, "hopen");
-        map.put(Constants.en_user_id, PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext()) + "");
-        map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0"));
-        map.put(Constants.deptIdnew, PreferencesUtils.getStringValue(Constants.deptId, AppConfig.getAppContext()));
-        map.put(Constants.id, PreferencesUtils.getStringValue(Constants.id, AppConfig.getAppContext(), "0"));
+        map.put(Constants.en_user_id, PigPreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext()) + "");
+        map.put(Constants.en_id, PigPreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0"));
+        map.put(Constants.deptIdnew, PigPreferencesUtils.getStringValue(Constants.deptId, AppConfig.getAppContext()));
+        map.put(Constants.id, PigPreferencesUtils.getStringValue(Constants.id, AppConfig.getAppContext(), "0"));
 
         OkHttp3Util.doPost(Constants.SHESHOW, null, map, new Callback() {
             @Override
@@ -268,10 +265,10 @@ public class USBMenageActivity extends BaseActivity {
     private void addSheXiangTou() {
         Map map = new HashMap();
         map.put(Constants.AppKeyAuthorization, "hopen");
-        map.put(Constants.en_user_id, PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext()) + "");
-        map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0"));
-        map.put(Constants.deptIdnew, PreferencesUtils.getStringValue(Constants.deptId, AppConfig.getAppContext()));
-        map.put(Constants.id, PreferencesUtils.getStringValue(Constants.id, AppConfig.getAppContext(), "0"));
+        map.put(Constants.en_user_id, PigPreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext()) + "");
+        map.put(Constants.en_id, PigPreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0"));
+        map.put(Constants.deptIdnew, PigPreferencesUtils.getStringValue(Constants.deptId, AppConfig.getAppContext()));
+        map.put(Constants.id, PigPreferencesUtils.getStringValue(Constants.id, AppConfig.getAppContext(), "0"));
         Map mapbody = new HashMap();
         mapbody.put(Constants.cameraNo, she_xu.getText().toString());
         mapbody.put(Constants.cameraName, she_name.getText().toString());

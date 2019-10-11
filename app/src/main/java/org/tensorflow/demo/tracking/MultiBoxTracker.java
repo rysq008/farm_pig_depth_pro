@@ -25,17 +25,19 @@ import android.graphics.Paint.Join;
 import android.graphics.Paint.Style;
 import android.graphics.Point;
 import android.graphics.RectF;
-import android.media.Image;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.widget.Toast;
 
+import com.farm.innovation.utils.FarmerPreferencesUtils;
+import com.innovation.pig.insurance.AppConfig;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
+
 import innovation.biz.iterm.PostureItem;
 import innovation.biz.iterm.PredictRotationIterm;
 import innovation.biz.iterm.TrackerItem;
-import innovation.utils.PreferencesUtils;
 import innovation.utils.ScreenUtil;
 
 import org.tensorflow.demo.Classifier;
@@ -49,11 +51,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Vector;
-
-import innovation.biz.iterm.PostureItem;
-import innovation.utils.ScreenUtil;
-
-import static innovation.utils.ConstUtils.ANIMAL_TYPE_PIG;
 
 
 /**
@@ -607,16 +604,31 @@ public class MultiBoxTracker {
 
 
   public void getCurrentTypeList() {
-
-    listAngles_capture.add("左脸，数量：" + type1Sum + ((type1Sum < PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_LEFT, context)) ? "(不足)" : "(OK)"));
-    listAngles_capture.add("正脸，数量：" + type2Sum + ((type2Sum < PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_MIDDLE, context)) ? "(不足)" : "(OK)"));
-    listAngles_capture.add("右脸，数量：" + type3Sum + ((type3Sum < PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_RIGHT, context)) ? "(不足)" : "(OK)"));
+    if(AppConfig.getSdkType() == AppConfig.SDK_TYPE.COW){
+      listAngles_capture.add("左脸，数量：" + type1Sum + ((type1Sum < FarmerPreferencesUtils.getMaxPics(FarmerPreferencesUtils.FACE_ANGLE_MAX_LEFT, context)) ? "(不足)" : "(OK)"));
+      listAngles_capture.add("正脸，数量：" + type2Sum + ((type2Sum < FarmerPreferencesUtils.getMaxPics(FarmerPreferencesUtils.FACE_ANGLE_MAX_MIDDLE, context)) ? "(不足)" : "(OK)"));
+      listAngles_capture.add("右脸，数量：" + type3Sum + ((type3Sum < FarmerPreferencesUtils.getMaxPics(FarmerPreferencesUtils.FACE_ANGLE_MAX_RIGHT, context)) ? "(不足)" : "(OK)"));
+    }else {
+      listAngles_capture.add("左脸，数量：" + type1Sum + ((type1Sum < PigPreferencesUtils.getMaxPics(PigPreferencesUtils.FACE_ANGLE_MAX_LEFT, context)) ? "(不足)" : "(OK)"));
+      listAngles_capture.add("正脸，数量：" + type2Sum + ((type2Sum < PigPreferencesUtils.getMaxPics(PigPreferencesUtils.FACE_ANGLE_MAX_MIDDLE, context)) ? "(不足)" : "(OK)"));
+      listAngles_capture.add("右脸，数量：" + type3Sum + ((type3Sum < PigPreferencesUtils.getMaxPics(PigPreferencesUtils.FACE_ANGLE_MAX_RIGHT, context)) ? "(不足)" : "(OK)"));
+    }
   }
 
   public String getReminderMsgText() {
-    int maxLeft = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_LEFT, context);
-    int maxMiddle = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_MIDDLE, context);
-    int maxRight = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_RIGHT, context);
+    int maxLeft = 0;
+    int maxMiddle = 0;
+    int maxRight = 0;
+    if(AppConfig.getSdkType() == AppConfig.SDK_TYPE.COW){
+       maxLeft = FarmerPreferencesUtils.getMaxPics(FarmerPreferencesUtils.FACE_ANGLE_MAX_LEFT, context);
+       maxMiddle = FarmerPreferencesUtils.getMaxPics(FarmerPreferencesUtils.FACE_ANGLE_MAX_MIDDLE, context);
+       maxRight = FarmerPreferencesUtils.getMaxPics(FarmerPreferencesUtils.FACE_ANGLE_MAX_RIGHT, context);
+    }else {
+       maxLeft = PigPreferencesUtils.getMaxPics(PigPreferencesUtils.FACE_ANGLE_MAX_LEFT, context);
+       maxMiddle = PigPreferencesUtils.getMaxPics(PigPreferencesUtils.FACE_ANGLE_MAX_MIDDLE, context);
+       maxRight = PigPreferencesUtils.getMaxPics(PigPreferencesUtils.FACE_ANGLE_MAX_RIGHT, context);
+    }
+
     boolean b = false;
     if (type1Sum < maxLeft
             && type2Sum < maxMiddle

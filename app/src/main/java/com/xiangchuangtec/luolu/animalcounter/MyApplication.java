@@ -13,13 +13,13 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        AppConfig.newInstance().onCreate(this);
+        PigAppConfig.newInstance().onCreate(this);
     }
 
     @Override
     public void onTerminate() {
         super.onTerminate();
-        AppConfig.newInstance().onTerminate();
+        PigAppConfig.newInstance().onTerminate();
     }
 
 

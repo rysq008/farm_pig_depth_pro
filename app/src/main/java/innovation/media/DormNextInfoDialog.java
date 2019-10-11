@@ -29,7 +29,7 @@ import com.innovation.pig.insurance.model.Commit;
 import com.innovation.pig.insurance.model.DatabaseHelper;
 import com.innovation.pig.insurance.netutils.GsonUtils;
 import com.innovation.pig.insurance.netutils.OkHttp3Util;
-import com.innovation.pig.insurance.netutils.PreferencesUtils;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -125,16 +125,16 @@ public class DormNextInfoDialog extends Dialog implements View.OnClickListener {
         databaseHelper = new DatabaseHelper(context);
         activity = (Activity) context;
 
-        textZhuShe.setText(PreferencesUtils.getStringValue(Constants.shename, context));
-        textZhuJuan.setText(PreferencesUtils.getStringValue(Constants.juanname, context));
+        textZhuShe.setText(PigPreferencesUtils.getStringValue(Constants.shename, context));
+        textZhuJuan.setText(PigPreferencesUtils.getStringValue(Constants.juanname, context));
         querySheJuanMessage();
     }
 
     private void querySheJuanMessage() {
         Map map = new HashMap();
         map.put(Constants.AppKeyAuthorization, "hopen");
-        map.put(Constants.en_user_id, String.valueOf(PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext())));
-        map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0"));
+        map.put(Constants.en_user_id, String.valueOf(PigPreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext())));
+        map.put(Constants.en_id, PigPreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0"));
         Map mapbody = new HashMap();
         mapbody.put(Constants.amountFlg, String.valueOf(9));
         mapbody.put(Constants.insureFlg, String.valueOf(9));
@@ -191,8 +191,8 @@ public class DormNextInfoDialog extends Dialog implements View.OnClickListener {
     private void getzhujuanMessage(String pighouseid) {
         Map map = new HashMap();
         map.put(Constants.AppKeyAuthorization, "hopen");
-        map.put(Constants.en_user_id, PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext()) + "");
-        map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0"));
+        map.put(Constants.en_user_id, PigPreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext()) + "");
+        map.put(Constants.en_id, PigPreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0"));
         Map mapbody = new HashMap();
         mapbody.put(Constants.amountFlg, "" + 9);
         mapbody.put(Constants.insureFlg, "" + 9);
@@ -339,8 +339,8 @@ public class DormNextInfoDialog extends Dialog implements View.OnClickListener {
             getDataFromNet();
 
         } else if (i == R.id.cancel) {
-            PreferencesUtils.saveKeyValue(Constants.manualcount, "0", AppConfig.getAppContext());
-            PreferencesUtils.saveBooleanValue("isfleg", false, context);
+            PigPreferencesUtils.saveKeyValue(Constants.manualcount, "0", AppConfig.getAppContext());
+            PigPreferencesUtils.saveBooleanValue("isfleg", false, context);
             cancel();
 
         } else {
@@ -350,16 +350,16 @@ public class DormNextInfoDialog extends Dialog implements View.OnClickListener {
     private void getDataFromNet() {
         Map map = new HashMap();
         map.put(Constants.AppKeyAuthorization, "hopen");
-        map.put(Constants.en_user_id, String.valueOf(PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext())));
-        map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0"));
+        map.put(Constants.en_user_id, String.valueOf(PigPreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext())));
+        map.put(Constants.en_id, PigPreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0"));
         Map mapbody = new HashMap();
         String numzidongvalue = numzidong.getText().toString();
         String numshoudongvalue = numshoudong.getText().toString();
-        mapbody.put(Constants.sheId, PreferencesUtils.getStringValue(Constants.sheId, context) + "");
-        mapbody.put(Constants.juanId, PreferencesUtils.getStringValue(Constants.juanId, context) + "");
+        mapbody.put(Constants.sheId, PigPreferencesUtils.getStringValue(Constants.sheId, context) + "");
+        mapbody.put(Constants.juanId, PigPreferencesUtils.getStringValue(Constants.juanId, context) + "");
         mapbody.put(Constants.cutoCount, numzidongvalue);
         mapbody.put(Constants.count, numshoudongvalue);
-        mapbody.put(Constants.videoId, PreferencesUtils.getStringValue(Constants.startVideoId, context));
+        mapbody.put(Constants.videoId, PigPreferencesUtils.getStringValue(Constants.startVideoId, context));
         //经度
         mapbody.put(Constants.longitude, String.valueOf(LocationManager.getInstance(context).currentLon));
         //维度
@@ -383,10 +383,10 @@ public class DormNextInfoDialog extends Dialog implements View.OnClickListener {
                             if (null != bean && bean.getStatus() == 1) {
                                 SpinnerZhuJuan.setSelection(0);
                                 Toast.makeText(AppConfig.getAppContext(), "保存成功", Toast.LENGTH_LONG).show();
-                                PreferencesUtils.saveKeyValue(Constants.manualcount, numshoudongvalue, AppConfig.getAppContext());
+                                PigPreferencesUtils.saveKeyValue(Constants.manualcount, numshoudongvalue, AppConfig.getAppContext());
                             }
                             dismiss();
-                            PreferencesUtils.saveBooleanValue("isfleg",false,context);
+                            PigPreferencesUtils.saveBooleanValue("isfleg",false,context);
                             appContext.finish();
                         }
                     });
@@ -398,10 +398,10 @@ public class DormNextInfoDialog extends Dialog implements View.OnClickListener {
     private void editRecoed() {
         Map map = new HashMap();
         map.put(Constants.AppKeyAuthorization, "hopen");
-        map.put(Constants.en_user_id, String.valueOf(PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext())));
-        map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0"));
+        map.put(Constants.en_user_id, String.valueOf(PigPreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext())));
+        map.put(Constants.en_id, PigPreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0"));
         Map mapbody = new HashMap();
-        mapbody.put(Constants.videoId, PreferencesUtils.getStringValue(Constants.startVideoId, AppConfig.getAppContext(), "0"));
+        mapbody.put(Constants.videoId, PigPreferencesUtils.getStringValue(Constants.startVideoId, AppConfig.getAppContext(), "0"));
         OkHttp3Util.doPost(Constants.PRESTOP, mapbody, map, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {

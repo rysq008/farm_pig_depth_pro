@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 
+import com.farm.innovation.utils.FarmerPreferencesUtils;
 import com.google.gson.Gson;
 import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
@@ -23,7 +24,6 @@ import java.util.Map;
 
 import innovation.entry.UpdateBean;
 import innovation.utils.HttpUtils;
-import innovation.utils.PreferencesUtils;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -43,15 +43,29 @@ public class AppUpdateUtils {
         this.mActivity = activity;
         this.mListener = listener;
         Map<String, String> query = new HashMap<>();
-        String type = PreferencesUtils.getStringValue(Constants.companyfleg, mActivity);
-        if (("1").equals(type)) {
-            query.put("uid", PreferencesUtils.getStringValue(Constants.id, mActivity));
-        } else {
-            query.put("uid", PreferencesUtils.getIntValue(Constants.en_user_id, mActivity) + "");
+        String type ;
+        if(AppConfig.getSdkType() == AppConfig.SDK_TYPE.COW){
+             type = FarmerPreferencesUtils.getStringValue(Constants.companyfleg, mActivity);
+            if (("1").equals(type)) {
+                query.put("uid", FarmerPreferencesUtils.getStringValue(Constants.id, mActivity));
+            } else {
+                query.put("uid", FarmerPreferencesUtils.getIntValue(Constants.en_user_id, mActivity) + "");
+            }
+            query.put("enId", FarmerPreferencesUtils.getStringValue(Constants.en_id, mActivity));
+            query.put("longitude", FarmerPreferencesUtils.getStringValue(Constants.longitude, mActivity));
+            query.put("latitude", FarmerPreferencesUtils.getStringValue(Constants.latitude, mActivity));
+        }else {
+             type = PigPreferencesUtils.getStringValue(Constants.companyfleg, mActivity);
+            if (("1").equals(type)) {
+                query.put("uid", PigPreferencesUtils.getStringValue(Constants.id, mActivity));
+            } else {
+                query.put("uid", PigPreferencesUtils.getIntValue(Constants.en_user_id, mActivity) + "");
+            }
+            query.put("enId", PigPreferencesUtils.getStringValue(Constants.en_id, mActivity));
+            query.put("longitude", PigPreferencesUtils.getStringValue(Constants.longitude, mActivity));
+            query.put("latitude", PigPreferencesUtils.getStringValue(Constants.latitude, mActivity));
         }
-        query.put("enId", PreferencesUtils.getStringValue(Constants.en_id, mActivity));
-        query.put("longitude", PreferencesUtils.getStringValue(Constants.longitude, mActivity));
-        query.put("latitude", PreferencesUtils.getStringValue(Constants.latitude, mActivity));
+
         query.put("phoneModel", android.os.Build.MODEL);
         query.put("timestamp", System.currentTimeMillis() + "");
 

@@ -17,13 +17,13 @@ import com.google.gson.Gson;
 import com.innovation.pig.insurance.R;
 import com.xiangchuang.risks.model.bean.QueryVideoFlagDataBean;
 
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
 
 import org.tensorflow.demo.DetectorActivity_pig;
 
 import java.util.List;
-import static com.xiangchuangtec.luolu.animalcounter.AppConfig.timeVideoStart;
+import static com.xiangchuangtec.luolu.animalcounter.PigAppConfig.timeVideoStart;
 
 /**
  * Created by luolu on 2018/3/1.
@@ -141,8 +141,8 @@ public class Utils {
      * 获取录制开始到当前节点的时长
      */
     public static Long getDuring(long timestamp) {
-        Log.i("图片数量计算---1", "总长" + AppConfig.during + ":当前时间戳" + timestamp + ":开始时间戳" + timeVideoStart);
-        return AppConfig.during + (timestamp - timeVideoStart);
+        Log.i("图片数量计算---1", "总长" + PigAppConfig.during + ":当前时间戳" + timestamp + ":开始时间戳" + timeVideoStart);
+        return PigAppConfig.during + (timestamp - timeVideoStart);
     }
 
     /**
@@ -156,7 +156,7 @@ public class Utils {
      * 获取投保或理赔的牲畜识别阈值
      */
     public static void getThreshold() {
-        String tlist = PreferencesUtils.getStringValue(Constants.THRESHOLD_LIST, AppConfig.getContext());
+        String tlist = PigPreferencesUtils.getStringValue(Constants.THRESHOLD_LIST, PigAppConfig.getContext());
         QueryVideoFlagDataBean.thresholdList thresholdList = new Gson().fromJson(tlist, QueryVideoFlagDataBean.thresholdList.class);
         Log.e("getThreshold", thresholdList.toString());
 
@@ -168,7 +168,7 @@ public class Utils {
      * 获取理赔的牲畜识别 降低后的阈值
      */
     public static void setLowThreshold() {
-        String tlist = PreferencesUtils.getStringValue(Constants.THRESHOLD_LIST, AppConfig.getContext());
+        String tlist = PigPreferencesUtils.getStringValue(Constants.THRESHOLD_LIST, PigAppConfig.getContext());
         QueryVideoFlagDataBean.thresholdList thresholdList = new Gson().fromJson(tlist, QueryVideoFlagDataBean.thresholdList.class);
         Log.e("getLowThreshold", thresholdList.toString());
 

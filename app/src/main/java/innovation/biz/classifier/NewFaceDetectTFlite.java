@@ -10,7 +10,7 @@ import android.graphics.RectF;
 import android.os.SystemClock;
 import android.os.Trace;
 
-import com.xiangchuangtec.luolu.animalcounter.AppConfig;
+import com.xiangchuangtec.luolu.animalcounter.PigAppConfig;
 
 import org.tensorflow.demo.CameraConnectionFragment_pig;
 import org.tensorflow.demo.Classifier;
@@ -106,7 +106,7 @@ public class NewFaceDetectTFlite implements Classifier {
         try {
             pigFaceKeyPointsDetector =
                     NewKeyPointsDetectTFlite.create(
-                            AppConfig.getAppContext().getAssets(),
+                            PigAppConfig.getAppContext().getAssets(),
                             PIG_TFLITE_KEYPOINTS_MODEL_FILE,
                             "",
                             192,

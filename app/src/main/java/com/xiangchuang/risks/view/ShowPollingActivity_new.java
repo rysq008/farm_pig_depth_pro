@@ -25,12 +25,12 @@ import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.utils.CounterHelper;
 import com.xiangchuang.risks.utils.PermissionsDelegate;
-import com.xiangchuangtec.luolu.animalcounter.AppConfig;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
+import com.xiangchuangtec.luolu.animalcounter.PigAppConfig;
 import com.xiangchuangtec.luolu.animalcounter.model.PollingResultAdapter_new;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
 import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
 import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
 
 import org.tensorflow.demo.BreedingDetectorActivity_pig;
 
@@ -46,7 +46,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-import static com.xiangchuangtec.luolu.animalcounter.AppConfig.offLineModle;
+import static com.xiangchuangtec.luolu.animalcounter.PigAppConfig.offLineModle;
 
 /**
  * @authorlxr 2018.08.30
@@ -87,10 +87,10 @@ public class ShowPollingActivity_new extends BaseActivity implements View.OnClic
 
     @Override
     protected void initData() {
-        String companyname = PreferencesUtils.getStringValue(Constants.companyname, AppConfig.getAppContext(), "育肥猪农场");
+        String companyname = PigPreferencesUtils.getStringValue(Constants.companyname, PigAppConfig.getAppContext(), "育肥猪农场");
         mshowpollingname.setText("智能点数");
 
-        String enId = PreferencesUtils.getStringValue(Constants.en_id, ShowPollingActivity_new.this);
+        String enId = PigPreferencesUtils.getStringValue(Constants.en_id, ShowPollingActivity_new.this);
         getDataFromNet(enId);
     }
 

@@ -12,6 +12,7 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -20,11 +21,14 @@ import android.widget.Toast;
 
 import com.farm.innovation.bean.CattleBean;
 import com.innovationai.pigweight.event.EventManager;
+import com.xiangchuang.risks.model.bean.GSCPigBean;
+import com.xiangchuang.risks.view.LoginFamerActivity;
 
+import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
-import innovation.utils.InnovationAiOpen;
+import innovation.utils.FarmInnovationAiOpen;
+import innovation.utils.PigInnovationAiOpen;
 
 import static android.widget.LinearLayout.VERTICAL;
 
@@ -84,12 +88,12 @@ public class MainActivity extends Activity {
                     }
 //                    Toast.makeText(MainActivity.this, "nb", Toast.LENGTH_LONG).show();
 //                    Intent mIntent = new Intent(MainActivity.this, LoginPigAarActivity.class);
-//                    mIntent.putExtra(AppConfig.TOKEY, "android_token");
-//                    mIntent.putExtra(AppConfig.USER_ID, userid/*"android_userid3"*/);
-//                    mIntent.putExtra(AppConfig.PHONE_NUMBER, phone);
-//                    mIntent.putExtra(AppConfig.NAME, "android_name");
-//                    mIntent.putExtra(AppConfig.DEPARTMENT_ID, pid/*"14079900"*//*"android_department"*/);
-//                    mIntent.putExtra(AppConfig.IDENTITY_CARD, "android_identitry");
+//                    mIntent.putExtra(PigAppConfig.TOKEY, "android_token");
+//                    mIntent.putExtra(PigAppConfig.USER_ID, userid/*"android_userid3"*/);
+//                    mIntent.putExtra(PigAppConfig.PHONE_NUMBER, phone);
+//                    mIntent.putExtra(PigAppConfig.NAME, "android_name");
+//                    mIntent.putExtra(PigAppConfig.DEPARTMENT_ID, pid/*"14079900"*//*"android_department"*/);
+//                    mIntent.putExtra(PigAppConfig.IDENTITY_CARD, "android_identitry");
 //                    startActivity(mIntent);
                     dialog.dismiss();
 //                    innovation.f.j.a().a();
@@ -108,15 +112,15 @@ public class MainActivity extends Activity {
                      idcard 身份证号（必填）
                      username 用户名（必填）
                      */
-                    InnovationAiOpen.getInstance().requestInnovationApi(MainActivity.this, "98765432101", "89979dc663caa2580164f88b57796251",
+                    FarmInnovationAiOpen.getInstance().requestInnovationApi(MainActivity.this, "98765432101", "89979dc663caa2580164f88b57796251",
                             "14112100", "文水县支公司", "总公司/山西分公司/吕梁市中心支公司/文水县支公司",
-                            "00000000,14000000,14119900,", InnovationAiOpen.INSURE, "111111111111111111",
+                            "00000000,14000000,14119900,", FarmInnovationAiOpen.INSURE, "111111111111111111",
                             "test", new Handler.Callback() {
                                 @Override
                                 public boolean handleMessage(Message msg) {
                                     CattleBean bean = (CattleBean) msg.obj;
-                                    if(bean.type == InnovationAiOpen.INSURE)
-                                    Toast.makeText(MainActivity.this, "投保返回", Toast.LENGTH_LONG).show();
+                                    if (bean.type == FarmInnovationAiOpen.INSURE)
+                                        Toast.makeText(MainActivity.this, "投保返回", Toast.LENGTH_LONG).show();
                                     return true;
                                 }
                             });
@@ -138,8 +142,6 @@ public class MainActivity extends Activity {
 //                    });
 
 
-
-
 //                        Bundle bundle = new Bundle();
 //            bundle.putString(Constants.ACTION_APPID,"oL-mw59d4mEgDxG49-nQVM2hIha4");
 //            bundle.putString(Constants.ACTION_TOKEN,"android_token");
@@ -151,35 +153,61 @@ public class MainActivity extends Activity {
 //                }
 //            });
 
-            EventManager.getInstance().requestWeightApi(MainActivity.this, "2c28450ebe993dd61cb4d76eff7a916d","token", new Handler.Callback() {
-                @Override
-                public boolean handleMessage(Message msg) {
-                    if (MainActivity.this == null || MainActivity.this.isFinishing())
-                        return false;
-                    Map<String, Object> map = (Map<String, Object>) msg.obj;
-                    if (map == null) {
-                        Toast.makeText(MainActivity.this, "没有返回结果", Toast.LENGTH_SHORT).show();
-                        return false;
-                    }
-                    try {
-                        Toast.makeText(MainActivity.this, "模型结果反馈： " + map.get("data").toString(), Toast.LENGTH_LONG).show();
-                        ((TextView)view).setText(map.get("data").toString());
-                        byte[] bis = (byte[]) map.get("bitmap");
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(bis, 0, bis.length);
-                        view.setBackground(new BitmapDrawable(bitmap));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Toast.makeText(MainActivity.this, "aaaaa", Toast.LENGTH_SHORT).show();
-                    }
-                    return false;
-                }
-            });
+//            EventManager.getInstance().requestWeightApi(MainActivity.this, "2c28450ebe993dd61cb4d76eff7a916d", "token", new Handler.Callback() {
+//                @Override
+//                public boolean handleMessage(Message msg) {
+//                    if (MainActivity.this == null || MainActivity.this.isFinishing())
+//                        return false;
+//                    Map<String, Object> map = (Map<String, Object>) msg.obj;
+//                    if (map == null) {
+//                        Toast.makeText(MainActivity.this, "没有返回结果", Toast.LENGTH_SHORT).show();
+//                        return false;
+//                    }
+//                    try {
+//                        Toast.makeText(MainActivity.this, "模型结果反馈： " + map.get("data").toString(), Toast.LENGTH_LONG).show();
+//                        ((TextView) view).setText(map.get("data").toString());
+//                        byte[] bis = (byte[]) map.get("bitmap");
+//                        Bitmap bitmap = BitmapFactory.decodeByteArray(bis, 0, bis.length);
+//                        view.setBackground(new BitmapDrawable(bitmap));
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                        Toast.makeText(MainActivity.this, "aaaaa", Toast.LENGTH_SHORT).show();
+//                    }
+//                    return false;
+//                }
+//            });
+
+            if(true){
+                PigInnovationAiOpen.getInstance().requestInnovationApi(this, "98765432101", "89979dc663caa2580164f88b57796251",
+                        "14112100", "文水县支公司", "3","14119900","总公司/山西分公司/吕梁市中心支公司/文水县支公司",
+                        "00000000,14000000,14119900,", "文水县养殖场", PigInnovationAiOpen.INSURE, "test", new Handler.Callback() {
+                            @Override
+                            public boolean handleMessage(Message msg) {
+                                List<GSCPigBean> beanS = (List<GSCPigBean>) msg.obj;
+                                for (GSCPigBean bean:beanS) {
+                                    Log.d("aaaaaa", "handleMessage: ---->"+bean.string());
+                                }
+                                if(msg.what == PigInnovationAiOpen.INSURE) {
+                                    innovation.utils.Toast.makeText(MainActivity.this, "投保返回", innovation.utils.Toast.LENGTH_LONG).show();
+                                }
+
+                                if(msg.what == PigInnovationAiOpen.PAY) {
+
+                                    List<GSCPigBean> beans = (List<GSCPigBean>)msg.obj;
+                                    innovation.utils.Toast.makeText(MainActivity.this, "理赔返回", innovation.utils.Toast.LENGTH_LONG).show();
+                                }
+
+                                return true;
+                            }
+                        });
+                return;
+            }
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        InnovationAiOpen.getInstance().removeEvent(this);
+        FarmInnovationAiOpen.getInstance().removeEvent(this);
     }
 }

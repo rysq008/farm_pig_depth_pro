@@ -1,12 +1,12 @@
-apply plugin: 'com.android.application'
-//apply plugin: 'com.android.library'
+//apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 27
     buildToolsVersion '27.0.3'
     //    luolucode
     defaultConfig {
-        applicationId "com.xiangchuangtec.luolu.animalcounter"
+//        applicationId "com.xiangchuangtec.luolu.animalcounter"
         minSdkVersion 21
         targetSdkVersion 27
         //release versionCode 1100

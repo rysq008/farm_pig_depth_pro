@@ -10,11 +10,11 @@ import com.google.gson.reflect.TypeToken;
 import com.xiangchuang.risks.model.bean.BaseBean;
 import com.xiangchuang.risks.model.bean.TipsBean;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
 import com.xiangchuang.risks.utils.SystemUtil;
 import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.netutils.Constants;
 import com.innovation.pig.insurance.netutils.OkHttp3Util;
-import com.innovation.pig.insurance.netutils.PreferencesUtils;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -44,11 +44,11 @@ public class GlobalDialogUtils {
         Map<String, String> mapBody = new HashMap<>();
         mapBody.put("appType", "2");
         mapBody.put("useCase", useCase);
-        String type = PreferencesUtils.getStringValue(Constants.companyfleg, AppConfig.getAppContext());
+        String type = PigPreferencesUtils.getStringValue(Constants.companyfleg, AppConfig.getAppContext());
         if (type.equals("1")) {
-            mapBody.put("userId", PreferencesUtils.getStringValue(Constants.id, AppConfig.getAppContext()));
+            mapBody.put("userId", PigPreferencesUtils.getStringValue(Constants.id, AppConfig.getAppContext()));
         } else {
-            mapBody.put("userId", String.valueOf(PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext())));
+            mapBody.put("userId", String.valueOf(PigPreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext())));
         }
         OkHttp3Util.doPost(Constants.GET_TIPS_DIALOG, mapBody, mapHeader, new Callback() {
             @Override

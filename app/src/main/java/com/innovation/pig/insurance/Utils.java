@@ -13,7 +13,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.xiangchuang.risks.model.bean.QueryVideoFlagDataBean;
 import com.innovation.pig.insurance.netutils.Constants;
-import com.innovation.pig.insurance.netutils.PreferencesUtils;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
 
 import org.tensorflow.demo.DetectorActivity;
 
@@ -155,7 +155,7 @@ public class Utils {
      * 获取投保或理赔的牲畜识别阈值
      */
     public static void getThreshold() {
-        String tlist = PreferencesUtils.getStringValue(Constants.THRESHOLD_LIST, AppConfig.getActivity());
+        String tlist = PigPreferencesUtils.getStringValue(Constants.THRESHOLD_LIST, AppConfig.getActivity());
         QueryVideoFlagDataBean.thresholdList thresholdList = new Gson().fromJson(tlist, QueryVideoFlagDataBean.thresholdList.class);
         Log.e("getThreshold", thresholdList.toString());
 
@@ -167,7 +167,7 @@ public class Utils {
      * 获取理赔的牲畜识别 降低后的阈值
      */
     public static void setLowThreshold() {
-        String tlist = PreferencesUtils.getStringValue(Constants.THRESHOLD_LIST, AppConfig.getActivity());
+        String tlist = PigPreferencesUtils.getStringValue(Constants.THRESHOLD_LIST, AppConfig.getActivity());
         QueryVideoFlagDataBean.thresholdList thresholdList = new Gson().fromJson(tlist, QueryVideoFlagDataBean.thresholdList.class);
         Log.e("getLowThreshold", thresholdList.toString());
 

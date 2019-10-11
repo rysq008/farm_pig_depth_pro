@@ -30,12 +30,12 @@ import android.view.KeyEvent;
 import android.view.Surface;
 import android.view.WindowManager;
 
+import com.innovation.pig.insurance.R;
 import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.utils.AlertDialogManager;
-import com.xiangchuangtec.luolu.animalcounter.AppConfig;
-import com.innovation.pig.insurance.R;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
+import com.xiangchuangtec.luolu.animalcounter.PigAppConfig;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
 
 import org.tensorflow.demo.env.Logger;
 import org.tensorflow.demo.tracking.MultiBoxTracker;
@@ -77,8 +77,8 @@ public abstract class CameraActivity_pig extends BaseActivity implements OnImage
             requestPermission();
         }
 
-        AppConfig.debugNub = 0;
-        AppConfig.during = 0;
+        PigAppConfig.debugNub = 0;
+        PigAppConfig.during = 0;
 
         Global.VIDEO_PROCESS = false;
 
@@ -94,25 +94,25 @@ public abstract class CameraActivity_pig extends BaseActivity implements OnImage
 
     private void readSDCard() {
         String state = Environment.getExternalStorageState();
-        if(Environment.MEDIA_MOUNTED.equals(state)) {
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
             File sdcardDir = Environment.getExternalStorageDirectory();
 
-            long usable = sdcardDir.getFreeSpace()/1024;
-            if(usable < 612000){
-                String phone = PreferencesUtils.getStringValue(Constants.phone, AppConfig.getContext());
+            long usable = sdcardDir.getFreeSpace() / 1024;
+            if (usable < 612000) {
+                String phone = PigPreferencesUtils.getStringValue(Constants.phone, PigAppConfig.getContext());
 
                 AlertDialogManager.showMessageDialogOne(this, "提示",
-                        "您的手机存储空间严重不足，请清理后再进行采集录制。如清理后仍无法采集录制，请联系人工客服，电话："+phone+"。", new AlertDialogManager.DialogInterface() {
-                    @Override
-                    public void onPositive() {
-                        finish();
-                    }
+                        "您的手机存储空间严重不足，请清理后再进行采集录制。如清理后仍无法采集录制，请联系人工客服，电话：" + phone + "。", new AlertDialogManager.DialogInterface() {
+                            @Override
+                            public void onPositive() {
+                                finish();
+                            }
 
-                    @Override
-                    public void onNegative() {
+                            @Override
+                            public void onNegative() {
 
-                    }
-                });
+                            }
+                        });
             }
         }
     }

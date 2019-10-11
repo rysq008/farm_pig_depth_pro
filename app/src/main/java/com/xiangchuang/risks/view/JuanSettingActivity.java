@@ -1,7 +1,5 @@
 package com.xiangchuang.risks.view;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,7 +15,7 @@ import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
 import com.innovation.pig.insurance.netutils.Constants;
 import com.innovation.pig.insurance.netutils.OkHttp3Util;
-import com.innovation.pig.insurance.netutils.PreferencesUtils;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 
 
-import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -72,11 +69,11 @@ public class JuanSettingActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        String xu = PreferencesUtils.getStringValue(Constants.xu, AppConfig.getAppContext(), "0");
-        String touname = PreferencesUtils.getStringValue(Constants.touname, AppConfig.getAppContext(), "0");
-        String shename = PreferencesUtils.getStringValue(Constants.shename, AppConfig.getAppContext(), "0");
-        String sheId = PreferencesUtils.getStringValue(Constants.sheId, AppConfig.getAppContext(), "0");
-        String cameraId = PreferencesUtils.getStringValue(Constants.cameraId, AppConfig.getAppContext(), "0");
+        String xu = PigPreferencesUtils.getStringValue(Constants.xu, AppConfig.getAppContext(), "0");
+        String touname = PigPreferencesUtils.getStringValue(Constants.touname, AppConfig.getAppContext(), "0");
+        String shename = PigPreferencesUtils.getStringValue(Constants.shename, AppConfig.getAppContext(), "0");
+        String sheId = PigPreferencesUtils.getStringValue(Constants.sheId, AppConfig.getAppContext(), "0");
+        String cameraId = PigPreferencesUtils.getStringValue(Constants.cameraId, AppConfig.getAppContext(), "0");
         mxu.setText(xu);
         mtouname.setText(touname);
         mshename.setText(shename);
@@ -86,10 +83,10 @@ public class JuanSettingActivity extends BaseActivity {
     private void getDataFromNet(String sheId, String cameraId) {
         Map map = new HashMap();
         map.put(Constants.AppKeyAuthorization, "hopen");
-        map.put(Constants.en_user_id, PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext()) + "");
-        map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0"));
-        map.put(Constants.deptIdnew, PreferencesUtils.getStringValue(Constants.deptId, AppConfig.getAppContext()));
-        map.put(Constants.id, PreferencesUtils.getStringValue(Constants.id, AppConfig.getAppContext(), "0"));
+        map.put(Constants.en_user_id, PigPreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext()) + "");
+        map.put(Constants.en_id, PigPreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0"));
+        map.put(Constants.deptIdnew, PigPreferencesUtils.getStringValue(Constants.deptId, AppConfig.getAppContext()));
+        map.put(Constants.id, PigPreferencesUtils.getStringValue(Constants.id, AppConfig.getAppContext(), "0"));
         Map mapbody = new HashMap();
         mapbody.put(Constants.cameraId, cameraId);
         mapbody.put(Constants.sheId, sheId);

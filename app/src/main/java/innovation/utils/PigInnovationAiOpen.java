@@ -14,12 +14,15 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
+import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
 import com.xiangchuang.risks.model.bean.QueryVideoFlagDataBean;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
 import com.xiangchuang.risks.view.LoginFarmAarActivity;
+import com.xiangchuang.risks.view.LoginPigAarActivity;
 import com.xiangchuang.risks.view.SelectFunctionActivity_new;
-import com.xiangchuangtec.luolu.animalcounter.AppConfig;
+import com.xiangchuangtec.luolu.animalcounter.PigAppConfig;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
 import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
 
@@ -155,6 +158,7 @@ public class PigInnovationAiOpen {
             phone = "";
         }
 
+        AppConfig.setSdkType(AppConfig.SDK_TYPE.COW);
         Global.model = type;//(type == 1 ? Model.VERIFY.value() : Model.BUILD.value());
 //        Toast.makeText(context, "nb", Toast.LENGTH_LONG).show();
         String finalPhone = phone;
@@ -189,24 +193,25 @@ public class PigInnovationAiOpen {
     }
 
     private void skipTo(Context context, String taskId, String userid, String officeCode, String officeName,
-                        String officeLevel, String parentCode, String parentOfficeName, String parentOfficeCodes,
+                        String officeLevel,
+                        String parentCode, String parentOfficeName, String parentOfficeCodes,
                         String farmName, int type, String phone, String idcard, String username) {
         GSC_TASKID = taskId;
-        Intent mIntent = new Intent(context, LoginFarmAarActivity.class);
-        mIntent.putExtra(AppConfig.TASK_ID, taskId);
-        mIntent.putExtra(AppConfig.USER_ID, userid);
-        mIntent.putExtra(AppConfig.OFFICE_CODE, officeCode);
-        mIntent.putExtra(AppConfig.OFFICE_NAME, officeName);
-        mIntent.putExtra(AppConfig.OFFICE_LEVEL, officeLevel);
-        mIntent.putExtra(AppConfig.PARENT_CODE, parentCode);
-        mIntent.putExtra(AppConfig.PARENT_OFFICE_NAMES, parentOfficeName);
-        mIntent.putExtra(AppConfig.PARENT_OFFICE_CODES, parentOfficeCodes);
-        mIntent.putExtra(AppConfig.TYPE, type + "");
-        mIntent.putExtra(AppConfig.PHONE, phone);
-        mIntent.putExtra(AppConfig.ID_CARD, idcard);
-        mIntent.putExtra(AppConfig.USER_NAME, username);
-        mIntent.putExtra(AppConfig.FARM_NAME, farmName);
-        mIntent.putExtra(AppConfig.TOKEY, "android_token");
+        Intent mIntent = new Intent(context, LoginPigAarActivity.class);
+        mIntent.putExtra(PigAppConfig.TASK_ID, taskId);
+        mIntent.putExtra(PigAppConfig.USER_ID, userid);
+        mIntent.putExtra(PigAppConfig.OFFICE_CODE, officeCode);
+        mIntent.putExtra(PigAppConfig.OFFICE_NAME, officeName);
+        mIntent.putExtra(PigAppConfig.OFFICE_LEVEL, officeLevel);
+        mIntent.putExtra(PigAppConfig.PARENT_CODE, parentCode);
+        mIntent.putExtra(PigAppConfig.PARENT_OFFICE_NAMES, parentOfficeName);
+        mIntent.putExtra(PigAppConfig.PARENT_OFFICE_CODES, parentOfficeCodes);
+        mIntent.putExtra(PigAppConfig.TYPE, type + "");
+        mIntent.putExtra(PigAppConfig.PHONE, phone);
+        mIntent.putExtra(PigAppConfig.ID_CARD, idcard);
+        mIntent.putExtra(PigAppConfig.USER_NAME, username);
+        mIntent.putExtra(PigAppConfig.FARM_NAME, farmName);
+        mIntent.putExtra(PigAppConfig.TOKEY, "android_token");
         context.startActivity(mIntent);
     }
 
@@ -252,20 +257,20 @@ public class PigInnovationAiOpen {
                         if (queryVideoFlagData.getStatus() == 1) {
                             QueryVideoFlagDataBean.thresholdList thresholdList = (QueryVideoFlagDataBean.thresholdList) GsonUtils.getBean(queryVideoFlagData.getData().getThreshold(), QueryVideoFlagDataBean.thresholdList.class);
                             Log.e(SelectFunctionActivity_new.TAG, "queryVideoFlag thresholdList: " + thresholdList.toString());
-                            PreferencesUtils.saveIntValue(Constants.lipeia, Integer.parseInt(thresholdList.getLipeiA()), context);
-                            PreferencesUtils.saveIntValue(Constants.lipeib, Integer.parseInt(thresholdList.getLipeiB()), context);
-                            PreferencesUtils.saveIntValue(Constants.lipein, Integer.parseInt(thresholdList.getLipeiN()), context);
-                            PreferencesUtils.saveIntValue(Constants.lipeim, Integer.parseInt(thresholdList.getLipeiM()), context);
-                            PreferencesUtils.saveKeyValue(Constants.phone, queryVideoFlagData.getData().getServiceTelephone(), context);
-                            PreferencesUtils.saveKeyValue(Constants.customServ, thresholdList.getCustomServ(), context);
-                            PreferencesUtils.saveKeyValue("thresholdlist", queryVideoFlagData.getData().getThreshold(), context);
+                            PigPreferencesUtils.saveIntValue(Constants.lipeia, Integer.parseInt(thresholdList.getLipeiA()), context);
+                            PigPreferencesUtils.saveIntValue(Constants.lipeib, Integer.parseInt(thresholdList.getLipeiB()), context);
+                            PigPreferencesUtils.saveIntValue(Constants.lipein, Integer.parseInt(thresholdList.getLipeiN()), context);
+                            PigPreferencesUtils.saveIntValue(Constants.lipeim, Integer.parseInt(thresholdList.getLipeiM()), context);
+                            PigPreferencesUtils.saveKeyValue(Constants.phone, queryVideoFlagData.getData().getServiceTelephone(), context);
+                            PigPreferencesUtils.saveKeyValue(Constants.customServ, thresholdList.getCustomServ(), context);
+                            PigPreferencesUtils.saveKeyValue("thresholdlist", queryVideoFlagData.getData().getThreshold(), context);
                             if (null != queryVideoFlagData.getData() && !"".equals(queryVideoFlagData.getData())) {
                                 String left = queryVideoFlagData.getData().getLeftNum() == null ? "8" : queryVideoFlagData.getData().getLeftNum();
                                 String middleNum = queryVideoFlagData.getData().getLeftNum() == null ? "8" : queryVideoFlagData.getData().getMiddleNum();
                                 String rightNum = queryVideoFlagData.getData().getLeftNum() == null ? "8" : queryVideoFlagData.getData().getRightNum();
-                                PreferencesUtils.saveKeyValue("leftNum", left, context);
-                                PreferencesUtils.saveKeyValue("middleNum", middleNum, context);
-                                PreferencesUtils.saveKeyValue("rightNum", rightNum, context);
+                                PigPreferencesUtils.saveKeyValue("leftNum", left, context);
+                                PigPreferencesUtils.saveKeyValue("middleNum", middleNum, context);
+                                PigPreferencesUtils.saveKeyValue("rightNum", rightNum, context);
                             }
                             msg.what = 1;
                             msg.obj = queryVideoFlagData.getMsg();

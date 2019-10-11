@@ -43,7 +43,7 @@ import com.innovation.pig.insurance.BuildConfig;
 import com.innovation.pig.insurance.R;
 import com.innovation.pig.insurance.Utils;
 import com.innovation.pig.insurance.netutils.Constants;
-import com.innovation.pig.insurance.netutils.PreferencesUtils;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
 
 import org.tensorflow.demo.OverlayView.DrawCallback;
 import org.tensorflow.demo.env.BorderedText;
@@ -429,10 +429,10 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             return;
         }
 
-        int a = PreferencesUtils.getIntValue(Constants.lipeia, 30, DetectorActivity.this);//10
-        int b = PreferencesUtils.getIntValue(Constants.lipeib, 30, DetectorActivity.this);//10;
-        int n = PreferencesUtils.getIntValue(Constants.lipein, 120, DetectorActivity.this);//30;
-        int m = PreferencesUtils.getIntValue(Constants.lipeim, 240, DetectorActivity.this);//60;
+        int a = PigPreferencesUtils.getIntValue(Constants.lipeia, 30, DetectorActivity.this);//10
+        int b = PigPreferencesUtils.getIntValue(Constants.lipeib, 30, DetectorActivity.this);//10;
+        int n = PigPreferencesUtils.getIntValue(Constants.lipein, 120, DetectorActivity.this);//30;
+        int m = PigPreferencesUtils.getIntValue(Constants.lipeim, 240, DetectorActivity.this);//60;
 
         int pastSeconds = 5;
         //获取当前时间戳

@@ -69,7 +69,7 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.xiangchuangtec.luolu.animalcounter.AppConfig;
+import com.xiangchuangtec.luolu.animalcounter.PigAppConfig;
 import com.xiangchuangtec.luolu.animalcounter.JPushStatsConfig;
 import com.innovation.pig.insurance.R;
 
@@ -98,7 +98,7 @@ import innovation.view.SendView;
 import innovation.view.VerticalSeekBar;
 
 import static android.content.ContentValues.TAG;
-import static com.xiangchuangtec.luolu.animalcounter.AppConfig.timeVideoStart;
+import static com.xiangchuangtec.luolu.animalcounter.PigAppConfig.timeVideoStart;
 import static org.tensorflow.demo.DetectorActivity_pig.tracker;
 import static org.tensorflow.demo.DetectorActivity_pig.trackingOverlay;
 
@@ -671,7 +671,7 @@ public class CameraConnectionFragment_pig extends Fragment implements View.OnCli
 
         if (mIsRecordingVideo) {
             // 停止按钮点击时
-            AppConfig.during += System.currentTimeMillis() - timeVideoStart;
+            PigAppConfig.during += System.currentTimeMillis() - timeVideoStart;
             //Toast.makeText(activity, InnApplication.during+"", Toast.LENGTH_SHORT).show();
             stopRecordingVideo(false);
         }
@@ -697,7 +697,7 @@ public class CameraConnectionFragment_pig extends Fragment implements View.OnCli
 
             if (mIsRecordingVideo) {
                 // 停止按钮点击时
-                AppConfig.during += System.currentTimeMillis() - timeVideoStart;
+                PigAppConfig.during += System.currentTimeMillis() - timeVideoStart;
                 //Toast.makeText(activity, InnApplication.during+"", Toast.LENGTH_SHORT).show();
                 stopRecordingVideo(false);
                 Global.VIDEO_PROCESS = false;
@@ -1339,7 +1339,7 @@ public class CameraConnectionFragment_pig extends Fragment implements View.OnCli
                         if (mMediaRecorder == null) {
                             //mMediaRecorder = new MediaRecorder();
                         }
-                        AppConfig.during += System.currentTimeMillis() - timeVideoStart;
+                        PigAppConfig.during += System.currentTimeMillis() - timeVideoStart;
                         //Toast.makeText(activity, ""+InnApplication.during, Toast.LENGTH_SHORT).show();
                         Global.VIDEO_PROCESS = false;
                         // 录制、暂停按钮所在布局隐藏
@@ -1466,8 +1466,8 @@ public class CameraConnectionFragment_pig extends Fragment implements View.OnCli
                     if (textureView != null) {
                         textureView.refreshDrawableState();
                     }
-                    AppConfig.debugNub = 0;
-                    AppConfig.during = 0;
+                    PigAppConfig.debugNub = 0;
+                    PigAppConfig.during = 0;
                     LOGGER.i("collectNumberHandler Message 2！");
                     break;
                 //左脸达到数量
@@ -1492,7 +1492,7 @@ public class CameraConnectionFragment_pig extends Fragment implements View.OnCli
                         if (mMediaRecorder == null) {
                             //mMediaRecorder = new MediaRecorder();
                         }
-                        if (AppConfig.debugNub == 2) {
+                        if (PigAppConfig.debugNub == 2) {
                             // 录制、暂停按钮所在布局隐藏
                             mReCordLayout.setVisibility(View.GONE);
                             tvNotice.setVisibility(View.GONE);
@@ -1502,7 +1502,7 @@ public class CameraConnectionFragment_pig extends Fragment implements View.OnCli
                             ivRight.setVisibility(View.GONE);
                         }
 
-                        AppConfig.during += System.currentTimeMillis() - timeVideoStart;
+                        PigAppConfig.during += System.currentTimeMillis() - timeVideoStart;
                         Global.VIDEO_PROCESS = false;
 
                         mIsRecordingVideo = false;

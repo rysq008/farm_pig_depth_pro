@@ -15,14 +15,17 @@ import android.support.v4.app.ActivityCompat;
 import com.avos.avoscloud.AVOSCloud;
 import com.farm.innovation.base.FarmAppConfig;
 import com.farm.innovation.biz.welcome.WelcomeActivity;
+import com.hjq.toast.ToastUtils;
+import com.hjq.toast.style.ToastAliPayStyle;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.update.UpdateInfoModel;
 import com.xiangchuang.risks.utils.AppUpdateUtils;
-import com.xiangchuang.risks.utils.ShareUtils;
+import com.xiangchuang.risks.utils.PigShareUtils;
 import com.xiangchuang.risks.view.LoginFarmAarActivity;
+import com.xiangchuangtec.luolu.animalcounter.PigAppConfig;
 
 import net.gotev.uploadservice.UploadService;
 import net.gotev.uploadservice.okhttp.OkHttpStack;
@@ -94,7 +97,7 @@ public class AppConfig {
         FarmAppConfig.newInstance().onCreate(app);
         mCrashHandler = CrashHandler.getInstance();
         mCrashHandler.init(app);
-        ShareUtils.init(app);
+        PigAppConfig.newInstance().onCreate(app);
         boxStore = MyObjectBox.builder().androidContext(app).build();
         //初始化日志库
         Logger.addLogAdapter(new AndroidLogAdapter() {
@@ -104,12 +107,14 @@ public class AppConfig {
             }
         });
 
-//        if (AppConfig.isApkInDebug())
+//        if (PigAppConfig.isApkInDebug())
 //            new AndroidObjectBrowser(boxStore).start(app);
+        ToastUtils.init(app);
+        ToastUtils.initStyle(new ToastAliPayStyle());
 
         if (AppConfig.isOriginApk()) {
             //        // 初始化参数依次为 this, AppId, AppKey
-            HttpUtils.baseUrl = ShareUtils.getHost("host");
+            HttpUtils.baseUrl = PigShareUtils.getHost("host");
             HttpUtils.resetIp(HttpUtils.baseUrl);
             UploadService.NAMESPACE = app.getPackageName()/*BuildConfig.APPLICATION_ID*/;
             OkHttpClient client = new OkHttpClient();
@@ -209,6 +214,20 @@ public class AppConfig {
     public void onTerminate() {
         app.unregisterReceiver(networkChangedReceiver);
         FarmAppConfig.newInstance().onTerminate();
+    }
+
+    public enum SDK_TYPE {
+        COW, PIG
+    }
+
+    static SDK_TYPE cur_type;
+
+    public static void setSdkType(SDK_TYPE sdkType) {
+        cur_type = sdkType;
+    }
+
+    public static SDK_TYPE getSdkType() {
+        return cur_type;
     }
 
     private class LocationThread extends Thread {

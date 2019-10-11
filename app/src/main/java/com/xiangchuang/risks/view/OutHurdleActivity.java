@@ -1,7 +1,5 @@
 package com.xiangchuang.risks.view;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -20,7 +18,7 @@ import com.innovation.pig.insurance.R;
 import com.innovation.pig.insurance.netutils.Constants;
 import com.innovation.pig.insurance.netutils.GsonUtils;
 import com.innovation.pig.insurance.netutils.OkHttp3Util;
-import com.innovation.pig.insurance.netutils.PreferencesUtils;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -61,9 +59,9 @@ public class OutHurdleActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        defaultpig = PreferencesUtils.getIntValue(Constants.defaultpig, AppConfig.getAppContext());
-        en_id = PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0");
-        userid = PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext());
+        defaultpig = PigPreferencesUtils.getIntValue(Constants.defaultpig, AppConfig.getAppContext());
+        en_id = PigPreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0");
+        userid = PigPreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext());
         //查询猪舍信息
         getDataFromNet();
     }

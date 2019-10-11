@@ -2,8 +2,6 @@ package com.xiangchuang.risks.view;
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -27,7 +25,7 @@ import com.innovation.pig.insurance.R;
 import com.innovation.pig.insurance.netutils.Constants;
 import com.innovation.pig.insurance.netutils.GsonUtils;
 import com.innovation.pig.insurance.netutils.OkHttp3Util;
-import com.innovation.pig.insurance.netutils.PreferencesUtils;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
 
 import org.json.JSONObject;
 import org.tensorflow.demo.DetectorActivity;
@@ -40,7 +38,6 @@ import java.util.List;
 import java.util.Map;
 
 
-import butterknife.OnClick;
 import innovation.media.Model;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -114,8 +111,8 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
 
     @Override
     protected void initData() {
-        String mfleg = PreferencesUtils.getStringValue(Constants.fleg, AppConfig.getAppContext());
-        String companyName = PreferencesUtils.getStringValue(Constants.companyname, AppConfig.getAppContext());
+        String mfleg = PigPreferencesUtils.getStringValue(Constants.fleg, AppConfig.getAppContext());
+        String companyName = PigPreferencesUtils.getStringValue(Constants.companyname, AppConfig.getAppContext());
         mprelititle.setText(companyName);
         //预理赔
         if ("pre".equals(mfleg)) {
@@ -126,8 +123,8 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
             mpreparedbegin.setVisibility(View.GONE);
             tv_title.setText("理赔");
         }
-        en_id = PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0");
-        userid = PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext());
+        en_id = PigPreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0");
+        userid = PigPreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext());
         addreasons();
         getDataFromNet();
 
@@ -327,7 +324,7 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
 //        switch (view.getStepId()) {
 //            case prepared_begin:
 //                if (!hasInNo) {
-//                    Toast.makeText(AppConfig.getAppContext(), "保单号为空，无法申请预理赔。", Toast.LENGTH_LONG).show();
+//                    Toast.makeText(PigAppConfig.getAppContext(), "保单号为空，无法申请预理赔。", Toast.LENGTH_LONG).show();
 //                } else {
 //                    collectToNet();
 //                }
@@ -378,7 +375,7 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
                                     Log.i("stringbuffer",str);
                                 }
                                 isNoCamera = false;
-                                PreferencesUtils.saveKeyValue(Constants.preVideoId,str , AppConfig.getAppContext());
+                                PigPreferencesUtils.saveKeyValue(Constants.preVideoId,str , AppConfig.getAppContext());
                                 Global.model = Model.VERIFY.value();
                                 Intent intent = new Intent(PreparedLiPeiActivity_new.this, DetectorActivity.class);
                                 intent.putExtra(Constants.sheId, sheId + "");
@@ -389,7 +386,7 @@ public class PreparedLiPeiActivity_new extends BaseActivity {
                             } else if(bean.getStatus() == 0) {
                                 isNoCamera = true;
                                 Global.model = Model.VERIFY.value();
-                                PreferencesUtils.saveKeyValue(Constants.preVideoId,"" , AppConfig.getAppContext());
+                                PigPreferencesUtils.saveKeyValue(Constants.preVideoId,"" , AppConfig.getAppContext());
                                 Intent intent = new Intent(PreparedLiPeiActivity_new.this, DetectorActivity.class);
                                 intent.putExtra(Constants.sheId, sheId + "");
                                 intent.putExtra(Constants.inspectNo, mchuxiannum.getText().toString());

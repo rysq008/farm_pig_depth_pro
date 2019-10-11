@@ -10,7 +10,7 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.netutils.Constants;
-import com.innovation.pig.insurance.netutils.PreferencesUtils;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
 
 import org.tensorflow.demo.env.Logger;
 
@@ -106,9 +106,9 @@ public class LocationManager_new {
                     str_address = mLocationClient.getLastKnownLocation().getAddress();
                 }
                 Log.i("===str_address====", "str_address" + str_address);
-                PreferencesUtils.saveKeyValue(Constants.longitude, currentLon+"", AppConfig.getAppContext());
-                PreferencesUtils.saveKeyValue(Constants.latitude, currentLat+"", AppConfig.getAppContext());
-                PreferencesUtils.saveKeyValue(Constants.address, str_address, AppConfig.getAppContext());
+                PigPreferencesUtils.saveKeyValue(Constants.longitude, currentLon+"", AppConfig.getAppContext());
+                PigPreferencesUtils.saveKeyValue(Constants.latitude, currentLat+"", AppConfig.getAppContext());
+                PigPreferencesUtils.saveKeyValue(Constants.address, str_address, AppConfig.getAppContext());
                 getAddress.getaddress(str_address);
                 amapLocation.getAccuracy();//获取精度信息
             } else {

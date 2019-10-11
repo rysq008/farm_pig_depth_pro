@@ -50,7 +50,7 @@ import com.innovation.pig.insurance.R;
 import com.innovation.pig.insurance.netutils.Constants;
 import com.innovation.pig.insurance.netutils.GsonUtils;
 import com.innovation.pig.insurance.netutils.OkHttp3Util;
-import com.innovation.pig.insurance.netutils.PreferencesUtils;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -134,7 +134,7 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
                     @Override
                     public void hasPermission(List<String> granted, boolean isAll) {
                         if (isAll) {
-                            // toastUtils.showLong(AppConfig.getAppContext(), "获取权限成功");
+                            // toastUtils.showLong(PigAppConfig.getAppContext(), "获取权限成功");
                         }
                     }
 
@@ -429,9 +429,9 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
     private void saveMessageFromNet() {
         Map<String,String> map = new HashMap<>();
         map.put(Constants.AppKeyAuthorization, "hopen");
-        map.put(Constants.deptIdnew, PreferencesUtils.getStringValue(Constants.deptId, AppConfig.getAppContext()));
+        map.put(Constants.deptIdnew, PigPreferencesUtils.getStringValue(Constants.deptId, AppConfig.getAppContext()));
 
-        map.put(Constants.id, PreferencesUtils.getStringValue(Constants.id, AppConfig.getAppContext(), "0"));
+        map.put(Constants.id, PigPreferencesUtils.getStringValue(Constants.id, AppConfig.getAppContext(), "0"));
 
         Map<String,String> mapbody = new HashMap<>();
         mapbody.put("enName", tv_qiyename.getText().toString());
@@ -454,7 +454,7 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
         mapbody.put("bankBack", "");
 
         if (type) {
-            mapbody.put("enId", PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext()));
+            mapbody.put("enId", PigPreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext()));
         }
 
         OkHttp3Util.doPost(Constants.adduser, mapbody, map, new Callback() {
@@ -638,7 +638,7 @@ public class AddCompanyActivity extends BaseBarActivity implements View.OnClickL
         mProgressDialog.show();
         Map<String, String> map = new HashMap<>();
         map.put(Constants.AppKeyAuthorization, "hopen");
-        map.put(Constants.id, PreferencesUtils.getStringValue(Constants.id, AppConfig.getAppContext(), "0"));
+        map.put(Constants.id, PigPreferencesUtils.getStringValue(Constants.id, AppConfig.getAppContext(), "0"));
         OkHttp3Util.uploadPreFile(Constants.upload, fileURLPath, "a.jpg", null, map, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {

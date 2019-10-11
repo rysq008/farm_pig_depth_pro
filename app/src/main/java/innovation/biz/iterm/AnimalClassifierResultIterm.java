@@ -5,14 +5,15 @@ import android.util.Log;
 import android.widget.Toast;
 
 
+import com.farm.innovation.utils.FarmerPreferencesUtils;
 import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.BuildConfig;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
 
 import innovation.biz.classifier.PigKeyPointsDetectTFlite;
 import innovation.biz.classifier.PigRotationPrediction;
 import innovation.media.Model;
 import innovation.utils.FileUtils;
-import innovation.utils.PreferencesUtils;
 import innovation.utils.Rot2AngleType;
 
 import org.tensorflow.demo.CameraConnectionFragment;
@@ -45,9 +46,20 @@ public class AnimalClassifierResultIterm {
 
     public static void pigAngleCalculateTFlite(PostureItem postureItem) {
         int type;
-        int maxLeft = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_LEFT, AppConfig.getAppContext());
-        int maxMiddle = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_MIDDLE, AppConfig.getAppContext());
-        int maxRight = PreferencesUtils.getMaxPics(PreferencesUtils.FACE_ANGLE_MAX_RIGHT, AppConfig.getAppContext());
+        int maxLeft;
+        int maxMiddle;
+        int maxRight;
+        if(AppConfig.getSdkType() == AppConfig.SDK_TYPE.COW){
+             maxLeft = FarmerPreferencesUtils.getMaxPics(FarmerPreferencesUtils.FACE_ANGLE_MAX_LEFT, AppConfig.getAppContext());
+             maxMiddle = FarmerPreferencesUtils.getMaxPics(FarmerPreferencesUtils.FACE_ANGLE_MAX_MIDDLE, AppConfig.getAppContext());
+             maxRight = FarmerPreferencesUtils.getMaxPics(FarmerPreferencesUtils.FACE_ANGLE_MAX_RIGHT, AppConfig.getAppContext());
+        }else{
+             maxLeft = PigPreferencesUtils.getMaxPics(PigPreferencesUtils.FACE_ANGLE_MAX_LEFT, AppConfig.getAppContext());
+             maxMiddle = PigPreferencesUtils.getMaxPics(PigPreferencesUtils.FACE_ANGLE_MAX_MIDDLE, AppConfig.getAppContext());
+             maxRight = PigPreferencesUtils.getMaxPics(PigPreferencesUtils.FACE_ANGLE_MAX_RIGHT, AppConfig.getAppContext());
+
+        }
+
         DetectorActivity.AngleTrackType = 10;
         PigFaceKeyPointsItem pigFaceKeyPointsItem = PigFaceKeyPointsItem.getInstance();
         type = Rot2AngleType.getPigAngleType((float) postureItem.rot_x, (float) postureItem.rot_y);

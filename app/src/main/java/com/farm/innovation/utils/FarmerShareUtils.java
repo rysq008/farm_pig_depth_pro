@@ -22,7 +22,7 @@ import com.farm.innovation.base.FarmAppConfig;
 import com.farm.innovation.bean.MergeLoginBean;
 import com.farm.innovation.login.RespObject;
 import com.innovation.pig.insurance.R;
-import com.xiangchuang.risks.utils.ShareUtils;
+import com.xiangchuang.risks.utils.PigShareUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -36,7 +36,6 @@ import java.util.List;
 import java.util.Map;
 
 import static android.util.Base64.DEFAULT;
-import static com.xiangchuang.risks.utils.ShareUtils.preferences_pig;
 
 public class FarmerShareUtils {
 
@@ -56,7 +55,7 @@ public class FarmerShareUtils {
 
     public static final boolean saveHost(String key, String val) {
         if(!FarmAppConfig.isOriginApk()){
-            if(ShareUtils.saveHost(key,val)){
+            if(PigShareUtils.saveHost(key,val)){
                 return preferences_farm.edit().putString(key, val).commit();
             }
         }

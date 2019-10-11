@@ -16,7 +16,8 @@ import android.util.Log;
 import com.farm.innovation.biz.login.LoginFamerActivity;
 import com.hjq.toast.ToastUtils;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
-import com.xiangchuangtec.luolu.animalcounter.AppConfig;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
+import com.xiangchuangtec.luolu.animalcounter.PigAppConfig;
 import com.xiangchuangtec.luolu.animalcounter.model.Commit;
 
 import org.json.JSONObject;
@@ -160,27 +161,27 @@ public class OkHttp3Util {
                 .url(url)
                 .post(builder.build());
         request.addHeader("AppKeyAuthorization", "hopen");
-        String type = PreferencesUtils.getStringValue(Constants.companyfleg, AppConfig.getAppContext());
+        String type = PigPreferencesUtils.getStringValue(Constants.companyfleg, PigAppConfig.getAppContext());
         if (type.equals("1")) {
-            request.addHeader("uid", PreferencesUtils.getStringValue(Constants.id, AppConfig.getAppContext()));
+            request.addHeader("uid", PigPreferencesUtils.getStringValue(Constants.id, PigAppConfig.getAppContext()));
         } else {
-            request.addHeader("uid", PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext()) + "");
+            request.addHeader("uid", PigPreferencesUtils.getIntValue(Constants.en_user_id, PigAppConfig.getAppContext()) + "");
         }
         request.addHeader("type", type);
-        request.addHeader("en_id", PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext()));
+        request.addHeader("en_id", PigPreferencesUtils.getStringValue(Constants.en_id, PigAppConfig.getAppContext()));
 
-        request.addHeader("longitude", PreferencesUtils.getStringValue(Constants.longitude, AppConfig.getAppContext()));
-        request.addHeader("latitude", PreferencesUtils.getStringValue(Constants.latitude, AppConfig.getAppContext()));
+        request.addHeader("longitude", PigPreferencesUtils.getStringValue(Constants.longitude, PigAppConfig.getAppContext()));
+        request.addHeader("latitude", PigPreferencesUtils.getStringValue(Constants.latitude, PigAppConfig.getAppContext()));
         //机型
         request.addHeader("phone_model", android.os.Build.MODEL);
         //时间
         request.addHeader("timestamp", SystemClock.currentThreadTimeMillis() + "");
-        request.addHeader("token", PreferencesUtils.getStringValue(Constants.TOKEN, AppConfig.getAppContext()));
+        request.addHeader("token", PigPreferencesUtils.getStringValue(Constants.TOKEN, PigAppConfig.getAppContext()));
 
-        TelephonyManager phone = (TelephonyManager) AppConfig.getContext().getSystemService(Context.TELEPHONY_SERVICE);
+        TelephonyManager phone = (TelephonyManager) PigAppConfig.getContext().getSystemService(Context.TELEPHONY_SERVICE);
 
         //IMEI
-        if (ActivityCompat.checkSelfPermission(AppConfig.getContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(PigAppConfig.getContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -194,11 +195,11 @@ public class OkHttp3Util {
         }
 
         //版本
-        request.addHeader("version", AppConfig.version);
+        request.addHeader("version", PigAppConfig.version);
         request.addHeader("Accept-Encoding", "identity");
 
 
-//        request.addHeader("token", PreferencesUtils.getIntValue(Constants.token, AppConfig.getAppContext())+"");
+//        request.addHeader("token", PigPigPreferencesUtils.getIntValue(Constants.token, PigAppConfig.getAppContext())+"");
 
         Request build = request.build();
         Call call = okHttpClient.newCall(build);
@@ -218,11 +219,11 @@ public class OkHttp3Util {
                     int status = jsonObject.getInt("status");
                     String msg = jsonObject.getString("msg");
                     if (status == -4) {
-                        PreferencesUtils.removeAllKey(AppConfig.getContext());
-                        AppConfig.removeALLActivity();
+                        PigPreferencesUtils.removeAllKey(PigAppConfig.getContext());
+                        PigAppConfig.removeALLActivity();
                         ToastUtils.show("登录超时，请重新登录。");
-                        Intent addIntent = new Intent(AppConfig.getContext(), LoginFamerActivity.class);
-                        AppConfig.getContext().startActivity(addIntent);
+                        Intent addIntent = new Intent(PigAppConfig.getContext(), LoginFamerActivity.class);
+                        PigAppConfig.getContext().startActivity(addIntent);
                     }else{
                         callback.onResponse(call, response1);
                     }
@@ -260,25 +261,25 @@ public class OkHttp3Util {
         }
 
         request.addHeader("AppKeyAuthorization", "hopen");
-        String type = PreferencesUtils.getStringValue(Constants.companyfleg, AppConfig.getAppContext());
+        String type = PigPreferencesUtils.getStringValue(Constants.companyfleg, PigAppConfig.getAppContext());
         if (type.equals("1")) {
-            request.addHeader("uid", PreferencesUtils.getStringValue(Constants.id, AppConfig.getAppContext()));
+            request.addHeader("uid", PigPreferencesUtils.getStringValue(Constants.id, PigAppConfig.getAppContext()));
         } else {
-            request.addHeader("uid", PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext()) + "");
+            request.addHeader("uid", PigPreferencesUtils.getIntValue(Constants.en_user_id, PigAppConfig.getAppContext()) + "");
         }
-        request.addHeader("en_id", PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext()));
-        request.addHeader("longitude", PreferencesUtils.getStringValue(Constants.longitude, AppConfig.getAppContext()));
-        request.addHeader("latitude", PreferencesUtils.getStringValue(Constants.latitude, AppConfig.getAppContext()));
-        //        request.addHeader("token", PreferencesUtils.getIntValue(Constants.token, AppConfig.getAppContext())+"");
+        request.addHeader("en_id", PigPreferencesUtils.getStringValue(Constants.en_id, PigAppConfig.getAppContext()));
+        request.addHeader("longitude", PigPreferencesUtils.getStringValue(Constants.longitude, PigAppConfig.getAppContext()));
+        request.addHeader("latitude", PigPreferencesUtils.getStringValue(Constants.latitude, PigAppConfig.getAppContext()));
+        //        request.addHeader("token", PigPigPreferencesUtils.getIntValue(Constants.token, PigAppConfig.getAppContext())+"");
         //机型
         request.addHeader("phone_model", android.os.Build.MODEL);
         //时间
         request.addHeader("timestamp", SystemClock.currentThreadTimeMillis() + "");
-        request.addHeader("token", PreferencesUtils.getStringValue(Constants.TOKEN, AppConfig.getAppContext()));
-        TelephonyManager phone = (TelephonyManager) AppConfig.getContext().getSystemService(Context.TELEPHONY_SERVICE);
+        request.addHeader("token", PigPreferencesUtils.getStringValue(Constants.TOKEN, PigAppConfig.getAppContext()));
+        TelephonyManager phone = (TelephonyManager) PigAppConfig.getContext().getSystemService(Context.TELEPHONY_SERVICE);
 
         //IMEI
-        if (ActivityCompat.checkSelfPermission(AppConfig.getContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(PigAppConfig.getContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -292,7 +293,7 @@ public class OkHttp3Util {
         }
 
         //版本
-        request.addHeader("version", AppConfig.version);
+        request.addHeader("version", PigAppConfig.version);
         request.addHeader("Accept-Encoding", "identity");
 
         Request build = request.build();
@@ -314,11 +315,11 @@ public class OkHttp3Util {
                     int status = jsonObject.getInt("status");
                     String msg = jsonObject.getString("msg");
                     if (status == -4) {
-                        PreferencesUtils.removeAllKey(AppConfig.getContext());
-                        AppConfig.removeALLActivity();
+                        PigPreferencesUtils.removeAllKey(PigAppConfig.getContext());
+                        PigAppConfig.removeALLActivity();
                         ToastUtils.show("登录超时，请重新登录。");
-                        Intent addIntent = new Intent(AppConfig.getContext(), LoginFamerActivity.class);
-                        AppConfig.getContext().startActivity(addIntent);
+                        Intent addIntent = new Intent(PigAppConfig.getContext(), LoginFamerActivity.class);
+                        PigAppConfig.getContext().startActivity(addIntent);
                     }else{
                         callback.onResponse(call, response1);
                     }
@@ -361,25 +362,25 @@ public class OkHttp3Util {
         }
 
         request.addHeader("AppKeyAuthorization", "hopen");
-        String type = PreferencesUtils.getStringValue(Constants.companyfleg, AppConfig.getAppContext());
+        String type = PigPreferencesUtils.getStringValue(Constants.companyfleg, PigAppConfig.getAppContext());
         if (type.equals("1")) {
-            request.addHeader("uid", PreferencesUtils.getStringValue(Constants.id, AppConfig.getAppContext()));
+            request.addHeader("uid", PigPreferencesUtils.getStringValue(Constants.id, PigAppConfig.getAppContext()));
         } else {
-            request.addHeader("uid", PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext()) + "");
+            request.addHeader("uid", PigPreferencesUtils.getIntValue(Constants.en_user_id, PigAppConfig.getAppContext()) + "");
         }
-        request.addHeader("en_id", PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext()));
-        request.addHeader("longitude", PreferencesUtils.getStringValue(Constants.longitude, AppConfig.getAppContext()));
-        request.addHeader("latitude", PreferencesUtils.getStringValue(Constants.latitude, AppConfig.getAppContext()));
-        //        request.addHeader("token", PreferencesUtils.getIntValue(Constants.token, AppConfig.getAppContext())+"");
+        request.addHeader("en_id", PigPreferencesUtils.getStringValue(Constants.en_id, PigAppConfig.getAppContext()));
+        request.addHeader("longitude", PigPreferencesUtils.getStringValue(Constants.longitude, PigAppConfig.getAppContext()));
+        request.addHeader("latitude", PigPreferencesUtils.getStringValue(Constants.latitude, PigAppConfig.getAppContext()));
+        //        request.addHeader("token", PigPigPreferencesUtils.getIntValue(Constants.token, PigAppConfig.getAppContext())+"");
         //机型
         request.addHeader("phone_model", android.os.Build.MODEL);
         //时间
         request.addHeader("timestamp", SystemClock.currentThreadTimeMillis() + "");
-        request.addHeader("token", PreferencesUtils.getStringValue(Constants.TOKEN, AppConfig.getAppContext()));
-        TelephonyManager phone = (TelephonyManager) AppConfig.getContext().getSystemService(Context.TELEPHONY_SERVICE);
+        request.addHeader("token", PigPreferencesUtils.getStringValue(Constants.TOKEN, PigAppConfig.getAppContext()));
+        TelephonyManager phone = (TelephonyManager) PigAppConfig.getContext().getSystemService(Context.TELEPHONY_SERVICE);
 
         //IMEI
-        if (ActivityCompat.checkSelfPermission(AppConfig.getContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(PigAppConfig.getContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -393,7 +394,7 @@ public class OkHttp3Util {
         }
 
         //版本
-        request.addHeader("version", AppConfig.version);
+        request.addHeader("version", PigAppConfig.version);
         Request build = request.build();
         Call call = okHttpClient.newCall(build);
         call.enqueue(callback);
@@ -445,24 +446,24 @@ public class OkHttp3Util {
         }
 
         request.addHeader("AppKeyAuthorization", "hopen");
-        String type = PreferencesUtils.getStringValue(Constants.companyfleg, AppConfig.getAppContext());
+        String type = PigPreferencesUtils.getStringValue(Constants.companyfleg, PigAppConfig.getAppContext());
         if (type.equals("1")) {
-            request.addHeader("uid", PreferencesUtils.getStringValue(Constants.id, AppConfig.getAppContext()));
+            request.addHeader("uid", PigPreferencesUtils.getStringValue(Constants.id, PigAppConfig.getAppContext()));
         } else {
-            request.addHeader("uid", PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext()) + "");
+            request.addHeader("uid", PigPreferencesUtils.getIntValue(Constants.en_user_id, PigAppConfig.getAppContext()) + "");
         }
-        request.addHeader("en_id", PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext()));
-        request.addHeader("longitude", PreferencesUtils.getStringValue(Constants.longitude, AppConfig.getAppContext()));
-        request.addHeader("latitude", PreferencesUtils.getStringValue(Constants.latitude, AppConfig.getAppContext()));
+        request.addHeader("en_id", PigPreferencesUtils.getStringValue(Constants.en_id, PigAppConfig.getAppContext()));
+        request.addHeader("longitude", PigPreferencesUtils.getStringValue(Constants.longitude, PigAppConfig.getAppContext()));
+        request.addHeader("latitude", PigPreferencesUtils.getStringValue(Constants.latitude, PigAppConfig.getAppContext()));
         //机型
         request.addHeader("phone_model", android.os.Build.MODEL);
         //时间
         request.addHeader("timestamp", SystemClock.currentThreadTimeMillis() + "");
-        request.addHeader("token", PreferencesUtils.getStringValue(Constants.TOKEN, AppConfig.getAppContext()));
-        TelephonyManager phone = (TelephonyManager) AppConfig.getContext().getSystemService(Context.TELEPHONY_SERVICE);
+        request.addHeader("token", PigPreferencesUtils.getStringValue(Constants.TOKEN, PigAppConfig.getAppContext()));
+        TelephonyManager phone = (TelephonyManager) PigAppConfig.getContext().getSystemService(Context.TELEPHONY_SERVICE);
 
         //IMEI
-        if (ActivityCompat.checkSelfPermission(AppConfig.getContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(PigAppConfig.getContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -476,7 +477,7 @@ public class OkHttp3Util {
         }
 
         //版本
-        request.addHeader("version", AppConfig.version);
+        request.addHeader("version", PigAppConfig.version);
 
         request.addHeader("Accept-Encoding", "identity");
         //得到Call
@@ -501,11 +502,11 @@ public class OkHttp3Util {
                         int status = jsonObject.getInt("status");
                         String msg = jsonObject.getString("msg");
                         if (status == -4) {
-                            PreferencesUtils.removeAllKey(AppConfig.getContext());
-                            AppConfig.removeALLActivity();
+                            PigPreferencesUtils.removeAllKey(PigAppConfig.getContext());
+                            PigAppConfig.removeALLActivity();
                             ToastUtils.show("登录超时，请重新登录。");
-                            Intent addIntent = new Intent(AppConfig.getContext(), LoginFamerActivity.class);
-                            AppConfig.getContext().startActivity(addIntent);
+                            Intent addIntent = new Intent(PigAppConfig.getContext(), LoginFamerActivity.class);
+                            PigAppConfig.getContext().startActivity(addIntent);
                         }else{
                             callback.onResponse(call, response1);
                         }
@@ -560,24 +561,24 @@ public class OkHttp3Util {
         }
 
         request.addHeader("AppKeyAuthorization", "hopen");
-        String type = PreferencesUtils.getStringValue(Constants.companyfleg, AppConfig.getAppContext());
+        String type = PigPreferencesUtils.getStringValue(Constants.companyfleg, PigAppConfig.getAppContext());
         if (type.equals("1")) {
-            request.addHeader("uid", PreferencesUtils.getStringValue(Constants.id, AppConfig.getAppContext()));
+            request.addHeader("uid", PigPreferencesUtils.getStringValue(Constants.id, PigAppConfig.getAppContext()));
         } else {
-            request.addHeader("uid", PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext()) + "");
+            request.addHeader("uid", PigPreferencesUtils.getIntValue(Constants.en_user_id, PigAppConfig.getAppContext()) + "");
         }
-        request.addHeader("en_id", PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext()));
-        request.addHeader("longitude", PreferencesUtils.getStringValue(Constants.longitude, AppConfig.getAppContext()));
-        request.addHeader("latitude", PreferencesUtils.getStringValue(Constants.latitude, AppConfig.getAppContext()));
+        request.addHeader("en_id", PigPreferencesUtils.getStringValue(Constants.en_id, PigAppConfig.getAppContext()));
+        request.addHeader("longitude", PigPreferencesUtils.getStringValue(Constants.longitude, PigAppConfig.getAppContext()));
+        request.addHeader("latitude", PigPreferencesUtils.getStringValue(Constants.latitude, PigAppConfig.getAppContext()));
         //机型
         request.addHeader("phone_model", android.os.Build.MODEL);
         //时间
         request.addHeader("timestamp", SystemClock.currentThreadTimeMillis() + "");
-        request.addHeader("token", PreferencesUtils.getStringValue(Constants.TOKEN, AppConfig.getAppContext()));
-        TelephonyManager phone = (TelephonyManager) AppConfig.getContext().getSystemService(Context.TELEPHONY_SERVICE);
+        request.addHeader("token", PigPreferencesUtils.getStringValue(Constants.TOKEN, PigAppConfig.getAppContext()));
+        TelephonyManager phone = (TelephonyManager) PigAppConfig.getContext().getSystemService(Context.TELEPHONY_SERVICE);
 
         //IMEI
-        if (ActivityCompat.checkSelfPermission(AppConfig.getContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(PigAppConfig.getContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -590,7 +591,7 @@ public class OkHttp3Util {
             request.addHeader("phone_imei", phone.getDeviceId() + "");
         }
         //版本
-        request.addHeader("version", AppConfig.version);
+        request.addHeader("version", PigAppConfig.version);
         request.addHeader("Accept-Encoding", "identity");
         //得到Call
         Call call = okHttpClient.newCall(request.build());
@@ -613,11 +614,11 @@ public class OkHttp3Util {
                         int status = jsonObject.getInt("status");
                         String msg = jsonObject.getString("msg");
                         if (status == -4) {
-                            PreferencesUtils.removeAllKey(AppConfig.getContext());
-                            AppConfig.removeALLActivity();
+                            PigPreferencesUtils.removeAllKey(PigAppConfig.getContext());
+                            PigAppConfig.removeALLActivity();
                             ToastUtils.show("登录超时，请重新登录。");
-                            Intent addIntent = new Intent(AppConfig.getContext(), LoginFamerActivity.class);
-                            AppConfig.getContext().startActivity(addIntent);
+                            Intent addIntent = new Intent(PigAppConfig.getContext(), LoginFamerActivity.class);
+                            PigAppConfig.getContext().startActivity(addIntent);
                         }else{
                             callback.onResponse(call, response1);
                         }
@@ -688,8 +689,8 @@ public class OkHttp3Util {
                         public void run() {
                             final Commit bean = GsonUtils.getBean(s, Commit.class);
                             if (null != bean && bean.getStatus() == 1) {
-                                Toast.makeText(AppConfig.getAppContext(), "保存成功", Toast.LENGTH_LONG).show();
-                                PreferencesUtils.saveKeyValue(Constants.manualcount, numshoudongvalue, AppConfig.getAppContext());
+                                Toast.makeText(PigAppConfig.getAppContext(), "保存成功", Toast.LENGTH_LONG).show();
+                                PigPreferencesUtils.saveKeyValue(Constants.manualcount, numshoudongvalue, PigAppConfig.getAppContext());
                             }
                             dormNextInfoDialog.dismiss();
                         }
@@ -978,7 +979,7 @@ public class OkHttp3Util {
             //老的响应
             Response oldResponse = chain.proceed(chain.request());
 
-            if (NetUtils.isConnected(AppConfig.getAppContext())) {
+            if (NetUtils.isConnected(PigAppConfig.getAppContext())) {
                 int maxAge = 120; // 在线缓存在2分钟内可读取
 
                 return oldResponse.newBuilder()

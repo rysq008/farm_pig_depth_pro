@@ -38,7 +38,7 @@ import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
 import com.innovation.pig.insurance.netutils.Constants;
 import com.innovation.pig.insurance.netutils.OkHttp3Util;
-import com.innovation.pig.insurance.netutils.PreferencesUtils;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
 import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
@@ -111,7 +111,7 @@ public class LoginFarmAarActivity extends BaseActivity {
                     public void hasPermission(List<String> granted, boolean isAll) {
                         if (isAll) {
                             // FarmerPreferencesUtils.saveBooleanValue("isallow", true, WelcomeActivity.this);
-                            // toastUtils.showLong(AppConfig.getAppContext(), "获取权限成功");
+                            // toastUtils.showLong(PigAppConfig.getAppContext(), "获取权限成功");
                             if (Build.VERSION.SDK_INT > 9) {
                                 StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                                 StrictMode.setThreadPolicy(policy);
@@ -162,11 +162,11 @@ public class LoginFarmAarActivity extends BaseActivity {
 //        mIntent.putExtra(Constants.DEPARTMENT_ID, "28"/*"android_department"*/);
 //        mIntent.putExtra(Constants.IDENTITY_CARD, "android_identitry");
         startService(new Intent(this, UploadService.class));
-//        if (FarmerPreferencesUtils.getBooleanValue(Constants.ISLOGIN, AppConfig.getAppContext())) {
-//            String type = FarmerPreferencesUtils.getStringValue(Constants.companyfleg, AppConfig.getAppContext());
+//        if (FarmerPreferencesUtils.getBooleanValue(Constants.ISLOGIN, PigAppConfig.getAppContext())) {
+//            String type = FarmerPreferencesUtils.getStringValue(Constants.companyfleg, PigAppConfig.getAppContext());
 
-//        if (PreferencesUtils.getBooleanValue(Constants.ISLOGIN, AppConfig.getAppContext())) {
-//            String type = PreferencesUtils.getStringValue(Constants.companyfleg, AppConfig.getAppContext());
+//        if (PigPreferencesUtils.getBooleanValue(Constants.ISLOGIN, PigAppConfig.getAppContext())) {
+//            String type = PigPreferencesUtils.getStringValue(Constants.companyfleg, PigAppConfig.getAppContext());
 //            if (type.equals("1")) {
 //                goToActivity(CompanyActivity.class, null);
 //                LoginFarmAarActivity.this.finish();
@@ -331,11 +331,11 @@ public class LoginFarmAarActivity extends BaseActivity {
                                     data = jsonObject.getJSONObject("data");
                                     int type = data.getInt("type");
 //                                    int myToken = data.getInt("token");
-//                                    FarmerPreferencesUtils.saveKeyValue(Constants.token, myToken + "", AppConfig.getAppContext());
-                                    PreferencesUtils.saveKeyValue(Constants.companyfleg, type + "", AppConfig.getAppContext());
-                                    PreferencesUtils.saveKeyValue(Constants.username, musername + "", AppConfig.getAppContext());
-                                    PreferencesUtils.saveKeyValue(Constants.password, muserpass + "", AppConfig.getAppContext());
-                                    PreferencesUtils.saveBooleanValue(Constants.ISLOGIN, true, AppConfig.getAppContext());
+//                                    FarmerPreferencesUtils.saveKeyValue(Constants.token, myToken + "", PigAppConfig.getAppContext());
+                                    PigPreferencesUtils.saveKeyValue(Constants.companyfleg, type + "", AppConfig.getAppContext());
+                                    PigPreferencesUtils.saveKeyValue(Constants.username, musername + "", AppConfig.getAppContext());
+                                    PigPreferencesUtils.saveKeyValue(Constants.password, muserpass + "", AppConfig.getAppContext());
+                                    PigPreferencesUtils.saveBooleanValue(Constants.ISLOGIN, true, AppConfig.getAppContext());
 
                                     //1 保险公司  2 猪场企业
                                     if (type == 1) {
@@ -344,10 +344,10 @@ public class LoginFarmAarActivity extends BaseActivity {
                                         String name = adminUser.getString("name");
                                         int deptId = adminUser.getInt("deptId");
                                         int id = adminUser.getInt("id");
-                                        PreferencesUtils.saveKeyValue(Constants.companyuser, name, AppConfig.getAppContext());
-                                        PreferencesUtils.saveKeyValue(Constants.insurecompany, deptName, AppConfig.getAppContext());
-                                        PreferencesUtils.saveKeyValue(Constants.deptId, deptId + "", AppConfig.getAppContext());
-                                        PreferencesUtils.saveKeyValue(Constants.id, id + "", AppConfig.getAppContext());
+                                        PigPreferencesUtils.saveKeyValue(Constants.companyuser, name, AppConfig.getAppContext());
+                                        PigPreferencesUtils.saveKeyValue(Constants.insurecompany, deptName, AppConfig.getAppContext());
+                                        PigPreferencesUtils.saveKeyValue(Constants.deptId, deptId + "", AppConfig.getAppContext());
+                                        PigPreferencesUtils.saveKeyValue(Constants.id, id + "", AppConfig.getAppContext());
                                         goToActivity(CompanyActivity.class, null);
                                         LoginFarmAarActivity.this.finish();
                                     } else {
@@ -355,9 +355,9 @@ public class LoginFarmAarActivity extends BaseActivity {
                                         int enId = enUser.getInt("enId");
                                         int enUserId = enUser.getInt("enUserId");
                                         String enName = enUser.getString("enName");
-                                        PreferencesUtils.saveKeyValue(Constants.en_id, enId + "", AppConfig.getAppContext());
-                                        PreferencesUtils.saveKeyValue(Constants.companyname, enName, AppConfig.getAppContext());
-                                        PreferencesUtils.saveIntValue(Constants.en_user_id, enUserId, AppConfig.getAppContext());
+                                        PigPreferencesUtils.saveKeyValue(Constants.en_id, enId + "", AppConfig.getAppContext());
+                                        PigPreferencesUtils.saveKeyValue(Constants.companyname, enName, AppConfig.getAppContext());
+                                        PigPreferencesUtils.saveIntValue(Constants.en_user_id, enUserId, AppConfig.getAppContext());
                                         goToActivity(SelectFunctionActivity_new.class, null);
                                         LoginFarmAarActivity.this.finish();
                                     }

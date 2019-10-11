@@ -101,7 +101,7 @@ public class SmallVideoActivity extends BaseActivity implements SurfaceHolder.Ca
     public void initView() {
 //        int width = getWindowManager().getDefaultDisplay().getWidth();
 ////        float height = (getWindowManager().getDefaultDisplay().getHeight())/4*3;
-////        if(AppConfig.isApkInDebug()){
+////        if(PigAppConfig.isApkInDebug()){
 ////            Toast.makeText(this, "width = "+width+"---height = "+height, Toast.LENGTH_SHORT).show();
 ////        }
 
@@ -563,7 +563,7 @@ public class SmallVideoActivity extends BaseActivity implements SurfaceHolder.Ca
             @Override
             public void onClickView(View v) {
                 dialogcreate.dismiss();
-                if ("pre".equals(FarmerPreferencesUtils.getStringValue(Constants.fleg, AppConfig.getAppContext()))){
+                if ("pre".equals(FarmerPreferencesUtils.getStringValue(Constants.fleg, PigAppConfig.getAppContext()))){
                     startActivity(new Intent(SmallVideoActivity.this, PreparedLiPeiActivity.class));
                 }
                 finish();

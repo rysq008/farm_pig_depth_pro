@@ -23,7 +23,7 @@ import android.widget.Toast;
 import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
 import com.innovation.pig.insurance.netutils.Constants;
-import com.innovation.pig.insurance.netutils.PreferencesUtils;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
 import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.view.camera.CameraSurfaceView;
 import com.xiangchuang.risks.view.camera.CameraUtils;
@@ -94,8 +94,8 @@ public class CameraPicActivity extends BaseActivity implements ViewTreeObserver.
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         String dateString = formatter.format(new Date());
         tv_date.setText(dateString);
-        tv_longitude.setText("经度：" + PreferencesUtils.getStringValue(Constants.longitude, AppConfig.getAppContext()));
-        tv_latitude.setText("纬度：" + PreferencesUtils.getStringValue(Constants.latitude, AppConfig.getAppContext()));
+        tv_longitude.setText("经度：" + PigPreferencesUtils.getStringValue(Constants.longitude, AppConfig.getAppContext()));
+        tv_latitude.setText("纬度：" + PigPreferencesUtils.getStringValue(Constants.latitude, AppConfig.getAppContext()));
         tv_position.setText("位置：" + LocationManager_new.getInstance(CameraPicActivity.this).str_address);
 
     }

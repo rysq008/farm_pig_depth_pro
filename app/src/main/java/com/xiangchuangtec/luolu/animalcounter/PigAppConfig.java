@@ -15,11 +15,12 @@ import android.support.v4.app.ActivityCompat;
 import com.avos.avoscloud.AVOSCloud;
 import com.hjq.toast.ToastUtils;
 import com.hjq.toast.style.ToastAliPayStyle;
+import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.BuildConfig;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 import com.tencent.bugly.crashreport.CrashReport;
-import com.xiangchuang.risks.utils.ShareUtils;
+import com.xiangchuang.risks.utils.PigShareUtils;
 
 import net.gotev.uploadservice.UploadService;
 import net.gotev.uploadservice.okhttp.OkHttpStack;
@@ -40,7 +41,7 @@ import io.objectbox.BoxStore;
 import io.objectbox.android.AndroidObjectBrowser;
 import okhttp3.OkHttpClient;
 
-public class AppConfig {
+public class PigAppConfig {
     private static final String TAG = "MyApplication";
     private CrashHandler mCrashHandler;
     private static Application app;
@@ -94,21 +95,91 @@ public class AppConfig {
 
 
     public void onCreate(Application app) {
-        AppConfig.app = app;
+        PigAppConfig.app = app;
         mCrashHandler = CrashHandler.getInstance();
         mCrashHandler.init(app);
 
         oList = new ArrayList<>();
 
-        //        // 初始化参数依次为 this, AppId, AppKey
-        AVOSCloud.initialize(app, "sraDTfcMG5cUdE454yDX5Dv1-gzGzoHsz", "qQwz83LLwnWW6LyH8qkWU6J7");
-        ShareUtils.init(app);
-        HttpUtils.baseUrl = ShareUtils.getHost("host");
-        HttpUtils.resetIp(HttpUtils.baseUrl);
-        UploadService.NAMESPACE = BuildConfig.APPLICATION_ID;
-        OkHttpClient client = new OkHttpClient();
-        // create your own OkHttp client
-        UploadService.HTTP_STACK = new OkHttpStack(client);
+        if (AppConfig.isOriginApk()){
+            //        // 初始化参数依次为 this, AppId, AppKey
+            AVOSCloud.initialize(app, "sraDTfcMG5cUdE454yDX5Dv1-gzGzoHsz", "qQwz83LLwnWW6LyH8qkWU6J7");
+            PigShareUtils.init(app);
+            HttpUtils.baseUrl = PigShareUtils.getHost("host");
+            HttpUtils.resetIp(HttpUtils.baseUrl);
+            UploadService.NAMESPACE = BuildConfig.APPLICATION_ID;
+            OkHttpClient client = new OkHttpClient();
+            // create your own OkHttp client
+            UploadService.HTTP_STACK = new OkHttpStack(client);
+            CrashReport.initCrashReport(app, "2d3ff546dd", false);
+
+            locationThread = new LocationThread();
+            locationThread.start();
+
+            version = getVersionName();
+
+            app.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
+                @Override
+                public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+//                if(null == acontext)
+//                {
+//                    HttpUtils.baseUrl = PigShareUtils.getHost("host");
+//                    HttpUtils.resetIp(HttpUtils.baseUrl);
+//                    Toast.makeText(activity, "------->>"+HttpUtils.baseUrl, Toast.LENGTH_LONG).show();
+//                }
+                    addActivity(activity);
+                    PigAppConfig.activity = activity;
+                    if (activity != null && !activity.getClass().getCanonicalName().contains("LoginFamerActivity")) {
+                        GlobalDialogUtils.getNotice(activity.getClass().getCanonicalName(), activity);
+                    }
+                }
+
+                @Override
+                public void onActivityStarted(Activity activity) {
+
+                }
+
+                @Override
+                public void onActivityResumed(Activity activity) {
+                    PigAppConfig.activity = activity;
+                    JPushStatsConfig.onPageStart(activity, activity.getClass().getCanonicalName());
+                }
+
+                @Override
+                public void onActivityPaused(Activity activity) {
+                    JPushStatsConfig.onPageEnd(activity, activity.getClass().getCanonicalName());
+                }
+
+                @Override
+                public void onActivityStopped(Activity activity) {
+
+                }
+
+                @Override
+                public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+                }
+
+                @Override
+                public void onActivityDestroyed(Activity activity) {
+                    removeActivity(activity);
+                }
+            });
+
+            boxStore = MyObjectBox.builder().androidContext(app).build();
+            if (isApkDebugable()) {
+                new AndroidObjectBrowser(boxStore).start(app);
+            }
+
+            JPushStatsConfig.initStats(app);
+            JPushStatsConfig.openCrashLog();
+            //        //初始化 bugly
+            networkChangedReceiver = new NetworkChangedReceiver();
+            IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+            app.registerReceiver(networkChangedReceiver, intentFilter);
+
+        }
+
         // make the library use your own OkHttp client
         //初始化 ImageLoader
         ImageLoaderUtils.initImageLoader(app);
@@ -119,75 +190,11 @@ public class AppConfig {
                 return isApkDebugable();
             }
         });
-//        //初始化 bugly
-        CrashReport.initCrashReport(app, "2d3ff546dd", false);
-        networkChangedReceiver = new NetworkChangedReceiver();
-        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        app.registerReceiver(networkChangedReceiver, intentFilter);
 
         ToastUtils.init(app);
         ToastUtils.initStyle(new ToastAliPayStyle());
 
-        locationThread = new LocationThread();
-        locationThread.start();
 
-        version = getVersionName();
-
-        app.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
-            @Override
-            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-//                if(null == acontext)
-//                {
-//                    HttpUtils.baseUrl = ShareUtils.getHost("host");
-//                    HttpUtils.resetIp(HttpUtils.baseUrl);
-//                    Toast.makeText(activity, "------->>"+HttpUtils.baseUrl, Toast.LENGTH_LONG).show();
-//                }
-                addActivity(activity);
-                AppConfig.activity = activity;
-                if (activity != null && !activity.getClass().getCanonicalName().contains("LoginFamerActivity")) {
-                    GlobalDialogUtils.getNotice(activity.getClass().getCanonicalName(), activity);
-                }
-            }
-
-            @Override
-            public void onActivityStarted(Activity activity) {
-
-            }
-
-            @Override
-            public void onActivityResumed(Activity activity) {
-                AppConfig.activity = activity;
-                JPushStatsConfig.onPageStart(activity, activity.getClass().getCanonicalName());
-            }
-
-            @Override
-            public void onActivityPaused(Activity activity) {
-                JPushStatsConfig.onPageEnd(activity, activity.getClass().getCanonicalName());
-            }
-
-            @Override
-            public void onActivityStopped(Activity activity) {
-
-            }
-
-            @Override
-            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-
-            }
-
-            @Override
-            public void onActivityDestroyed(Activity activity) {
-                removeActivity(activity);
-            }
-        });
-
-        boxStore = MyObjectBox.builder().androidContext(app).build();
-        if (isApkDebugable()) {
-            new AndroidObjectBrowser(boxStore).start(app);
-        }
-
-        JPushStatsConfig.initStats(app);
-        JPushStatsConfig.openCrashLog();
     }
 
     /**
@@ -256,7 +263,7 @@ public class AppConfig {
     }
 
     public static Activity getContext() {
-        return AppConfig.activity;
+        return PigAppConfig.activity;
     }
 
     /**
@@ -312,11 +319,11 @@ public class AppConfig {
     }
 
     private static class Holder {
-        static AppConfig AppConfig = new AppConfig();
+        static PigAppConfig PigAppConfig = new PigAppConfig();
     }
 
-    public static AppConfig newInstance() {
-        return Holder.AppConfig;
+    public static PigAppConfig newInstance() {
+        return Holder.PigAppConfig;
     }
 
     public static String TOKEY = "token";

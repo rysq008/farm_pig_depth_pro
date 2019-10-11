@@ -117,9 +117,9 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     implementation 'com.android.support:multidex:1.0.1'
-    implementation('com.innovation.ai:farmer_depth_pro:1.133')
-            {transitive = true}
-//    implementation project(':app')
+//    implementation('com.innovation.ai:farmer_depth_pro:1.133')
+//            {transitive = true}
+    implementation project(':app')
 //    implementation('com.innovation.aar:farmer_depth_pro:1.118'){transitive = true}
 //    implementation ('com.innovation.ai:farmer_pig_aar:1.113'){transitive =true }
 //    implementation('com.innovation.aar:farmer_pig_Insurance:1.118')

@@ -18,7 +18,7 @@ import android.widget.Toast;
 import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
 import com.innovation.pig.insurance.netutils.Constants;
-import com.innovation.pig.insurance.netutils.PreferencesUtils;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
 import com.xiangchuang.risks.base.BaseActivity;
 
 import innovation.utils.HttpUtils;
@@ -46,7 +46,7 @@ public class MonitoringActivity extends BaseActivity {
         webView = (WebView) findViewById(R.id.webview);
         progressBar = (ProgressBar)findViewById(R.id.progressbar);
 
-        en_id = PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0");
+        en_id = PigPreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0");
         Log.e("en_id", "en_id: "+en_id);
 
         url = "http://test1.innovationai.cn:8007/list.html?enId="+en_id+"&url="+ HttpUtils.baseUrl;

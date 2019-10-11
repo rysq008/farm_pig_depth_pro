@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.model.Commit;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -156,16 +157,16 @@ public class OkHttp3Util {
                 .url(url)
                 .post(builder.build());
         request.addHeader("AppKeyAuthorization", "hopen");
-        String type = PreferencesUtils.getStringValue(Constants.companyfleg, AppConfig.getAppContext());
+        String type = PigPreferencesUtils.getStringValue(Constants.companyfleg, AppConfig.getAppContext());
         if (type.equals("1")) {
-            request.addHeader("uid", PreferencesUtils.getStringValue(Constants.id, AppConfig.getAppContext()));
+            request.addHeader("uid", PigPreferencesUtils.getStringValue(Constants.id, AppConfig.getAppContext()));
         } else {
-            request.addHeader("uid", PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext()) + "");
+            request.addHeader("uid", PigPreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext()) + "");
         }
-        request.addHeader("en_id", PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext()));
+        request.addHeader("en_id", PigPreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext()));
 
-        request.addHeader("longitude", PreferencesUtils.getStringValue(Constants.longitude, AppConfig.getAppContext()));
-        request.addHeader("latitude", PreferencesUtils.getStringValue(Constants.latitude, AppConfig.getAppContext()));
+        request.addHeader("longitude", PigPreferencesUtils.getStringValue(Constants.longitude, AppConfig.getAppContext()));
+        request.addHeader("latitude", PigPreferencesUtils.getStringValue(Constants.latitude, AppConfig.getAppContext()));
         //机型
         request.addHeader("phone_model", android.os.Build.MODEL);
         //时间
@@ -190,7 +191,7 @@ public class OkHttp3Util {
         //版本
         request.addHeader("version",AppConfig.version);
 
-//        request.addHeader("token", FarmerPreferencesUtils.getIntValue(Constants.token, AppConfig.getAppContext())+"");
+//        request.addHeader("token", FarmerPreferencesUtils.getIntValue(Constants.token, PigAppConfig.getAppContext())+"");
 
         Request build = request.build();
         Call call = okHttpClient.newCall(build);
@@ -221,16 +222,16 @@ public class OkHttp3Util {
         }
 
         request.addHeader("AppKeyAuthorization", "hopen");
-        String type = PreferencesUtils.getStringValue(Constants.companyfleg, AppConfig.getAppContext());
+        String type = PigPreferencesUtils.getStringValue(Constants.companyfleg, AppConfig.getAppContext());
         if (type.equals("1")) {
-            request.addHeader("uid", PreferencesUtils.getStringValue(Constants.id, AppConfig.getAppContext()));
+            request.addHeader("uid", PigPreferencesUtils.getStringValue(Constants.id, AppConfig.getAppContext()));
         } else {
-            request.addHeader("uid", PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext())+"");
+            request.addHeader("uid", PigPreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext())+"");
         }
-        request.addHeader("en_id", PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext()));
-        request.addHeader("longitude", PreferencesUtils.getStringValue(Constants.longitude, AppConfig.getAppContext()));
-        request.addHeader("latitude", PreferencesUtils.getStringValue(Constants.latitude, AppConfig.getAppContext()));
-//        request.addHeader("token", FarmerPreferencesUtils.getIntValue(Constants.token, AppConfig.getAppContext())+"");
+        request.addHeader("en_id", PigPreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext()));
+        request.addHeader("longitude", PigPreferencesUtils.getStringValue(Constants.longitude, AppConfig.getAppContext()));
+        request.addHeader("latitude", PigPreferencesUtils.getStringValue(Constants.latitude, AppConfig.getAppContext()));
+//        request.addHeader("token", FarmerPreferencesUtils.getIntValue(Constants.token, PigAppConfig.getAppContext())+"");
 
         Request build = request.build();
         Call call = okHttpClient.newCall(build);
@@ -279,15 +280,15 @@ public class OkHttp3Util {
         }
 
         request.addHeader("AppKeyAuthorization", "hopen");
-        String type = PreferencesUtils.getStringValue(Constants.companyfleg, AppConfig.getAppContext());
+        String type = PigPreferencesUtils.getStringValue(Constants.companyfleg, AppConfig.getAppContext());
         if (type.equals("1")) {
-            request.addHeader("uid", PreferencesUtils.getStringValue(Constants.id, AppConfig.getAppContext()));
+            request.addHeader("uid", PigPreferencesUtils.getStringValue(Constants.id, AppConfig.getAppContext()));
         } else {
-            request.addHeader("uid", PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext())+"");
+            request.addHeader("uid", PigPreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext())+"");
         }
-        request.addHeader("en_id", PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext()));
-        request.addHeader("longitude", PreferencesUtils.getStringValue(Constants.longitude, AppConfig.getAppContext()));
-        request.addHeader("latitude", PreferencesUtils.getStringValue(Constants.latitude, AppConfig.getAppContext()));
+        request.addHeader("en_id", PigPreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext()));
+        request.addHeader("longitude", PigPreferencesUtils.getStringValue(Constants.longitude, AppConfig.getAppContext()));
+        request.addHeader("latitude", PigPreferencesUtils.getStringValue(Constants.latitude, AppConfig.getAppContext()));
 
         //得到Call
         Call call = okHttpClient.newCall(request.build());
@@ -358,7 +359,7 @@ public class OkHttp3Util {
                             final Commit bean = GsonUtils.getBean(s, Commit.class);
                             if (null != bean && bean.getStatus() == 1) {
                                 Toast.makeText(AppConfig.getAppContext(), "保存成功", Toast.LENGTH_LONG).show();
-                                PreferencesUtils.saveKeyValue(Constants.manualcount, numshoudongvalue, AppConfig.getAppContext());
+                                PigPreferencesUtils.saveKeyValue(Constants.manualcount, numshoudongvalue, AppConfig.getAppContext());
                             }
                             dormNextInfoDialog.dismiss();
                         }

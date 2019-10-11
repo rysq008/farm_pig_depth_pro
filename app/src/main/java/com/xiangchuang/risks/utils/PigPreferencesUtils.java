@@ -1,16 +1,19 @@
-package com.innovation.pig.insurance.netutils;
+package com.xiangchuang.risks.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
-import static com.xiangchuang.risks.utils.ShareUtils.preferences_pig;
+import com.innovation.pig.insurance.netutils.Constants;
+
+import static com.xiangchuang.risks.utils.PigShareUtils.preferences_pig;
 
 /**
  * Created by Administrator on 2018/8/3.
  */
 
-public class PreferencesUtils {
+public class PigPreferencesUtils {
     static SharedPreferences sp = preferences_pig;
 
     public static void saveKeyValue(String key, String value, Context context) {
@@ -34,6 +37,19 @@ public class PreferencesUtils {
         editor.putInt(key, value);
         editor.commit();
     }
+    public static boolean saveKeyValueForRes(String key, String value, Context context) {
+//        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(key, value);
+        return editor.commit();
+    }
+    public static boolean saveIntValueForRes(String key, int value, Context context){
+//        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putInt(key, value);
+        return editor.commit();
+    }
+
 
     public static void saveBooleanValue(String key, boolean value, Context context) {
 //        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
@@ -131,4 +147,5 @@ public class PreferencesUtils {
         return result;
     }
 
+    public final static String KEY_ANIMAL_TYPE= "ANIMAL_TYPE";
 }

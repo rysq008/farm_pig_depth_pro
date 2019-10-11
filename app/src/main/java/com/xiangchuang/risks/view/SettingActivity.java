@@ -1,7 +1,5 @@
 package com.xiangchuang.risks.view;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,7 +14,7 @@ import com.innovation.pig.insurance.R;
 import com.innovation.pig.insurance.netutils.Constants;
 import com.innovation.pig.insurance.netutils.GsonUtils;
 import com.innovation.pig.insurance.netutils.OkHttp3Util;
-import com.innovation.pig.insurance.netutils.PreferencesUtils;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -24,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 
-import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -85,8 +82,8 @@ public class SettingActivity extends BaseActivity {
     @Override
     protected void initData() {
         tv_title.setText("设置");
-        en_id = PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0");
-        userid = PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext());
+        en_id = PigPreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0");
+        userid = PigPreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext());
     }
 
 

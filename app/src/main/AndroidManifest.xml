@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.innovation.pig.insurance">
 
-    <application
+<!--    <application
         android:name=".MyApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
@@ -12,13 +12,13 @@
         android:launchMode="singleInstance"
         android:screenOrientation="portrait"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <!--  <application
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">-->
+          <application
               android:largeHeap="true"
               android:launchMode="singleInstance"
               android:screenOrientation="portrait"
               android:supportsRtl="true"
-              tools:overrideLibrary="com.innovation.pig.insurance">-->
+              tools:overrideLibrary="com.innovation.pig.insurance">
         <activity
             android:name="com.innovation.pig.insurance.CounterActivity_new"
             android:configChanges="orientation|keyboardHidden"
@@ -61,7 +61,12 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name="org.tensorflow.demo.BreedingDetectorActivityBreeding"
+            android:name="org.tensorflow.demo.DetectorActivity_pig"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="org.tensorflow.demo.BreedingDetectorActivity_pig"
             android:exported="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
@@ -132,7 +137,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity
+<!--        <activity
             android:name="com.farm.innovation.biz.welcome.WelcomeActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
@@ -140,7 +145,7 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+        </activity>-->
         <activity
             android:name="org.tensorflow.demo.FarmDetectorActivity"
             android:exported="true"
@@ -153,10 +158,13 @@
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
 
-
+        <activity android:name="com.xiangchuang.risks.view.LoginPigAarActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name="com.xiangchuang.risks.view.LoginFamerActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -232,9 +240,9 @@
             android:name="org.tensorflow.demo.ToubaoCowInfoActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
-        <meta-data
+<!--        <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="adf3458ffa64cdeee292d3ed2a68b6cc" />
+            android:value="adf3458ffa64cdeee292d3ed2a68b6cc" />-->
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.animalcounter.provider"
@@ -296,7 +304,7 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <!-- android:hardwareAccelerated="false" -->
-    <!-- android:name="com.xiangchuangtec.luolu.animalcounter.AppConfig" -->
+    <!-- android:name="com.xiangchuangtec.luolu.animalcounter.PigAppConfigfig" -->
 
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 

@@ -22,7 +22,7 @@ import com.innovation.pig.insurance.R;
 import com.innovation.pig.insurance.netutils.Constants;
 import com.innovation.pig.insurance.netutils.GsonUtils;
 import com.innovation.pig.insurance.netutils.OkHttp3Util;
-import com.innovation.pig.insurance.netutils.PreferencesUtils;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
 
 import org.json.JSONObject;
 
@@ -131,8 +131,8 @@ public class ZhuJuanXinXI_item_Adapter extends BaseAdapter {
     private void deleteZhuJuan(int position, String juanid) {
         Map map = new HashMap();
         map.put(Constants.AppKeyAuthorization, "hopen");
-        map.put(Constants.en_user_id, "" + PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext()));
-        map.put(Constants.en_id, "" + PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0"));
+        map.put(Constants.en_user_id, "" + PigPreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext()));
+        map.put(Constants.en_id, "" + PigPreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0"));
         Map mapbody = new HashMap();
         mapbody.put(Constants.juanId, juanid);
         Log.i("juandeleteid", juanid);
@@ -182,8 +182,8 @@ public class ZhuJuanXinXI_item_Adapter extends BaseAdapter {
     private void updateZhuJuan(int juanId, String mstring, int position, String animalSubType) {
         Map map = new HashMap();
         map.put(Constants.AppKeyAuthorization, "hopen");
-        map.put(Constants.en_user_id, "" + PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext()));
-        map.put(Constants.en_id, "" + PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0"));
+        map.put(Constants.en_user_id, "" + PigPreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext()));
+        map.put(Constants.en_id, "" + PigPreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0"));
         Map mapbody = new HashMap();
         mapbody.put(Constants.juanId, String.valueOf(juanId));
         mapbody.put(Constants.name, mstring.trim());

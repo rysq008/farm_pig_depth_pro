@@ -18,10 +18,10 @@ import java.util.List;
 import java.util.Locale;
 
 
-import com.xiangchuangtec.luolu.animalcounter.AppConfig;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
+import com.xiangchuangtec.luolu.animalcounter.PigAppConfig;
 import com.xiangchuangtec.luolu.animalcounter.Recognition;
 import com.xiangchuangtec.luolu.animalcounter.Utils;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
 
 
 /**
@@ -39,7 +39,7 @@ public class RecognitionView extends View implements TextToSpeech.OnInitListener
     public RecognitionView(Context context) {
         super(context);
         textSize = Utils.setAttributes(context, rectPaint, textPaint);
-        textToSpeech = new TextToSpeech(AppConfig.getAppContext(), new TextToSpeech.OnInitListener() {
+        textToSpeech = new TextToSpeech(PigAppConfig.getAppContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
                 textToSpeech.setLanguage(Locale.CHINESE);
@@ -53,7 +53,7 @@ public class RecognitionView extends View implements TextToSpeech.OnInitListener
         super(context, attrs);
         textSize = Utils.setAttributes(context, rectPaint, textPaint);
 //        textSize = Utils.setAttributes(context, rectPaint, textPaint);
-        textToSpeech = new TextToSpeech(AppConfig.getAppContext(), new TextToSpeech.OnInitListener() {
+        textToSpeech = new TextToSpeech(PigAppConfig.getAppContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
                 textToSpeech.setLanguage(Locale.CHINESE);
@@ -66,7 +66,7 @@ public class RecognitionView extends View implements TextToSpeech.OnInitListener
     public RecognitionView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         textSize = Utils.setAttributes(context, rectPaint, textPaint);
-        textToSpeech = new TextToSpeech(AppConfig.getAppContext(), new TextToSpeech.OnInitListener() {
+        textToSpeech = new TextToSpeech(PigAppConfig.getAppContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
                 textToSpeech.setLanguage(Locale.CHINESE);
@@ -127,8 +127,8 @@ public class RecognitionView extends View implements TextToSpeech.OnInitListener
         String toSpeak = count + "头";
         Long currentDateTimeString = System.currentTimeMillis();// && (currentDateTimeString%2)==0
         if (count > 0) {
-            Log.i("===isfleg====", PreferencesUtils.getBooleanValue("isfleg", AppConfig.getAppContext())+"");
-            if (!PreferencesUtils.getBooleanValue("isfleg", AppConfig.getAppContext())) {
+            Log.i("===isfleg====", PigPreferencesUtils.getBooleanValue("isfleg", PigAppConfig.getAppContext())+"");
+            if (!PigPreferencesUtils.getBooleanValue("isfleg", PigAppConfig.getAppContext())) {
                 textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_ADD, null);
             }
             textToSpeech.setPitch(0.3f);

@@ -10,12 +10,12 @@ import android.widget.TextView;
 
 import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.bean.InSureCompanyBean;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
 import com.xiangchuang.risks.view.AddCompanyActivity;
 import com.xiangchuang.risks.view.SelectFunctionActivity_new;
 import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
 import com.innovation.pig.insurance.netutils.Constants;
-import com.innovation.pig.insurance.netutils.PreferencesUtils;
 
 import java.util.List;
 
@@ -69,13 +69,13 @@ public class CompanyAdapter extends BaseAdapter {
             public void onClick(View v) {
                 BaseActivity activity = (BaseActivity) context;
                 if(companyBeans.get(position).getEnId()!=null&&!companyBeans.get(position).getEnId().isEmpty()){
-                    PreferencesUtils.saveKeyValue(Constants.en_id, companyBeans.get(position).getEnId(), AppConfig.getAppContext());
+                    PigPreferencesUtils.saveKeyValue(Constants.en_id, companyBeans.get(position).getEnId(), AppConfig.getAppContext());
                 }
                 if(companyBeans.get(position).getEnName()!=null&&!companyBeans.get(position).getEnName().isEmpty()){
-                    PreferencesUtils.saveKeyValue(Constants.companyname, companyBeans.get(position).getEnName(), AppConfig.getAppContext());
+                    PigPreferencesUtils.saveKeyValue(Constants.companyname, companyBeans.get(position).getEnName(), AppConfig.getAppContext());
                 }
                 if(companyBeans.get(position).getEnUserId()!=null&&!companyBeans.get(position).getEnUserId().equals("")){
-                    PreferencesUtils.saveIntValue(Constants.en_user_id, Integer.valueOf(companyBeans.get(position).getEnUserId()), AppConfig.getAppContext());
+                    PigPreferencesUtils.saveIntValue(Constants.en_user_id, Integer.valueOf(companyBeans.get(position).getEnUserId()), AppConfig.getAppContext());
                 }
 
                 String type = companyBeans.get(position).getCanUse();

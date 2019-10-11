@@ -16,15 +16,15 @@ import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
 import com.innovation.pig.insurance.R;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
 import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.bean.BaseBean;
 import com.xiangchuang.risks.model.bean.GscFarmInfoBean;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
-import com.xiangchuangtec.luolu.animalcounter.AppConfig;
+import com.xiangchuangtec.luolu.animalcounter.PigAppConfig;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
 import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -38,20 +38,20 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-import static com.xiangchuangtec.luolu.animalcounter.AppConfig.FARM_NAME;
-import static com.xiangchuangtec.luolu.animalcounter.AppConfig.ID_CARD;
-import static com.xiangchuangtec.luolu.animalcounter.AppConfig.OFFICE_CODE;
-import static com.xiangchuangtec.luolu.animalcounter.AppConfig.OFFICE_LEVEL;
-import static com.xiangchuangtec.luolu.animalcounter.AppConfig.OFFICE_NAME;
-import static com.xiangchuangtec.luolu.animalcounter.AppConfig.PARENT_CODE;
-import static com.xiangchuangtec.luolu.animalcounter.AppConfig.PARENT_OFFICE_CODES;
-import static com.xiangchuangtec.luolu.animalcounter.AppConfig.PARENT_OFFICE_NAMES;
-import static com.xiangchuangtec.luolu.animalcounter.AppConfig.PHONE;
-import static com.xiangchuangtec.luolu.animalcounter.AppConfig.TASK_ID;
-import static com.xiangchuangtec.luolu.animalcounter.AppConfig.TOKEY;
-import static com.xiangchuangtec.luolu.animalcounter.AppConfig.TYPE;
-import static com.xiangchuangtec.luolu.animalcounter.AppConfig.USER_ID;
-import static com.xiangchuangtec.luolu.animalcounter.AppConfig.USER_NAME;
+import static com.xiangchuangtec.luolu.animalcounter.PigAppConfig.FARM_NAME;
+import static com.xiangchuangtec.luolu.animalcounter.PigAppConfig.ID_CARD;
+import static com.xiangchuangtec.luolu.animalcounter.PigAppConfig.OFFICE_CODE;
+import static com.xiangchuangtec.luolu.animalcounter.PigAppConfig.OFFICE_LEVEL;
+import static com.xiangchuangtec.luolu.animalcounter.PigAppConfig.OFFICE_NAME;
+import static com.xiangchuangtec.luolu.animalcounter.PigAppConfig.PARENT_CODE;
+import static com.xiangchuangtec.luolu.animalcounter.PigAppConfig.PARENT_OFFICE_CODES;
+import static com.xiangchuangtec.luolu.animalcounter.PigAppConfig.PARENT_OFFICE_NAMES;
+import static com.xiangchuangtec.luolu.animalcounter.PigAppConfig.PHONE;
+import static com.xiangchuangtec.luolu.animalcounter.PigAppConfig.TASK_ID;
+import static com.xiangchuangtec.luolu.animalcounter.PigAppConfig.TOKEY;
+import static com.xiangchuangtec.luolu.animalcounter.PigAppConfig.TYPE;
+import static com.xiangchuangtec.luolu.animalcounter.PigAppConfig.USER_ID;
+import static com.xiangchuangtec.luolu.animalcounter.PigAppConfig.USER_NAME;
 import static innovation.utils.HttpUtils.GSC_PIG_AAR_FARM_INFO;
 import static innovation.utils.HttpUtils.GSC_PIG_AAR_LOGINURLNEW;
 
@@ -89,7 +89,7 @@ public class LoginPigAarActivity extends BaseActivity {
                     public void hasPermission(List<String> granted, boolean isAll) {
                         if (isAll) {
                             // FarmerPreferencesUtils.saveBooleanValue("isallow", true, WelcomeActivity.this);
-                            // toastUtils.showLong(AppConfig.getAppContext(), "获取权限成功");
+                            // toastUtils.showLong(PigAppConfig.getAppContext(), "获取权限成功");
                             if (Build.VERSION.SDK_INT > 9) {
                                 StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                                 StrictMode.setThreadPolicy(policy);
@@ -101,7 +101,7 @@ public class LoginPigAarActivity extends BaseActivity {
                                 return;
                             }
 //                            showTypeDialog();
-//                            PreferencesUtils.setAnimalType(ConstUtils.ANIMAL_TYPE_CATTLE, LoginPigAarActivity.this);
+//                            PigPreferencesUtils.setAnimalType(ConstUtils.ANIMAL_TYPE_CATTLE, LoginPigAarActivity.this);
                             getDataFarmFromNet("", "");
 //                            getDataFromNet("", "");
                         } else {
@@ -113,15 +113,15 @@ public class LoginPigAarActivity extends BaseActivity {
                     @Override
                     public void noPermission(List<String> denied, boolean quick) {
                         if (quick) {
-                            Toast.makeText(AppConfig.getAppContext(), "被永久拒绝授权，请手动授予权限", Toast.LENGTH_LONG).show();
+                            Toast.makeText(PigAppConfig.getAppContext(), "被永久拒绝授权，请手动授予权限", Toast.LENGTH_LONG).show();
                             //如果是被永久拒绝就跳转到应用权限系统设置页面
-                            XXPermissions.gotoPermissionSettings(AppConfig.getAppContext());
+                            XXPermissions.gotoPermissionSettings(PigAppConfig.getAppContext());
                             LoginPigAarActivity.this.finish();
                         } else {
-                            Toast.makeText(AppConfig.getAppContext(), "获取权限失败", Toast.LENGTH_LONG).show();
+                            Toast.makeText(PigAppConfig.getAppContext(), "获取权限失败", Toast.LENGTH_LONG).show();
 //                                        AppManager.getAppManager().AppExit(LoginPigAarActivity.this);
                             //如果是被永久拒绝就跳转到应用权限系统设置页面
-                            XXPermissions.gotoPermissionSettings(AppConfig.getAppContext());
+                            XXPermissions.gotoPermissionSettings(PigAppConfig.getAppContext());
                             LoginPigAarActivity.this.finish();
                         }
                     }
@@ -207,7 +207,7 @@ public class LoginPigAarActivity extends BaseActivity {
         mProgressDialog.show();
 //        String url = "http://192.168.1.175:8081/app/ftnAarLogin";
 //        String url = "http://47.92.167.61:8081/nongxian2/app/ftnAarLogin";
-        String url = AppConfig.PIG_DEPTH_JOIN ? GSC_PIG_AAR_LOGINURLNEW : "http://test1.innovationai.cn:8081/nongxian2/app/aarLogin";
+        String url = PigAppConfig.PIG_DEPTH_JOIN ? GSC_PIG_AAR_LOGINURLNEW : "http://test1.innovationai.cn:8081/nongxian2/app/aarLogin";
 
         OkHttp3Util.doPost(url, mapbody, new Callback() {
             @Override
@@ -237,7 +237,7 @@ public class LoginPigAarActivity extends BaseActivity {
                 runOnUiThread(() -> {
 
                     Gson gson = new Gson();
-                    if (AppConfig.PIG_DEPTH_JOIN) {
+                    if (PigAppConfig.PIG_DEPTH_JOIN) {
                         try {
                             BaseBean<GscLoginBean> gscLoginBean = gson.fromJson(string, new TypeToken<BaseBean<GscLoginBean>>() {
                             }.getType());
@@ -259,16 +259,16 @@ public class LoginPigAarActivity extends BaseActivity {
                                     editor.putString("createtime", tokenresp.createtime);
                                     //  editor.putInt("deptid", tokenresp.deptid);
                                     editor.apply();
-                                    PreferencesUtils.saveIntValue(Constants.deptId, tokenresp.deptid, AppConfig.getAppContext());
+                                    PigPreferencesUtils.saveIntValue(Constants.deptId, tokenresp.deptid, PigAppConfig.getAppContext());
 
                                     {
-                                        PreferencesUtils.saveKeyValue(Constants.TOKEN, tokenresp.token, AppConfig.getAppContext());
-                                        PreferencesUtils.saveKeyValue(Constants.username, musername + "", AppConfig.getAppContext());
-                                        PreferencesUtils.saveKeyValue(Constants.password, muserpass + "", AppConfig.getAppContext());
-                                        PreferencesUtils.saveBooleanValue(Constants.ISLOGIN, true, AppConfig.getAppContext());
+                                        PigPreferencesUtils.saveKeyValue(Constants.TOKEN, tokenresp.token, PigAppConfig.getAppContext());
+                                        PigPreferencesUtils.saveKeyValue(Constants.username, musername + "", PigAppConfig.getAppContext());
+                                        PigPreferencesUtils.saveKeyValue(Constants.password, muserpass + "", PigAppConfig.getAppContext());
+                                        PigPreferencesUtils.saveBooleanValue(Constants.ISLOGIN, true, PigAppConfig.getAppContext());
 
                                         //1 保险公司  2 猪场企业
-                                        PreferencesUtils.saveKeyValue(Constants.deptId, tokenresp.deptid + "", AppConfig.getAppContext());
+                                        PigPreferencesUtils.saveKeyValue(Constants.deptId, tokenresp.deptid + "", PigAppConfig.getAppContext());
 
                                         //继续请求接口然后跳转TODO
                                         mapbody.clear();
@@ -301,10 +301,10 @@ public class LoginPigAarActivity extends BaseActivity {
                                                     if (gscBean.isSuccess()) {
                                                         GscFarmInfoBean farmInfoBean = gscBean.getData();
 
-                                                        PreferencesUtils.saveKeyValue(Constants.companyfleg, 2 + "", AppConfig.getAppContext());
-                                                        PreferencesUtils.saveKeyValue(Constants.companyname, farmInfoBean.enName, AppConfig.getAppContext());
-                                                        PreferencesUtils.saveKeyValueForRes(Constants.en_id, farmInfoBean.enId + "", AppConfig.getAppContext());
-                                                        PreferencesUtils.saveIntValueForRes(Constants.en_user_id, Integer.parseInt(farmInfoBean.enUserId), AppConfig.getAppContext());
+                                                        PigPreferencesUtils.saveKeyValue(Constants.companyfleg, 2 + "", PigAppConfig.getAppContext());
+                                                        PigPreferencesUtils.saveKeyValue(Constants.companyname, farmInfoBean.enName, PigAppConfig.getAppContext());
+                                                        PigPreferencesUtils.saveKeyValueForRes(Constants.en_id, farmInfoBean.enId + "", PigAppConfig.getAppContext());
+                                                        PigPreferencesUtils.saveIntValueForRes(Constants.en_user_id, Integer.parseInt(farmInfoBean.enUserId), PigAppConfig.getAppContext());
 
                                                         goToActivity(SelectFunctionActivity_new.class, mIntent.getExtras());
                                                         LoginPigAarActivity.this.finish();

@@ -38,7 +38,7 @@ import android.view.Display;
 import android.view.KeyEvent;
 
 import com.innovation.pig.insurance.R;
-import com.xiangchuangtec.luolu.animalcounter.AppConfig;
+import com.xiangchuangtec.luolu.animalcounter.PigAppConfig;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
 
 import org.tensorflow.demo.OverlayView.DrawCallback;
@@ -53,7 +53,7 @@ import java.util.List;
 import innovation.biz.classifier.BreedingPigFaceDetectTFlite;
 import innovation.utils.Toast;
 
-import static com.xiangchuangtec.luolu.animalcounter.AppConfig.lastXmin;
+import static com.xiangchuangtec.luolu.animalcounter.PigAppConfig.lastXmin;
 import static org.tensorflow.demo.Global.dilogIsShowing;
 
 /**
@@ -143,7 +143,7 @@ public class BreedingDetectorActivity_pig extends BreedingCameraActivity_pig imp
     @Override
     public synchronized void onResume() {
         if(!dilogIsShowing){
-            AppConfig.sowCount = 0;
+            PigAppConfig.sowCount = 0;
             lastXmin = 0f;
             Intent intent = getIntent();
             sheId = intent.getStringExtra(Constants.sheId);

@@ -57,7 +57,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import innovation.location.LocationManager_new;
 import innovation.utils.Toast;
 
-import static com.xiangchuangtec.luolu.animalcounter.AppConfig.offLineModle;
+import static com.xiangchuangtec.luolu.animalcounter.PigAppConfig.offLineModle;
 
 
 public final class USBCameraActivity_new extends UsbBaseActivity implements CameraDialog.CameraDialogParent, CameraViewInterface.Callback {

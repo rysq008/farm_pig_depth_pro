@@ -20,12 +20,8 @@ import com.farm.innovation.base.FarmAppConfig;
 import com.farm.innovation.utils.FarmerPreferencesUtils;
 import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.netutils.Constants;
-import com.innovation.pig.insurance.netutils.PreferencesUtils;
 
-import org.tensorflow.demo.FarmGlobal;
 import org.tensorflow.demo.env.Logger;
-
-import java.util.prefs.Preferences;
 
 /**
  * @author wbs on 11/30/17.

@@ -29,14 +29,13 @@ import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
 import com.innovation.pig.insurance.netutils.Constants;
 import com.innovation.pig.insurance.netutils.OkHttp3Util;
-import com.innovation.pig.insurance.netutils.PreferencesUtils;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
 import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.adapter.CompanyAdapter;
 import com.xiangchuang.risks.model.bean.InSureCompanyBean;
 import com.xiangchuang.risks.update.AppUpgradeService;
 import com.xiangchuang.risks.update.UpdateInfoModel;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
-import com.xiangchuang.risks.utils.AppUpdateUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -264,7 +263,7 @@ public class CompanyActivity extends BaseActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     //如果退出，清空保存的相关状态， 跳转到登录页
-                                    PreferencesUtils.removeAllKey(CompanyActivity.this);
+                                    PigPreferencesUtils.removeAllKey(CompanyActivity.this);
                                     FarmerShareUtils.clearMergeLoginInfo();
 //                                    Intent addIntent = new Intent(CompanyActivity.this, LoginFarmAarActivity.class);
                                     Intent addIntent = new Intent(CompanyActivity.this, LoginMergeActivity.class);
@@ -339,7 +338,7 @@ public class CompanyActivity extends BaseActivity {
         Map<String, String> map = new HashMap<>();
         map.put(Constants.AppKeyAuthorization, "hopen");
         Map<String, String> mapbody = new HashMap<>();
-        mapbody.put(Constants.deptId, PreferencesUtils.getStringValue(Constants.deptId, AppConfig.getAppContext()));
+        mapbody.put(Constants.deptId, PigPreferencesUtils.getStringValue(Constants.deptId, AppConfig.getAppContext()));
         OkHttp3Util.doPost(Constants.ENLIST, mapbody, map, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {

@@ -26,11 +26,11 @@ import com.xiangchuang.risks.model.bean.GSCPigBean;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.utils.AppManager;
-import com.xiangchuangtec.luolu.animalcounter.AppConfig;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
+import com.xiangchuangtec.luolu.animalcounter.PigAppConfig;
 import com.xiangchuangtec.luolu.animalcounter.JPushStatsConfig;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
 import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -119,7 +119,7 @@ public class LoginFamerActivity extends BaseActivity implements View.OnClickList
 //                                @Override
 //                                public void hasPermission(List<String> granted, boolean isAll) {
 //                                    if (isAll) {
-//                                        // PreferencesUtils.saveBooleanValue("isallow", true, WelcomeActivity.this);
+//                                        // PigPreferencesUtils.saveBooleanValue("isallow", true, WelcomeActivity.this);
 //
 //                                        if (android.os.Build.VERSION.SDK_INT > 9) {
 //                                            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -155,8 +155,8 @@ public class LoginFamerActivity extends BaseActivity implements View.OnClickList
 //            });
 //        } else {
 //            //根据保存的标记判断是否登录
-//            if (PreferencesUtils.getBooleanValue(Constants.ISLOGIN, AppConfig.getAppContext())) {
-////                String type = PreferencesUtils.getStringValue(Constants.companyfleg, AppConfig.getAppContext());
+//            if (PigPreferencesUtils.getBooleanValue(Constants.ISLOGIN, PigAppConfig.getAppContext())) {
+////                String type = PigPreferencesUtils.getStringValue(Constants.companyfleg, PigAppConfig.getAppContext());
 ////                if (type.equals("1")) {
 ////                    goToActivity(CompanyActivity.class, null);
 ////                    finish();
@@ -168,9 +168,9 @@ public class LoginFamerActivity extends BaseActivity implements View.OnClickList
 //            }
 //        }
 //        if (!HttpUtils.isOfficialHost()) {
-//            Toast.makeText(LoginFamerActivity.this, ShareUtils.getHost("host"), Toast.LENGTH_LONG).show();
+//            Toast.makeText(LoginFamerActivity.this, PigShareUtils.getHost("host"), Toast.LENGTH_LONG).show();
 //        }
-//        ShareUtils.setUpGlobalHost(LoginFamerActivity.this, ivPass);
+//        PigShareUtils.setUpGlobalHost(LoginFamerActivity.this, ivPass);
     }
 
     @Override
@@ -208,7 +208,7 @@ public class LoginFamerActivity extends BaseActivity implements View.OnClickList
                 return;
             }
 
-            if (ActivityCompat.checkSelfPermission(AppConfig.getContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(PigAppConfig.getContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
                 //    ActivityCompat#requestPermissions
                 // here to request the missing permissions, and then overriding
@@ -223,7 +223,7 @@ public class LoginFamerActivity extends BaseActivity implements View.OnClickList
                             @Override
                             public void hasPermission(List<String> granted, boolean isAll) {
                                 if (isAll) {
-                                    // PreferencesUtils.saveBooleanValue("isallow", true, WelcomeActivity.this);
+                                    // PigPreferencesUtils.saveBooleanValue("isallow", true, WelcomeActivity.this);
 
                                     if (Build.VERSION.SDK_INT > 9) {
                                         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -250,13 +250,13 @@ public class LoginFamerActivity extends BaseActivity implements View.OnClickList
             String musername = mloginfameruserid.getText().toString();
             String muserpass = mloginfamerpass.getText().toString();
             if (musername.length() < 6 || musername.length() > 20) {
-                Toast.makeText(AppConfig.getAppContext(), "账号长度不正确，应为6-20位字符", Toast.LENGTH_LONG).show();
+                Toast.makeText(PigAppConfig.getAppContext(), "账号长度不正确，应为6-20位字符", Toast.LENGTH_LONG).show();
                 return;
             }
             if (!TextUtils.isEmpty(musername) && !TextUtils.isEmpty(muserpass)) {
                 getDataFromNet(musername, muserpass);
             } else {
-                Toast.makeText(AppConfig.getAppContext(), "账号或者密码为空", Toast.LENGTH_LONG).show();
+                Toast.makeText(PigAppConfig.getAppContext(), "账号或者密码为空", Toast.LENGTH_LONG).show();
             }
         }
 //        else if (i == R.id.ll_pass_hide) {
@@ -335,12 +335,12 @@ public class LoginFamerActivity extends BaseActivity implements View.OnClickList
                                     int type = data.getInt("type");
                                     String token = data.getString("token");
 //                                    int myToken = data.getInt("token");
-//                                    PreferencesUtils.saveKeyValue(Constants.token, myToken + "", AppConfig.getAppContext());
-                                    PreferencesUtils.saveKeyValue(Constants.companyfleg, type + "", AppConfig.getAppContext());
-                                    PreferencesUtils.saveKeyValue(Constants.username, musername + "", AppConfig.getAppContext());
-                                    PreferencesUtils.saveKeyValue(Constants.password, muserpass + "", AppConfig.getAppContext());
-                                    PreferencesUtils.saveKeyValue(Constants.TOKEN, token, AppConfig.getAppContext());
-                                    PreferencesUtils.saveBooleanValue(Constants.ISLOGIN, true, AppConfig.getAppContext());
+//                                    PigPreferencesUtils.saveKeyValue(Constants.token, myToken + "", PigAppConfig.getAppContext());
+                                    PigPreferencesUtils.saveKeyValue(Constants.companyfleg, type + "", PigAppConfig.getAppContext());
+                                    PigPreferencesUtils.saveKeyValue(Constants.username, musername + "", PigAppConfig.getAppContext());
+                                    PigPreferencesUtils.saveKeyValue(Constants.password, muserpass + "", PigAppConfig.getAppContext());
+                                    PigPreferencesUtils.saveKeyValue(Constants.TOKEN, token, PigAppConfig.getAppContext());
+                                    PigPreferencesUtils.saveBooleanValue(Constants.ISLOGIN, true, PigAppConfig.getAppContext());
 
 
                                     //1 保险公司  2 猪场企业
@@ -350,10 +350,10 @@ public class LoginFamerActivity extends BaseActivity implements View.OnClickList
                                         String name = adminUser.getString("name");
                                         int deptId = adminUser.getInt("deptId");
                                         int id = adminUser.getInt("id");
-                                        PreferencesUtils.saveKeyValue(Constants.companyuser, name, AppConfig.getAppContext());
-                                        PreferencesUtils.saveKeyValue(Constants.insurecompany, deptName, AppConfig.getAppContext());
-                                        PreferencesUtils.saveKeyValue(Constants.deptId, deptId + "", AppConfig.getAppContext());
-                                        if (PreferencesUtils.saveKeyValueForRes(Constants.id, id + "", AppConfig.getAppContext())) {
+                                        PigPreferencesUtils.saveKeyValue(Constants.companyuser, name, PigAppConfig.getAppContext());
+                                        PigPreferencesUtils.saveKeyValue(Constants.insurecompany, deptName, PigAppConfig.getAppContext());
+                                        PigPreferencesUtils.saveKeyValue(Constants.deptId, deptId + "", PigAppConfig.getAppContext());
+                                        if (PigPreferencesUtils.saveKeyValueForRes(Constants.id, id + "", PigAppConfig.getAppContext())) {
                                             goToActivity(CompanyActivity.class, null);
                                             finish();
                                         } else {
@@ -365,9 +365,9 @@ public class LoginFamerActivity extends BaseActivity implements View.OnClickList
                                         int enUserId = enUser.getInt("enUserId");
                                         String enName = enUser.getString("enName");
 
-                                        PreferencesUtils.saveKeyValue(Constants.companyname, enName, AppConfig.getAppContext());
-                                        if (PreferencesUtils.saveKeyValueForRes(Constants.en_id, enId + "", AppConfig.getAppContext())
-                                                && PreferencesUtils.saveIntValueForRes(Constants.en_user_id, enUserId, AppConfig.getAppContext())) {
+                                        PigPreferencesUtils.saveKeyValue(Constants.companyname, enName, PigAppConfig.getAppContext());
+                                        if (PigPreferencesUtils.saveKeyValueForRes(Constants.en_id, enId + "", PigAppConfig.getAppContext())
+                                                && PigPreferencesUtils.saveIntValueForRes(Constants.en_user_id, enUserId, PigAppConfig.getAppContext())) {
                                             goToActivity(SelectFunctionActivity_new.class, null);
                                             finish();
                                         } else {

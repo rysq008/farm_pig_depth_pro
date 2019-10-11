@@ -21,7 +21,7 @@ import com.innovation.pig.insurance.R;
 import com.innovation.pig.insurance.netutils.Constants;
 import com.innovation.pig.insurance.netutils.GsonUtils;
 import com.innovation.pig.insurance.netutils.OkHttp3Util;
-import com.innovation.pig.insurance.netutils.PreferencesUtils;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
 
 import org.json.JSONObject;
 
@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 
 
-import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -88,14 +87,14 @@ public class PigHouseInformationActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        en_id = PreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0");
-        userid = PreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext());
+        en_id = PigPreferencesUtils.getStringValue(Constants.en_id, AppConfig.getAppContext(), "0");
+        userid = PigPreferencesUtils.getIntValue(Constants.en_user_id, AppConfig.getAppContext());
         tv_title.setText("猪舍信息");
         if (!en_id.equals(0)) {
             getDataFromNet();
         } else {
             toastUtils.showLong(AppConfig.getAppContext(), "请稍候");
-            //Toast.makeText(AppConfig.getAppContext(), "请稍候", Toast.LENGTH_LONG).show();
+            //Toast.makeText(PigAppConfig.getAppContext(), "请稍候", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -288,7 +287,7 @@ public class PigHouseInformationActivity extends BaseActivity {
                                 List<ZhuSheBean.DataBean> sheList = bean.getData();
                                 if (null != sheList && sheList.size() > 0) {
                                     Log.i("defaultpig=", sheList.get(0).getSheId() + "");
-                                    PreferencesUtils.saveIntValue(Constants.defaultpig, sheList.get(0).getSheId(), AppConfig.getAppContext());
+                                    PigPreferencesUtils.saveIntValue(Constants.defaultpig, sheList.get(0).getSheId(), AppConfig.getAppContext());
                                     mzhushelistview.setAdapter(new ZhuSheXinXI_item_Adapter(PigHouseInformationActivity.this, sheList));
                                 } else {
                                     toastUtils.showLong(AppConfig.getAppContext(), "猪舍为空");

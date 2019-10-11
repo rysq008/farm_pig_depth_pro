@@ -46,7 +46,7 @@ import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.bean.RecognitionResult;
 import com.xiangchuang.risks.utils.CommonUtils;
 import com.xiangchuang.risks.utils.CounterHelper;
-import com.innovation.pig.insurance.netutils.PreferencesUtils;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
 
 import org.json.JSONObject;
 import org.opencv.android.OpenCVLoader;
@@ -789,7 +789,7 @@ public class CounterActivity_new extends BaseActivity implements View.OnClickLis
     public void onResume() {
         super.onResume();
         //显示头部信息
-        String fullname = PreferencesUtils.getStringValue("fullname", CounterActivity_new.this);
+        String fullname = PigPreferencesUtils.getStringValue("fullname", CounterActivity_new.this);
         tou = fullname + recodetitle;
         //mcountname.setText(tou);
         mTotalCountTextView.setText("总数:" + mTotalCount.get() + "头");
@@ -908,7 +908,7 @@ public class CounterActivity_new extends BaseActivity implements View.OnClickLis
         private YuvImage mCurrentYuvImage;
 
         public MyPreviewProcessor() {
-            //  pigNumDetector = PigNumDetector.get(AppConfig.getAppContext());
+            //  pigNumDetector = PigNumDetector.get(PigAppConfig.getAppContext());
         }
 
         private synchronized void setYunImage(YuvImage image) {

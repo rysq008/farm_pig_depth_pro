@@ -9,16 +9,14 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.farm.innovation.utils.FarmerPreferencesUtils;
 import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.netutils.Constants;
-import com.innovation.pig.insurance.netutils.PreferencesUtils;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
 
 
 import innovation.env.Logger;
 import innovation.login.Utils;
 import innovation.utils.DeviceUtil;
-import okhttp3.internal.Util;
 
 /**
  * @author wbs on 11/30/17.
@@ -82,9 +80,9 @@ public class LocationManager {
                     str_address = mLocationClient.getLastKnownLocation().getAddress();
                 }
                 Log.i("===str_address====", "str_address" + str_address);
-                PreferencesUtils.saveKeyValue(Constants.longitude, currentLon+"", AppConfig.getAppContext());
-                PreferencesUtils.saveKeyValue(Constants.latitude, currentLat+"", AppConfig.getAppContext());
-                PreferencesUtils.saveKeyValue(Constants.address, str_address, AppConfig.getAppContext());
+                PigPreferencesUtils.saveKeyValue(Constants.longitude, currentLon+"", AppConfig.getAppContext());
+                PigPreferencesUtils.saveKeyValue(Constants.latitude, currentLat+"", AppConfig.getAppContext());
+                PigPreferencesUtils.saveKeyValue(Constants.address, str_address, AppConfig.getAppContext());
 
                 if (Utils.getMD5(DeviceUtil.getImei(mContext)).equalsIgnoreCase("6b9e3b1ee1042312a18464c407b424dc")) {
                     mLocationStr = aMapLocation.getCity() + aMapLocation.getDistrict();

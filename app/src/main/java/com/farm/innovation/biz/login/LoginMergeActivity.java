@@ -17,7 +17,6 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
-import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -49,7 +48,7 @@ import com.google.gson.JsonSyntaxException;
 import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
 import com.innovation.pig.insurance.netutils.Constants;
-import com.innovation.pig.insurance.netutils.PreferencesUtils;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
 import com.xiangchuang.risks.view.CompanyActivity;
 import com.xiangchuang.risks.view.SelectFunctionActivity_new;
 
@@ -286,10 +285,10 @@ public class LoginMergeActivity extends BaseActivity implements ILoginView {
                             MergeLoginBean.FarmerLoginBean fbean = resultBean.data.nxData;
                             MergeLoginBean.PigLoginBean pbean = resultBean.data.ftnData;
                             if (pbean != null) {
-                                PreferencesUtils.saveKeyValue(Constants.companyfleg, pbean.type + "", AppConfig.getAppContext());
-                                PreferencesUtils.saveKeyValue(Constants.username, textInputEditPhoneNumber.getText().toString().trim(), AppConfig.getAppContext());
-                                PreferencesUtils.saveKeyValue(Constants.password, textInputEditPassword.getText().toString().trim(), AppConfig.getAppContext());
-                                PreferencesUtils.saveBooleanValue(Constants.ISLOGIN, true, AppConfig.getAppContext());
+                                PigPreferencesUtils.saveKeyValue(Constants.companyfleg, pbean.type + "", AppConfig.getAppContext());
+                                PigPreferencesUtils.saveKeyValue(Constants.username, textInputEditPhoneNumber.getText().toString().trim(), AppConfig.getAppContext());
+                                PigPreferencesUtils.saveKeyValue(Constants.password, textInputEditPassword.getText().toString().trim(), AppConfig.getAppContext());
+                                PigPreferencesUtils.saveBooleanValue(Constants.ISLOGIN, true, AppConfig.getAppContext());
 
                                 //1 保险公司  2 猪场企业
                                 if (pbean.type == 1) {
@@ -297,10 +296,10 @@ public class LoginMergeActivity extends BaseActivity implements ILoginView {
                                     String name = pbean.adminUser.name;// adminUser.getString("name");
                                     int deptId = pbean.adminUser.deptId;// adminUser.getInt("deptId");
                                     int id = pbean.adminUser.id;// adminUser.getInt("id");
-                                    PreferencesUtils.saveKeyValue(Constants.companyuser, name, AppConfig.getAppContext());
-                                    PreferencesUtils.saveKeyValue(Constants.insurecompany, deptName, AppConfig.getAppContext());
-                                    PreferencesUtils.saveKeyValue(Constants.deptId, deptId + "", AppConfig.getAppContext());
-                                    PreferencesUtils.saveKeyValue(Constants.id, id + "", AppConfig.getAppContext());
+                                    PigPreferencesUtils.saveKeyValue(Constants.companyuser, name, AppConfig.getAppContext());
+                                    PigPreferencesUtils.saveKeyValue(Constants.insurecompany, deptName, AppConfig.getAppContext());
+                                    PigPreferencesUtils.saveKeyValue(Constants.deptId, deptId + "", AppConfig.getAppContext());
+                                    PigPreferencesUtils.saveKeyValue(Constants.id, id + "", AppConfig.getAppContext());
 
                                     if (TextUtils.isEmpty(fbean.token) || fbean.status != RespObject.USER_STATUS_1) {
                                         goToActivity(CompanyActivity.class, null);
@@ -310,9 +309,9 @@ public class LoginMergeActivity extends BaseActivity implements ILoginView {
                                     int enId = pbean.enUser.enId;// enUser.getInt("enId");
                                     int enUserId = pbean.enUser.enUserId;// enUser.getInt("enUserId");
                                     String enName = pbean.enUser.enName;// enUser.getString("enName");
-                                    PreferencesUtils.saveKeyValue(Constants.en_id, enId + "", AppConfig.getAppContext());
-                                    PreferencesUtils.saveKeyValue(Constants.companyname, enName, AppConfig.getAppContext());
-                                    PreferencesUtils.saveIntValue(Constants.en_user_id, enUserId, AppConfig.getAppContext());
+                                    PigPreferencesUtils.saveKeyValue(Constants.en_id, enId + "", AppConfig.getAppContext());
+                                    PigPreferencesUtils.saveKeyValue(Constants.companyname, enName, AppConfig.getAppContext());
+                                    PigPreferencesUtils.saveIntValue(Constants.en_user_id, enUserId, AppConfig.getAppContext());
                                     if (TextUtils.isEmpty(fbean.token) || fbean.status != RespObject.USER_STATUS_1) {
                                         goToActivity(SelectFunctionActivity_new.class, null);
                                         finish();

@@ -88,12 +88,12 @@ import com.xiangchuang.risks.model.bean.RecognitionResult;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.utils.CounterHelper;
-import com.xiangchuangtec.luolu.animalcounter.AppConfig;
+import com.xiangchuang.risks.utils.PigPreferencesUtils;
+import com.xiangchuangtec.luolu.animalcounter.PigAppConfig;
 import com.innovation.pig.insurance.R;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
 import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
 import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
-import com.xiangchuangtec.luolu.animalcounter.netutils.PreferencesUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -132,7 +132,7 @@ import okhttp3.Response;
 import static android.content.ContentValues.TAG;
 import static com.xiangchuang.risks.view.SelectFunctionActivity_new.g_LocationMap;
 import static com.xiangchuang.risks.view.SelectFunctionActivity_new.g_PigType;
-import static com.xiangchuangtec.luolu.animalcounter.AppConfig.sowCount;
+import static com.xiangchuangtec.luolu.animalcounter.PigAppConfig.sowCount;
 import static org.tensorflow.demo.BreedingDetectorActivity_pig.trackingOverlay;
 import static org.tensorflow.demo.Global.dilogIsShowing;
 import static org.tensorflow.demo.Global.mediaPayItem;
@@ -552,7 +552,7 @@ public class BreedingCameraConnectionFragment_pig extends Fragment implements Vi
                 e.printStackTrace();
             }
         }
-        PreferencesUtils.getStringValue(Constants.fleg, AppConfig.getAppContext());
+        PigPreferencesUtils.getStringValue(Constants.fleg, PigAppConfig.getAppContext());
         mReCordLayout.setVisibility(View.VISIBLE);
     }
 
@@ -1920,7 +1920,7 @@ public class BreedingCameraConnectionFragment_pig extends Fragment implements Vi
                 {
                     Map map = new HashMap();
                     map.put(Constants.AppKeyAuthorization, "hopen");
-                    map.put(Constants.en_id, PreferencesUtils.getStringValue(Constants.en_id, activity));
+                    map.put(Constants.en_id, PigPreferencesUtils.getStringValue(Constants.en_id, activity));
 
                     List<GSCPigBean> list = new ArrayList<>();
                     gscPigBean.address = LocationManager_new.getInstance(getActivity()).str_address;
@@ -1944,7 +1944,7 @@ public class BreedingCameraConnectionFragment_pig extends Fragment implements Vi
                     param.put("location", locationString);
                     param.put("timeLength", "" + (int) ((System.currentTimeMillis() - tmieVideoStart) / 1000));
                     param.put("juanCnt", "" + myResults.size());
-                    param.put("createuser", "" + PreferencesUtils.getIntValue(Constants.userid, AppConfig.getAppContext()));
+                    param.put("createuser", "" + PigPreferencesUtils.getIntValue(Constants.userid, PigAppConfig.getAppContext()));
 
 
                     OkHttp3Util.uploadPreFile(Constants.SHECOMMIT, zipFileVideo2, "out.zip", param, map, new Callback() {

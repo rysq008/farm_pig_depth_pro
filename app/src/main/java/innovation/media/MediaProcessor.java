@@ -31,7 +31,7 @@ import com.xiangchuang.risks.model.bean.GSCPigBean;
 import com.xiangchuang.risks.model.bean.GsCommitBean;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
-import com.xiangchuangtec.luolu.animalcounter.AppConfig;
+import com.xiangchuangtec.luolu.animalcounter.PigAppConfig;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
 import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
 import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
@@ -347,7 +347,7 @@ public class MediaProcessor {
 
         View.OnClickListener listener_abort = v -> {
             mInsureDialog.dismiss();
-            if (AppConfig.debugNub == 1) {
+            if (PigAppConfig.debugNub == 1) {
                 collectNumberHandler.sendEmptyMessage(5);
             } else {
                 String pignum = meditText.getText().toString().trim();
@@ -431,7 +431,7 @@ public class MediaProcessor {
         //取消停止录制
         View.OnClickListener listener_cancel = v -> {
             mInsureDialog.dismiss();
-            AppConfig.during = 0;
+            PigAppConfig.during = 0;
             reInitCurrentDir();
             collectNumberHandler.sendEmptyMessage(2);
             mActivity.startActivity(new Intent(mActivity, DetectorActivity_pig.class));
@@ -459,7 +459,7 @@ public class MediaProcessor {
         mapbody.put("taskID", PigInnovationAiOpen.GSC_TASKID);
         mapbody.put(Constants.timesFlag, timesFlag);
         mapbody.put(Constants.address, str_address);
-        mapbody.put(Constants.COLLECT_TIME, AppConfig.during / 1000 + "");
+        mapbody.put(Constants.COLLECT_TIME, PigAppConfig.during / 1000 + "");
         Activity appContext = (Activity) mActivity;
 
         OkHttp3Util.uploadPreFile(HttpUtils.GSC_PAY_LIBUPLOAD, zipFile, "a.zip", mapbody, null, new Callback() {
@@ -514,7 +514,7 @@ public class MediaProcessor {
 
                                             gscPigBeans.add(gscPigBean);
                                             ToastUtils.show("理赔申请成功");
-                                            ((Activity) AppConfig.getContext()).finish();
+                                            ((Activity) PigAppConfig.getContext()).finish();
 
                                             boolean result = FileUtils.deleteFile(zipFile);
                                             if (result) {
@@ -559,7 +559,7 @@ public class MediaProcessor {
 
             @Override
             public void onNegative() {
-                ((Activity) AppConfig.getContext()).finish();
+                ((Activity) PigAppConfig.getContext()).finish();
             }
         });
     }
@@ -572,7 +572,7 @@ public class MediaProcessor {
                 new AlertDialogManager.DialogInterface() {
                     @Override
                     public void onPositive() {
-                        AppConfig.during = 0;
+                        PigAppConfig.during = 0;
                         mActivity.startActivity(new Intent(mActivity, DetectorActivity_pig.class));
                         collectNumberHandler.sendEmptyMessage(2);
                     }
@@ -598,7 +598,7 @@ public class MediaProcessor {
 
             @Override
             public void onNegative() {
-                ((Activity) AppConfig.getContext()).finish();
+                ((Activity) PigAppConfig.getContext()).finish();
             }
         });
     }
