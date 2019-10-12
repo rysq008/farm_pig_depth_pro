@@ -25,48 +25,49 @@
     android:id="@+id/usb_camera_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#30425A"
-    tools:context="com.xiangchuang.risks.view.USBCameraActivity_newUsb"
+    android:background="@color/white"
+    tools:context="com.xiangchuang.risks.view.USBCameraActivity_new"
     tools:ignore="MergeRootFrame">
 
-   <!-- <LinearLayout
-        android:id="@+id/display_info"
+    <View
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginTop="25dp"
-        android:orientation="horizontal">
+        android:layout_height="@dimen/dp_25"
+        android:background="@color/app_base_color" />
+
+    <LinearLayout
+        android:id="@+id/ll_head"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_45"
+        android:background="@color/app_base_color"
+        android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/count_name"
-            android:layout_width="100dp"
-            android:layout_height="30dp"
-            android:layout_marginLeft="40dp"
-            android:text="猪舍1"
-            android:textColor="#8D9195" />
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dp_18" />
 
-        <TextView
-            android:id="@+id/total_count"
-            android:layout_width="70dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="20dp"
-            android:text="数量:20"
-            android:textColor="#8D9195" />
-
-    </LinearLayout>-->
+    </LinearLayout>
 
     <com.serenegiant.widget.UVCCameraTextureView
         android:id="@+id/camera_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        />
+        android:layout_below="@+id/ll_head"/>
+
     <TextView
         android:id="@+id/warning_msg"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
         android:layout_marginTop="10dp"
         android:layout_centerHorizontal="true"
+        android:layout_below="@+id/ll_head"
         android:text="拍摄时使整个猪圈在摄像头范围，保证高度，遮挡少"
-        android:textColor="#8D9195" />
+        android:textColor="@color/colorText" /><!--#8D9195-->
+
     <TextView
         android:id="@+id/tv_tips_msg"
         android:layout_width="wrap_content"
@@ -74,7 +75,7 @@
         android:layout_below="@+id/warning_msg"
         android:layout_centerHorizontal="true"
         android:text="点数过程中如预览画面变黑，请重插外接摄像头"
-        android:textColor="#8D9195" />
+        android:textColor="@color/colorText" />
 
     <ImageView
         android:id="@+id/usb_recogn"
@@ -82,65 +83,39 @@
         android:layout_height="540dp"
         android:scaleType="fitXY"
         android:visibility="gone"
+        android:layout_below="@+id/ll_head"
         tools:visibility="visible" />
 
-    <com.innovation.pig.insurance.view.RecognitionView
+    <com.xiangchuangtec.luolu.animalcounter.view.RecognitionView
         android:id="@+id/recognition_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/BLUE"
+        android:layout_below="@+id/ll_head"
         android:visibility="invisible"/>
 
 
+    <!--    <LinearLayout
+            android:id="@+id/display_info"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_below="@+id/camera_view"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
+
+        </LinearLayout>-->
+
+
+
     <LinearLayout
-        android:id="@+id/display_info"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_below="@+id/camera_view"
-        android:layout_marginTop="15dp"
-        android:orientation="horizontal">
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <TextView
-                android:id="@+id/count_name"
-                android:layout_width="100dp"
-                android:layout_height="30dp"
-                android:layout_marginLeft="50dp"
-                android:text="猪舍1"
-                android:textColor="#8D9195" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <TextView
-                android:id="@+id/total_count"
-                android:layout_width="70dp"
-                android:layout_height="30dp"
-                android:layout_marginLeft="40dp"
-                android:text="数量:20"
-                android:textColor="#8D9195" />
-        </RelativeLayout>
-
-    </LinearLayout>
-
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_below="@+id/display_info"
         android:layout_marginTop="5dp"
         android:orientation="horizontal">
 
         <RelativeLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1">
 
@@ -149,13 +124,42 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:background="@drawable/anniu_detail"
-                android:text="完成盘查"
+                android:background="@drawable/button_onclick"
+                android:text="完成点数"
                 android:textColor="#ffffff" />
         </RelativeLayout>
 
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="已点数:"
+                android:textColor="#8D9195" />
+
+            <TextView
+                android:id="@+id/total_count"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_centerInParent="true"
+                android:gravity="center_horizontal"
+                android:text="0"
+                android:textSize="@dimen/dp_18"
+                android:textColor="@color/app_base_color" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="头"
+                android:textColor="#8D9195" />
+        </LinearLayout>
+
         <RelativeLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1">
 
@@ -164,75 +168,60 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:background="@drawable/anniu_detail"
+                android:background="@drawable/button_onclick"
                 android:text="本次详情"
                 android:textColor="#ffffff" />
         </RelativeLayout>
 
     </LinearLayout>
 
-
-
-
-
-
-
-
-    <!--<ImageView-->
-        <!--android:id="@+id/frame_image"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignBottom="@+id/camera_view"-->
-        <!--android:layout_alignLeft="@+id/camera_view"-->
-        <!--android:layout_alignRight="@+id/camera_view"-->
-        <!--android:layout_alignTop="@+id/camera_view"-->
-        <!--android:src="@drawable/border"-->
-        <!--android:visibility="invisible" />-->
-
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:layout_alignParentBottom="true"
-        android:background="#30425A">
+        android:background="@color/white">
         <Button
             android:id="@+id/usb_next_button"
-            android:layout_width="65dp"
-            android:layout_height="65dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_marginStart="50dp"
-            android:background="@drawable/video_btn_bg"
+            android:layout_marginStart="@dimen/dp_40"
+            android:background="@color/white"
+            android:drawableTop="@mipmap/next_button"
             android:gravity="center"
-            android:text="下一圈"
+            android:stateListAnimator="@null"
+            android:text="下一栏"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="#333"
+            android:textColor="@color/app_base_color"
             android:textSize="16sp"
-            android:visibility="gone" />
+            android:visibility="invisible"/>
 
         <Button
             android:id="@+id/usb_goon_button"
-            android:layout_width="65dp"
-            android:layout_height="65dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginEnd="50dp"
-            android:background="@drawable/video_btn_bg"
+            android:layout_marginEnd="@dimen/dp_40"
+            android:background="@color/white"
+            android:drawableTop="@mipmap/rephotograph"
             android:gravity="center"
-            android:text="重点\n本圈"
+            android:stateListAnimator="@null"
+            android:text="重拍"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="#333"
+            android:textColor="@color/app_base_color"
             android:textSize="16sp"
-            android:visibility="gone" />
+            android:visibility="invisible" />
 
         <Button
             android:id="@+id/take_picture_button"
             android:layout_width="65dp"
             android:layout_height="65dp"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/video_btn_bg"
+            android:background="@drawable/video_blue_btn_bg"
             android:gravity="center"
             android:text="点数"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="#333"
+            android:textColor="@color/white"
             android:textSize="16sp"
             android:visibility="visible"/>
 
@@ -240,54 +229,49 @@
             android:id="@+id/ll_modifier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="65dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="@dimen/dp_4"
             android:orientation="horizontal"
-            android:visibility="gone">
+            android:gravity="center_vertical"
+            android:visibility="invisible">
 
             <Button
                 android:id="@+id/btn_modifier_minus"
                 style="null"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:background="@drawable/anniu_detail"
-                android:text="—"
+                android:layout_width="@dimen/dp_24"
+                android:layout_height="@dimen/dp_24"
+                android:background="@mipmap/ic_minus"
+                android:stateListAnimator="@null"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="#ffffff"
                 android:textSize="16sp" />
 
-            <EditText
+            <TextView
                 android:id="@+id/tv_modifier"
                 android:layout_width="50dp"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:text="0"
                 android:inputType="number"
+                android:background="@null"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textColor="#ffffff"
-                android:textSize="16sp" />
+                android:textColor="#333"
+                android:textSize="@dimen/dp_18" />
 
             <Button
                 android:id="@+id/btn_modifier_positive"
                 style="null"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:background="@drawable/anniu_detail"
+                android:layout_width="@dimen/dp_24"
+                android:layout_height="@dimen/dp_24"
+                android:background="@mipmap/ic_add"
+                android:stateListAnimator="@null"
                 android:gravity="center"
-                android:text="+"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="#ffffff"
                 android:textSize="16sp" />
         </LinearLayout>
     </RelativeLayout>
-
-
-
-
-
 
 
     <ListView

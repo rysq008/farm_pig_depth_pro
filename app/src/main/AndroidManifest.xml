@@ -3,22 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.innovation.pig.insurance">
 
-<!--    <application
-        android:name=".MyApplication"
-        android:allowBackup="false"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+    <!--    <application
+            android:name=".MyApplication"
+            android:allowBackup="false"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:largeHeap="true"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            android:supportsRtl="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">-->
+    <application
         android:largeHeap="true"
         android:launchMode="singleInstance"
         android:screenOrientation="portrait"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar">-->
-          <application
-              android:largeHeap="true"
-              android:launchMode="singleInstance"
-              android:screenOrientation="portrait"
-              android:supportsRtl="true"
-              tools:overrideLibrary="com.innovation.pig.insurance">
+        tools:overrideLibrary="com.innovation.pig.insurance">
         <activity
             android:name="com.innovation.pig.insurance.CounterActivity_new"
             android:configChanges="orientation|keyboardHidden"
@@ -35,10 +35,17 @@
                                     </intent-filter>-->
         </activity>
         <activity
+            android:name="com.xiangchuang.risks.view.PigHouseListActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="com.xiangchuang.risks.view.ShowPollingActivity_new"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.xiangchuang.risks.view.USBCameraActivity_newUsb"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.xiangchuang.risks.view.USBCameraActivity_new"
             android:screenOrientation="portrait" />
         <activity
             android:name="phpMySQL.MainActivity"
@@ -137,15 +144,15 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-<!--        <activity
-            android:name="com.farm.innovation.biz.welcome.WelcomeActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>-->
+        <!--        <activity
+                    android:name="com.farm.innovation.biz.welcome.WelcomeActivity"
+                    android:launchMode="singleTop"
+                    android:screenOrientation="portrait">
+                    <intent-filter>
+                        <action android:name="android.intent.action.MAIN" />
+                        <category android:name="android.intent.category.LAUNCHER" />
+                    </intent-filter>
+                </activity>-->
         <activity
             android:name="org.tensorflow.demo.FarmDetectorActivity"
             android:exported="true"
@@ -160,7 +167,8 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
 
-        <activity android:name="com.xiangchuang.risks.view.LoginPigAarActivity"
+        <activity
+            android:name="com.xiangchuang.risks.view.LoginPigAarActivity"
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
@@ -240,9 +248,9 @@
             android:name="org.tensorflow.demo.ToubaoCowInfoActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
-<!--        <meta-data
-            android:name="com.amap.api.v2.apikey"
-            android:value="adf3458ffa64cdeee292d3ed2a68b6cc" />-->
+        <!--        <meta-data
+                    android:name="com.amap.api.v2.apikey"
+                    android:value="adf3458ffa64cdeee292d3ed2a68b6cc" />-->
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.animalcounter.provider"
@@ -260,9 +268,11 @@
         <service android:name="innovation.upload.UploadService" />
         <service android:name="com.xiangchuang.risks.view.LoginFamerServer" />
     </application>
+
     <uses-feature android:name="android.hardware.camera" />
 
     <uses-feature android:name="android.hardware.camera.autofocus" />
+
     <uses-permission android:name="android.permission.HARDWARE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />

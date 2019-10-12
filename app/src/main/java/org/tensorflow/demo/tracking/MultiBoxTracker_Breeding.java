@@ -44,9 +44,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Vector;
-
-
-import static com.innovation.pig.insurance.AppConfig.sowCount;
+import static com.xiangchuangtec.luolu.animalcounter.PigAppConfig.sowCount;
 
 
 /**

@@ -30,7 +30,7 @@ public class NewBuildResultObject extends HttpRespObject {
         build_result_images = data.optJSONObject("images");
         build_result_type = data.optInt("type", 0);
         build_result_similarity = data.optString("similarity", "");
-        build_result_result = data.optString("result","");
+        build_result_result = data.optString("resultStatus","");
         build_result_pid = data.optString("pid", "");
         build_result_libIds = data.optString("libIds", "");
         buildVertificaton = data.optString("verification", "");

@@ -302,10 +302,10 @@ public class Photo {
 
 
     //
-    // C++:  void denoise_TVL1(vector_Mat observations, Mat result, double lambda = 1.0, int niters = 30)
+    // C++:  void denoise_TVL1(vector_Mat observations, Mat resultStatus, double lambda = 1.0, int niters = 30)
     //
 
-    //javadoc: denoise_TVL1(observations, result, lambda, niters)
+    //javadoc: denoise_TVL1(observations, resultStatus, lambda, niters)
     public static void denoise_TVL1(List<Mat> observations, Mat result, double lambda, int niters)
     {
         Mat observations_mat = Converters.vector_Mat_to_Mat(observations);
@@ -314,7 +314,7 @@ public class Photo {
         return;
     }
 
-    //javadoc: denoise_TVL1(observations, result)
+    //javadoc: denoise_TVL1(observations, resultStatus)
     public static void denoise_TVL1(List<Mat> observations, Mat result)
     {
         Mat observations_mat = Converters.vector_Mat_to_Mat(observations);
@@ -681,7 +681,7 @@ public class Photo {
     // C++:  void decolor(Mat src, Mat& grayscale, Mat& color_boost)
     private static native void decolor_0(long src_nativeObj, long grayscale_nativeObj, long color_boost_nativeObj);
 
-    // C++:  void denoise_TVL1(vector_Mat observations, Mat result, double lambda = 1.0, int niters = 30)
+    // C++:  void denoise_TVL1(vector_Mat observations, Mat resultStatus, double lambda = 1.0, int niters = 30)
     private static native void denoise_TVL1_0(long observations_mat_nativeObj, long result_nativeObj, double lambda, int niters);
     private static native void denoise_TVL1_1(long observations_mat_nativeObj, long result_nativeObj);
 

@@ -30,7 +30,7 @@ public final class GSCPigBean {
     public int photoPigsNumber;
     public int totalPigs;
     public int totalFarmPigs;
-    public String result = "";
+    public int resultStatus = -1;//投保：0失败，1成功，理赔：0重复，1成功
     public String videoFlag = "0";//1:视频,0:非视频
     public String pigType;//辅助判断猪的种类
 
@@ -39,7 +39,7 @@ public final class GSCPigBean {
 
     public String string() {
         String str = "String: ==>".concat(picture + ",").concat(name + ",").concat(longitude + ",").concat(latitude + ",").concat(address + ",")
-                .concat(time + ",").concat(pigHouseNumber + ",").concat(photoPigsNumber + ",").concat(totalPigs + ",").concat(totalFarmPigs + ",").concat(result + ",")
+                .concat(time + ",").concat(pigHouseNumber + ",").concat(photoPigsNumber + ",").concat(totalPigs + ",").concat(totalFarmPigs + ",").concat(resultStatus + ",")
                 .concat(videoFlag + ",").concat(pigType).concat("\n");
         Log.d(TAG, str);
         return str;

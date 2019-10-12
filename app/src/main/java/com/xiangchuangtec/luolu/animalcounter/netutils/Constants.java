@@ -10,7 +10,7 @@ public class Constants {
 //    public static final String LOGINURL = BASE + "appLogin";
 //    public static final String XUNJIANURL = BASE + "inspect";
 //    public static final String XUNJIANTIJIAO = BASE + "commit";
-//    public static final String XUNJIANCHAXUN = BASE + "result";
+//    public static final String XUNJIANCHAXUN = BASE + "resultStatus";
 //    public static final String XUNFINISH = BASE + "finish";
 //    public static final String NUMFIND = BASE + "search";
     /**
@@ -91,7 +91,7 @@ public class Constants {
     public static String CHECKBAODAN = BASENEW + "payment/allStart";
     public static String POLLINGLIST = BASENEW + "inspect/inspect";
     public static String XUNJIANTIJIAONEW = BASENEW + "inspect/commit";
-    public static String XUNJIANCHAXUNEW = BASENEW + "inspect/result";
+    public static String XUNJIANCHAXUNEW = BASENEW + "inspect/resultStatus";
     public static String XUNFINISHNEW = BASENEW + "inspect/finish";
     public static String DIANSHULIST = BASENEW + "ftnInsure/list";
     public static final String en_id = "en_id";
@@ -279,7 +279,7 @@ public class Constants {
         CHECKBAODAN = BASENEW + "payment/allStart";
         POLLINGLIST = BASENEW + "inspect/inspect";
         XUNJIANTIJIAONEW = BASENEW + "inspect/commit";
-        XUNJIANCHAXUNEW = BASENEW + "inspect/result";
+        XUNJIANCHAXUNEW = BASENEW + "inspect/resultStatus";
         XUNFINISHNEW = BASENEW + "inspect/finish";
         DIANSHULIST = BASENEW + "ftnInsure/list";
         ENLIST = BASENEW + "ftnEnList";

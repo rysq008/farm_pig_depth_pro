@@ -391,7 +391,7 @@ LOOP:	while (mIsCapturing) {
                	}
             } else if (encoderStatus < 0) {
             	// unexpected status
-            	if (DEBUG) Log.w(TAG, "drain:unexpected result from encoder#dequeueOutputBuffer: " + encoderStatus);
+            	if (DEBUG) Log.w(TAG, "drain:unexpected resultStatus from encoder#dequeueOutputBuffer: " + encoderStatus);
             } else {
                 final ByteBuffer encodedData = encoderOutputBuffers[encoderStatus];
                 if (encodedData == null) {

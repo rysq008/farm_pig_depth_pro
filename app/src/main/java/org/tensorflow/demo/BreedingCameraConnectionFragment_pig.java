@@ -79,9 +79,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.hjq.toast.ToastUtils;
+import com.innovation.pig.insurance.R;
 import com.xiangchuang.risks.model.bean.BaseBean;
 import com.xiangchuang.risks.model.bean.GSCPigBean;
 import com.xiangchuang.risks.model.bean.RecognitionResult;
@@ -90,7 +91,6 @@ import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.utils.CounterHelper;
 import com.xiangchuang.risks.utils.PigPreferencesUtils;
 import com.xiangchuangtec.luolu.animalcounter.PigAppConfig;
-import com.innovation.pig.insurance.R;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
 import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
 import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
@@ -1646,9 +1646,9 @@ public class BreedingCameraConnectionFragment_pig extends Fragment implements Vi
                 if (filesVideo != null&& filesVideo.length > 0) {
 
                 File vf = filesVideo[0];
-                    Glide.with(getActivity()).load(vf).asBitmap().into(new SimpleTarget<Bitmap>() {
+                    Glide.with(getActivity()).asBitmap().load(vf).into(new SimpleTarget<Bitmap>() {
                         @Override
-                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
 //                int bytes = resource.getByteCount();
 //                ByteBuffer buf = ByteBuffer.allocate(bytes);
 //                resource.copyPixelsToBuffer(buf);
@@ -1879,6 +1879,7 @@ public class BreedingCameraConnectionFragment_pig extends Fragment implements Vi
 //                String path = FileUtils.createTempDir(context);
                 File[] files = new File[myResults.size()];
                 files[0] = new File(Global.mediaPayItem.getVideoDir());
+                List<GSCPigBean> list = new ArrayList<>();
 
                 int totalCount = 0;
                 int mAutoCount = 0;
@@ -1902,7 +1903,21 @@ public class BreedingCameraConnectionFragment_pig extends Fragment implements Vi
                     JSONObject root = new JSONObject();
                     root.put("pigsty", arrays);
                     locationString = root.toString();
+
+                    gscPigBean.address = LocationManager_new.getInstance(getActivity()).str_address;
+                    gscPigBean.latitude = LocationManager_new.getInstance(getActivity()).currentLat;
+                    gscPigBean.longitude = LocationManager_new.getInstance(getActivity()).currentLon;
+                    gscPigBean.time = System.currentTimeMillis();
+                    gscPigBean.pigHouseNumber = mSheId;
+                    gscPigBean.photoPigsNumber = totalCount;
+                    gscPigBean.totalPigs = totalCount;
+                    gscPigBean.pigType = g_PigType;
+                    gscPigBean.videoFlag = "1";
+                    list.add(gscPigBean);
+
                 } catch (JSONException e) {
+                    list.get(0).resultStatus = 0;
+                    g_LocationMap.put(mSheId, list);
                     listener.onCompleted(false, "");
                     return;
                 }
@@ -1922,19 +1937,8 @@ public class BreedingCameraConnectionFragment_pig extends Fragment implements Vi
                     map.put(Constants.AppKeyAuthorization, "hopen");
                     map.put(Constants.en_id, PigPreferencesUtils.getStringValue(Constants.en_id, activity));
 
-                    List<GSCPigBean> list = new ArrayList<>();
-                    gscPigBean.address = LocationManager_new.getInstance(getActivity()).str_address;
-                    gscPigBean.latitude = LocationManager_new.getInstance(getActivity()).currentLat;
-                    gscPigBean.longitude = LocationManager_new.getInstance(getActivity()).currentLon;
-                    gscPigBean.time = System.currentTimeMillis();
-                    gscPigBean.pigHouseNumber = mSheId;
-                    gscPigBean.photoPigsNumber = totalCount;
-                    gscPigBean.totalPigs = totalCount;
-                    gscPigBean.pigType = g_PigType;
-                    gscPigBean.videoFlag = "1";
-                    list.add(gscPigBean);
 //                    totalFarmPigs += totalCount;
-                    g_LocationMap.put(mSheId, list);
+//                    g_LocationMap.put(mSheId, list);
 //                String url = "http://47.92.167.61:8081/numberCheck/app/sheCommit";
                     Map<String, String> param = new HashMap<>();
                     param.put("sheId", mSheId);
@@ -1951,6 +1955,8 @@ public class BreedingCameraConnectionFragment_pig extends Fragment implements Vi
                         @Override
                         public void onFailure(Call call, IOException e) {
                             Log.e(TAG, "onFailure: " + e.toString());
+                            list.get(0).resultStatus = 0;
+                            g_LocationMap.put(mSheId, list);
                             listener.onCompleted(false, "");
 
                             AVOSCloudUtils.saveErrorMessage(e, BreedingCameraConnectionFragment_pig.class.getSimpleName());
@@ -1961,10 +1967,13 @@ public class BreedingCameraConnectionFragment_pig extends Fragment implements Vi
                             if (response.code() == 200) {
                                 String resutl = response.body().string();
                                 BaseBean bean = GsonUtils.getBean(resutl, BaseBean.class);
+                                list.get(0).resultStatus = 1;
+                                g_LocationMap.put(mSheId, list);
                                 listener.onCompleted(true, resutl);
-                                list.get(0).result = bean.getMsg();
                             } else {
                                 Log.e(TAG, "onResponse.code: " + response.code());
+                                list.get(0).resultStatus = 0;
+                                g_LocationMap.put(mSheId, list);
                                 listener.onCompleted(false, "");
                             }
                         }

@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 
 import com.avos.avoscloud.AVOSCloud;
+import com.farm.innovation.utils.FarmerShareUtils;
 import com.hjq.toast.ToastUtils;
 import com.hjq.toast.style.ToastAliPayStyle;
 import com.innovation.pig.insurance.AppConfig;
@@ -98,13 +99,13 @@ public class PigAppConfig {
         PigAppConfig.app = app;
         mCrashHandler = CrashHandler.getInstance();
         mCrashHandler.init(app);
-
         oList = new ArrayList<>();
+        PigShareUtils.init(app);
+
 
         if (AppConfig.isOriginApk()){
             //        // 初始化参数依次为 this, AppId, AppKey
             AVOSCloud.initialize(app, "sraDTfcMG5cUdE454yDX5Dv1-gzGzoHsz", "qQwz83LLwnWW6LyH8qkWU6J7");
-            PigShareUtils.init(app);
             HttpUtils.baseUrl = PigShareUtils.getHost("host");
             HttpUtils.resetIp(HttpUtils.baseUrl);
             UploadService.NAMESPACE = BuildConfig.APPLICATION_ID;
@@ -113,58 +114,7 @@ public class PigAppConfig {
             UploadService.HTTP_STACK = new OkHttpStack(client);
             CrashReport.initCrashReport(app, "2d3ff546dd", false);
 
-            locationThread = new LocationThread();
-            locationThread.start();
 
-            version = getVersionName();
-
-            app.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
-                @Override
-                public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-//                if(null == acontext)
-//                {
-//                    HttpUtils.baseUrl = PigShareUtils.getHost("host");
-//                    HttpUtils.resetIp(HttpUtils.baseUrl);
-//                    Toast.makeText(activity, "------->>"+HttpUtils.baseUrl, Toast.LENGTH_LONG).show();
-//                }
-                    addActivity(activity);
-                    PigAppConfig.activity = activity;
-                    if (activity != null && !activity.getClass().getCanonicalName().contains("LoginFamerActivity")) {
-                        GlobalDialogUtils.getNotice(activity.getClass().getCanonicalName(), activity);
-                    }
-                }
-
-                @Override
-                public void onActivityStarted(Activity activity) {
-
-                }
-
-                @Override
-                public void onActivityResumed(Activity activity) {
-                    PigAppConfig.activity = activity;
-                    JPushStatsConfig.onPageStart(activity, activity.getClass().getCanonicalName());
-                }
-
-                @Override
-                public void onActivityPaused(Activity activity) {
-                    JPushStatsConfig.onPageEnd(activity, activity.getClass().getCanonicalName());
-                }
-
-                @Override
-                public void onActivityStopped(Activity activity) {
-
-                }
-
-                @Override
-                public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-
-                }
-
-                @Override
-                public void onActivityDestroyed(Activity activity) {
-                    removeActivity(activity);
-                }
-            });
 
             boxStore = MyObjectBox.builder().androidContext(app).build();
             if (isApkDebugable()) {
@@ -174,12 +124,64 @@ public class PigAppConfig {
             JPushStatsConfig.initStats(app);
             JPushStatsConfig.openCrashLog();
             //        //初始化 bugly
-            networkChangedReceiver = new NetworkChangedReceiver();
-            IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-            app.registerReceiver(networkChangedReceiver, intentFilter);
 
         }
+        networkChangedReceiver = new NetworkChangedReceiver();
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        app.registerReceiver(networkChangedReceiver, intentFilter);
 
+        locationThread = new LocationThread();
+        locationThread.start();
+
+        version = getVersionName();
+
+        app.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
+            @Override
+            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+//                if(null == acontext)
+//                {
+//                    HttpUtils.baseUrl = PigShareUtils.getHost("host");
+//                    HttpUtils.resetIp(HttpUtils.baseUrl);
+//                    Toast.makeText(activity, "------->>"+HttpUtils.baseUrl, Toast.LENGTH_LONG).show();
+//                }
+                addActivity(activity);
+                PigAppConfig.activity = activity;
+                if (activity != null && !activity.getClass().getCanonicalName().contains("LoginFamerActivity")) {
+                    GlobalDialogUtils.getNotice(activity.getClass().getCanonicalName(), activity);
+                }
+            }
+
+            @Override
+            public void onActivityStarted(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityResumed(Activity activity) {
+                PigAppConfig.activity = activity;
+                JPushStatsConfig.onPageStart(activity, activity.getClass().getCanonicalName());
+            }
+
+            @Override
+            public void onActivityPaused(Activity activity) {
+                JPushStatsConfig.onPageEnd(activity, activity.getClass().getCanonicalName());
+            }
+
+            @Override
+            public void onActivityStopped(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+            }
+
+            @Override
+            public void onActivityDestroyed(Activity activity) {
+                removeActivity(activity);
+            }
+        });
         // make the library use your own OkHttp client
         //初始化 ImageLoader
         ImageLoaderUtils.initImageLoader(app);
@@ -259,7 +261,7 @@ public class PigAppConfig {
     }
 
     public static BoxStore getBoxStore() {
-        return boxStore;
+        return boxStore=AppConfig.getBoxStore();
     }
 
     public static Activity getContext() {

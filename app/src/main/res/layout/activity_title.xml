@@ -7,7 +7,7 @@
         android:id="@+id/rl_title"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="@android:color/holo_blue_dark">
+        android:background="@color/app_base_color">
 
 
         <ImageView

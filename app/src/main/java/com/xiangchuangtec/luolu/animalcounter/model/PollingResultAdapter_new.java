@@ -23,7 +23,7 @@ public class PollingResultAdapter_new extends BaseAdapter {
     private OnDetailitemClickListener onDetailitemClickListener;
 
     public interface OnDetailClickListener {
-//        public void onClick(int sheId);
+        //        public void onClick(int sheId);
         public void onClick(int position);
     }
 

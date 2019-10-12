@@ -2,12 +2,18 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#30425A"
+    android:background="@color/white"
     android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/statusbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_25"
+            android:background="@color/app_base_color" />
 
         <include layout="@layout/activity_title" />
 
@@ -34,7 +40,8 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
-        android:background="#009A9A">
+        android:background="#009A9A"
+        android:visibility="gone">
 
         <RelativeLayout
             android:layout_width="150dp"
@@ -46,7 +53,7 @@
                 android:layout_centerInParent="true"
                 android:text="猪只总数"
                 android:textColor="#DCDEE2"
-                android:textSize="16sp" />
+                android:textSize="16dp" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -67,7 +74,7 @@
                     android:layout_marginLeft="20dp"
                     android:text="--"
                     android:textColor="#DCDEE2"
-                    android:textSize="16sp" />
+                    android:textSize="16dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -75,7 +82,7 @@
                     android:layout_gravity="center_vertical"
                     android:text="头"
                     android:textColor="#DCDEE2"
-                    android:textSize="16sp" />
+                    android:textSize="16dp" />
             </LinearLayout>
         </RelativeLayout>
 

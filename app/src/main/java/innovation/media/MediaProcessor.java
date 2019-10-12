@@ -509,17 +509,17 @@ public class MediaProcessor {
                                             gscPigBean.time = System.currentTimeMillis();
                                             gscPigBean.pigHouseNumber = "";
                                             gscPigBean.photoPigsNumber = 1;
-                                            gscPigBean.result = bean.getData().getResultMsg() +",相似度:"+ bean.getData().getXiangsidu();
+                                            gscPigBean.resultStatus = bean.getData().getBuildStatus();
                                             gscPigBean.videoFlag = "0";
 
                                             gscPigBeans.add(gscPigBean);
                                             ToastUtils.show("理赔申请成功");
-                                            ((Activity) PigAppConfig.getContext()).finish();
 
                                             boolean result = FileUtils.deleteFile(zipFile);
                                             if (result) {
                                                 Log.i("lipeidetete:", "本地图片打包文件删除成功！！");
                                             }
+                                            mActivity.finish();
                                         }
                                     }
                                 });
@@ -1252,8 +1252,8 @@ public class MediaProcessor {
 //                processUploadOne_Insure();
                 return imgResp;
             }
-            //boolean result = FileUtils.deleteFile(zipFile_image);
-           /* if (result == true) {
+            //boolean resultStatus = FileUtils.deleteFile(zipFile_image);
+           /* if (resultStatus == true) {
                 mLoggerPig.i("本地图片打包文件删除成功！！");
             }*/
             return imgResp;

@@ -5,11 +5,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.innovation.pig.insurance.R;
 
 import java.util.List;
+
+import innovation.utils.UIUtils;
 
 public class HogDetailAdapter extends BaseAdapter {
 
@@ -49,10 +53,15 @@ public class HogDetailAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
+        int x = UIUtils.getWidthPixels(context);
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) viewHolder.hog_image.getLayoutParams();
+        params.width = x / 2;
+        params.height = x / 8 * 3;
+        viewHolder.hog_image.setLayoutParams(params);
+
         Glide.with(context)
                 .load(hogimages.get(position))
-                .error(R.drawable.ic_launcher)
-                .placeholder(R.drawable.ic_launcher)
+                .apply(new RequestOptions().error(R.drawable.ic_launcher).placeholder(R.drawable.ic_launcher))
                 .into(viewHolder.hog_image);
         return convertView;
     }

@@ -30,7 +30,7 @@ import java.util.List;
  */
 public interface FarmClassifier {
   /**
-   * An immutable result returned by a FarmClassifier describing what was recognized.
+   * An immutable resultStatus returned by a FarmClassifier describing what was recognized.
    */
   public class Recognition {
     /**

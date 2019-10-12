@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import innovation.biz.classifier.PigFaceDetectTFlite;
+import innovation.biz.classifier.NewFaceDetectTFlite;
 import innovation.utils.FileUtils;
 import innovation.utils.StorageUtils;
 
@@ -168,7 +168,7 @@ public class MediaPayItem {
                 mtmpBimmapDir.mkdirs();
             }
         }
-        String strBitmapfile = new File(mtmpBimmapDir, PigFaceDetectTFlite.srcPigBitmapName).getAbsolutePath();
+        String strBitmapfile = new File(mtmpBimmapDir, NewFaceDetectTFlite.srcPigBitmapName).getAbsolutePath();
         return strBitmapfile;
     }
 
@@ -187,7 +187,7 @@ public class MediaPayItem {
         }
         SimpleDateFormat tmpSimpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS", Locale.getDefault());
         String fname = tmpSimpleDateFormat.format(new Date(System.currentTimeMillis()));
-        String pigPath = ("").equals(PigFaceDetectTFlite.srcPigBitmapName) ? fname : PigFaceDetectTFlite.srcPigBitmapName;
+        String pigPath = ("").equals(NewFaceDetectTFlite.srcPigBitmapName) ? fname : NewFaceDetectTFlite.srcPigBitmapName;
         String strBitmapfile = new File(mtmpBimmapDir, pigPath).getAbsolutePath();
         return strBitmapfile;
     }
@@ -204,7 +204,7 @@ public class MediaPayItem {
         String fname = tmpSimpleDateFormat.format(new Date(System.currentTimeMillis()));
         String strBitmapfile = null;
 
-        String pigPath = PigFaceDetectTFlite.srcPigBitmapName.equals("") ? fname : PigFaceDetectTFlite.srcPigBitmapName;
+        String pigPath = NewFaceDetectTFlite.srcPigBitmapName.equals("") ? fname : NewFaceDetectTFlite.srcPigBitmapName;
         strBitmapfile = new File(mtmpBimmapDir, pigPath).getAbsolutePath();
         return strBitmapfile;
     }

@@ -474,7 +474,7 @@ public final class USBMonitor {
 			if (destroyed) return;
 			final String action = intent.getAction();
 			if (ACTION_USB_PERMISSION.equals(action)) {
-				// when received the result of requesting USB permission
+				// when received the resultStatus of requesting USB permission
 				synchronized (USBMonitor.this) {
 					final UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
 					if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {

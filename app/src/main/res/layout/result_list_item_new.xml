@@ -1,98 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
-    android:background="#30425A"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
 
-    <RelativeLayout
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp">
+        android:layout_height="@dimen/dp_80"
+        android:layout_marginTop="@dimen/dp_6"
+        android:layout_marginLeft="@dimen/dp_13"
+        android:layout_marginRight="@dimen/dp_13"
+        android:layout_marginBottom="@dimen/dp_5"
+        android:background="@color/white"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="3dp">
+
+    <LinearLayout
+        android:id="@+id/poll_detail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
 
         <LinearLayout
-            android:id="@+id/result_left"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
-            android:orientation="vertical">
+            android:id="@+id/ll_she_top"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_53"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/poll_title"
+            <LinearLayout
+                android:id="@+id/result_left"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="猪舍名称"
-                android:textColor="#DCDEE2" />
+                android:layout_marginLeft="@dimen/dp_15"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/poll_title"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="猪舍名称"
+                    android:textColor="#333"
+                    android:textSize="@dimen/dp_14"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/poll_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_toRightOf="@+id/result_left"
+                android:gravity="right"
+                android:maxLength="6"
+                android:text="9999"
+                android:textColor="@color/app_base_color"
+                android:textSize="@dimen/dp_14" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/poll_count"
+                android:text="头"
+                android:textColor="#333"
+                android:textSize="@dimen/dp_14"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="0dp"/>
+
+            <TextView
+                android:id="@+id/poll_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/poll_count"
+                android:layout_alignStart="@+id/poll_count"
+                android:layout_marginBottom="5dp"
+                android:text="yyyy-mm-dd"
+                android:textColor="#DCDEE2"
+                android:textSize="14sp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/poll_countHog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/dp_10"
+                android:layout_toLeftOf="@+id/poll_detail"
+                android:background="@drawable/button_onclick"
+                android:gravity="center"
+                android:padding="@dimen/dp_5"
+                android:text="开始点数"
+                android:textColor="#ffffff"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="7dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/anniu_detail"
+                android:gravity="center"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:text="点数详情"
+                android:textColor="#ffffff"
+                android:textSize="14sp"
+                android:visibility="gone"/>
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/poll_count"
-            android:layout_width="32dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_toRightOf="@+id/result_left"
-            android:gravity="right"
-            android:text="9999"
-            android:textColor="#DCDEE2" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#f2f2f2" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_toRightOf="@+id/poll_count"
-            android:text="头"
-            android:textColor="#DCDEE2" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/poll_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/poll_count"
-            android:layout_below="@+id/poll_count"
-            android:layout_marginBottom="5dp"
-            android:text="yyyy-mm-dd"
-            android:textColor="#DCDEE2"
-            android:textSize="14sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_16"
+                android:text="点击查看详情"
+                android:textColor="#999"
+                android:textSize="@dimen/dp_11"/>
+            <View
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="0dp"/>
 
-        <TextView
-            android:id="@+id/poll_countHog"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="7dp"
-            android:layout_toLeftOf="@+id/poll_detail"
-            android:background="@drawable/anniu_detail"
-            android:gravity="center"
-            android:paddingEnd="5dp"
-            android:paddingStart="5dp"
-            android:text="开始盘查"
-            android:textColor="#ffffff"
-            android:textSize="14sp" />
+            <TextView
+                android:layout_width="@dimen/dp_7"
+                android:layout_height="@dimen/dp_12"
+                android:layout_marginRight="@dimen/dp_12"
+                android:background="@mipmap/ic_item_right"/>
 
-        <TextView
-            android:id="@+id/poll_detail"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="7dp"
-            android:background="@drawable/anniu_detail"
-            android:gravity="center"
-            android:paddingEnd="5dp"
-            android:paddingStart="5dp"
-            android:text="盘查详情"
-            android:textColor="#ffffff"
-            android:textSize="14sp" />
-    </RelativeLayout>
+        </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="10dp"
-        android:background="#ffffff" />
+    </LinearLayout>
+    </android.support.v7.widget.CardView>
 </LinearLayout>

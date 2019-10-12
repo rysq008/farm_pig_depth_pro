@@ -2532,10 +2532,10 @@ public class Imgproc {
 
 
     //
-    // C++:  void matchTemplate(Mat image, Mat templ, Mat& result, int method, Mat mask = Mat())
+    // C++:  void matchTemplate(Mat image, Mat templ, Mat& resultStatus, int method, Mat mask = Mat())
     //
 
-    //javadoc: matchTemplate(image, templ, result, method, mask)
+    //javadoc: matchTemplate(image, templ, resultStatus, method, mask)
     public static void matchTemplate(Mat image, Mat templ, Mat result, int method, Mat mask)
     {
         
@@ -2544,7 +2544,7 @@ public class Imgproc {
         return;
     }
 
-    //javadoc: matchTemplate(image, templ, result, method)
+    //javadoc: matchTemplate(image, templ, resultStatus, method)
     public static void matchTemplate(Mat image, Mat templ, Mat result, int method)
     {
         
@@ -3490,7 +3490,7 @@ public static Size getTextSize(String text, int fontFace, double fontScale, int 
     // C++:  void logPolar(Mat src, Mat& dst, Point2f center, double M, int flags)
     private static native void logPolar_0(long src_nativeObj, long dst_nativeObj, double center_x, double center_y, double M, int flags);
 
-    // C++:  void matchTemplate(Mat image, Mat templ, Mat& result, int method, Mat mask = Mat())
+    // C++:  void matchTemplate(Mat image, Mat templ, Mat& resultStatus, int method, Mat mask = Mat())
     private static native void matchTemplate_0(long image_nativeObj, long templ_nativeObj, long result_nativeObj, int method, long mask_nativeObj);
     private static native void matchTemplate_1(long image_nativeObj, long templ_nativeObj, long result_nativeObj, int method);
 

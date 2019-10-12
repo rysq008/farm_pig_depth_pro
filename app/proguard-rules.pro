@@ -572,3 +572,8 @@ public static java.lang.String TABLENAME;
     public <fields>;
     public <methods>;
 }
+-keep  public class innovation.utils.PigInnovationAiOpen {
+    public static final int *;
+    public <fields>;
+    public <methods>;
+}

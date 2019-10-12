@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *
  * <p>Thread interruptions are not supported; interrupting a thread that is either
  * waiting with {@link #waitForState} / {@link #waitForAnyOfStates} or is currently in
- * {@link StateChangeListener#onStateChanged} (provided by {@link #getListener}) will result in an
+ * {@link StateChangeListener#onStateChanged} (provided by {@link #getListener}) will resultStatus in an
  * {@link UnsupportedOperationException} being raised on that thread.</p>
  */
 public final class StateWaiter {

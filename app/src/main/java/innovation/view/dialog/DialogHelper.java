@@ -2,11 +2,15 @@ package innovation.view.dialog;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.app.Dialog;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 
 import com.innovation.pig.insurance.R;
+import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.view.SelectFunctionActivity_new;
 import com.xiangchuang.risks.view.WeightPicCollectActivity;
 
@@ -27,6 +31,10 @@ public class DialogHelper {
     public static final int ERROR_CODE_RULER_SMALL = 212;
     //尺子太大
     public static final int ERROR_CODE_RULER_LARGE = 213;
+    //尺子太大
+    public static final int ERROR_CODE_RULER_LARGE_TWO = 223;
+    //没有猪
+    public static final int ERROR_CODE_NO_PIG = 216;
     //图片传输中解码出错
     public static final int ERROR_CODE_PICTURE_DECODE_ERROR = 221;
 
@@ -37,17 +45,27 @@ public class DialogHelper {
      * @param activity
      */
     public static void weightCheckDialog(final Activity activity) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity)
-                .setIcon(R.mipmap.ic_launcher).setTitle("提示")
-                .setMessage("请将整只死猪放在拍摄范围内进行拍摄")
-                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        builder.setCancelable(false);
-        builder.show();
+        //改完
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
+        final View dialogView = LayoutInflater.from(activity).inflate(R.layout.dialog_common_one_layout, null);
+        TextView dialog_content_tv1 = dialogView.findViewById(R.id.dialog_content_tv1);
+        TextView dialog_ok_btn = dialogView.findViewById(R.id.dialog_ok_btn);
+        TextView dialog_tips_tv = dialogView.findViewById(R.id.dialog_tips_tv);
+
+        dialog_tips_tv.setText("提示");
+        dialog_content_tv1.setText("请将整只死猪放在拍摄范围内进行拍摄");
+        builder.setView(dialogView);
+
+        Dialog d = builder.create();
+        dialog_ok_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                d.dismiss();
+            }
+        });
+        d.setCancelable(false);
+        d.show();
     }
 
     /**
@@ -59,19 +77,28 @@ public class DialogHelper {
         if (TextUtils.isEmpty(errorMsg)) {
             errorMsg = "图片提交失败！请重新拍摄并确保整只死猪在拍摄范围内。";
         }
+        //改完
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity)
-                .setIcon(R.mipmap.ic_launcher).setTitle("提示")
-                .setMessage(errorMsg)
-                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        WeightPicCollectActivity.start(activity);
-                        dialog.dismiss();
-                    }
-                });
-        builder.setCancelable(false);
-        builder.show();
+        final View dialogView = LayoutInflater.from(activity).inflate(R.layout.dialog_common_one_layout, null);
+        TextView dialog_content_tv1 = dialogView.findViewById(R.id.dialog_content_tv1);
+        TextView dialog_ok_btn = dialogView.findViewById(R.id.dialog_ok_btn);
+        TextView dialog_tips_tv = dialogView.findViewById(R.id.dialog_tips_tv);
+
+        dialog_tips_tv.setText("提示");
+        dialog_content_tv1.setText(errorMsg);
+        builder.setView(dialogView);
+
+        Dialog d = builder.create();
+        dialog_ok_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                WeightPicCollectActivity.start(activity);
+                d.dismiss();
+            }
+        });
+        d.setCancelable(false);
+        d.show();
     }
 
     /**
@@ -79,18 +106,41 @@ public class DialogHelper {
      *
      * @param activity
      */
-    public static void weightCheckFailureDialog(final Activity activity) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity)
-                .setIcon(R.mipmap.ic_launcher).setTitle("提示")
-                .setMessage("您多次照片拍摄不合格，系统将根据填写的畜龄计算出重量。")
-                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        builder.setCancelable(false);
-        builder.show();
+    public static void weightCheckFailureDialog(final Activity activity, String errormsg, View.OnClickListener submit) {
+        //改完
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
+        final View dialogView = LayoutInflater.from(activity).inflate(R.layout.dialog_common_two_layout, null);
+        TextView dialog_content_tv1 = dialogView.findViewById(R.id.dialog_content_tv1);
+        TextView dialog_ok_btn = dialogView.findViewById(R.id.dialog_ok_btn);
+        TextView dialog_cancel_btn = dialogView.findViewById(R.id.dialog_cancel_btn);
+        TextView dialog_tips_tv = dialogView.findViewById(R.id.dialog_tips_tv);
+
+        dialog_tips_tv.setText("提示");
+        dialog_ok_btn.setText("提交");
+        dialog_cancel_btn.setText("重新拍照");
+        dialog_content_tv1.setText(errormsg);
+        builder.setView(dialogView);
+
+        Dialog d = builder.create();
+
+        dialog_ok_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                d.dismiss();
+                submit.onClick(v);
+            }
+        });
+
+        dialog_cancel_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                d.dismiss();
+                WeightPicCollectActivity.start(activity);
+            }
+        });
+        d.setCancelable(false);
+        d.show();
     }
 
     /**
@@ -99,23 +149,19 @@ public class DialogHelper {
      * @param activity
      */
     public static void exitCheckDialog(final Activity activity) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity)
-                .setIcon(R.mipmap.ic_launcher).setTitle("提示")
-                .setMessage("理赔审核需要填写畜龄、死亡时间及拍摄称重照片否则可能审核失败，您确定要退出吗？")
-                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        activity.finish();
-                    }
-                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                });
-        builder.setCancelable(false);
-        builder.show();
+
+        AlertDialogManager.showMessageDialog(activity, "提示",
+                "理赔审核需要填写畜龄、死亡时间及拍摄称重照片否则可能审核失败，您确定要退出吗？", new AlertDialogManager.DialogInterface() {
+            @Override
+            public void onPositive() {
+                activity.finish();
+            }
+
+            @Override
+            public void onNegative() {
+
+            }
+        });
     }
 
     /**
@@ -123,26 +169,21 @@ public class DialogHelper {
      *
      * @param activity
      */
-    public static void deadPigProcessExitTip(final Activity activity, CallBackListener listener,int step, String msg) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity)
-                .setIcon(R.mipmap.ic_launcher).setTitle("提示")
-                .setMessage(msg)
-                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+    public static void deadPigProcessExitTip(final Activity activity, CallBackListener listener, int step, String msg) {
+
+        AlertDialogManager.showMessageDialog(activity, "提示",msg, new AlertDialogManager.DialogInterface() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        if(listener != null){
+                    public void onPositive() {
+                        if (listener != null) {
                             listener.onSuccess(step);
                         }
                     }
-                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
+                    public void onNegative() {
+
                     }
                 });
-        builder.setCancelable(false);
-        builder.show();
     }
 
     /**
@@ -150,28 +191,24 @@ public class DialogHelper {
      *
      * @param activity
      */
-    public static void exitDeadPigProcessDialog(final Activity activity,boolean isCreateOrder) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity)
-                .setIcon(R.mipmap.ic_launcher).setTitle("提示")
-                .setMessage("此步骤的无害化处理数据还未提交，此时退出该页面当前页面的数据将被清除，您确定退出吗？")
-                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        activity.finish();
-                        if(!isCreateOrder){
-                            Intent intent = new Intent(activity, SelectFunctionActivity_new.class);
-                            activity.startActivity(intent);
-                        }
-                    }
-                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                });
-        builder.setCancelable(false);
-        builder.show();
+    public static void exitDeadPigProcessDialog(final Activity activity, boolean isCreateOrder) {
+
+        AlertDialogManager.showMessageDialog(activity, "提示",
+                "此步骤的无害化处理未提交，此时退出该页面当前页面的数据将清除，您确定退出吗？", new AlertDialogManager.DialogInterface() {
+            @Override
+            public void onPositive() {
+                activity.finish();
+                if (!isCreateOrder) {
+                    Intent intent = new Intent(activity, SelectFunctionActivity_new.class);
+                    activity.startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onNegative() {
+
+            }
+        });
     }
 
     public interface CallBackListener {

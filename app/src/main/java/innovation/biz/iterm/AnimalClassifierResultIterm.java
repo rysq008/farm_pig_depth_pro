@@ -2,36 +2,32 @@ package innovation.biz.iterm;
 
 
 import android.util.Log;
-import android.widget.Toast;
 
+import innovation.biz.classifier.NewKeyPointsDetectTFlite;
+import innovation.utils.Toast;
 
-import com.farm.innovation.utils.FarmerPreferencesUtils;
 import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.BuildConfig;
 import com.xiangchuang.risks.utils.PigPreferencesUtils;
 
-import innovation.biz.classifier.PigKeyPointsDetectTFlite;
-import innovation.biz.classifier.PigRotationPrediction;
 import innovation.media.Model;
 import innovation.utils.FileUtils;
 import innovation.utils.Rot2AngleType;
 
-import org.tensorflow.demo.CameraConnectionFragment;
-import org.tensorflow.demo.DetectorActivity;
+import org.tensorflow.demo.CameraConnectionFragment_pig;
+import org.tensorflow.demo.DetectorActivity_pig;
 import org.tensorflow.demo.Global;
 import org.tensorflow.demo.env.Logger;
 
 import java.io.File;
 
 import static innovation.utils.ImageUtils.compressBitmap;
-import static org.tensorflow.demo.DetectorActivity.aNumber;
-import static org.tensorflow.demo.DetectorActivity.aTime;
-import static org.tensorflow.demo.DetectorActivity.allNumber;
-import static org.tensorflow.demo.DetectorActivity.allTime;
-import static org.tensorflow.demo.DetectorActivity.dNumber;
-import static org.tensorflow.demo.DetectorActivity.dTime;
-import static org.tensorflow.demo.DetectorActivity.kNumber;
-import static org.tensorflow.demo.DetectorActivity.kTime;
+import static org.tensorflow.demo.DetectorActivity_pig.aNumber;
+import static org.tensorflow.demo.DetectorActivity_pig.allNumber;
+import static org.tensorflow.demo.DetectorActivity_pig.allTime;
+import static org.tensorflow.demo.DetectorActivity_pig.dNumber;
+import static org.tensorflow.demo.DetectorActivity_pig.dTime;
+import static org.tensorflow.demo.DetectorActivity_pig.kTime;
 
 /**
  * Created by Luolu on 2018/10/30.
@@ -46,21 +42,10 @@ public class AnimalClassifierResultIterm {
 
     public static void pigAngleCalculateTFlite(PostureItem postureItem) {
         int type;
-        int maxLeft;
-        int maxMiddle;
-        int maxRight;
-        if(AppConfig.getSdkType() == AppConfig.SDK_TYPE.COW){
-             maxLeft = FarmerPreferencesUtils.getMaxPics(FarmerPreferencesUtils.FACE_ANGLE_MAX_LEFT, AppConfig.getAppContext());
-             maxMiddle = FarmerPreferencesUtils.getMaxPics(FarmerPreferencesUtils.FACE_ANGLE_MAX_MIDDLE, AppConfig.getAppContext());
-             maxRight = FarmerPreferencesUtils.getMaxPics(FarmerPreferencesUtils.FACE_ANGLE_MAX_RIGHT, AppConfig.getAppContext());
-        }else{
-             maxLeft = PigPreferencesUtils.getMaxPics(PigPreferencesUtils.FACE_ANGLE_MAX_LEFT, AppConfig.getAppContext());
-             maxMiddle = PigPreferencesUtils.getMaxPics(PigPreferencesUtils.FACE_ANGLE_MAX_MIDDLE, AppConfig.getAppContext());
-             maxRight = PigPreferencesUtils.getMaxPics(PigPreferencesUtils.FACE_ANGLE_MAX_RIGHT, AppConfig.getAppContext());
-
-        }
-
-        DetectorActivity.AngleTrackType = 10;
+        int maxLeft = PigPreferencesUtils.getMaxPics(PigPreferencesUtils.FACE_ANGLE_MAX_LEFT, AppConfig.getAppContext());
+        int maxMiddle = PigPreferencesUtils.getMaxPics(PigPreferencesUtils.FACE_ANGLE_MAX_MIDDLE, AppConfig.getAppContext());
+        int maxRight = PigPreferencesUtils.getMaxPics(PigPreferencesUtils.FACE_ANGLE_MAX_RIGHT, AppConfig.getAppContext());
+        DetectorActivity_pig.AngleTrackType = 10;
         PigFaceKeyPointsItem pigFaceKeyPointsItem = PigFaceKeyPointsItem.getInstance();
         type = Rot2AngleType.getPigAngleType((float) postureItem.rot_x, (float) postureItem.rot_y);
         String imagefilename = "";
@@ -86,14 +71,14 @@ public class AnimalClassifierResultIterm {
         boolean addImgFlag = false;
 
         // 判断图片角度
-        if((PigRotationPrediction.pigPredictAngleType == 1 || ANGLE_JUDGE_SKIP_FLG)
-                && (PigKeyPointsDetectTFlite.pigKeypointsK1 == true || KEYPOINT_JUDGE_SKIP_FLG)) {
-            DetectorActivity.AngleTrackType = 1;
+        if((NewKeyPointsDetectTFlite.pigPredictAngleTypeR == 1 || ANGLE_JUDGE_SKIP_FLG)
+                && (NewKeyPointsDetectTFlite.pigKeypointsK1 == true || KEYPOINT_JUDGE_SKIP_FLG)) {
+            DetectorActivity_pig.AngleTrackType = 1;
             type = 1;
             // 未达到上限时增加图片
-            if(DetectorActivity.type1Count < maxLeft * ADD_PIC_RATE) {
-                DetectorActivity.type1Count++;
-                if (DetectorActivity.type1Count < 3) {
+            if(DetectorActivity_pig.type1Count < maxLeft * ADD_PIC_RATE) {
+                DetectorActivity_pig.type1Count++;
+                if (DetectorActivity_pig.type1Count < 3) {
                     //保存原图
                     File file1 = new File(oriInfoImageName);
                     FileUtils.saveBitmapToFile(compressBitmap(postureItem.oriBitmap), file1);
@@ -101,30 +86,30 @@ public class AnimalClassifierResultIterm {
                 addImgFlag = true;
             }else{
                 //左脸达到上限发消息 关闭左脸提示
-                CameraConnectionFragment.collectNumberHandler.sendEmptyMessage(3);
+                CameraConnectionFragment_pig.collectNumberHandler.sendEmptyMessage(3);
             }
-        } else if((PigRotationPrediction.pigPredictAngleType == 2|| ANGLE_JUDGE_SKIP_FLG)
-                && (PigKeyPointsDetectTFlite.pigKeypointsK2 == true || KEYPOINT_JUDGE_SKIP_FLG)){
-            DetectorActivity.AngleTrackType = 2;
+        } else if((NewKeyPointsDetectTFlite.pigPredictAngleTypeR == 2|| ANGLE_JUDGE_SKIP_FLG)
+                && (NewKeyPointsDetectTFlite.pigKeypointsK2 == true || KEYPOINT_JUDGE_SKIP_FLG)){
+            DetectorActivity_pig.AngleTrackType = 2;
             type = 2;
             // 未达到上限时增加图片
-            if(DetectorActivity.type2Count < maxMiddle * ADD_PIC_RATE) {
-                DetectorActivity.type2Count++;
-                if (DetectorActivity.type2Count < 3) {
+            if(DetectorActivity_pig.type2Count < maxMiddle * ADD_PIC_RATE) {
+                DetectorActivity_pig.type2Count++;
+                if (DetectorActivity_pig.type2Count < 3) {
                     //保存原图
                     File file1 = new File(oriInfoImageName);
                     FileUtils.saveBitmapToFile(compressBitmap(postureItem.oriBitmap), file1);
                 }
                 addImgFlag = true;
             }
-        } else if((PigRotationPrediction.pigPredictAngleType == 3|| ANGLE_JUDGE_SKIP_FLG)
-                && (PigKeyPointsDetectTFlite.pigKeypointsK3 == true || KEYPOINT_JUDGE_SKIP_FLG)) {
-            DetectorActivity.AngleTrackType = 3;
+        } else if((NewKeyPointsDetectTFlite.pigPredictAngleTypeR == 3|| ANGLE_JUDGE_SKIP_FLG)
+                && (NewKeyPointsDetectTFlite.pigKeypointsK3 == true || KEYPOINT_JUDGE_SKIP_FLG)) {
+            DetectorActivity_pig.AngleTrackType = 3;
             type = 3;
             // 未达到上限时增加图片
-            if(DetectorActivity.type3Count < maxRight * ADD_PIC_RATE) {
-                DetectorActivity.type3Count++;
-                if (DetectorActivity.type3Count < 3) {
+            if(DetectorActivity_pig.type3Count < maxRight * ADD_PIC_RATE) {
+                DetectorActivity_pig.type3Count++;
+                if (DetectorActivity_pig.type3Count < 3) {
                     //保存原图
                     File file1 = new File(oriInfoImageName);
                     FileUtils.saveBitmapToFile(compressBitmap(postureItem.oriBitmap), file1);
@@ -132,7 +117,7 @@ public class AnimalClassifierResultIterm {
                 addImgFlag = true;
             }else{
                 //右脸达到上限发消息 关闭右脸提示
-                CameraConnectionFragment.collectNumberHandler.sendEmptyMessage(4);
+                CameraConnectionFragment_pig.collectNumberHandler.sendEmptyMessage(4);
             }
         } else {
             // 啥也不干
@@ -150,10 +135,9 @@ public class AnimalClassifierResultIterm {
                     imagefilename.substring(imagefilename.lastIndexOf("/") + 1) +
                             "；totalNum：" + allNumber +
                             "；DetectTime：" + dTime +
-                            "；AngleTime：" + aTime +
-                            "；KeypointTime：" + kTime +
+                            "；AngleTime&KeypointTime：" + kTime +
                             "；totalTime：" + allTime);
-            DetectorActivity.resetParameter();
+            DetectorActivity_pig.resetParameter();
             return;
         }
 
@@ -198,10 +182,9 @@ public class AnimalClassifierResultIterm {
                     imagefilename.substring(imagefilename.lastIndexOf("/") + 1) +
                             "；totalNum：" + allNumber +
                             "；DetectTime：" + dTime +
-                            "；AngleTime：" + aTime +
-                            "；KeypointTime：" + kTime +
+                            "；AngleTime&KeypointTime：" + kTime +
                             "；totalTime：" + allTime);
-            DetectorActivity.resetParameter();
+            DetectorActivity_pig.resetParameter();
 
             //保存图片
             File tmpimagefile = new File(imagefilename);
@@ -215,20 +198,19 @@ public class AnimalClassifierResultIterm {
 
             // 保存src图片
             // FileUtils.saveBitmapToFile(postureItem.srcBitmap, tmpImageSrcFileName);
-            DetectorActivity.tracker.getCountOfCurrentImage(DetectorActivity.type1Count,
-                    DetectorActivity.type2Count, DetectorActivity.type3Count);
+            DetectorActivity_pig.tracker.getCountOfCurrentImage(DetectorActivity_pig.type1Count,
+                    DetectorActivity_pig.type2Count, DetectorActivity_pig.type3Count);
         }
 
-        if (DetectorActivity.type1Count >= maxLeft && DetectorActivity.type2Count >= maxMiddle && DetectorActivity.type3Count >= maxRight) {
+        if (DetectorActivity_pig.type1Count >= maxLeft && DetectorActivity_pig.type2Count >= maxMiddle && DetectorActivity_pig.type3Count >= maxRight) {
             AppConfig.debugNub = -1;
             FileUtils.saveInfoToTxtFile(oriInfoPath,
                     "totalNum：" + allNumber +
                             "；Detect_Success_Num：" + dNumber +
-                            "；Angle_Success_Num：" + aNumber +
-                            "；Keypoint_Success_Num：" + kNumber +
-                            "；total_Success_Num：" + (DetectorActivity.type1Count+DetectorActivity.type2Count+DetectorActivity.type3Count));
+                            "；Angle&Keypoint_Success_Num：" + aNumber +
+                            "；total_Success_Num：" + (DetectorActivity_pig.type1Count+ DetectorActivity_pig.type2Count+ DetectorActivity_pig.type3Count));
             FileUtils.saveInfoToTxtFile(oriInfoPath,"phoneModel："+ android.os.Build.BRAND + " "+android.os.Build.MODEL + "\r\nversion：" + AppConfig.version);
-            CameraConnectionFragment.collectNumberHandler.sendEmptyMessage(1);
+            CameraConnectionFragment_pig.collectNumberHandler.sendEmptyMessage(1);
             if (BuildConfig.DEBUG){
                 Toast.makeText(AppConfig.getAppContext(), "猪脸数据采集完成!!!", Toast.LENGTH_LONG).show();
             }
@@ -236,3 +218,4 @@ public class AnimalClassifierResultIterm {
     }
 
 }
+

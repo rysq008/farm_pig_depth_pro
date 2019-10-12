@@ -36,6 +36,7 @@ import android.util.Size;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.KeyEvent;
+import innovation.utils.Toast;
 
 import com.innovation.pig.insurance.R;
 import com.xiangchuangtec.luolu.animalcounter.PigAppConfig;
@@ -51,9 +52,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import innovation.biz.classifier.BreedingPigFaceDetectTFlite;
-import innovation.utils.Toast;
-
-import static com.xiangchuangtec.luolu.animalcounter.PigAppConfig.lastXmin;
 import static org.tensorflow.demo.Global.dilogIsShowing;
 
 /**
@@ -144,7 +142,7 @@ public class BreedingDetectorActivity_pig extends BreedingCameraActivity_pig imp
     public synchronized void onResume() {
         if(!dilogIsShowing){
             PigAppConfig.sowCount = 0;
-            lastXmin = 0f;
+            PigAppConfig.lastXmin = 0f;
             Intent intent = getIntent();
             sheId = intent.getStringExtra(Constants.sheId);
             inspectNo = intent.getStringExtra(Constants.inspectNo);
@@ -365,7 +363,7 @@ public class BreedingDetectorActivity_pig extends BreedingCameraActivity_pig imp
                                 result.getConfidence(),
                                 location, null);
 
-//                        result.setLocation(location);
+//                        resultStatus.setLocation(location);
                         mappedRecognitions.add(recognition);
                     }
                 }

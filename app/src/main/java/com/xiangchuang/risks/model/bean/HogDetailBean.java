@@ -166,4 +166,79 @@ public class HogDetailBean {
             this.pics = pics;
         }
     }
+
+
+    public class locations{
+
+        //        "{\"pigsty\":[{\"name\":\"猪圈2\",\"count\":10,\"autoCount\":10,\"lon\":116.407219,\"picName\":\"\",\"lat\":40.001821}]}"
+        private List<Pigsty> pigsty;
+
+        public List<Pigsty> getPigsty() {
+            return pigsty;
+        }
+
+        public void setPigsty(List<Pigsty> pigsty) {
+            this.pigsty = pigsty;
+        }
+    }
+
+    public class Pigsty{
+        //        {\"name\":\"猪圈2\",\"count\":10,\"autoCount\":10,\"lon\":116.407219,\"picName\":\"\",\"lat\":40.001821}
+        private String name;
+        private String count;
+        private String autoCount;
+        private String lon;
+        private String picName;
+        private String lat;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getCount() {
+            return count;
+        }
+
+        public void setCount(String count) {
+            this.count = count;
+        }
+
+        public String getAutoCount() {
+            return autoCount;
+        }
+
+        public void setAutoCount(String autoCount) {
+            this.autoCount = autoCount;
+        }
+
+        public String getLon() {
+            return lon;
+        }
+
+        public void setLon(String lon) {
+            this.lon = lon;
+        }
+
+        public String getPicName() {
+            return picName;
+        }
+
+        public void setPicName(String picName) {
+            this.picName = picName;
+        }
+
+        public String getLat() {
+            return lat;
+        }
+
+        public void setLat(String lat) {
+            this.lat = lat;
+        }
+    }
+
+
 }

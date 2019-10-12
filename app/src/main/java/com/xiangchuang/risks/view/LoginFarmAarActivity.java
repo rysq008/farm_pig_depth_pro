@@ -532,7 +532,7 @@ public class LoginFarmAarActivity extends BaseActivity {
                     public void run() {
                         if (null != mProgressDialog) mProgressDialog.dismiss();
                         Toast.makeText(LoginFarmAarActivity.this, "登录失败，请检查网络后重试。", Toast.LENGTH_LONG).show();
-                        finish();
+                        LoginFarmAarActivity.this.finish();
                         return;
                     }
                 });

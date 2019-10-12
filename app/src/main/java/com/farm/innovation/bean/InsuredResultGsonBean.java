@@ -15,7 +15,7 @@ package com.farm.innovation.bean;
      },
      "buildSum":10,
      "type":1,
-     "result":"",
+     "resultStatus":"",
      "buildStatus":1,
      "similarity":"",
      "createtime":"2018-08-17 09:39:33",
@@ -29,7 +29,7 @@ package com.farm.innovation.bean;
 public class InsuredResultGsonBean {
 
         /**
-         * data : {"images":{},"buildSum":10,"type":1,"result":"","buildStatus":1,"similarity":"","createtime":"2018-08-17 09:39:33","pid":"c69668c01f66446a8e7f726a792b3b43","libIds":"19373"}
+         * data : {"images":{},"buildSum":10,"type":1,"resultStatus":"","buildStatus":1,"similarity":"","createtime":"2018-08-17 09:39:33","pid":"c69668c01f66446a8e7f726a792b3b43","libIds":"19373"}
          * msg : 投保建库查询成功
          * status : 1
          */
@@ -67,7 +67,7 @@ public class InsuredResultGsonBean {
              * images : {}
              * buildSum : 10
              * type : 1
-             * result :
+             * resultStatus :
              * buildStatus : 1
              * similarity :
              * createtime : 2018-08-17 09:39:33

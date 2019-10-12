@@ -222,7 +222,7 @@ public class LoginPigAarActivity extends BaseActivity {
                             mProgressDialog.dismiss();
                         }
                         Toast.makeText(LoginPigAarActivity.this, "登录失败，请检查网络后重试。", Toast.LENGTH_LONG).show();
-                        finish();
+                        LoginPigAarActivity.this.finish();
                         return;
                     }
                 });

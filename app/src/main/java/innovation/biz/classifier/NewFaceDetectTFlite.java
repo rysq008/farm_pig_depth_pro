@@ -9,6 +9,7 @@ import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.os.SystemClock;
 import android.os.Trace;
+import android.util.Log;
 
 import com.xiangchuangtec.luolu.animalcounter.PigAppConfig;
 
@@ -486,7 +487,6 @@ public class NewFaceDetectTFlite implements Classifier {
         Bitmap padBitmap2SpRatio = padBitmap2SpRatio(clipBitmap, 1.0f);
 //        int widthZoom = ZOOM, heightZoom = ZOOM;
         Bitmap resizeClipBitmap = zoomImage(padBitmap2SpRatio, ZOOM, ZOOM);
-
 
         // 调用模型判断关键点
         // keypoint detect

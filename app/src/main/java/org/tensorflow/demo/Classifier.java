@@ -32,7 +32,7 @@ import innovation.utils.PointFloat;
  */
 public interface Classifier {
   /**
-   * An immutable result returned by a Classifier describing what was recognized.
+   * An immutable resultStatus returned by a Classifier describing what was recognized.
    */
   public class Recognition {
     /**

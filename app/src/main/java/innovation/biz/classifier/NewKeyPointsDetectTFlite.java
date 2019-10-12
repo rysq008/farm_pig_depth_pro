@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.os.SystemClock;
 import android.os.Trace;
+import android.util.Log;
 
 import org.tensorflow.demo.Classifier;
 import org.tensorflow.demo.Global;

@@ -2,12 +2,19 @@ package innovation.location;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.amap.api.services.core.LatLonPoint;
+import com.amap.api.services.geocoder.GeocodeResult;
+import com.amap.api.services.geocoder.GeocodeSearch;
+import com.amap.api.services.geocoder.RegeocodeAddress;
+import com.amap.api.services.geocoder.RegeocodeQuery;
+import com.amap.api.services.geocoder.RegeocodeResult;
 import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.netutils.Constants;
 import com.xiangchuang.risks.utils.PigPreferencesUtils;
@@ -49,11 +56,12 @@ public class LocationManager_new {
     public void startLocation() {
         AMapLocationClientOption locationOption = new AMapLocationClientOption();
         locationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
-        locationOption.setOnceLocation(true);
-        locationOption.setOnceLocationLatest(true);
+//        locationOption.setOnceLocation(true);
+//        locationOption.setOnceLocationLatest(true);
         //单位是毫秒，默认30000毫秒，建议超时时间不要低于8000毫秒。
         locationOption.setHttpTimeOut(15000);
         mLocationStr = null;
+        mLocationClient.setLocationOption(locationOption);
         mLocationClient.startLocation();
     }
 
@@ -128,4 +136,39 @@ public class LocationManager_new {
         void getaddress(String address);
     }
 
+    public void getAddressByLatlng(double latitude, double longitude, android.os.Handler.Callback callback) {
+        //地理搜索类
+        GeocodeSearch geocodeSearch = new GeocodeSearch(mContext);
+
+        geocodeSearch.setOnGeocodeSearchListener(new GeocodeSearch.OnGeocodeSearchListener() {
+
+            //得到逆地理编码异步查询结果
+            @Override
+            public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
+                RegeocodeAddress regeocodeAddress = regeocodeResult.getRegeocodeAddress();
+                String formatAddress = regeocodeAddress.getFormatAddress();
+                AppConfig.getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(callback != null){
+                            Message m = Message.obtain();
+                            m.obj = formatAddress;
+                            callback.handleMessage(m);
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
+
+            }
+        });
+
+        //逆地理编码查询条件：逆地理编码查询的地理坐标点、查询范围、坐标类型。
+        LatLonPoint latLonPoint = new LatLonPoint(latitude, longitude);
+        RegeocodeQuery query = new RegeocodeQuery(latLonPoint, 500f, GeocodeSearch.AMAP);
+        //异步查询
+        geocodeSearch.getFromLocationAsyn(query);
+    }
 }

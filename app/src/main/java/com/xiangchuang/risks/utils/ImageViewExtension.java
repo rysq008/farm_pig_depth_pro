@@ -7,6 +7,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.innovation.pig.insurance.R;
 
 import java.io.File;
@@ -19,59 +20,50 @@ public class ImageViewExtension {
 
     /**
      * 跳过缓存  接受图片验证码使用
+     *
      * @param context
      * @param imageView
      * @param url
      */
-  public  static void loadImageSkipCache(Context context, ImageView imageView, String url){
-      Glide.with(context)
-              .load(url)
-              .skipMemoryCache(true)
-              .diskCacheStrategy(DiskCacheStrategy.NONE)
-              .centerCrop()
-              .error(R.drawable.default_pic)
-              .into(imageView);
+    public static void loadImageSkipCache(Context context, ImageView imageView, String url) {
+        Glide.with(context)
+                .load(url)
+                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE).centerCrop().error(R.drawable.default_pic))
+                .into(imageView);
 
-  }
+    }
 
     /**
      * banner
-     *
      */
-    public  static void loadImageToBanner(Context context, ImageView imageView, String url){
+    public static void loadImageToBanner(Context context, ImageView imageView, String url) {
         Glide.with(context).load(url)
-                .fitCenter()
+                .apply(new RequestOptions().fitCenter())
                 .into(imageView);
     }
 
     /**
      * 通用
+     *
      * @param context
      * @param imageView
      * @param url
      */
-    public  static void loadImageToComm(Context context, ImageView imageView, String url){
+    public static void loadImageToComm(Context context, ImageView imageView, String url) {
         Glide.with(context).load(url)
-                .dontAnimate()
-                .centerCrop()
-                .error(R.drawable.ic_default_icon)
-                .into(imageView);
+                .apply(new RequestOptions().dontAnimate().centerCrop().error(R.drawable.ic_default_icon)).into(imageView);
     }
 
-    public  static void loadImageToComm(Activity context, ImageView imageView, String url){
+    public static void loadImageToComm(Activity context, ImageView imageView, String url) {
         Glide.with(context).load(url)
-                .dontAnimate()
-                .centerCrop()
-                .error(R.drawable.default_pic)
+                .apply(new RequestOptions().dontAnimate().centerCrop().error(R.drawable.default_pic))
                 .into(imageView);
     }
 
     public static void loadImageToComm(Fragment context, ImageView imageView, String url) {
         Glide.with(context).
                 load(url)
-                .dontAnimate()
-                .centerCrop()
-                .error(R.drawable.default_pic)
+                .apply(new RequestOptions().dontAnimate().centerCrop().error(R.drawable.default_pic))
                 .into(imageView);
     }
 
@@ -79,11 +71,9 @@ public class ImageViewExtension {
      * @param context
      * @param imageView
      */
-    public  static void loadImageToComm(Context context, ImageView imageView, File file){
+    public static void loadImageToComm(Context context, ImageView imageView, File file) {
         Glide.with(context).load(file)
-                .dontAnimate()
-                .centerCrop()
-                .error(R.drawable.ic_default_icon)
+                .apply(new RequestOptions().dontAnimate().centerCrop().error(R.drawable.ic_default_icon))
                 .into(imageView);
     }
 
@@ -91,11 +81,9 @@ public class ImageViewExtension {
      * @param context
      * @param imageView
      */
-    public  static void loadImageToComm(Context context, ImageView imageView, byte[] bytes){
+    public static void loadImageToComm(Context context, ImageView imageView, byte[] bytes) {
         Glide.with(context).load(bytes)
-                .dontAnimate()
-                .centerCrop()
-                .error(R.drawable.ic_default_icon)
+                .apply(new RequestOptions().dontAnimate().centerCrop().error(R.drawable.ic_default_icon))
                 .into(imageView);
     }
 
@@ -103,11 +91,8 @@ public class ImageViewExtension {
      * @param context
      * @param imageView
      */
-    public  static void loadImageToCommBase(Context context, ImageView imageView, String s){
-        Glide.with(context).load(s).asBitmap()
-                .dontAnimate()
-                .centerCrop()
-                .error(R.drawable.ic_default_icon)
+    public static void loadImageToCommBase(Context context, ImageView imageView, String s) {
+        Glide.with(context).asBitmap().load(s).apply(new RequestOptions().dontAnimate().centerCrop().error(R.drawable.ic_default_icon))
                 .into(imageView);
     }
 }

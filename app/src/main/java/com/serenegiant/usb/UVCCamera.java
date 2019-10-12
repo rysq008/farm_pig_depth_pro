@@ -204,7 +204,7 @@ public class UVCCamera {
             result = -1;
         }
         if (result != 0) {
-            throw new UnsupportedOperationException("open failed:result=" + result);
+            throw new UnsupportedOperationException("open failed:resultStatus=" + result);
         }
         if (mNativePtr != 0 && TextUtils.isEmpty(mSupportedSize)) {
             mSupportedSize = nativeGetSupportedSize(mNativePtr);
@@ -455,7 +455,7 @@ public class UVCCamera {
         }
     }
 
-    // wrong result may return when you call this just after camera open.
+    // wrong resultStatus may return when you call this just after camera open.
     // it is better to wait several hundreads millseconds.
     public boolean checkSupportFlag(final long flag) {
         updateCameraParams();

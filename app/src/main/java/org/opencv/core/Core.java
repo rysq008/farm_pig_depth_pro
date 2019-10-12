@@ -715,10 +715,10 @@ public class Core {
 
 
     //
-    // C++:  void PCABackProject(Mat data, Mat mean, Mat eigenvectors, Mat& result)
+    // C++:  void PCABackProject(Mat data, Mat mean, Mat eigenvectors, Mat& resultStatus)
     //
 
-    //javadoc: PCABackProject(data, mean, eigenvectors, result)
+    //javadoc: PCABackProject(data, mean, eigenvectors, resultStatus)
     public static void PCABackProject(Mat data, Mat mean, Mat eigenvectors, Mat result)
     {
         
@@ -766,10 +766,10 @@ public class Core {
 
 
     //
-    // C++:  void PCAProject(Mat data, Mat mean, Mat eigenvectors, Mat& result)
+    // C++:  void PCAProject(Mat data, Mat mean, Mat eigenvectors, Mat& resultStatus)
     //
 
-    //javadoc: PCAProject(data, mean, eigenvectors, result)
+    //javadoc: PCAProject(data, mean, eigenvectors, resultStatus)
     public static void PCAProject(Mat data, Mat mean, Mat eigenvectors, Mat result)
     {
         
@@ -2440,7 +2440,7 @@ public static MinMaxLocResult minMaxLoc(Mat src) {
     // C++:  void LUT(Mat src, Mat lut, Mat& dst)
     private static native void LUT_0(long src_nativeObj, long lut_nativeObj, long dst_nativeObj);
 
-    // C++:  void PCABackProject(Mat data, Mat mean, Mat eigenvectors, Mat& result)
+    // C++:  void PCABackProject(Mat data, Mat mean, Mat eigenvectors, Mat& resultStatus)
     private static native void PCABackProject_0(long data_nativeObj, long mean_nativeObj, long eigenvectors_nativeObj, long result_nativeObj);
 
     // C++:  void PCACompute(Mat data, Mat& mean, Mat& eigenvectors, double retainedVariance)
@@ -2450,7 +2450,7 @@ public static MinMaxLocResult minMaxLoc(Mat src) {
     private static native void PCACompute_1(long data_nativeObj, long mean_nativeObj, long eigenvectors_nativeObj, int maxComponents);
     private static native void PCACompute_2(long data_nativeObj, long mean_nativeObj, long eigenvectors_nativeObj);
 
-    // C++:  void PCAProject(Mat data, Mat mean, Mat eigenvectors, Mat& result)
+    // C++:  void PCAProject(Mat data, Mat mean, Mat eigenvectors, Mat& resultStatus)
     private static native void PCAProject_0(long data_nativeObj, long mean_nativeObj, long eigenvectors_nativeObj, long result_nativeObj);
 
     // C++:  void SVBackSubst(Mat w, Mat u, Mat vt, Mat rhs, Mat& dst)

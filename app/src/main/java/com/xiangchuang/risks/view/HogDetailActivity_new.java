@@ -3,25 +3,28 @@ package com.xiangchuang.risks.view;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import innovation.location.LocationManager_new;
+import innovation.utils.Toast;
 import android.widget.VideoView;
 
 import com.google.gson.Gson;
+import com.innovation.pig.insurance.R;
 import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.adapter.HogDetailAdapter;
 import com.xiangchuang.risks.model.bean.HogDetailBean;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
-import com.innovation.pig.insurance.R;
-import com.innovation.pig.insurance.netutils.Constants;
-import com.innovation.pig.insurance.netutils.OkHttp3Util;
-import com.xiangchuang.risks.utils.PigPreferencesUtils;
+import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
+import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
 
 import org.json.JSONObject;
 
@@ -31,7 +34,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -39,18 +41,19 @@ import okhttp3.Response;
 public class HogDetailActivity_new extends BaseActivity {
 
     TextView hog_name;
-
     TextView hog_date;
-
     TextView hog_count;
-
     GridView gridview_pic;
-
     ImageView ivCancel;
-
     VideoView vvSow;
-
     ProgressBar mProgressBar;
+
+    TextView tvShelon;
+    TextView tvShelat;
+    TextView tvSheAddress;
+
+    LinearLayout llSheMsg;
+
     private List<String> picpaths;
 
     private String mSheId;
@@ -58,22 +61,26 @@ public class HogDetailActivity_new extends BaseActivity {
 
     private List<String> paths = new ArrayList<>();
     private int cIndex = 0;
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_hog_detail_new;
+    }
 
     @Override
     public void initView() {
         super.initView();
-        hog_name = (TextView) findViewById(R.id.tv_title);
-        hog_date = (TextView) findViewById(R.id.hog_date);
-        hog_count = (TextView) findViewById(R.id.hog_count);
-        gridview_pic = (GridView) findViewById(R.id.gridview_pic);
-        ivCancel = (ImageView) findViewById(R.id.iv_cancel);
-        vvSow = (VideoView) findViewById(R.id.vv_sow);
-        mProgressBar = (ProgressBar) findViewById(R.id.pb_loading);
-    }
+        hog_name = findViewById(R.id.tv_title);
+        hog_date = findViewById(R.id.hog_date);
+        hog_count = findViewById(R.id.hog_count);
+        gridview_pic = findViewById(R.id.gridview_pic);
+        ivCancel = findViewById(R.id.iv_cancel);
+        vvSow = findViewById(R.id.vv_sow);
+        mProgressBar = findViewById(R.id.pb_loading);
 
-    @Override
-    protected int getLayoutId() {
-        return R.layout.activity_hog_detail_new;
+        tvShelon = findViewById(R.id.tv_shelon);
+        tvShelat = findViewById(R.id.tv_shelat);
+        tvSheAddress = findViewById(R.id.tv_sheaddress);
+        llSheMsg = findViewById(R.id.ll_she_msg);
     }
 
     @Override
@@ -93,23 +100,32 @@ public class HogDetailActivity_new extends BaseActivity {
     }
 
     private void getHogMessage() {
-        Map mapheader = new HashMap();
-        mapheader.put(Constants.AppKeyAuthorization, "hopen");
-        mapheader.put(Constants.en_id, PigPreferencesUtils.getStringValue(Constants.en_id, HogDetailActivity_new.this));
         Map mapbody = new HashMap();
         mapbody.put("sheId", mSheId);
-
-        OkHttp3Util.doPost(Constants.SHEDETAIL_NEW, mapbody, mapheader, new Callback() {
+        showLoadProgressDialog();
+        OkHttp3Util.doPost(Constants.SHEDETAIL_NEW, mapbody, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i("HogDetail", e.toString());
                 AVOSCloudUtils.saveErrorMessage(e,HogDetailActivity_new.class.getSimpleName());
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        dismissLoadDialog();
+                    }
+                });
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String string = response.body().string();
                 Log.i("HogDetail", string);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        dismissLoadDialog();
+                    }
+                });
                 try {
                     JSONObject jsonObject = new JSONObject(string);
                     int status = jsonObject.getInt("status");
@@ -131,18 +147,22 @@ public class HogDetailActivity_new extends BaseActivity {
                                     HogDetailBean.DataBean data = hogDetailBean.getData();
                                     int count = data.getCount();
                                     String createtime = data.getCreatetime();
-                                                            String name = data.getName();
+                                    String name = data.getName();
+                                    String location = data.getLocation();
+
                                     hog_name.setText(name);
                                     hog_count.setText(count + "");
                                     hog_date.setText(createtime);
                                     picpaths = data.getPics();
                                     Log.i("size", picpaths.size() + "" + picpaths.toString());
 
+
                                     boolean isVideo = false;
                                     if(picpaths != null && picpaths.size() > 0){
                                         isVideo = picpaths.get(0).contains("mp4");
                                     }else{
                                         Toast.makeText(HogDetailActivity_new.this, "无点数详情信息。", Toast.LENGTH_SHORT).show();
+                                        return;
                                     }
 
                                     if(isVideo){
@@ -151,16 +171,35 @@ public class HogDetailActivity_new extends BaseActivity {
                                                 paths.add(picpaths.get(i));
                                             }
                                             vvSow.setVisibility(View.VISIBLE);
+                                            mProgressBar.setVisibility(View.VISIBLE);
                                             gridview_pic.setVisibility(View.GONE);
 
                                             cIndex = paths.size()-1;
                                             playeVideo(paths.get(cIndex));
+                                            HogDetailBean.locations locations = new Gson().fromJson(location, HogDetailBean.locations.class);
+
+                                            llSheMsg.setVisibility(View.VISIBLE);
+                                            tvShelon.setText("经度："+locations.getPigsty().get(0).getLon());
+                                            tvShelat.setText("纬度："+locations.getPigsty().get(0).getLat());
+
+                                            LocationManager_new.getInstance(HogDetailActivity_new.this).
+                                                    getAddressByLatlng(
+                                                            Double.parseDouble(locations.getPigsty().get(0).getLat()),
+                                                            Double.parseDouble(locations.getPigsty().get(0).getLon()),
+                                                            new Handler.Callback() {
+                                                                @Override
+                                                                public boolean handleMessage(Message msg) {
+                                                                    tvSheAddress.setText("地址："+msg.obj.toString());
+                                                                    return false;
+                                                                }
+                                                            });
                                         }else{
                                             handler.postDelayed(runnable,0);
                                             mProgressBar.setVisibility(View.GONE);
                                             Toast.makeText(HogDetailActivity_new.this, "无点数详情信息。", Toast.LENGTH_SHORT).show();
                                         }
                                     }else{
+                                        llSheMsg.setVisibility(View.GONE);
                                         vvSow.setVisibility(View.GONE);
                                         gridview_pic.setVisibility(View.VISIBLE);
                                         gridview_pic.setAdapter(new HogDetailAdapter(HogDetailActivity_new.this, picpaths));

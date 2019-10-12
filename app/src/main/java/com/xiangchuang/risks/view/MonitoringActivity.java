@@ -125,7 +125,7 @@ public class MonitoringActivity extends BaseActivity {
             localBuilder.create().show();
 
             //注意:
-            //必须要这一句代码:result.confirm()表示:
+            //必须要这一句代码:resultStatus.confirm()表示:
             //处理结果为确定状态同时唤醒WebCore线程
             //否则不能继续点击按钮
             result.confirm();

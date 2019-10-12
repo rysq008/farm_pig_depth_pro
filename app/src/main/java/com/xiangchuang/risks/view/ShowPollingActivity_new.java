@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hjq.toast.ToastUtils;
+import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
 import com.xiangchuang.risks.base.BaseActivity;
 import com.xiangchuang.risks.model.bean.SheListBean;
@@ -26,7 +27,6 @@ import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.utils.CounterHelper;
 import com.xiangchuang.risks.utils.PermissionsDelegate;
 import com.xiangchuang.risks.utils.PigPreferencesUtils;
-import com.xiangchuangtec.luolu.animalcounter.PigAppConfig;
 import com.xiangchuangtec.luolu.animalcounter.model.PollingResultAdapter_new;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
 import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
@@ -45,7 +45,6 @@ import innovation.utils.Toast;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
-
 import static com.xiangchuangtec.luolu.animalcounter.PigAppConfig.offLineModle;
 
 /**
@@ -87,7 +86,7 @@ public class ShowPollingActivity_new extends BaseActivity implements View.OnClic
 
     @Override
     protected void initData() {
-        String companyname = PigPreferencesUtils.getStringValue(Constants.companyname, PigAppConfig.getAppContext(), "育肥猪农场");
+        String companyname = PigPreferencesUtils.getStringValue(Constants.companyname, AppConfig.getAppContext(), "育肥猪农场");
         mshowpollingname.setText("智能点数");
 
         String enId = PigPreferencesUtils.getStringValue(Constants.en_id, ShowPollingActivity_new.this);

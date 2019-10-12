@@ -228,7 +228,7 @@ public abstract class CameraActivity_pig extends BaseActivity implements OnImage
 
         getFragmentManager()
                 .beginTransaction()
-                .replace(R.id.container, mFragment)
+                .replace(R.id.container_camera_pig, mFragment)
                 .commit();
     }
 

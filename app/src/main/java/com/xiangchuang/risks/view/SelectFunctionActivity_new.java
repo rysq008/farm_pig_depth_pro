@@ -541,15 +541,15 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
                         arrayList.addAll(beanList);
                     }
                 }
-                try {
-                    for (GSCPigBean pigBean : arrayList) {
-                        fileWriter.append(pigBean.string());
-                    }
-                    fileWriter.flush();
-                    fileWriter.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    for (GSCPigBean pigBean : arrayList) {
+//                        fileWriter.append(pigBean.string());
+//                    }
+//                    fileWriter.flush();
+//                    fileWriter.close();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
 
                 final int[] callbackCount = {0};
                 for (Map.Entry<String, Integer> entry : g_TotalMap.entrySet()) {

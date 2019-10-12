@@ -28,6 +28,7 @@ import android.util.Size;
 import android.view.KeyEvent;
 import android.view.Surface;
 import android.view.WindowManager;
+import innovation.utils.Toast;
 
 import com.innovation.pig.insurance.R;
 import com.xiangchuang.risks.base.BaseActivity;
@@ -35,8 +36,6 @@ import com.xiangchuang.risks.base.BaseActivity;
 import org.tensorflow.demo.env.Logger;
 
 import java.nio.ByteBuffer;
-
-import innovation.utils.Toast;
 
 public abstract class BreedingCameraActivity_pig extends BaseActivity implements OnImageAvailableListener {
     private static final Logger LOGGER = new Logger();
@@ -59,7 +58,7 @@ public abstract class BreedingCameraActivity_pig extends BaseActivity implements
         super.onCreate(null);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        setContentView(R.layout.activity_camera);
+        setContentView(R.layout.activity_camera_breeding);
         if (hasPermission()) {
             setFragment();
         } else {
@@ -178,7 +177,7 @@ public abstract class BreedingCameraActivity_pig extends BaseActivity implements
 
         getFragmentManager()
                 .beginTransaction()
-                .replace(R.id.container, mFragment)
+                .replace(R.id.container_breeding_pig, mFragment)
                 .commit();
     }
 

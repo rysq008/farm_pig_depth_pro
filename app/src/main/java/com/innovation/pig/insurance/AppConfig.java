@@ -59,8 +59,8 @@ public class AppConfig {
     public static boolean isNetConnected = false;
     NetworkChangedReceiver networkChangedReceiver;
 
-    //能繁母猪计数器；
-    public static int sowCount = 0;
+//    //能繁母猪计数器；
+//    public static int sowCount = 0;
     //记录每次抓图最小的Xmin值
     public static float lastXmin = 0f;
 

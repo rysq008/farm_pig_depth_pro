@@ -155,7 +155,7 @@ public class LocationTracker {
             if (result.getLocation() == null) {
                 continue;
             }
-            //mFrameRects.add(new Pair<>(result.getConfidence(), result.getLocation()));
+            //mFrameRects.add(new Pair<>(resultStatus.getConfidence(), resultStatus.getLocation()));
         }
     }
 

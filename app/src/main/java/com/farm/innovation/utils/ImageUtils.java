@@ -128,7 +128,7 @@ public class ImageUtils {
         soglia += 6118750 + userOffset;
         maxLap += 6118750 + userOffset;
 
-        Log.d("FarmerImageUtils", "opencvanswers..result：image.w=" + image.getWidth() + ", image.h=" + image.getHeight()
+        Log.d("FarmerImageUtils", "opencvanswers..resultStatus：image.w=" + image.getWidth() + ", image.h=" + image.getHeight()
                 + "\nmaxLap= " + maxLap + "(清晰范围:0~" + (6118750 + userOffset) + ")"
                 + "\n" + Html.fromHtml("<font color='#eb5151'><b>" + (maxLap <= soglia ? "模糊" : "清晰") + "</b></font>"));
         return maxLap <= soglia;

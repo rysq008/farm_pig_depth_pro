@@ -505,7 +505,7 @@ public class AddPigPicActivity extends BaseActivity {
         //上传死猪照片时候调用称重接口
         CounterHelper.recognitionWeightFromNet(photo, insureNo, lipeiNo , new CounterHelper.OnImageRecognitionWeightListener() {
             @Override
-            public void onCompleted(float weight, int status, String errorMsg) {
+            public void onCompleted(float weight, float length, float area, int status, String errormsg) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -548,7 +548,7 @@ public class AddPigPicActivity extends BaseActivity {
 //                                DialogHelper.weightCheckFailureDialog(AddPigPicActivity.this, errorMsg);
                             } else {
 
-                                DialogHelper.weightCheckDialog1(AddPigPicActivity.this, errorMsg);
+                                DialogHelper.weightCheckDialog1(AddPigPicActivity.this, errormsg);
                                 failureTime += 1;
                             }
 //                            Toast.makeText(AddPigPicActivity.this, "识别失败！", Toast.LENGTH_SHORT).show();

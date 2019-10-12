@@ -29,8 +29,11 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import innovation.utils.Toast;
+
 import com.hjq.toast.ToastUtils;
 import com.hjq.toast.style.ToastAliPayStyle;
+
 import com.innovation.pig.insurance.BuildConfig;
 import com.innovation.pig.insurance.R;
 import com.serenegiant.common.UsbBaseActivity;
@@ -40,6 +43,7 @@ import com.serenegiant.usb.UVCCamera;
 import com.serenegiant.usbcameracommon.UVCCameraHandler;
 import com.serenegiant.widget.CameraViewInterface;
 import com.serenegiant.widget.UVCCameraTextureView;
+import com.xiangchuang.risks.model.bean.GSCPigBean;
 import com.xiangchuang.risks.model.bean.RecognitionResult;
 import com.xiangchuang.risks.utils.CommonUtils;
 import com.xiangchuang.risks.utils.CounterHelper;
@@ -55,7 +59,6 @@ import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import innovation.location.LocationManager_new;
-import innovation.utils.Toast;
 
 import static com.xiangchuangtec.luolu.animalcounter.PigAppConfig.offLineModle;
 
@@ -491,7 +494,6 @@ public final class USBCameraActivity_new extends UsbBaseActivity implements Came
                     } else {
                         etModifier.setText("" + tempCount);
                     }
-
                 }
             }
         });
