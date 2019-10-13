@@ -60,6 +60,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import innovation.location.LocationManager_new;
 
+import static com.xiangchuang.risks.view.SelectFunctionActivity_new.g_CaptivityMap;
+import static com.xiangchuang.risks.view.SelectFunctionActivity_new.g_LocationMap;
 import static com.xiangchuangtec.luolu.animalcounter.PigAppConfig.offLineModle;
 
 
@@ -608,6 +610,8 @@ public final class USBCameraActivity_new extends UsbBaseActivity implements Came
                 results, USBCameraActivity_new.this, new CounterHelper.OnUploadResultListener() {
                     @Override
                     public void onCompleted(boolean succeed, String resutl) {
+                        if(g_LocationMap.containsKey(mSheId))
+                            g_LocationMap.remove(mSheId);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {

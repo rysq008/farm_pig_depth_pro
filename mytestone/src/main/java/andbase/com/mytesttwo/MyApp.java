@@ -11,7 +11,7 @@ public class MyApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        AppConfig.newInstance().onCreate(this);
+        AppConfig.newInstance().onCreate(this,true);
 //        FarmAppConfig.newInstance().onCreate(this);
     }
 

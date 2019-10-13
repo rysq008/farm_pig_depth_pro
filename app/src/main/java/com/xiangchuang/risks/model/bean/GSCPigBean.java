@@ -32,7 +32,7 @@ public final class GSCPigBean {
     public int totalFarmPigs;
     public int resultStatus = -1;//投保：0失败，1成功，理赔：0重复，1成功
     public String videoFlag = "0";//1:视频,0:非视频
-    public String pigType;//辅助判断猪的种类
+    public String pigType = "";//辅助判断猪的种类
 
     public GSCPigBean() {
     }

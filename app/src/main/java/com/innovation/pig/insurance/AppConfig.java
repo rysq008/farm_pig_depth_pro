@@ -92,11 +92,16 @@ public class AppConfig {
 
     private static UpdateInfoModel updateInfoModel;
 
-    public void onCreate(Application application) {
+    private static boolean SDK_DEBUG = true;
+
+    public static boolean isSDK_DEBUG() {
+        return SDK_DEBUG;
+    }
+
+    public void onCreate(Application application, boolean isDebug) {
         app = application;
+        SDK_DEBUG = isDebug;
         FarmAppConfig.newInstance().onCreate(app);
-        mCrashHandler = CrashHandler.getInstance();
-        mCrashHandler.init(app);
         PigAppConfig.newInstance().onCreate(app);
         boxStore = MyObjectBox.builder().androidContext(app).build();
         //初始化日志库
@@ -106,11 +111,6 @@ public class AppConfig {
                 return BuildConfig.DEBUG;
             }
         });
-
-//        if (PigAppConfig.isApkInDebug())
-//            new AndroidObjectBrowser(boxStore).start(app);
-        ToastUtils.init(app);
-        ToastUtils.initStyle(new ToastAliPayStyle());
 
         if (AppConfig.isOriginApk()) {
             //        // 初始化参数依次为 this, AppId, AppKey
@@ -126,9 +126,6 @@ public class AppConfig {
             AVOSCloud.initialize(app, "sraDTfcMG5cUdE454yDX5Dv1-gzGzoHsz", "qQwz83LLwnWW6LyH8qkWU6J7");
         }
 
-
-        //初始化 ImageLoader
-        ImageLoaderUtils.initImageLoader(app);
 
         networkChangedReceiver = new NetworkChangedReceiver();
         IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);

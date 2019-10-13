@@ -69,7 +69,7 @@ public abstract class CameraActivity_pig extends BaseActivity implements OnImage
         super.onCreate(null);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        setContentView(R.layout.activity_camera);
+        setContentView(R.layout.activity_camera_pig_body);
 
         if (hasPermission()) {
             setFragment();
@@ -228,7 +228,7 @@ public abstract class CameraActivity_pig extends BaseActivity implements OnImage
 
         getFragmentManager()
                 .beginTransaction()
-                .replace(R.id.container_camera_pig, mFragment)
+                .replace(R.id.container_camera_pig_body, mFragment)
                 .commit();
     }
 

@@ -13,7 +13,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 
 import com.avos.avoscloud.AVOSCloud;
-import com.farm.innovation.utils.FarmerShareUtils;
 import com.hjq.toast.ToastUtils;
 import com.hjq.toast.style.ToastAliPayStyle;
 import com.innovation.pig.insurance.AppConfig;
@@ -29,7 +28,6 @@ import net.gotev.uploadservice.okhttp.OkHttpStack;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 
 import innovation.crash.CrashHandler;
 import innovation.database.MyObjectBox;
@@ -93,8 +91,6 @@ public class PigAppConfig {
     private static List<Activity> oList;
 
 
-
-
     public void onCreate(Application app) {
         PigAppConfig.app = app;
         mCrashHandler = CrashHandler.getInstance();
@@ -102,8 +98,9 @@ public class PigAppConfig {
         oList = new ArrayList<>();
         PigShareUtils.init(app);
 
-
-        if (AppConfig.isOriginApk()){
+        HttpUtils.baseUrl = !AppConfig.isSDK_DEBUG() ? "http://f14e.innovationai.cn/nongxian2/" : "http://test1.innovationai.cn:8081/nongxian2/";
+        HttpUtils.resetIp(HttpUtils.baseUrl);
+        if (AppConfig.isOriginApk()) {
             //        // 初始化参数依次为 this, AppId, AppKey
             AVOSCloud.initialize(app, "sraDTfcMG5cUdE454yDX5Dv1-gzGzoHsz", "qQwz83LLwnWW6LyH8qkWU6J7");
             HttpUtils.baseUrl = PigShareUtils.getHost("host");
@@ -113,7 +110,6 @@ public class PigAppConfig {
             // create your own OkHttp client
             UploadService.HTTP_STACK = new OkHttpStack(client);
             CrashReport.initCrashReport(app, "2d3ff546dd", false);
-
 
 
             boxStore = MyObjectBox.builder().androidContext(app).build();
@@ -261,7 +257,7 @@ public class PigAppConfig {
     }
 
     public static BoxStore getBoxStore() {
-        return boxStore=AppConfig.getBoxStore();
+        return boxStore = AppConfig.getBoxStore();
     }
 
     public static Activity getContext() {

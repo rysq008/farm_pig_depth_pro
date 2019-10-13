@@ -466,10 +466,10 @@ public class MediaProcessor {
                     @Override
                     public void onFailure(Call call, IOException e) {
 //                            Log.e("lipeiprecommit", e.getLocalizedMessage());
-                        mProgressDialog.dismiss();
                         appContext.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                mProgressDialog.dismiss();
                                 showTimeOutDialog();
                             }
                         });
@@ -478,61 +478,63 @@ public class MediaProcessor {
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        mProgressDialog.dismiss();
-                        if (response.isSuccessful()) {
-                            String s = response.body().string();
-                            Log.e("lipeicommit", "上传--" + s);
-                            JSONObject jsonObject = null;
-                            try {
-                                jsonObject = new JSONObject(s);
-                                int status = jsonObject.getInt("status");
-                                String mymsg = jsonObject.getString("msg");
-                                appContext.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (-1 == status) {
-                                            //上传过程中有异常终止了，此时用户需要重试
-                                            showTimeOutDialog();
-                                        } else if (0 == status) {
-                                            //模型返回图片质量不合格，用户需要重新采集
-                                            showErrorDialog(mymsg);
-                                        } else if (1 == status)  {
-                                            GsCommitBean bean = GsonUtils.getBean(s, GsCommitBean.class);
-                                            Log.e(TAG, "bean: " + bean);
+                        String s = response.body().string();
+                        mActivity.runOnUiThread(()->{
+                            mProgressDialog.dismiss();
+                            if (response.isSuccessful()) {
+                                Log.e("lipeicommit", "上传--" + s);
+                                JSONObject jsonObject = null;
+                                try {
+                                    jsonObject = new JSONObject(s);
+                                    int status = jsonObject.getInt("status");
+                                    String mymsg = jsonObject.getString("msg");
+                                    appContext.runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (-1 == status) {
+                                                //上传过程中有异常终止了，此时用户需要重试
+                                                showTimeOutDialog();
+                                            } else if (0 == status) {
+                                                //模型返回图片质量不合格，用户需要重新采集
+                                                showErrorDialog(mymsg);
+                                            } else if (1 == status)  {
+                                                GsCommitBean bean = GsonUtils.getBean(s, GsCommitBean.class);
+                                                Log.e(TAG, "bean: " + bean);
 
-                                            GSCPigBean gscPigBean = new GSCPigBean();
-                                            gscPigBean.name = fileName;
-                                            gscPigBean.picture = filePath;
-                                            gscPigBean.address = str_address;
-                                            gscPigBean.latitude = LocationManager_new.getInstance(appContext).currentLat;
-                                            gscPigBean.longitude = LocationManager_new.getInstance(appContext).currentLon;
-                                            gscPigBean.time = System.currentTimeMillis();
-                                            gscPigBean.pigHouseNumber = "";
-                                            gscPigBean.photoPigsNumber = 1;
-                                            gscPigBean.resultStatus = bean.getData().getBuildStatus();
-                                            gscPigBean.videoFlag = "0";
+                                                GSCPigBean gscPigBean = new GSCPigBean();
+                                                gscPigBean.name = fileName;
+                                                gscPigBean.picture = filePath;
+                                                gscPigBean.address = str_address;
+                                                gscPigBean.latitude = LocationManager_new.getInstance(appContext).currentLat;
+                                                gscPigBean.longitude = LocationManager_new.getInstance(appContext).currentLon;
+                                                gscPigBean.time = System.currentTimeMillis();
+                                                gscPigBean.pigHouseNumber = "";
+                                                gscPigBean.photoPigsNumber = 1;
+                                                gscPigBean.resultStatus = bean.getData().getBuildStatus();
+                                                gscPigBean.videoFlag = "0";
 
-                                            gscPigBeans.add(gscPigBean);
-                                            ToastUtils.show("理赔申请成功");
+                                                gscPigBeans.add(gscPigBean);
+                                                ToastUtils.show("理赔申请成功");
 
-                                            boolean result = FileUtils.deleteFile(zipFile);
-                                            if (result) {
-                                                Log.i("lipeidetete:", "本地图片打包文件删除成功！！");
+                                                boolean result = FileUtils.deleteFile(zipFile);
+                                                if (result) {
+                                                    Log.i("lipeidetete:", "本地图片打包文件删除成功！！");
+                                                }
+                                                mActivity.finish();
                                             }
-                                            mActivity.finish();
                                         }
-                                    }
-                                });
+                                    });
 
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    showRetryDialog("网络异常，请检查网络后重试。");
+                                    AVOSCloudUtils.saveErrorMessage(e, MediaProcessor.class.getSimpleName());
+                                }
+
+                            } else {
                                 showRetryDialog("网络异常，请检查网络后重试。");
-                                AVOSCloudUtils.saveErrorMessage(e, MediaProcessor.class.getSimpleName());
                             }
-
-                        } else {
-                            showRetryDialog("网络异常，请检查网络后重试。");
-                        }
+                        });
                     }
                 }
         );

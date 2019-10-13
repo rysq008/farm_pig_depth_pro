@@ -66,6 +66,9 @@ public class OkHttp3Util {
                     int cacheSize = 10 * 1024 * 1024;
 
                     okHttpClient = new OkHttpClient.Builder()
+//                            .connectTimeout(130, TimeUnit.SECONDS)//连接时长
+//                            .writeTimeout(160, TimeUnit.SECONDS)//写入时长
+//                            .readTimeout(160, TimeUnit.SECONDS)//读取时长
                             .connectTimeout(60, TimeUnit.SECONDS)//连接超时
                             .writeTimeout(60, TimeUnit.SECONDS)//写入超时
                             .readTimeout(60, TimeUnit.SECONDS)//读取超时
@@ -523,10 +526,10 @@ public class OkHttp3Util {
     public static void uploadPreFile(String url, File file, String fileName, Map<String, String> params, Map<String, String> headerParams, Callback callback) {
         //创建OkHttpClient请求对象
         OkHttpClient okHttpClient = getInstance();
-        okHttpClient.newBuilder()
-                .connectTimeout(130, TimeUnit.SECONDS)//连接时长
-                .writeTimeout(160, TimeUnit.SECONDS)//写入时长
-                .readTimeout(160, TimeUnit.SECONDS);//读取时长
+//        okHttpClient.newBuilder()
+//                .connectTimeout(130, TimeUnit.SECONDS)//连接时长
+//                .writeTimeout(160, TimeUnit.SECONDS)//写入时长
+//                .readTimeout(160, TimeUnit.SECONDS);//读取时长
 
         MultipartBody.Builder builder = new MultipartBody.Builder();
         builder.setType(MultipartBody.FORM);

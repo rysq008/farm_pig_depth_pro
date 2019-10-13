@@ -7,6 +7,7 @@ package com.xiangchuang.risks.view;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -50,8 +51,8 @@ import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.utils.AppUpdateUtils;
 import com.xiangchuang.risks.utils.NoWeighingDialog;
 import com.xiangchuang.risks.utils.PigPreferencesUtils;
-import com.xiangchuangtec.luolu.animalcounter.PigAppConfig;
 import com.xiangchuangtec.luolu.animalcounter.JPushStatsConfig;
+import com.xiangchuangtec.luolu.animalcounter.PigAppConfig;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
 import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
 import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
@@ -64,6 +65,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -478,13 +480,12 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
         } else if (i == R.id.rl_company_info) {
 //            this.goToActivity(CompanyInfoActivity.class, (Bundle) null);
         } else if (i == R.id.function_submit_btn) {
-
             if (Global.model == PigInnovationAiOpen.INSURE) {
                 if (g_CaptivityMap.size() == 0 && g_LocationMap.size() == 0) {
                     android.widget.Toast.makeText(mActivity, "提交数据不能为空！", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
+                view.setEnabled(false);
                 int farm_total_cnt = 0;
                 //第一次遍历获取：投保某一种类猪的存栏数量、猪种类、猪厂采集总数
                 for (Map.Entry<String, List<GSCPigBean>> entry : g_CaptivityMap.entrySet()) {//圈养
@@ -521,7 +522,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
                     List<GSCPigBean> beanList = entry.getValue();
                     if (beanList != null) {
                         for (GSCPigBean sgscPigBean : beanList) {
-                            if(null != g_LocationMap.get(entry.getKey())){
+                            if (null != g_LocationMap.get(entry.getKey())) {
                                 sgscPigBean.totalPigs += g_LocationMap.get(entry.getKey()).get(0).totalPigs;
                             }
                             sgscPigBean.totalFarmPigs = farm_total_cnt;
@@ -533,7 +534,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
                     List<GSCPigBean> beanList = entry.getValue();
                     if (beanList != null) {
                         for (GSCPigBean sgscPigBean : beanList) {
-                            if(null != g_CaptivityMap.get(entry.getKey())){
+                            if (null != g_CaptivityMap.get(entry.getKey())) {
                                 sgscPigBean.totalPigs += g_CaptivityMap.get(entry.getKey()).get(0).totalPigs;
                             }
                             sgscPigBean.totalFarmPigs = farm_total_cnt;
@@ -551,6 +552,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
 //                    e.printStackTrace();
 //                }
 
+                ProgressDialog progressDialog = ProgressDialog.show(this, "", "数据处理中。。。", false);
                 final int[] callbackCount = {0};
                 for (Map.Entry<String, Integer> entry : g_TotalMap.entrySet()) {
                     Map map = new HashMap();
@@ -564,24 +566,50 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
                         @Override
                         public void onFailure(Call call, IOException e) {
                             callbackCount[0]++;
-                            if (callbackCount[0] == g_TotalMap.size()) {
-                                Message msg = Message.obtain();
-                                msg.obj = arrayList;
-                                msg.what = PigInnovationAiOpen.INSURE;
-                                PigInnovationAiOpen.getInstance().postEventEvent(msg);
-                                SelectFunctionActivity_new.this.finish();
+                            if (callbackCount[0] == g_TotalMap.size() && !isFinishing()) {
+                                callbackCount[0] = 0;
+                                g_TotalMap.clear();
+//                                android.widget.Toast.makeText(mActivity, "猪投保失败了---》"+callbackCount[0], Toast.LENGTH_SHORT).show();
+                                runOnUiThread(() -> {
+                                    progressDialog.dismiss();
+                                    view.setEnabled(true);
+                                    Message msg = Message.obtain();
+                                    msg.obj = null;
+                                    msg.what = PigInnovationAiOpen.INSURE;
+                                    PigInnovationAiOpen.getInstance().postEventEvent(msg);
+                                    SelectFunctionActivity_new.this.finish();
+                                });
+
                             }
                         }
 
                         @Override
                         public void onResponse(Call call, Response response) throws IOException {
                             callbackCount[0]++;
-                            if (callbackCount[0] == g_TotalMap.size()) {
-                                Message msg = Message.obtain();
-                                msg.obj = arrayList;
-                                msg.what = PigInnovationAiOpen.INSURE;
-                                PigInnovationAiOpen.getInstance().postEventEvent(msg);
-                                SelectFunctionActivity_new.this.finish();
+                            if (callbackCount[0] == g_TotalMap.size() && !isFinishing()) {
+                                callbackCount[0] = 0;
+                                g_TotalMap.clear();
+                                String result = "";
+                                List<GSCPigBean> listBean = null;
+                                if (response.isSuccessful()) {
+                                    result = response.body().string();
+                                    Type listType = new TypeToken<BaseBean<List<GSCPigBean>>>() {
+                                    }.getType();
+                                    Gson gson = new Gson();
+                                    BaseBean<List<GSCPigBean>> baseBean = gson.fromJson(result, listType);
+                                    listBean = baseBean.getData();
+                                }
+//                                android.widget.Toast.makeText(mActivity, "猪投保成功了----->"+callbackCount[0], Toast.LENGTH_SHORT).show();
+                                List<GSCPigBean> finalListBean = listBean;
+                                runOnUiThread(() -> {
+                                    progressDialog.dismiss();
+                                    view.setEnabled(true);
+                                    Message msg = Message.obtain();
+                                    msg.obj = finalListBean;//arrayList;
+                                    msg.what = PigInnovationAiOpen.INSURE;
+                                    PigInnovationAiOpen.getInstance().postEventEvent(msg);
+                                    SelectFunctionActivity_new.this.finish();
+                                });
                             }
                         }
                     });
@@ -591,12 +619,13 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
                     ToastUtils.show("提交数据不能为空！");
                     return;
                 }
-
+                view.setEnabled(false);
                 Message msg = Message.obtain();
                 msg.obj = gscPigBeans;
                 msg.what = PigInnovationAiOpen.PAY;
                 PigInnovationAiOpen.getInstance().postEventEvent(msg);
                 SelectFunctionActivity_new.this.finish();
+                view.setEnabled(true);
             }
         }
     }

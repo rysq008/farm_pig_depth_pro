@@ -130,6 +130,7 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 import static android.content.ContentValues.TAG;
+import static com.xiangchuang.risks.view.SelectFunctionActivity_new.g_CaptivityMap;
 import static com.xiangchuang.risks.view.SelectFunctionActivity_new.g_LocationMap;
 import static com.xiangchuang.risks.view.SelectFunctionActivity_new.g_PigType;
 import static com.xiangchuangtec.luolu.animalcounter.PigAppConfig.sowCount;
@@ -1798,6 +1799,8 @@ public class BreedingCameraConnectionFragment_pig extends Fragment implements Vi
             @Override
             public void onCompleted(boolean succeed, String resutl) {
                 Log.e(TAG, "on Completed:resutl " + resutl);
+                if(g_CaptivityMap.containsKey(mSheId))
+                    g_CaptivityMap.remove(mSheId);
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

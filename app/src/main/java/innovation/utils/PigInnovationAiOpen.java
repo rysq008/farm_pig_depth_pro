@@ -38,6 +38,7 @@ import okhttp3.RequestBody;
 public class PigInnovationAiOpen {
     public static final int INSURE = 1;
     public static final int PAY = 2;
+    public static final int PAY_POLICY = 3;
     public static String GSC_TASKID = null;
 
     private Map<Object, Handler> mHandlerMap = new HashMap<>();
@@ -113,7 +114,7 @@ public class PigInnovationAiOpen {
      * @param callback
      */
     public void requestInnovationApi(Context context, String taskId, String userid, String officeCode, String officeName, String officeLevel, String parentCode, String parentOfficeName, String parentOfficeCodes, String farmName, int type, String phone, String idcard, String username, Handler.Callback callback) {
-        if (type != 1 && type != 2) {
+        if (type != 1 && type != 2 && type != 3) {
             Toast.makeText(context, "无效业务类型", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -159,7 +160,7 @@ public class PigInnovationAiOpen {
         }
 
         AppConfig.setSdkType(AppConfig.SDK_TYPE.COW);
-        Global.model = type;//(type == 1 ? Model.VERIFY.value() : Model.BUILD.value());
+        Global.model = (type == PAY_POLICY ? PAY : type);//(type == 1 ? Model.VERIFY.value() : Model.BUILD.value());
 //        Toast.makeText(context, "nb", Toast.LENGTH_LONG).show();
         String finalPhone = phone;
         String finalIdcard = idcard;

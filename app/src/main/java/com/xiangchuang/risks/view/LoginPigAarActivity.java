@@ -275,6 +275,7 @@ public class LoginPigAarActivity extends BaseActivity {
                                         mapbody.put("enName", mIntent.getStringExtra(FARM_NAME));
                                         mapbody.put("deptId", String.valueOf(tokenresp.deptid));
                                         mapbody.put("gsUserid", tokenresp.gsUserId);
+                                        mapbody.put("taskId",mIntent.getStringExtra(TASK_ID));
                                         OkHttp3Util.doPost(GSC_PIG_AAR_FARM_INFO, mapbody, new Callback() {
                                             @Override
                                             public void onFailure(Call call, IOException e) {
