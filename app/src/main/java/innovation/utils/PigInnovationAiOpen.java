@@ -39,7 +39,18 @@ public class PigInnovationAiOpen {
     public static final int INSURE = 1;
     public static final int PAY = 2;
     public static final int PAY_POLICY = 3;
-    public static String GSC_TASKID = null;
+
+    public static String getGscTaskid() {
+        return GSC_TASKID;
+    }
+
+    private static String GSC_TASKID = null;
+
+    public static int getCurType() {
+        return CUR_TYPE;
+    }
+
+    private static int CUR_TYPE = 0;
 
     private Map<Object, Handler> mHandlerMap = new HashMap<>();
 
@@ -198,6 +209,7 @@ public class PigInnovationAiOpen {
                         String parentCode, String parentOfficeName, String parentOfficeCodes,
                         String farmName, int type, String phone, String idcard, String username) {
         GSC_TASKID = taskId;
+        CUR_TYPE = type;
         Intent mIntent = new Intent(context, LoginPigAarActivity.class);
         mIntent.putExtra(PigAppConfig.TASK_ID, taskId);
         mIntent.putExtra(PigAppConfig.USER_ID, userid);

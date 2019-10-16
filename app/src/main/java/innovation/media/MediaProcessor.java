@@ -456,7 +456,8 @@ public class MediaProcessor {
         Log.e("precommit:zipimage2", "path=" + zipFile.getAbsolutePath());
 
         Map<String, String> mapbody = new HashMap<>();
-        mapbody.put("taskID", PigInnovationAiOpen.GSC_TASKID);
+        mapbody.put("taskID", PigInnovationAiOpen.getGscTaskid());
+        mapbody.put("type", String.valueOf(PigInnovationAiOpen.getCurType()));
         mapbody.put(Constants.timesFlag, timesFlag);
         mapbody.put(Constants.address, str_address);
         mapbody.put(Constants.COLLECT_TIME, PigAppConfig.during / 1000 + "");
