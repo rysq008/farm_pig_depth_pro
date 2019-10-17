@@ -20,7 +20,7 @@
         android:id="@+id/ivAttachment"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:src="@drawable/ic_launcher"
+        android:src="@drawable/pig_ic_launcher"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"/>
 

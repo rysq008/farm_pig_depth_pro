@@ -29,11 +29,8 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import innovation.utils.Toast;
-
 import com.hjq.toast.ToastUtils;
 import com.hjq.toast.style.ToastAliPayStyle;
-
 import com.innovation.pig.insurance.BuildConfig;
 import com.innovation.pig.insurance.R;
 import com.serenegiant.common.UsbBaseActivity;
@@ -43,7 +40,6 @@ import com.serenegiant.usb.UVCCamera;
 import com.serenegiant.usbcameracommon.UVCCameraHandler;
 import com.serenegiant.widget.CameraViewInterface;
 import com.serenegiant.widget.UVCCameraTextureView;
-import com.xiangchuang.risks.model.bean.GSCPigBean;
 import com.xiangchuang.risks.model.bean.RecognitionResult;
 import com.xiangchuang.risks.utils.CommonUtils;
 import com.xiangchuang.risks.utils.CounterHelper;
@@ -59,8 +55,8 @@ import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import innovation.location.LocationManager_new;
+import innovation.utils.Toast;
 
-import static com.xiangchuang.risks.view.SelectFunctionActivity_new.g_CaptivityMap;
 import static com.xiangchuang.risks.view.SelectFunctionActivity_new.g_LocationMap;
 import static com.xiangchuangtec.luolu.animalcounter.PigAppConfig.offLineModle;
 
@@ -278,7 +274,7 @@ public final class USBCameraActivity_new extends UsbBaseActivity implements Came
                                 mResultImageView.setVisibility(View.GONE);
                                 mTakePictureButton.setVisibility(View.VISIBLE);
                                 llModifier.setVisibility(View.GONE);
-                                mTotalCountTextView.setText(mTotalCount.addAndGet(result.count < 0 ? 0 : result.count)+"");
+                                mTotalCountTextView.setText(mTotalCount.addAndGet(result.count < 0 ? 0 : result.count) + "");
                                 mAutolCount.addAndGet(result.autoCount < 0 ? 0 : result.autoCount);
 
                                 uploadRecognitionResult();
@@ -305,7 +301,7 @@ public final class USBCameraActivity_new extends UsbBaseActivity implements Came
         mOldDuration = intent.getStringExtra("duration");
         mStartTime = System.currentTimeMillis();
         mCountName.setText(mSheName);
-        mTotalCountTextView.setText(mTotalCount.get()+"");
+        mTotalCountTextView.setText(mTotalCount.get() + "");
 
         mJuanCountAdapter = new JuanCountAdapter(this);
         juan_list.setAdapter(mJuanCountAdapter);
@@ -353,19 +349,19 @@ public final class USBCameraActivity_new extends UsbBaseActivity implements Came
                 setCurrentBitmap(mCameraTextureView.getBitmap());
                 mResultImageView.setVisibility(View.GONE);
                 Bitmap tBitmap = getCurrentBitmap();
-                Log.e(TAG, "ByteCount: "+tBitmap.getByteCount());
+                Log.e(TAG, "ByteCount: " + tBitmap.getByteCount());
                 if (tBitmap == null) {
                     return;
                 }
                 //检测图片质量
                 int bright = innovation.utils.ImageUtils.checkImageBright(tBitmap);
-                if(bright < 40){
+                if (bright < 40) {
                     Toast.makeText(USBCameraActivity_new.this, "图片过暗", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 showPop();
-                CounterHelper.recognitionFromNet(USBCameraActivity_new.this,tBitmap, new CounterHelper.OnImageRecognitionListener() {
+                CounterHelper.recognitionFromNet(USBCameraActivity_new.this, tBitmap, new CounterHelper.OnImageRecognitionListener() {
                     @Override
                     public void onCompleted(int count, Bitmap bitmap, String time) {
                         runOnUiThread(new Runnable() {
@@ -381,7 +377,7 @@ public final class USBCameraActivity_new extends UsbBaseActivity implements Came
                                     mNextButton.setVisibility(View.VISIBLE);
                                     llModifier.setVisibility(View.VISIBLE);
                                     etModifier.setText(count + "");
-                                    setCurrentResult(count, bitmap, null,time);
+                                    setCurrentResult(count, bitmap, null, time);
                                 } else {
                                     tempNum = 0;
                                     setCurrentResult(-1, tBitmap, null, time);
@@ -443,7 +439,7 @@ public final class USBCameraActivity_new extends UsbBaseActivity implements Came
                 mResultImageView.setVisibility(View.GONE);
                 mTakePictureButton.setVisibility(View.VISIBLE);
                 llModifier.setVisibility(View.GONE);
-                mTotalCountTextView.setText(mTotalCount.addAndGet(result.count < 0 ? 0 : result.count)+"");
+                mTotalCountTextView.setText(mTotalCount.addAndGet(result.count < 0 ? 0 : result.count) + "");
                 mAutolCount.addAndGet(result.autoCount < 0 ? 0 : result.autoCount);
                 if (isTest) {
                     testCount++;
@@ -532,9 +528,9 @@ public final class USBCameraActivity_new extends UsbBaseActivity implements Came
                         "合计%s圈 %s头 修正后%s头 时长%s秒", mRecognitionResults.size(), mAutolCount.get(), mTotalCount.get(),
                 (System.currentTimeMillis() - mStartTime) / 1000, mOldJuanCnt, mOldAutoCount, mOldTotalCount, mOldDuration);
 
-        if(offLineModle){
+        if (offLineModle) {
             //本次离线点数合计7圈，已成功保存在本地，联网后需要回到app首页待数据自动上传成功后方可查看点数数据
-            text = String.format("本次离线点数合计%d圈，点击 \"完成\" 保存至手机本地，联网后需要回到app首页待数据自动上传成功后方可查看点数数据",mRecognitionResults.size());
+            text = String.format("本次离线点数合计%d圈，点击 \"完成\" 保存至手机本地，联网后需要回到app首页待数据自动上传成功后方可查看点数数据", mRecognitionResults.size());
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(USBCameraActivity_new.this);
@@ -610,7 +606,7 @@ public final class USBCameraActivity_new extends UsbBaseActivity implements Came
                 results, USBCameraActivity_new.this, new CounterHelper.OnUploadResultListener() {
                     @Override
                     public void onCompleted(boolean succeed, String resutl) {
-                        if(g_LocationMap.containsKey(mSheId))
+                        if (g_LocationMap.containsKey(mSheId))
                             g_LocationMap.remove(mSheId);
                         runOnUiThread(new Runnable() {
                             @Override
@@ -619,7 +615,7 @@ public final class USBCameraActivity_new extends UsbBaseActivity implements Came
                                 if (succeed) {
                                     Log.e(TAG, "resutl: " + resutl.toString());
 
-                                    if("保存成功".equals(resutl.toString())){
+                                    if ("保存成功".equals(resutl.toString())) {
                                         Toast.makeText(USBCameraActivity_new.this, "保存成功", Toast.LENGTH_SHORT).show();
                                         new Handler().postDelayed(new Runnable() {
                                             @Override
@@ -640,7 +636,7 @@ public final class USBCameraActivity_new extends UsbBaseActivity implements Came
 //
 //                                                    }
 //                                                });
-                                    }else{
+                                    } else {
                                         try {
                                             JSONObject jsonObject = new JSONObject(resutl);
                                             int status = jsonObject.getInt("status");
@@ -706,7 +702,8 @@ public final class USBCameraActivity_new extends UsbBaseActivity implements Came
     protected void onStart() {
         super.onStart();
         if (DEBUG) Log.v(TAG, "onStart:");
-        mUSBMonitor.register();
+        if (mUSBMonitor != null)
+            mUSBMonitor.register();
         if (mUVCCameraView != null)
             mUVCCameraView.onResume();
         if (!mCameraHandler.isOpened()) {
@@ -822,7 +819,7 @@ public final class USBCameraActivity_new extends UsbBaseActivity implements Came
         @Override
         public void onAttach(final UsbDevice device) {
             //Toast.makeText(USBCameraActivity_new.this, "USB_DEVICE_ATTACHED", Toast.LENGTH_SHORT).show();
-            if(isCameraClose) {
+            if (isCameraClose) {
                 CameraDialog.openCamera(USBCameraActivity_new.this);
                 mCameraHandler = UVCCameraHandler.createHandler(USBCameraActivity_new.this, mUVCCameraView,
                         USE_SURFACE_ENCODER ? 0 : 1, PREVIEW_WIDTH, PREVIEW_HEIGHT, PREVIEW_MODE);
@@ -965,7 +962,7 @@ public final class USBCameraActivity_new extends UsbBaseActivity implements Came
     }
 
     private synchronized void setCurrentResult(int autoCount, Bitmap bitmap, String fileName, String time) {
-        mCurrentRecognitionResult = new RecognitionResult(mRecognitionResults.size(), autoCount, bitmap, fileName,time);
+        mCurrentRecognitionResult = new RecognitionResult(mRecognitionResults.size(), autoCount, bitmap, fileName, time);
 
         mCurrentRecognitionResult.lat = LocationManager_new.getInstance(this).currentLat;
         mCurrentRecognitionResult.lon = LocationManager_new.getInstance(this).currentLon;

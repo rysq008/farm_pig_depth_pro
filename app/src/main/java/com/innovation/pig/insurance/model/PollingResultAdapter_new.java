@@ -74,7 +74,7 @@ public class PollingResultAdapter_new extends BaseAdapter {
             public void onClick(View v) {
                 if (recordList.get(position).getCount() == 0) {
                     AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-                    dialog.setIcon(R.drawable.ic_launcher)
+                    dialog.setIcon(R.drawable.pig_ic_launcher)
                             .setTitle("提示")
                             .setMessage("该猪舍猪只数量为0")
                             .setPositiveButton("确定", new android.content.DialogInterface.OnClickListener() {

@@ -40,7 +40,7 @@ public class DropEditText extends FrameLayout implements View.OnClickListener, O
         mPopView = (WrapListView) LayoutInflater.from(context).inflate(R.layout.pop_view, null);
 
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.DropEditText, defStyle, 0);
-        mDrawableLeft = ta.getResourceId(R.styleable.DropEditText_drawableRight, R.drawable.ic_launcher);
+        mDrawableLeft = ta.getResourceId(R.styleable.DropEditText_drawableRight, R.drawable.pig_ic_launcher);
         mDropMode = ta.getInt(R.styleable.DropEditText_dropMode, 0);
         mHit = ta.getString(R.styleable.DropEditText_hint);
         ta.recycle();

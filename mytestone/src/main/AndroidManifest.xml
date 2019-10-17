@@ -9,7 +9,7 @@
         android:allowBackup="true"
         android:supportsRtl="true"
         android:label="猪险宿主工程"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/pig_ic_launcher"
         android:theme="@style/AppTheme">
         <activity android:name="andbase.com.mytesttwo.MainActivity">
             <intent-filter>

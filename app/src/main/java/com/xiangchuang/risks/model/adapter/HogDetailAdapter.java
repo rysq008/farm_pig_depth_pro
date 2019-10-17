@@ -61,7 +61,7 @@ public class HogDetailAdapter extends BaseAdapter {
 
         Glide.with(context)
                 .load(hogimages.get(position))
-                .apply(new RequestOptions().error(R.drawable.ic_launcher).placeholder(R.drawable.ic_launcher))
+                .apply(new RequestOptions().error(R.drawable.pig_ic_launcher).placeholder(R.drawable.pig_ic_launcher))
                 .into(viewHolder.hog_image);
         return convertView;
     }

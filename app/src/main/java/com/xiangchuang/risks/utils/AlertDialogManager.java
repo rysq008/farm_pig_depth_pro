@@ -60,7 +60,7 @@ public class AlertDialogManager {
             return;
         }
         AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-        dialog.setIcon(R.drawable.ic_launcher)
+        dialog.setIcon(R.drawable.pig_ic_launcher)
                 .setTitle(title)
                 .setMessage(message)
                 .setPositiveButton("确定", new android.content.DialogInterface.OnClickListener() {
@@ -80,7 +80,7 @@ public class AlertDialogManager {
             return;
         }
         AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-        dialog.setIcon(R.drawable.ic_launcher)
+        dialog.setIcon(R.drawable.pig_ic_launcher)
                 .setTitle(title)
                 .setMessage(message)
                 .setPositiveButton("重试", new android.content.DialogInterface.OnClickListener() {

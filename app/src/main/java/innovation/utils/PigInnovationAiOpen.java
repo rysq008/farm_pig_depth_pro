@@ -185,7 +185,7 @@ public class PigInnovationAiOpen {
                     skipTo(context, taskId, userid, officeCode, officeName, officeLevel, parentCode, parentOfficeName, parentOfficeCodes, farmName, type, finalPhone, finalIdcard, username);
                 } else {
                     AlertDialog.Builder builder14 = new AlertDialog.Builder(context)
-                            .setIcon(R.drawable.ic_launcher)
+                            .setIcon(R.drawable.pig_ic_launcher)
                             .setTitle("提示")
                             .setMessage((CharSequence) msg.obj)
                             .setPositiveButton("退出", new DialogInterface.OnClickListener() {

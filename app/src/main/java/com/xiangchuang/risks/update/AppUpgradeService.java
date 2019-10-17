@@ -100,7 +100,7 @@ public class AppUpgradeService extends Service {
         // 创建Notifcation对象，设置图标，提示文字,策略
         mPendingIntent = PendingIntent.getActivity(AppUpgradeService.this, R.string.app_name, completingIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
-        mNotification.icon = R.drawable.ic_launcher;
+        mNotification.icon = R.drawable.pig_ic_launcher;
         mNotification.tickerText = "开始下载";
         mNotification.contentIntent = mPendingIntent;
 

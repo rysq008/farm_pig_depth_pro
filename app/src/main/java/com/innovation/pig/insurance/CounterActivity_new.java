@@ -875,7 +875,7 @@ public class CounterActivity_new extends BaseActivity implements View.OnClickLis
 
 
         mProgressDialog.setCanceledOnTouchOutside(false);//false
-        mProgressDialog.setIcon(R.drawable.ic_launcher);
+        mProgressDialog.setIcon(R.drawable.pig_ic_launcher);
 //        mProgressDialog.setButton(ProgressDialog.BUTTON_POSITIVE, "确定", mProgClickListener);
         mProgressDialog.setMessage("正在识别......");
 //        mProgressDialog.show();

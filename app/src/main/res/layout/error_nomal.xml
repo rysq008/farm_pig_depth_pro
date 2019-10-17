@@ -23,7 +23,7 @@
             android:layout_height="50dp"
             android:layout_gravity="center"
             android:layout_marginLeft="40dp"
-            android:background="@mipmap/ic_launcher" />
+            android:background="@mipmap/pig_ic_launcher" />
 
         <TextView
             android:id="@+id/error_msg"

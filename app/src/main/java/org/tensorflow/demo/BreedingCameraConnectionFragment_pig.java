@@ -1780,7 +1780,7 @@ public class BreedingCameraConnectionFragment_pig extends Fragment implements Vi
         mProgressDialog.setCancelable(false);//false
 
         mProgressDialog.setCanceledOnTouchOutside(false);//false
-        mProgressDialog.setIcon(R.drawable.ic_launcher);
+        mProgressDialog.setIcon(R.drawable.pig_ic_launcher);
 //        mProgressDialog.setButton(ProgressDialog.BUTTON_POSITIVE, "确定", mProgClickListener);
         mProgressDialog.setMessage("正在上传......");
 //        mProgressDialog.show();
