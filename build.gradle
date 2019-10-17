@@ -41,6 +41,7 @@ allprojects {
 
 //        maven { url 'http://raw.githubusercontent.com/innovationaiaar/farmer_depth_pro/master' }
         maven { url 'http://github.com/innovationaiaar/farmer_depth_pro/raw/master' }
+        maven { url 'http://github.com/innovationaiaar/farm_pig_depth_pro/raw/master' }
     }
 }
 

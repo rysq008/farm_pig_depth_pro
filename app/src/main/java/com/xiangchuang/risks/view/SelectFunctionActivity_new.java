@@ -34,6 +34,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hjq.toast.ToastUtils;
+import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
 import com.orhanobut.logger.Logger;
 import com.xiangchuang.risks.base.BaseActivity;
@@ -65,7 +66,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -485,6 +485,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
                     android.widget.Toast.makeText(mActivity, "提交数据不能为空！", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                int[] callbackCount = {0, 0};//
                 view.setEnabled(false);
                 int farm_total_cnt = 0;
                 //第一次遍历获取：投保某一种类猪的存栏数量、猪种类、猪厂采集总数
@@ -551,9 +552,9 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
 //                } catch (IOException e) {
 //                    e.printStackTrace();
 //                }
-
+                if (AppConfig.isSDK_DEBUG())
+                    android.widget.Toast.makeText(mActivity, "本次投保猪类型总数--1："+g_TotalMap.size(), Toast.LENGTH_SHORT).show();
                 ProgressDialog progressDialog = ProgressDialog.show(this, "", "数据处理中。。。", false);
-                final int[] callbackCount = {0};
                 for (Map.Entry<String, Integer> entry : g_TotalMap.entrySet()) {
                     Map map = new HashMap();
                     map.put("taskId", taskId);
@@ -566,10 +567,12 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
                         @Override
                         public void onFailure(Call call, IOException e) {
                             callbackCount[0]++;
-                            if (callbackCount[0] == g_TotalMap.size() && !isFinishing()) {
-                                callbackCount[0] = 0;
-                                g_TotalMap.clear();
-//                                android.widget.Toast.makeText(mActivity, "猪投保失败了---》"+callbackCount[0], Toast.LENGTH_SHORT).show();
+                            if (AppConfig.isSDK_DEBUG())
+                                runOnUiThread(() -> {
+                                    android.widget.Toast.makeText(mActivity, "猪投保失败了!--2" + callbackCount[0], Toast.LENGTH_SHORT).show();
+                                });
+                            if (callbackCount[0] == g_TotalMap.size() && callbackCount[1] == 0) {
+                                callbackCount[1] = 1;
                                 runOnUiThread(() -> {
                                     progressDialog.dismiss();
                                     view.setEnabled(true);
@@ -586,9 +589,12 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
                         @Override
                         public void onResponse(Call call, Response response) throws IOException {
                             callbackCount[0]++;
-                            if (callbackCount[0] == g_TotalMap.size() && !isFinishing()) {
-                                callbackCount[0] = 0;
-                                g_TotalMap.clear();
+                            if (AppConfig.isSDK_DEBUG())
+                                runOnUiThread(() -> {
+                                    android.widget.Toast.makeText(mActivity, "猪投保成功了!--3" + callbackCount[0], Toast.LENGTH_SHORT).show();
+                                });
+                            if (callbackCount[0] == g_TotalMap.size() && callbackCount[1] == 0) {
+                                callbackCount[1] = 1;
                                 String result = "";
                                 List<GSCPigBean> listBean = null;
                                 if (response.isSuccessful()) {
@@ -599,7 +605,6 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
                                     BaseBean<List<GSCPigBean>> baseBean = gson.fromJson(result, listType);
                                     listBean = baseBean.getData();
                                 }
-//                                android.widget.Toast.makeText(mActivity, "猪投保成功了----->"+callbackCount[0], Toast.LENGTH_SHORT).show();
                                 List<GSCPigBean> finalListBean = listBean;
                                 runOnUiThread(() -> {
                                     progressDialog.dismiss();
@@ -1176,14 +1181,14 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-        PigAppConfig.UnRegistEvent(this);
         g_CaptivityMap.clear();
         g_LocationMap.clear();
         g_TotalMap.clear();
         g_SheID = null;
         g_PigType = null;
         gscPigBeans.clear();
+        PigAppConfig.UnRegistEvent(this);
+        super.onDestroy();
     }
 
     @Override

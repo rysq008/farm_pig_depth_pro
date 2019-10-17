@@ -2,11 +2,13 @@ package com.xiangchuang.risks.view;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.location.LocationManager;
+import android.os.Message;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
@@ -32,6 +34,9 @@ import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
 import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
 import com.xiangchuangtec.luolu.animalcounter.netutils.OkHttp3Util;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.tensorflow.demo.BreedingDetectorActivity_pig;
 
 import java.io.IOException;
@@ -92,6 +97,19 @@ public class ShowPollingActivity_new extends BaseActivity implements View.OnClic
         String enId = PigPreferencesUtils.getStringValue(Constants.en_id, ShowPollingActivity_new.this);
         getDataFromNet(enId);
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onHandlerMessage(Message msg){
+        if(USBCameraActivity_new.class.getSimpleName().equals(msg.obj)){
+            if(msg.what == 1){
+                mProgressDialog.setMessage("资源释放中。。。");
+                mProgressDialog.show();
+            }else if(msg.what ==2){
+                dismissProgressDialog();
+            }
+        }
+    }
+
 
     private void getDataFromNet(String enId) {
         Log.i("ShowPollingActivity", "enId" + enId);

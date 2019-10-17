@@ -16,6 +16,7 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.View;
@@ -45,6 +46,7 @@ import com.xiangchuang.risks.utils.CommonUtils;
 import com.xiangchuang.risks.utils.CounterHelper;
 import com.xiangchuangtec.luolu.animalcounter.JuanCountAdapter;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -158,6 +160,7 @@ public final class USBCameraActivity_new extends UsbBaseActivity implements Came
     private int tempNum = 0;
 
     private Dialog dialog;
+    private boolean isProcessFinsh;
 
     private Handler tHandlet = new Handler() {
         @Override
@@ -209,6 +212,14 @@ public final class USBCameraActivity_new extends UsbBaseActivity implements Came
         mResultImageView.setLayoutParams(param);
 
         count_detail = findViewById(R.id.count_detail);
+        if (mCameraHandler != null) {
+            mCameraHandler.release();
+            mCameraHandler = null;
+        }
+        if (mUSBMonitor != null) {
+            mUSBMonitor.destroy();
+            mUSBMonitor = null;
+        }
 
         mUSBMonitor = new USBMonitor(this, mOnDeviceConnectListener);
         mCameraHandler = UVCCameraHandler.createHandler(this, mUVCCameraView,
@@ -620,7 +631,13 @@ public final class USBCameraActivity_new extends UsbBaseActivity implements Came
                                         new Handler().postDelayed(new Runnable() {
                                             @Override
                                             public void run() {
-                                                finish();
+                                                isProcessFinsh = true;
+                                                Message msg = Message.obtain();
+                                                msg.what = 1;
+                                                msg.obj = USBCameraActivity_new.class.getSimpleName();
+                                                EventBus.getDefault().post(msg);
+                                                USBCameraActivity_new.this.finish();
+
                                             }
                                         }, 500);
 
@@ -648,7 +665,12 @@ public final class USBCameraActivity_new extends UsbBaseActivity implements Came
                                                 new Handler().postDelayed(new Runnable() {
                                                     @Override
                                                     public void run() {
-                                                        finish();
+                                                        isProcessFinsh = true;
+                                                        Message msg = Message.obtain();
+                                                        msg.what = 1;
+                                                        msg.obj = USBCameraActivity_new.class.getSimpleName();
+                                                        EventBus.getDefault().post(msg);
+                                                        USBCameraActivity_new.this.finish();
                                                     }
                                                 }, 500);
                                             }
@@ -690,7 +712,12 @@ public final class USBCameraActivity_new extends UsbBaseActivity implements Came
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        finish();
+                        isProcessFinsh = true;
+                        Message msg = Message.obtain();
+                        msg.what = 1;
+                        msg.obj = USBCameraActivity_new.class.getSimpleName();
+                        EventBus.getDefault().post(msg);
+                        USBCameraActivity_new.this.finish();
                     }
                 });
         builder.create();
@@ -721,7 +748,9 @@ public final class USBCameraActivity_new extends UsbBaseActivity implements Came
     @Override
     protected void onStop() {
         if (DEBUG) Log.v(TAG, "onStop:");
-        mCameraHandler.close();
+        if (mCameraHandler != null) {
+            mCameraHandler.close();
+        }
         if (mUVCCameraView != null)
             mUVCCameraView.onPause();
 //        setCameraButton(false);
@@ -740,9 +769,31 @@ public final class USBCameraActivity_new extends UsbBaseActivity implements Came
             mUSBMonitor = null;
         }
         mUVCCameraView = null;
-        super.onDestroy();
-
         ToastUtils.initStyle(new ToastAliPayStyle());
+        super.onDestroy();
+        if(isProcessFinsh){
+            if (DEBUG) Log.v(TAG, "isProcessFinsh send msg:");
+            Message msg = Message.obtain();
+            msg.what = 2;
+            msg.obj = USBCameraActivity_new.class.getSimpleName();
+            EventBus.getDefault().post(msg);
+        }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (DEBUG) Log.v(TAG, "onKeyCodeBack:");
+            isProcessFinsh = true;
+            Message msg = Message.obtain();
+            msg.what = 1;
+            msg.obj = USBCameraActivity_new.class.getSimpleName();
+            EventBus.getDefault().post(msg);
+            USBCameraActivity_new.this.finish();
+            onDestroy();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     /**
@@ -790,7 +841,8 @@ public final class USBCameraActivity_new extends UsbBaseActivity implements Came
             public void run() {
                 final SurfaceTexture st = mUVCCameraView.getSurfaceTexture();
                 if (st != null) {
-                    mCameraHandler.startPreview(new Surface(st));
+                    if (mCameraHandler != null)
+                        mCameraHandler.startPreview(new Surface(st));
                 } else {
                     if (DEBUG) Log.v(TAG, "SurfaceTexture==" + st);
                     startPreview();
@@ -831,7 +883,8 @@ public final class USBCameraActivity_new extends UsbBaseActivity implements Came
         public void onConnect(final UsbDevice device, final USBMonitor.UsbControlBlock ctrlBlock, final boolean createNew) {
             if (DEBUG) Log.v(TAG, "onConnect:");
             //Toast.makeText(USBCameraActivity.this, "USB_DEVICE_CONNECT", Toast.LENGTH_SHORT).show();
-            mCameraHandler.open(ctrlBlock);
+            if (mCameraHandler != null)
+                mCameraHandler.open(ctrlBlock);
             startPreview();
         }
 
@@ -981,10 +1034,14 @@ public final class USBCameraActivity_new extends UsbBaseActivity implements Came
     }
 
     private void wakeUpCamera() {
-        mCameraHandler.close();
+        if (mCameraHandler != null) {
+            mCameraHandler.close();
+        }
         if (mUVCCameraView != null)
             mUVCCameraView.onPause();
-        mUSBMonitor.register();
+        if (mUSBMonitor != null) {
+            mUSBMonitor.register();
+        }
         if (mUVCCameraView != null)
             mUVCCameraView.onResume();
         if (!mCameraHandler.isOpened()) {

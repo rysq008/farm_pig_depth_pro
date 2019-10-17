@@ -37,7 +37,7 @@
 -keep public class * extends android.support.v4.app.Fragment
 -keep public class * extends android.support.v4.view.ViewPager
 -keep public class * extends android.os.HandlerThread
--keep public class * extends com.serenegiant.**{*;}
+#-keep public class * extends com.serenegiant.**{*;}
 
 -dontwarn com.android.volley.**
 -keep class com.android.volley.**{*;}
@@ -578,3 +578,4 @@ public static java.lang.String TABLENAME;
     public <fields>;
     public <methods>;
 }
+-keep public class com.xiangchuang.risks.view.USBCameraActivity_new {*;}

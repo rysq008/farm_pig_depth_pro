@@ -1,5 +1,6 @@
 package innovation.utils;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -80,12 +81,15 @@ public class PigInnovationAiOpen {
         Message msg = (Message) obj;
         for (Map.Entry<Object, Handler> entry : mHandlerMap.entrySet()) {
             Handler handler = entry.getValue();
+            Activity act = (Activity) entry.getKey();
 //            if(handler.obtainMessage(msg.what,msg.obj)!=null){
 //                Message _msg = new Message();
 //                _msg.what = msg.what;
 //                _msg.obj= msg.obj;
 //                msg = _msg;
 //            }
+            if(AppConfig.isSDK_DEBUG())
+                Toast.makeText(act, act.getClass().getSimpleName()+",循环发送结果："+mHandlerMap.size(), Toast.LENGTH_SHORT).show();
             Message _msg = new Message();
             _msg.obj = msg.obj;
             _msg.what = msg.what;

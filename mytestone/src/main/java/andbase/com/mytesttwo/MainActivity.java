@@ -203,13 +203,13 @@ public class MainActivity extends Activity {
                                     Log.d("aaaaaa", "handleMessage: ---->"+bean.string());
                                 }
                                 if(msg.what == PigInnovationAiOpen.INSURE) {
-                                    innovation.utils.Toast.makeText(MainActivity.this, "猪的---》投保返回", innovation.utils.Toast.LENGTH_LONG).show();
+                                    Toast.makeText(MainActivity.this, "猪的---》投保返回", Toast.LENGTH_LONG).show();
                                 }
 
                                 if(msg.what == PigInnovationAiOpen.PAY) {
 
                                     List<GSCPigBean> beans = (List<GSCPigBean>)msg.obj;
-                                    innovation.utils.Toast.makeText(MainActivity.this, "理赔返回", innovation.utils.Toast.LENGTH_LONG).show();
+                                    Toast.makeText(MainActivity.this, "理赔返回", Toast.LENGTH_LONG).show();
                                 }
 
                                 return true;

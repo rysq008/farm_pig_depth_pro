@@ -140,7 +140,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             }
         });
         super.onDestroy();
-//        EventBus.getDefault().unregister(this);
+        EventBus.getDefault().unregister(this);
     }
 
     public void showProgressDialog(Activity activity) {
@@ -186,6 +186,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void dismissLoadDialog() {
         if (mActivity != null && mLoadProgressDialog != null && mLoadProgressDialog.isShowing()) {
             mLoadProgressDialog.dismiss();
+        }
+    }
+
+    protected void dismissProgressDialog() {
+        if (mActivity != null && mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
         }
     }
 
