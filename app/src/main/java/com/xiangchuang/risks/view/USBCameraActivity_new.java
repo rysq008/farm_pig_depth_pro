@@ -631,11 +631,6 @@ public final class USBCameraActivity_new extends UsbBaseActivity implements Came
                                         new Handler().postDelayed(new Runnable() {
                                             @Override
                                             public void run() {
-                                                isProcessFinsh = true;
-                                                Message msg = Message.obtain();
-                                                msg.what = 1;
-                                                msg.obj = USBCameraActivity_new.class.getSimpleName();
-                                                EventBus.getDefault().post(msg);
                                                 USBCameraActivity_new.this.finish();
 
                                             }
@@ -665,11 +660,6 @@ public final class USBCameraActivity_new extends UsbBaseActivity implements Came
                                                 new Handler().postDelayed(new Runnable() {
                                                     @Override
                                                     public void run() {
-                                                        isProcessFinsh = true;
-                                                        Message msg = Message.obtain();
-                                                        msg.what = 1;
-                                                        msg.obj = USBCameraActivity_new.class.getSimpleName();
-                                                        EventBus.getDefault().post(msg);
                                                         USBCameraActivity_new.this.finish();
                                                     }
                                                 }, 500);
@@ -712,11 +702,6 @@ public final class USBCameraActivity_new extends UsbBaseActivity implements Came
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        isProcessFinsh = true;
-                        Message msg = Message.obtain();
-                        msg.what = 1;
-                        msg.obj = USBCameraActivity_new.class.getSimpleName();
-                        EventBus.getDefault().post(msg);
                         USBCameraActivity_new.this.finish();
                     }
                 });
@@ -812,11 +797,6 @@ public final class USBCameraActivity_new extends UsbBaseActivity implements Came
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (DEBUG) Log.v(TAG, "onKeyCodeBack:");
-            isProcessFinsh = true;
-//            Message msg = Message.obtain();
-//            msg.what = 1;
-//            msg.obj = USBCameraActivity_new.class.getSimpleName();
-//            EventBus.getDefault().post(msg);
             USBCameraActivity_new.this.finish();
             return true;
         }

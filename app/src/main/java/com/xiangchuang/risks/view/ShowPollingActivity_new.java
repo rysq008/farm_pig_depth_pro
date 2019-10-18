@@ -98,19 +98,6 @@ public class ShowPollingActivity_new extends BaseActivity implements View.OnClic
         getDataFromNet(enId);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onHandlerMessage(Message msg){
-        if(USBCameraActivity_new.class.getSimpleName().equals(msg.obj)){
-            if(msg.what == 1){
-                mProgressDialog.setMessage("资源释放中。。。");
-                mProgressDialog.show();
-            }else if(msg.what ==2){
-                dismissProgressDialog();
-            }
-        }
-    }
-
-
     private void getDataFromNet(String enId) {
         Log.i("ShowPollingActivity", "enId" + enId);
 //        String url = "http://test1.innovationai.cn:8081/numberCheck/app/sheList";
