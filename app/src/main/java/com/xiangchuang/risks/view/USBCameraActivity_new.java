@@ -746,20 +746,55 @@ public final class USBCameraActivity_new extends UsbBaseActivity implements Came
     }
 
     @Override
-    protected void onStop() {
-        if (DEBUG) Log.v(TAG, "onStop:");
+    protected void onPause() {
+        if (DEBUG) Log.v(TAG, "onPause:");
         if (mCameraHandler != null) {
             mCameraHandler.close();
         }
         if (mUVCCameraView != null)
             mUVCCameraView.onPause();
 //        setCameraButton(false);
-        super.onStop();
+        super.onPause();
     }
 
+//    @Override
+//    protected void onStop() {
+//        if (DEBUG) Log.v(TAG, "onStop:");
+//        if (mCameraHandler != null) {
+//            mCameraHandler.close();
+//        }
+//        if (mUVCCameraView != null)
+//            mUVCCameraView.onPause();
+////        setCameraButton(false);
+//        super.onStop();
+//    }
+
+//    @Override
+//    public void onDestroy() {
+//        if (DEBUG) Log.v(TAG, "onDestroy:");
+//        if (mCameraHandler != null) {
+//            mCameraHandler.release();
+//            mCameraHandler = null;
+//        }
+//        if (mUSBMonitor != null) {
+//            mUSBMonitor.destroy();
+//            mUSBMonitor = null;
+//        }
+//        mUVCCameraView = null;
+//        ToastUtils.initStyle(new ToastAliPayStyle());
+//        super.onDestroy();
+//        if(isProcessFinsh){
+//            if (DEBUG) Log.v(TAG, "isProcessFinsh send msg:");
+//            Message msg = Message.obtain();
+//            msg.what = 2;
+//            msg.obj = USBCameraActivity_new.class.getSimpleName();
+//            EventBus.getDefault().post(msg);
+//        }
+//    }
+
     @Override
-    public void onDestroy() {
-        if (DEBUG) Log.v(TAG, "onDestroy:");
+    public void finish() {
+        if (DEBUG) Log.v(TAG, "finish:");
         if (mCameraHandler != null) {
             mCameraHandler.release();
             mCameraHandler = null;
@@ -770,14 +805,7 @@ public final class USBCameraActivity_new extends UsbBaseActivity implements Came
         }
         mUVCCameraView = null;
         ToastUtils.initStyle(new ToastAliPayStyle());
-        super.onDestroy();
-        if(isProcessFinsh){
-            if (DEBUG) Log.v(TAG, "isProcessFinsh send msg:");
-            Message msg = Message.obtain();
-            msg.what = 2;
-            msg.obj = USBCameraActivity_new.class.getSimpleName();
-            EventBus.getDefault().post(msg);
-        }
+        super.finish();
     }
 
     @Override
@@ -785,12 +813,11 @@ public final class USBCameraActivity_new extends UsbBaseActivity implements Came
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (DEBUG) Log.v(TAG, "onKeyCodeBack:");
             isProcessFinsh = true;
-            Message msg = Message.obtain();
-            msg.what = 1;
-            msg.obj = USBCameraActivity_new.class.getSimpleName();
-            EventBus.getDefault().post(msg);
+//            Message msg = Message.obtain();
+//            msg.what = 1;
+//            msg.obj = USBCameraActivity_new.class.getSimpleName();
+//            EventBus.getDefault().post(msg);
             USBCameraActivity_new.this.finish();
-            onDestroy();
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -839,12 +866,20 @@ public final class USBCameraActivity_new extends UsbBaseActivity implements Came
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                final SurfaceTexture st = mUVCCameraView.getSurfaceTexture();
-                if (st != null) {
-                    if (mCameraHandler != null)
-                        mCameraHandler.startPreview(new Surface(st));
-                } else {
-                    if (DEBUG) Log.v(TAG, "SurfaceTexture==" + st);
+                if(mUVCCameraView != null){
+                    final SurfaceTexture st = mUVCCameraView.getSurfaceTexture();
+                    if (st != null) {
+                        if (mCameraHandler != null)
+                            mCameraHandler.startPreview(new Surface(st));
+                    } else {
+                        if (DEBUG) Log.v(TAG, "SurfaceTexture==" + st);
+                        startPreview();
+                    }
+                }else{
+                    final View view = findViewById(R.id.camera_view);
+                    //view.setOnLongClickListener(mOnLongClickListener);
+                    mUVCCameraView = (CameraViewInterface) view;
+                    mUVCCameraView.setAspectRatio(PREVIEW_WIDTH / (float) PREVIEW_HEIGHT);
                     startPreview();
                 }
             }
