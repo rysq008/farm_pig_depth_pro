@@ -5,30 +5,40 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.os.Message;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.hjq.toast.ToastUtils;
 import com.innovation.pig.insurance.AppConfig;
 import com.innovation.pig.insurance.R;
 import com.xiangchuang.risks.base.BaseActivity;
+import com.xiangchuang.risks.model.adapter.PigTypeListAdapter;
+import com.xiangchuang.risks.model.bean.PigTypeBean;
 import com.xiangchuang.risks.model.bean.SheListBean;
 import com.xiangchuang.risks.utils.AVOSCloudUtils;
 import com.xiangchuang.risks.utils.AlertDialogManager;
 import com.xiangchuang.risks.utils.CounterHelper;
 import com.xiangchuang.risks.utils.PermissionsDelegate;
 import com.xiangchuang.risks.utils.PigPreferencesUtils;
+import com.xiangchuangtec.luolu.animalcounter.JPushStatsConfig;
 import com.xiangchuangtec.luolu.animalcounter.model.PollingResultAdapter_new;
 import com.xiangchuangtec.luolu.animalcounter.netutils.Constants;
 import com.xiangchuangtec.luolu.animalcounter.netutils.GsonUtils;
@@ -63,6 +73,7 @@ public class ShowPollingActivity_new extends BaseActivity implements View.OnClic
     ListView mshowpollingresult_list;
     RelativeLayout rlTitle;
     ImageView ivCancel;
+    TextView mAddPigHouse;
 
     private String recodetitle;
     private String recodenumber;
@@ -71,6 +82,7 @@ public class ShowPollingActivity_new extends BaseActivity implements View.OnClic
     final PermissionsDelegate permissionsDelegate = new PermissionsDelegate(this);
 
     private List<SheInfo> sheInfoList;
+    private PopupWindow popupWindow;
 
     @Override
     protected int getLayoutId() {
@@ -87,6 +99,11 @@ public class ShowPollingActivity_new extends BaseActivity implements View.OnClic
         ivCancel = findViewById(R.id.iv_cancel);
 
         ivCancel.setOnClickListener(this);
+//------------------------------------------------------------------------------------------///
+        mAddPigHouse = findViewById(R.id.tv_exit);
+        mAddPigHouse.setVisibility(View.VISIBLE);
+        mAddPigHouse.setOnClickListener(this);
+        mAddPigHouse.setText("添加猪舍");
     }
 
     @Override
@@ -286,6 +303,9 @@ public class ShowPollingActivity_new extends BaseActivity implements View.OnClic
     public void onClick(View view) {
         if (view.getId() == R.id.iv_cancel) {
             finish();
+        }else if(view.getId() == R.id.tv_exit){
+            JPushStatsConfig.onCountEvent(this, "hoggery", null);
+            this.goToActivity(PigHouseListActivity.class, (Bundle) null);
         }
 
     }

@@ -8,11 +8,13 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -49,6 +51,7 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 import static com.xiangchuang.risks.utils.MyTextUtil.isEmojiCharacter;
+import static com.xiangchuangtec.luolu.animalcounter.PigAppConfig.PIG_DEPTH_JOIN;
 
 public class PigHouseListActivity extends BaseActivity {
 
@@ -71,6 +74,7 @@ public class PigHouseListActivity extends BaseActivity {
     private int nengfanNo = 0;
     private int baoyuNo = 0;
     private int houbeiNo = 0;
+    RelativeLayout add_layout;
 
     @Override
     protected int getLayoutId() {
@@ -106,6 +110,8 @@ public class PigHouseListActivity extends BaseActivity {
         popupWindow.setBackgroundDrawable(new BitmapDrawable());
         popupWindow.setFocusable(true);
         popupWindow.setOutsideTouchable(true);
+        if (PIG_DEPTH_JOIN)
+            popupWindow.setOutsideTouchable(false);
         popupWindow.setContentView(popView);
 
         pigTypeListAdapter = new PigTypeListAdapter(R.layout.item_type);
@@ -128,7 +134,8 @@ public class PigHouseListActivity extends BaseActivity {
             }
         });
 
-        findViewById(R.id.rl_add_pig_house).setOnClickListener(new View.OnClickListener() {
+        add_layout = findViewById(R.id.rl_add_pig_house);
+        add_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 popupWindow.showAtLocation(PigHouseListActivity.this.findViewById(R.id.pig_house_list_layout), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
@@ -244,10 +251,11 @@ public class PigHouseListActivity extends BaseActivity {
         Logger.i("后备：" + houbeiNo + "");
 
         pigHouseListAdapter.setNewData(data);
+        add_layout.performClick();
     }
 
     private void getPigType() {
-        if(isFinishing()) {
+        if (isFinishing()) {
             return;
         }
         mLoadProgressDialog.show();
@@ -368,7 +376,7 @@ public class PigHouseListActivity extends BaseActivity {
     AlertDialog mDialog;
 
     private void addPigHouse() {
-        if(isFinishing()) {
+        if (isFinishing()) {
             return;
         }
         Map<String, String> mapbody = new HashMap<>();
@@ -384,6 +392,9 @@ public class PigHouseListActivity extends BaseActivity {
                     public void run() {
                         mProgressDialog.dismiss();
                         Toast.makeText(PigHouseListActivity.this, "添加摄像头失败，请检查网络后重试。", Toast.LENGTH_SHORT).show();
+                        if (PIG_DEPTH_JOIN) {
+                            PigHouseListActivity.this.finish();
+                        }
                     }
                 });
             }
@@ -407,12 +418,16 @@ public class PigHouseListActivity extends BaseActivity {
                                 AlertDialogManager.showMessageDialogone(PigHouseListActivity.this, "提示", bean.getMsg(), true, "", new AlertDialogManager.DialogInterface() {
                                     @Override
                                     public void onPositive() {
-
+                                        if (PIG_DEPTH_JOIN) {
+                                            PigHouseListActivity.this.finish();
+                                        }
                                     }
 
                                     @Override
                                     public void onNegative() {
-
+                                        if (PIG_DEPTH_JOIN) {
+                                            PigHouseListActivity.this.finish();
+                                        }
                                     }
                                 });
                             }
@@ -422,8 +437,9 @@ public class PigHouseListActivity extends BaseActivity {
                             @Override
                             public void run() {
                                 popupWindow.dismiss();
-                                getDataFromNet();
 
+                                if (!PIG_DEPTH_JOIN)
+                                    getDataFromNet();
                                 //改完
                                 AlertDialog.Builder builder = new AlertDialog.Builder(PigHouseListActivity.this);
                                 builder.setView(R.layout.dialog_custom_view);
@@ -435,8 +451,11 @@ public class PigHouseListActivity extends BaseActivity {
                                     @Override
                                     public void run() {
                                         mDialog.dismiss();
+                                        if (PIG_DEPTH_JOIN)
+                                            PigHouseListActivity.this.finish();
                                     }
                                 }, 1000);
+
                             }
                         });
                     }

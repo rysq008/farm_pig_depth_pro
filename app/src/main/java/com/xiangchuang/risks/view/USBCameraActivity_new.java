@@ -713,6 +713,8 @@ public final class USBCameraActivity_new extends UsbBaseActivity implements Came
     @Override
     protected void onStart() {
         super.onStart();
+        if(mUSBMonitor == null)
+            mUSBMonitor = new USBMonitor(this, mOnDeviceConnectListener);
         if (DEBUG) Log.v(TAG, "onStart:");
         if (mUSBMonitor != null)
             mUSBMonitor.register();

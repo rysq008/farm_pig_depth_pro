@@ -9,6 +9,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.LocationManager;
@@ -192,6 +193,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
         if (!PIG_DEPTH_JOIN) {
             rlCompanyInfo.setOnClickListener(this);
         }
+        findViewById(R.id.cv_two_func).setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -553,7 +555,7 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
 //                    e.printStackTrace();
 //                }
                 if (AppConfig.isSDK_DEBUG())
-                    android.widget.Toast.makeText(mActivity, "本次投保猪类型总数--1："+g_TotalMap.size(), Toast.LENGTH_SHORT).show();
+                    android.widget.Toast.makeText(mActivity, "本次投保猪类型总数--1--：" + g_TotalMap.size(), Toast.LENGTH_SHORT).show();
                 ProgressDialog progressDialog = ProgressDialog.show(this, "", "数据处理中。。。", false);
                 for (Map.Entry<String, Integer> entry : g_TotalMap.entrySet()) {
                     Map map = new HashMap();
@@ -569,20 +571,23 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
                             callbackCount[0]++;
                             if (AppConfig.isSDK_DEBUG())
                                 runOnUiThread(() -> {
-                                    android.widget.Toast.makeText(mActivity, "猪投保失败了!--2" + callbackCount[0], Toast.LENGTH_SHORT).show();
+                                    android.widget.Toast.makeText(mActivity, "猪投保失败了!--2--" + callbackCount[0], Toast.LENGTH_SHORT).show();
                                 });
+                            Log.d(TAG, "onFailure: -->" + e.getMessage());
                             if (callbackCount[0] == g_TotalMap.size() && callbackCount[1] == 0) {
                                 callbackCount[1] = 1;
-                                runOnUiThread(() -> {
-                                    progressDialog.dismiss();
-                                    view.setEnabled(true);
-                                    Message msg = Message.obtain();
-                                    msg.obj = null;
-                                    msg.what = PigInnovationAiOpen.INSURE;
-                                    PigInnovationAiOpen.getInstance().postEventEvent(msg);
-                                    SelectFunctionActivity_new.this.finish();
+                                retryDialog(view, new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        progressDialog.dismiss();
+                                        view.setEnabled(true);
+                                        Message msg = Message.obtain();
+                                        msg.obj = null;
+                                        msg.what = PigInnovationAiOpen.INSURE;
+                                        PigInnovationAiOpen.getInstance().postEventEvent(msg);
+                                        SelectFunctionActivity_new.this.finish();
+                                    }
                                 });
-
                             }
                         }
 
@@ -591,30 +596,44 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
                             callbackCount[0]++;
                             if (AppConfig.isSDK_DEBUG())
                                 runOnUiThread(() -> {
-                                    android.widget.Toast.makeText(mActivity, "猪投保成功了!--3" + callbackCount[0], Toast.LENGTH_SHORT).show();
+                                    android.widget.Toast.makeText(mActivity, "猪投保成功了!--3--" + callbackCount[0], Toast.LENGTH_SHORT).show();
                                 });
                             if (callbackCount[0] == g_TotalMap.size() && callbackCount[1] == 0) {
                                 callbackCount[1] = 1;
-                                String result = "";
+                                String result = response.body().string();
                                 List<GSCPigBean> listBean = null;
                                 if (response.isSuccessful()) {
-                                    result = response.body().string();
                                     Type listType = new TypeToken<BaseBean<List<GSCPigBean>>>() {
                                     }.getType();
                                     Gson gson = new Gson();
                                     BaseBean<List<GSCPigBean>> baseBean = gson.fromJson(result, listType);
                                     listBean = baseBean.getData();
+                                    List<GSCPigBean> finalListBean = listBean;
+                                    runOnUiThread(() -> {
+                                        progressDialog.dismiss();
+                                        view.setEnabled(true);
+                                        Message msg = Message.obtain();
+                                        msg.obj = finalListBean;//arrayList;
+                                        msg.what = PigInnovationAiOpen.INSURE;
+                                        PigInnovationAiOpen.getInstance().postEventEvent(msg);
+                                        SelectFunctionActivity_new.this.finish();
+                                    });
+                                }else{
+                                    retryDialog(view, new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            progressDialog.dismiss();
+                                            view.setEnabled(true);
+                                            Message msg = Message.obtain();
+                                            msg.obj = null;
+                                            msg.what = PigInnovationAiOpen.INSURE;
+                                            PigInnovationAiOpen.getInstance().postEventEvent(msg);
+                                            SelectFunctionActivity_new.this.finish();
+                                        }
+                                    });
                                 }
-                                List<GSCPigBean> finalListBean = listBean;
-                                runOnUiThread(() -> {
-                                    progressDialog.dismiss();
-                                    view.setEnabled(true);
-                                    Message msg = Message.obtain();
-                                    msg.obj = finalListBean;//arrayList;
-                                    msg.what = PigInnovationAiOpen.INSURE;
-                                    PigInnovationAiOpen.getInstance().postEventEvent(msg);
-                                    SelectFunctionActivity_new.this.finish();
-                                });
+                                Log.d(TAG, "onResponse: -->" + result);
+
                             }
                         }
                     });
@@ -633,6 +652,26 @@ public class SelectFunctionActivity_new extends BaseActivity implements OnClickL
                 view.setEnabled(true);
             }
         }
+    }
+
+    private void retryDialog(View view, Runnable runnable) {
+        if (view == null) {
+            android.widget.Toast.makeText(mActivity, "view对象不能为空！", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        runOnUiThread(()->{
+            AlertDialog dialog = new AlertDialog.Builder(this).setTitle("提示").setMessage("提交失败，请重试。").setIcon(R.drawable.cowface).setPositiveButton("重试", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    view.performClick();
+                }
+            }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (runnable != null) runnable.run();;
+                }
+            }).show();
+        });
     }
 
     private void goToPrePayList() {

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,12 +23,9 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.farm.innovation.bean.CattleBean;
-import com.innovationai.pigweight.event.EventManager;
 import com.xiangchuang.risks.model.bean.GSCPigBean;
-import com.xiangchuang.risks.view.LoginFamerActivity;
 
 import java.util.List;
-import java.util.Map;
 
 import innovation.utils.FarmInnovationAiOpen;
 import innovation.utils.PigInnovationAiOpen;
@@ -181,34 +177,38 @@ public class MainActivity extends Activity {
 //                }
 //            });
             TextView tv = (TextView) view;
-            if(true){
+            if (true) {
                 Glide.with(this).asBitmap().apply(new RequestOptions())
                         .load("http://47.92.167.61:3389/ftn/20191015/1411/1571130593613/20191015050935589.mp4")
                         .into(new SimpleTarget<Bitmap>() {
                             @Override
                             public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                                     tv.setBackground(new BitmapDrawable(resource));
+                                tv.setBackground(new BitmapDrawable(resource));
                             }
                         });
                 final int[] n = {0};
                 PigInnovationAiOpen.getInstance().requestInnovationApi(this, "1174898336404176634", "89979dc663caa2580164f88b57796251",
-                        "14112100", "文水县支公司", "3","14119900","总公司/山西分公司/吕梁市中心支公司/文水县支公司",
+                        "14112100", "文水县支公司", "3", "14119900", "总公司/山西分公司/吕梁市中心支公司/文水县支公司",
                         "00000000,14000000,14119900,", "文水县养殖场", PigInnovationAiOpen.INSURE, "test", new Handler.Callback() {
                             @Override
                             public boolean handleMessage(Message msg) {
                                 n[0]++;
-                                Toast.makeText(MainActivity.this, "投保返回--->"+n[0], Toast.LENGTH_LONG).show();
-                                List<GSCPigBean> beanS = (List<GSCPigBean>) msg.obj;
-                                for (GSCPigBean bean:beanS) {
-                                    Log.d("aaaaaa", "handleMessage: ---->"+bean.string());
+                                Toast.makeText(MainActivity.this, "投保返回--->" + n[0], Toast.LENGTH_LONG).show();
+                                if (msg.obj == null) {
+                                    Toast.makeText(MainActivity.this, "SDK返回数据为空！", Toast.LENGTH_SHORT).show();
+                                    return true;
                                 }
-                                if(msg.what == PigInnovationAiOpen.INSURE) {
+                                List<GSCPigBean> beanS = (List<GSCPigBean>) msg.obj;
+                                for (GSCPigBean bean : beanS) {
+                                    Log.d("aaaaaa", "handleMessage: ---->" + bean.string());
+                                }
+                                if (msg.what == PigInnovationAiOpen.INSURE) {
                                     Toast.makeText(MainActivity.this, "猪的---》投保返回", Toast.LENGTH_LONG).show();
                                 }
 
-                                if(msg.what == PigInnovationAiOpen.PAY) {
+                                if (msg.what == PigInnovationAiOpen.PAY) {
 
-                                    List<GSCPigBean> beans = (List<GSCPigBean>)msg.obj;
+                                    List<GSCPigBean> beans = (List<GSCPigBean>) msg.obj;
                                     Toast.makeText(MainActivity.this, "理赔返回", Toast.LENGTH_LONG).show();
                                 }
 

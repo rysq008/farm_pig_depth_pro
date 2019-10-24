@@ -1269,7 +1269,7 @@ public class BreedingCameraConnectionFragment_pig extends Fragment implements Vi
             return;
         }
         //mMediaRecorder = new MediaRecorder();
-        mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+//        mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
         mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
 
@@ -1287,7 +1287,7 @@ public class BreedingCameraConnectionFragment_pig extends Fragment implements Vi
         mMediaRecorder.setVideoSize(640, 480);
 
         mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
-        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+//        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
         //解决录制视频, 播放器横向问题
         mMediaRecorder.setOrientationHint(90);
         try {
@@ -1686,6 +1686,10 @@ public class BreedingCameraConnectionFragment_pig extends Fragment implements Vi
                             });
                         }
                     });
+                }else{
+                    mProgressDialog.dismiss();
+                    android.widget.Toast.makeText(activity, "视频录制失败！", Toast.LENGTH_SHORT).show();
+                    activity.finish();
                 }
 
 
