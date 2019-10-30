@@ -13,15 +13,14 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
-
 import com.xiangchuang.risks.utils.PigPreferencesUtils;
 import com.xiangchuangtec.luolu.animalcounter.PigAppConfig;
 import com.xiangchuangtec.luolu.animalcounter.Recognition;
 import com.xiangchuangtec.luolu.animalcounter.Utils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 
 /**
@@ -38,40 +37,30 @@ public class RecognitionView extends View implements TextToSpeech.OnInitListener
 
     public RecognitionView(Context context) {
         super(context);
-        textSize = Utils.setAttributes(context, rectPaint, textPaint);
-        textToSpeech = new TextToSpeech(PigAppConfig.getAppContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                textToSpeech.setLanguage(Locale.CHINESE);
-                textToSpeech.setPitch(0.3f);
-                // textToSpeech.speak("Hello！大家好，我是小猪", TextToSpeech.QUEUE_FLUSH, null);
-            }
-        });
+        init(context);
     }
 
     public RecognitionView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        textSize = Utils.setAttributes(context, rectPaint, textPaint);
-//        textSize = Utils.setAttributes(context, rectPaint, textPaint);
-        textToSpeech = new TextToSpeech(PigAppConfig.getAppContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                textToSpeech.setLanguage(Locale.CHINESE);
-                textToSpeech.setPitch(0.3f);
-                //           textToSpeech.speak("Hello！大家好，我是小猪", TextToSpeech.QUEUE_FLUSH, null);
-            }
-        });
+        init(context);
     }
 
     public RecognitionView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init(context);
+    }
+
+    private void init(Context context) {
         textSize = Utils.setAttributes(context, rectPaint, textPaint);
         textToSpeech = new TextToSpeech(PigAppConfig.getAppContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
-                textToSpeech.setLanguage(Locale.CHINESE);
-                textToSpeech.setPitch(0.3f);
-                // textToSpeech.speak("Hello！大家好，我是小猪", TextToSpeech.QUEUE_FLUSH, null);
+                if (status == TextToSpeech.SUCCESS && null != textToSpeech) {
+                    textToSpeech.setLanguage(Locale.CHINESE);
+                    textToSpeech.setPitch(0.3f);
+                } else {
+                    Log.d(TAG, "onInit: --->" + "TextToSpeech init fail !");
+                }
             }
         });
     }
@@ -127,7 +116,7 @@ public class RecognitionView extends View implements TextToSpeech.OnInitListener
         String toSpeak = count + "头";
         Long currentDateTimeString = System.currentTimeMillis();// && (currentDateTimeString%2)==0
         if (count > 0) {
-            Log.i("===isfleg====", PigPreferencesUtils.getBooleanValue("isfleg", PigAppConfig.getAppContext())+"");
+            Log.i("===isfleg====", PigPreferencesUtils.getBooleanValue("isfleg", PigAppConfig.getAppContext()) + "");
             if (!PigPreferencesUtils.getBooleanValue("isfleg", PigAppConfig.getAppContext())) {
                 textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_ADD, null);
             }
