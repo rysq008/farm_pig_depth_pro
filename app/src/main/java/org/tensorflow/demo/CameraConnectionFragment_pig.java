@@ -1092,7 +1092,7 @@ public class CameraConnectionFragment_pig extends Fragment implements View.OnCli
             return;
         }
         //mMediaRecorder = new MediaRecorder();
-        mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+//        mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
         mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         if (Global.model == Model.BUILD.value()) {
@@ -1113,7 +1113,7 @@ public class CameraConnectionFragment_pig extends Fragment implements View.OnCli
         mMediaRecorder.setVideoSize(640, 480);
 
         mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
-        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+//        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
         //解决录制视频, 播放器横向问题
         mMediaRecorder.setOrientationHint(90);
         try {

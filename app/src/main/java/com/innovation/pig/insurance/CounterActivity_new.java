@@ -1003,10 +1003,10 @@ public class CounterActivity_new extends BaseActivity implements View.OnClickLis
         mRecorder.reset();
         mRecorder.setCamera(camera1);
         mRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
-        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+//        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         mRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
-        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+//        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 
       /*  if (mParam == null) {
             mParam = camera1.getParameters();

@@ -303,7 +303,7 @@ public class SmallVideoActivity extends BaseActivity implements SurfaceHolder.Ca
                 //从相机采集视频
                 mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
                 // 从麦克采集音频信息
-                mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+//                mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
                 // TODO: 2016/10/20  设置视频格式
                 mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
                 mMediaRecorder.setVideoSize(videoWidth, videoHeight);
@@ -313,7 +313,7 @@ public class SmallVideoActivity extends BaseActivity implements SurfaceHolder.Ca
 //                mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.DEFAULT);
                 mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
 //                mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-                mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+//                mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
 
 //                getOptimalSize(mCamera.getParameters().getSupportedVideoSizes(), videoWidth, videoHeight);
 

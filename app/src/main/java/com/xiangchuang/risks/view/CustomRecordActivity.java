@@ -538,13 +538,13 @@ public class CustomRecordActivity extends BaseActivity implements View.OnClickLi
         mediaRecorder.setPreviewDisplay(mSurfaceHolder.getSurface());
 
         //1.设置采集声音
-        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+//        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         //设置采集图像
         mediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
         //2.设置视频，音频的输出格式 mp4
         mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         //3.设置音频的编码格式
-        mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+//        mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
         //设置图像的编码格式
         mediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
         //设置立体声
@@ -579,11 +579,11 @@ public class CustomRecordActivity extends BaseActivity implements View.OnClickLi
         } else {
             mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
             mediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
-            mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+//            mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
             mediaRecorder.setVideoEncodingBitRate(600000);
             mediaRecorder.setVideoFrameRate(20);
         }
-        mediaRecorder.setAudioEncodingBitRate(44100);
+//        mediaRecorder.setAudioEncodingBitRate(44100);
 
         //设置码率
         mediaRecorder.setVideoEncodingBitRate(1 * 1024 * 1024);
