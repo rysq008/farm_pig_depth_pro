@@ -1,5 +1,7 @@
 package com.farm.innovation.utils;
 
+import android.util.Log;
+
 /**
  * Created by Luolu on 2018/10/30.
  * InnovationAI
@@ -100,13 +102,13 @@ public class Rot2AngleType {
 
     public static int getYakAngleType(float rotY) {
         int angleType = 10;
-        float  angleY;
+        float angleY;
         //弧度转角度
         angleY = (float) (rotY * 180 / 3.14);
 
         if (angleY >= -90 && angleY <= -25) {
             angleType = 1;
-        } else if (angleY >= -12 && angleY <= 12) {
+        } else if (angleY >= -18 && angleY <= 18) {
             angleType = 2;
         } else if (angleY >= 25 && angleY <= 90) {
             angleType = 3;
@@ -115,5 +117,37 @@ public class Rot2AngleType {
         }
 
         return angleType;
+    }
+
+    public static boolean getYakAngleType(int checkAngle, int[] pointsExists) {
+        int angleType = 10;
+        if (checkAngle == 1) {
+            if (pointsExists[8] + pointsExists[9] > 0) {
+                return false;
+            }
+            if (pointsExists[13] == 0) {
+                return false;
+            }
+        } else if (checkAngle == 2) {
+            if (pointsExists[8] + pointsExists[13] > 0) {
+                return false;
+            }
+            return true;
+        } else if (checkAngle == 3) {
+            boolean isFlag = true;
+            if (pointsExists[12] + pointsExists[13] > 0) {
+                isFlag = false;
+            }
+
+            if (pointsExists[8] == 0) {
+                isFlag = false;
+            }
+            Log.e("Rot2AngleType", "isFlag: " + isFlag + " >>> " + pointsExists[12] + " --- " + pointsExists[13] + "---" + pointsExists[8]);
+            return isFlag;
+
+        }
+        Log.e("Rot2AngleType", "getYakAngleType: " + pointsExists[12] + "____" + pointsExists[13] + "____" + pointsExists[8]);
+        return true;
+
     }
 }

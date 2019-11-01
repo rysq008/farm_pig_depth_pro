@@ -114,7 +114,7 @@ public class MainActivity extends Activity {
                      */
                     FarmInnovationAiOpen.getInstance().requestInnovationApi(MainActivity.this, "98765432101", "89979dc663caa2580164f88b57796251",
                             "14112100", "文水县支公司", "总公司/山西分公司/吕梁市中心支公司/文水县支公司",
-                            "00000000,14000000,14119900,", FarmInnovationAiOpen.INSURE, "111111111111111111",
+                            "00000000,14000000,14119900,", FarmInnovationAiOpen.PAY, "111111111111111111",
                             "test", new Handler.Callback() {
                                 @Override
                                 public boolean handleMessage(Message msg) {

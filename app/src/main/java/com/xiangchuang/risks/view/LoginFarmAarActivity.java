@@ -122,9 +122,9 @@ public class LoginFarmAarActivity extends BaseActivity {
                                 LoginFarmAarActivity.this.finish();
                                 return;
                             }
-//                            showTypeDialog();
-                            FarmerPreferencesUtils.setAnimalType(ConstUtils.ANIMAL_TYPE_CATTLE, LoginFarmAarActivity.this);
-                            getDataFarmFromNet("", "");
+                            showTypeDialog();
+//                            FarmerPreferencesUtils.setAnimalType(ConstUtils.ANIMAL_TYPE_CATTLE, LoginFarmAarActivity.this);
+//                            getDataFarmFromNet("", "");
 
                         } else {
                             Toast.makeText(LoginFarmAarActivity.this, "is not all permission", Toast.LENGTH_LONG).show();

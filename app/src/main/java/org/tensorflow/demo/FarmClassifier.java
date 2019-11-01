@@ -21,6 +21,7 @@ import android.graphics.RectF;
 
 import com.farm.innovation.biz.iterm.PostureItem;
 import com.farm.innovation.biz.iterm.PredictRotationIterm;
+import com.farm.innovation.biz.iterm.YakKeyPointAndRotationItem;
 import com.farm.innovation.utils.PointFloat;
 
 import java.util.List;
@@ -121,7 +122,7 @@ public interface FarmClassifier {
 
   public class RecognitionAndPostureItem {
     private List<Recognition> list;
-
+    private List<PointFloat> points;
     private PostureItem postureItem;
     private PredictRotationIterm predictRotationIterm;
 
@@ -147,6 +148,15 @@ public interface FarmClassifier {
 
     public void setPostureItem(PostureItem postureItem) {
       this.postureItem = postureItem;
+    }
+
+
+    public List<PointFloat> getPoints() {
+      return points;
+    }
+
+    public void setPoints(List<PointFloat> points) {
+      this.points = points;
     }
   }
 

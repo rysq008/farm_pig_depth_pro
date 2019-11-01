@@ -11,6 +11,7 @@ import com.farm.innovation.biz.classifier.DonkeyKeyPointsDetectTFlite;
 import com.farm.innovation.biz.classifier.DonkeyRotationPrediction;
 import com.farm.innovation.biz.classifier.PigKeyPointsDetectTFlite;
 import com.farm.innovation.biz.classifier.PigRotationPrediction;
+import com.farm.innovation.biz.classifier.YakKeyPointRotationDetectTFlite;
 import com.farm.innovation.biz.classifier.YakKeyPointsDetectTFlite;
 import com.farm.innovation.biz.classifier.YakRotationPrediction;
 import com.farm.innovation.utils.FarmerPreferencesUtils;
@@ -567,10 +568,10 @@ public class AnimalClassifierResultIterm {
             FarmAppConfig.debugNub = -1;
             FileUtils.saveInfoToTxtFile(oriInfoPath,
                     "totalNum：" + allNumber +
-                    "；Detect_Success_Num：" + dNumber +
-                    "；Angle_Success_Num：" + aNumber +
-                    "；Keypoint_Success_Num：" + kNumber +
-                    "；total_Success_Num：" + (FarmDetectorActivity.type1Count+ FarmDetectorActivity.type2Count+ FarmDetectorActivity.type3Count));
+                            "；Detect_Success_Num：" + dNumber +
+                            "；Angle_Success_Num：" + aNumber +
+                            "；Keypoint_Success_Num：" + kNumber +
+                            "；total_Success_Num：" + (FarmDetectorActivity.type1Count+ FarmDetectorActivity.type2Count+ FarmDetectorActivity.type3Count));
             FileUtils.saveInfoToTxtFile(oriInfoPath,"phoneModel："+ android.os.Build.BRAND + " "+android.os.Build.MODEL + "\r\nversion：" + FarmAppConfig.version);
             FarmCameraConnectionFragment.collectNumberHandler.sendEmptyMessage(1);
         }
@@ -622,8 +623,9 @@ public class AnimalClassifierResultIterm {
 
         boolean addImgFlag = false;
         // 判断图片角度
-        if ((YakRotationPrediction.yakRotationPredictSuccessR1 || isLiPei)
-                && (YakKeyPointsDetectTFlite.yakKeypointsDetectedK1 || KEYPOINT_JUDGE_SKIP_FLG)) {
+/*        if ((YakRotationPrediction.yakRotationPredictSuccessR1 || isLiPei)
+                && (YakKeyPointsDetectTFlite.yakKeypointsDetectedK1 || KEYPOINT_JUDGE_SKIP_FLG)) */
+        if(YakKeyPointRotationDetectTFlite.yakRotationPredictSuccessR1){
             FarmDetectorActivity.AngleTrackType = 1;
             type = 1;
             // 未达到上限时增加图片
@@ -639,57 +641,59 @@ public class AnimalClassifierResultIterm {
                 //左脸达到上限发消息 关闭左脸提示
                 FarmCameraConnectionFragment.collectNumberHandler.sendEmptyMessage(3);
             }
-        } else if ((YakRotationPrediction.yakRotationPredictSuccessR2 || isLiPei)
-                && (YakKeyPointsDetectTFlite.yakKeypointsDetectedK2 || KEYPOINT_JUDGE_SKIP_FLG)) {
-            FarmDetectorActivity.AngleTrackType = 2;
-            type = 2;
-            // 未达到上限时增加图片
-            if (FarmDetectorActivity.type2Count < maxMiddle * ADD_PIC_RATE) {
-                FarmDetectorActivity.type2Count++;
-                if (FarmDetectorActivity.type2Count < 3) {
-                    //保存原图
-                    File file1 = new File(oriInfoImageName);
-                    FileUtils.saveBitmapToFile(compressBitmap(postureItem.oriBitmap), file1);
+        } else /*if ((YakRotationPrediction.yakRotationPredictSuccessR2 || isLiPei)
+                && (YakKeyPointsDetectTFlite.yakKeypointsDetectedK2 || KEYPOINT_JUDGE_SKIP_FLG))*/
+            if(YakKeyPointRotationDetectTFlite.yakRotationPredictSuccessR2){
+                FarmDetectorActivity.AngleTrackType = 2;
+                type = 2;
+                // 未达到上限时增加图片
+                if (FarmDetectorActivity.type2Count < maxMiddle * ADD_PIC_RATE) {
+                    FarmDetectorActivity.type2Count++;
+                    if (FarmDetectorActivity.type2Count < 3) {
+                        //保存原图
+                        File file1 = new File(oriInfoImageName);
+                        FileUtils.saveBitmapToFile(compressBitmap(postureItem.oriBitmap), file1);
+                    }
+                    addImgFlag = true;
                 }
-                addImgFlag = true;
-            }
-        } else if ((YakRotationPrediction.yakRotationPredictSuccessR3 || isLiPei)
-                && (YakKeyPointsDetectTFlite.yakKeypointsDetectedK3 || KEYPOINT_JUDGE_SKIP_FLG)) {
-            FarmDetectorActivity.AngleTrackType = 3;
-            type = 3;
-            // 未达到上限时增加图片
-            if (FarmDetectorActivity.type3Count < maxRight * ADD_PIC_RATE) {
-                FarmDetectorActivity.type3Count++;
-                if (FarmDetectorActivity.type3Count < 3) {
-                    //保存原图
-                    File file1 = new File(oriInfoImageName);
-                    FileUtils.saveBitmapToFile(compressBitmap(postureItem.oriBitmap), file1);
-                }
-                addImgFlag = true;
-            } else {
-                //右脸达到上限发消息 关闭右脸提示
-                FarmCameraConnectionFragment.collectNumberHandler.sendEmptyMessage(4);
-            }
-        } else {
-            // 未识别角度
-            Log.e("maxMiddle", count + "---maxMiddle: " + maxMiddle);
+            } else /*if ((YakRotationPrediction.yakRotationPredictSuccessR3 || isLiPei)
+                && (YakKeyPointsDetectTFlite.yakKeypointsDetectedK3 || KEYPOINT_JUDGE_SKIP_FLG))*/
+                if(YakKeyPointRotationDetectTFlite.yakRotationPredictSuccessR3){
+                    FarmDetectorActivity.AngleTrackType = 3;
+                    type = 3;
+                    // 未达到上限时增加图片
+                    if (FarmDetectorActivity.type3Count < maxRight * ADD_PIC_RATE) {
+                        FarmDetectorActivity.type3Count++;
+                        if (FarmDetectorActivity.type3Count < 3) {
+                            //保存原图
+                            File file1 = new File(oriInfoImageName);
+                            FileUtils.saveBitmapToFile(compressBitmap(postureItem.oriBitmap), file1);
+                        }
+                        addImgFlag = true;
+                    } else {
+                        //右脸达到上限发消息 关闭右脸提示
+                        FarmCameraConnectionFragment.collectNumberHandler.sendEmptyMessage(4);
+                    }
+                } else {
+                    // 未识别角度
+                    Log.e("maxMiddle", count + "---maxMiddle: " + maxMiddle);
 //            if (count <= maxMiddle) {
 //                //保存原图
 //                File file = new File(oriImageName);
 //                FileUtils.saveBitmapToFile(compressBitmap(postureItem.oriBitmap), file);
 //                count++;
 //            }
-            allTime = System.currentTimeMillis() - allTime;
-            FileUtils.saveInfoToTxtFile(oriInfoPath,
-                    imagefilename.substring(imagefilename.lastIndexOf("/") + 1) +
-                            "；totalNum：" + allNumber +
-                            "；DetectTime：" + dTime +
-                            "；AngleTime：" + aTime +
-                            "；KeypointTime：" + kTime +
-                            "；totalTime：" + allTime);
-            FarmDetectorActivity.resetParameter();
-            return;
-        }
+                    allTime = System.currentTimeMillis() - allTime;
+                    FileUtils.saveInfoToTxtFile(oriInfoPath,
+                            imagefilename.substring(imagefilename.lastIndexOf("/") + 1) +
+                                    "；totalNum：" + allNumber +
+                                    "；DetectTime：" + dTime +
+                                    "；AngleTime：" + aTime +
+                                    "；KeypointTime：" + kTime +
+                                    "；totalTime：" + allTime);
+                    FarmDetectorActivity.resetParameter();
+                    return;
+                }
 
         //save model outputs
         String contenType = imagefilename.substring(imagefilename.lastIndexOf("/") + 1);
@@ -700,19 +704,19 @@ public class AnimalClassifierResultIterm {
         contenType += "box_x1 = " + postureItem.modelX1 + "; ";
         contenType += "box_y1 = " + postureItem.modelY1 + "; ";
         contenType += "score = " + postureItem.modelDetectedScore + "; ";
-        contenType += "point0 = " + yakFaceKeyPointsItem.getPointFloat0().toString() + "; ";
-        contenType += "point1 = " + yakFaceKeyPointsItem.getPointFloat1().toString() + "; ";
-        contenType += "point2 = " + yakFaceKeyPointsItem.getPointFloat2().toString() + "; ";
-        contenType += "point3 = " + yakFaceKeyPointsItem.getPointFloat3().toString() + "; ";
-        contenType += "point4 = " + yakFaceKeyPointsItem.getPointFloat4().toString() + "; ";
-        contenType += "point5 = " + yakFaceKeyPointsItem.getPointFloat5().toString() + "; ";
-        contenType += "point6 = " + yakFaceKeyPointsItem.getPointFloat6().toString() + "; ";
-        contenType += "point7 = " + yakFaceKeyPointsItem.getPointFloat7().toString() + "; ";
-        contenType += "point8 = " + yakFaceKeyPointsItem.getPointFloat8().toString() + "; ";
-        contenType += "point9 = " + yakFaceKeyPointsItem.getPointFloat9().toString() + "; ";
-        contenType += "point10 = " + yakFaceKeyPointsItem.getPointFloat10().toString() + "; ";
-        contenType += "point11 = " + yakFaceKeyPointsItem.getPointFloat11().toString() + "; ";
-        contenType += "point12 = " + yakFaceKeyPointsItem.getPointFloat12().toString() + "; ";
+//        contenType += "point0 = " + yakFaceKeyPointsItem.getPointFloat0().toString() + "; ";
+//        contenType += "point1 = " + yakFaceKeyPointsItem.getPointFloat1().toString() + "; ";
+//        contenType += "point2 = " + yakFaceKeyPointsItem.getPointFloat2().toString() + "; ";
+//        contenType += "point3 = " + yakFaceKeyPointsItem.getPointFloat3().toString() + "; ";
+//        contenType += "point4 = " + yakFaceKeyPointsItem.getPointFloat4().toString() + "; ";
+//        contenType += "point5 = " + yakFaceKeyPointsItem.getPointFloat5().toString() + "; ";
+//        contenType += "point6 = " + yakFaceKeyPointsItem.getPointFloat6().toString() + "; ";
+//        contenType += "point7 = " + yakFaceKeyPointsItem.getPointFloat7().toString() + "; ";
+//        contenType += "point8 = " + yakFaceKeyPointsItem.getPointFloat8().toString() + "; ";
+//        contenType += "point9 = " + yakFaceKeyPointsItem.getPointFloat9().toString() + "; ";
+//        contenType += "point10 = " + yakFaceKeyPointsItem.getPointFloat10().toString() + "; ";
+//        contenType += "point11 = " + yakFaceKeyPointsItem.getPointFloat11().toString() + "; ";
+//        contenType += "point12 = " + yakFaceKeyPointsItem.getPointFloat12().toString() + "; ";
 
         LOGGER.i("yakFaceKeyPointsItem:" + yakFaceKeyPointsItem.toString());
 

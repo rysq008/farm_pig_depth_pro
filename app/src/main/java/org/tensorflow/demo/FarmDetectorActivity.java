@@ -46,6 +46,7 @@ import com.farm.innovation.biz.classifier.DonkeyRotationPrediction;
 import com.farm.innovation.biz.classifier.PigFaceDetectTFlite;
 import com.farm.innovation.biz.classifier.PigRotationPrediction;
 import com.farm.innovation.biz.classifier.YakFaceDetectTFlite;
+import com.farm.innovation.biz.classifier.YakKeyPointRotationDetectTFlite;
 import com.farm.innovation.biz.classifier.YakRotationPrediction;
 import com.farm.innovation.biz.iterm.Model;
 import com.farm.innovation.login.Utils;
@@ -134,7 +135,7 @@ public class FarmDetectorActivity extends FarmCameraActivity implements OnImageA
     private static final String COW_TFLITE_DETECT_MODEL_FILE = "cow_detect_1029_tf10.tflite";
     private static final String PIG_TFLITE_DETECT_MODEL_FILE = "pig_1026_detect_xincai_addbg.tflite";
     //牦牛TF文件
-    private static final String YAK_TFLITE_DETECT_MODEL_FILE = "yak_detect_0320.tflite";
+    private static final String YAK_TFLITE_DETECT_MODEL_FILE = "yak_detect.tflite";
     int[] intValues = new int[192 * 192];
     public static int type1Count = 0;
     public static int type2Count = 0;
@@ -633,7 +634,7 @@ public class FarmDetectorActivity extends FarmCameraActivity implements OnImageA
             Log.d(TAG, "牦牛脸分类器");
             yakTFliteDetector.yakRecognitionAndPostureItemTFlite(padBitmap, rotateBitmap);
             if (YakFaceDetectTFlite.yakRecognitionAndPostureItemTFlite != null) {
-                tracker.trackAnimalResults(YakFaceDetectTFlite.yakRecognitionAndPostureItemTFlite.getPostureItem(), YakRotationPrediction.yakPredictAngleType);
+                tracker.trackAnimalResults(YakFaceDetectTFlite.yakRecognitionAndPostureItemTFlite.getPostureItem(), YakKeyPointRotationDetectTFlite.yakPredictAngleType);
                 final List<FarmClassifier.Recognition> mappedRecognitions =
                         new LinkedList<FarmClassifier.Recognition>();
                 if (YakFaceDetectTFlite.yakRecognitionAndPostureItemTFlite.getList() != null) {

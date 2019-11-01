@@ -4,9 +4,9 @@ buildscript {
     ext.objectboxVersion = '2.2.0'
     repositories {
         google()
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
         jcenter() { url 'http://jcenter.bintray.com/' }
-//        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
-        mavenLocal()
+//        mavenLocal()
         //这里是 LeanCloud 的包仓库
         maven {
             url "http://mvn.leancloud.cn/nexus/content/repositories/public"
@@ -20,8 +20,8 @@ buildscript {
 allprojects {
     repositories {
         google()
+        maven{url 'http://maven.aliyun.com/nexus/content/groups/public/'}
         jcenter() { url 'http://jcenter.bintray.com/' }
-//        maven{url 'http://maven.aliyun.com/nexus/content/groups/public/'}
         maven { url 'http://github.com/innovationaiaar/farmer_depth_pro/raw/master' }
         maven { url 'http://github.com/saki4510t/libcommon/raw/master/repository/' }
         maven { url 'https://jitpack.io' }

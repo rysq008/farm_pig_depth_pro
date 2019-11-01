@@ -16,6 +16,7 @@ import com.farm.innovation.biz.iterm.AnimalClassifierResultIterm;
 import com.farm.innovation.biz.iterm.Model;
 import com.farm.innovation.biz.iterm.PostureItem;
 import com.farm.innovation.biz.iterm.PredictRotationIterm;
+import com.farm.innovation.biz.iterm.YakKeyPointAndRotationItem;
 import com.farm.innovation.utils.FileUtils;
 import com.farm.innovation.utils.PointFloat;
 
@@ -74,7 +75,7 @@ public class YakFaceDetectTFlite implements FarmClassifier {
     private static final float IMAGE_STD = 128.0f;
     // Number of threads in the java app
     private static final int NUM_THREADS = 4;
-    private static final String YAK_TFLITE_PREDICTION_MODEL_FILE = "yak_rotation_0320.tflite";
+    private static final String YAK_TFLITE_PREDICTION_MODEL_FILE = "yak_kero.tflite";
     private static final String YAK_TFLITE_KEYPOINTS_MODEL_FILE = "cow_keypoint_1029_tf10.tflite";
 
     //    private final FarmClassifier donkeyFaceKeyPointsTFDetector;
@@ -88,7 +89,7 @@ public class YakFaceDetectTFlite implements FarmClassifier {
     private float[][] outputClassifyResult;
     private ByteBuffer imgData;
     private Interpreter tfLite;
-    private FarmClassifier yakFaceRotationDetector;
+    private FarmClassifier yakFaceKeyPointRotationDetector;
     private FarmClassifier yakFaceKeyPointsDetector;
     private Context context;
     public static String srcYakBitmapName = "";
@@ -99,21 +100,13 @@ public class YakFaceDetectTFlite implements FarmClassifier {
 
     private YakFaceDetectTFlite() {
         try {
-            yakFaceRotationDetector =
-                    YakRotationPrediction.create(
+            yakFaceKeyPointRotationDetector =
+                    YakKeyPointRotationDetectTFlite.create(
                             FarmAppConfig.getApplication().getAssets(),
                             YAK_TFLITE_PREDICTION_MODEL_FILE,
                             "",
                             192,
                             true);
-            yakFaceKeyPointsDetector =
-                    YakKeyPointsDetectTFlite.create(
-                            FarmAppConfig.getApplication().getAssets(),
-                            YAK_TFLITE_KEYPOINTS_MODEL_FILE,
-                            "",
-                            192,
-                            true);
-
         } catch (final Exception e) {
             throw new RuntimeException("cowFaceRotationDetector or cowFaceKeyPointsDetector: Error initializing TensorFlow!", e);
         }
@@ -519,8 +512,9 @@ public class YakFaceDetectTFlite implements FarmClassifier {
         Bitmap resizeClipBitmap = zoomImage(padBitmap2SpRatio, widthZoom, heightZoom);
 
         aTime = System.currentTimeMillis();
-        PredictRotationIterm predictRotationIterm = yakFaceRotationDetector.yakRotationPredictionItemTFlite(clipBitmap, oriBitmap);
+        RecognitionAndPostureItem keypointResults = yakFaceKeyPointRotationDetector.yakRecognitionAndPostureItemTFlite(clipBitmap, oriBitmap);
         aTime = System.currentTimeMillis() - aTime;
+        PredictRotationIterm predictRotationIterm = keypointResults.getPredictRotationIterm();
         // 调用模型判断角度分类
         if (predictRotationIterm == null) {
             FileUtils.saveInfoToTxtFile(oriInfoPath, srcYakBitmapName +
@@ -548,10 +542,7 @@ public class YakFaceDetectTFlite implements FarmClassifier {
 
         // 调用模型判断关键点
         // keypoint detect
-        kTime = System.currentTimeMillis();
-        List<PointFloat> keypointResults = yakFaceKeyPointsDetector.recognizePointImage(clipBitmap,oriBitmap);
-        kTime = System.currentTimeMillis() - kTime;
-        if (keypointResults == null) {
+        if (keypointResults.getPoints() == null) {
             FileUtils.saveInfoToTxtFile(oriInfoPath, srcYakBitmapName +
                     "；totalNum：" + allNumber + "；DetectTime：" + dTime + "；AngleTime：" + aTime + "；KeypointTime：" + kTime + "；totalTime：" + (dTime + aTime + kTime));
             if (kTimes < 4) {
