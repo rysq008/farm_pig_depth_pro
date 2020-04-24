@@ -10,8 +10,8 @@ android {
         minSdkVersion 21
         targetSdkVersion 27
         //release versionCode 1100
-        versionCode 17
-        versionName "1.9.7"
+        versionCode 19
+        versionName "1.9.9"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi", "armeabi-v7a", "x86", "mips","armeabi-v7a","arm64-v8a"
@@ -194,7 +194,7 @@ apply plugin: 'maven'
 
 ext {
     // 从Github上clone下来的项目的本地地址
-    GITHUB_REPO_PATH = "C:\\farm_pig_depth_pro";//"C:\\insurance\\farm_pig_insurance\\farm_pig_insurance"/*"C:\\pig_farmer_aar"*/
+    GITHUB_REPO_PATH = "D:\\pigweightGitHub\\farm_pig_depth_pro";//"C:\\insurance\\farm_pig_insurance\\farm_pig_insurance"/*"C:\\pig_farmer_aar"*/
     // api 'com.audient:super_library:1.0.0'
     PUBLISH_GROUP_ID = 'com.innovation.ai'
     PUBLISH_ARTIFACT_ID = 'farm_pig_depth_pro'
