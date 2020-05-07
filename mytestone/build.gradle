@@ -123,10 +123,11 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.1'
 //    implementation('com.innovation.ai:farmer_depth_pro:1.133')
 //            {transitive = true}
-//    implementation project(':app')
 //    implementation('com.innovation.ai:farm_pig_depth_pro:1.9.9')
 //            {transitive = true}
-    implementation 'com.github.rysq008:farm_pig_depth_pro:v1.9.94'
+    implementation project(':app')
+//    implementation 'com.github.rysq008:farm_pig_depth_pro:v1.9.95'
+    implementation 'com.github.rysq008:weight_aar:1.0'
 
 //    implementation 'com.gitee.rysq008:farm_pig_depth_pro:v1.6'
 //    implementation('com.innovation.aar:farmer_depth_pro:1.118'){transitive = true}
