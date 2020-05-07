@@ -4,7 +4,7 @@ buildscript {
     ext.objectboxVersion = '2.2.0'
     repositories {
         google()
-        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/'}
         jcenter() { url 'http://jcenter.bintray.com/' }
 //        mavenLocal()
         //这里是 LeanCloud 的包仓库
@@ -20,27 +20,19 @@ buildscript {
 allprojects {
     repositories {
         google()
-        maven{url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/'}
         jcenter() { url 'http://jcenter.bintray.com/' }
-        maven { url 'http://github.com/innovationaiaar/farmer_depth_pro/raw/master' }
-        maven { url 'http://github.com/saki4510t/libcommon/raw/master/repository/' }
-        maven { url 'https://jitpack.io' }
-        maven { url "http://mvn.aliyun.cn/nexus/content/groups/public" }
+        maven { url 'http://jitpack.io' }
         //这里是 LeanCloud 的包仓库
         maven { url "http://mvn.leancloud.cn/nexus/content/repositories/public" }
-//        maven { url  "https://dl.bintray.com/blazei/maven" }
 //        maven {url "http://github.com/innovationaiaar/farm_pig_insurance/raw/master"}
 //        maven {url "http://github.com/innovationaiaar/farmer_aar/raw/master"}
 //        maven { url 'http://github.com/innovationaiaar/farmer_pig_aar/raw/master' }
-        maven { url 'http://github.com/innovationaiaar/farmer_pig_insurance/raw/master' }
+//        maven { url 'http://github.com/innovationaiaar/farmer_pig_insurance/raw/master' }
 //        maven { url "https://raw.githubusercontent.com/rysq008/repos/master" }
-//        maven{url "https://raw.gitlabusercontent.com/androidapp/ScheduleApp/tree/master/raw/com/innovation/aar/pigInsurance"}
-//        maven { url "http://github.com/Lucas1012/pig_insurance_aar/raw/master" }
-        maven { url "http://github.com/innovationaiaar/weight_aar/raw/master" }
-//        maven { url 'http://github.com/innovationaiaar/farmer_depth_join/raw/master' }
+//        maven { url 'http://github.com/innovationaiaar/farmer_depth_pro/raw/master' }
 
-//        maven { url 'http://raw.githubusercontent.com/innovationaiaar/farmer_depth_pro/master' }
-        maven { url 'http://github.com/innovationaiaar/farmer_depth_pro/raw/master' }
+//        maven { url "http://github.com/innovationaiaar/weight_aar/raw/master" }
         maven { url 'http://github.com/innovationaiaar/farm_pig_depth_pro/raw/master' }
     }
 }

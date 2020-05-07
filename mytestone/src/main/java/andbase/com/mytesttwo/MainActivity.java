@@ -178,14 +178,14 @@ public class MainActivity extends Activity {
 //            });
             TextView tv = (TextView) view;
             if (true) {
-                Glide.with(this).asBitmap().apply(new RequestOptions())
-                        .load("http://47.92.167.61:3389/ftn/20191015/1411/1571130593613/20191015050935589.mp4")
-                        .into(new SimpleTarget<Bitmap>() {
-                            @Override
-                            public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                                tv.setBackground(new BitmapDrawable(resource));
-                            }
-                        });
+//                Glide.with(this).asBitmap().apply(new RequestOptions())
+//                        .load("http://47.92.167.61:3389/ftn/20191015/1411/1571130593613/20191015050935589.mp4")
+//                        .into(new SimpleTarget<Bitmap>() {
+//                            @Override
+//                            public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+//                                tv.setBackground(new BitmapDrawable(resource));
+//                            }
+//                        });
                 final int[] n = {0};
                 PigInnovationAiOpen.getInstance().requestInnovationApi(this, "1174898336404176634", "89979dc663caa2580164f88b57796251",
                         "14112100", "文水县支公司", "3", "14119900", "总公司/山西分公司/吕梁市中心支公司/文水县支公司",

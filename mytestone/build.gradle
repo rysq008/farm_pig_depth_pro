@@ -124,15 +124,17 @@ dependencies {
 //    implementation('com.innovation.ai:farmer_depth_pro:1.133')
 //            {transitive = true}
 //    implementation project(':app')
-    implementation('com.innovation.ai:farm_pig_depth_pro:1.9.9')
-            {transitive = true}
+//    implementation('com.innovation.ai:farm_pig_depth_pro:1.9.9')
+//            {transitive = true}
+    implementation 'com.github.rysq008:farm_pig_depth_pro:v1.9.94'
+
 //    implementation 'com.gitee.rysq008:farm_pig_depth_pro:v1.6'
 //    implementation('com.innovation.aar:farmer_depth_pro:1.118'){transitive = true}
 //    implementation ('com.innovation.ai:farmer_pig_aar:1.113'){transitive =true }
 //    implementation('com.innovation.aar:farmer_pig_Insurance:1.118')
 //            { transitive = true }
 //    implementation('com.innovationai.pigweight:pig_insurance_weight:1.0.8') { transitive = true }
-    implementation('com.innovationai.pigweight:pig_insurance_weight:1.1.6')
+//    implementation('com.innovationai.pigweight:pig_insurance_weight:1.1.6')
     // { transitive = true }
     implementation 'com.github.bumptech.glide:glide:4.2.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.2.0'

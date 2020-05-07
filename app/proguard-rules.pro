@@ -71,6 +71,7 @@
 -keep public class org.tensorflow.demo.tracking.**{*;}
 -keep public class com.xiangchuang.risks.utils.PigPreferencesUtils {*;}
 
+-keep public class com.xiangchuangtec.luolu.animalcounter.PigAppConfig{*;}
 -keep public class com.farm.innovation.base.FarmAppConfig {*;}
 -keep class com.farm.innovation.bean.**{*;}
 -keep class com.farm.innovation.biz.Insured.**{*;}
